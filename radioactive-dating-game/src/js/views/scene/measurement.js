@@ -31,6 +31,8 @@ define(function(require) {
 
         initialize: function(options) {
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation, 'change:mode', this.modeChanged);
         },
 
         reset: function() {
@@ -120,16 +122,6 @@ define(function(require) {
                 this.volcanoLandscape.update(time, deltaTime, paused);
         },
 
-        showTree: function() {
-            this.treeLandscape.show();
-            this.volcanoLandscape.hide();
-        },
-
-        showVolcano: function() {
-            this.volcanoLandscape.show();
-            this.treeLandscape.hide();
-        },
-
         setSoundVolumeMute: function() {
             this.volcanoLandscape.setSoundVolumeMute();
         },
@@ -140,6 +132,19 @@ define(function(require) {
 
         setSoundVolumeHigh: function() {
             this.volcanoLandscape.setSoundVolumeHigh();
+        },
+
+        modeChanged: function(simulation, mode) {
+            if (mode === Constants.MeasurementSimulation.MODE_TREE) {
+                this.treeLandscape.reset();
+                this.treeLandscape.show();
+                this.volcanoLandscape.hide();
+            }
+            else {
+                this.volcanoLandscape.reset();
+                this.volcanoLandscape.show();
+                this.treeLandscape.hide();
+            }
         }
 
     });

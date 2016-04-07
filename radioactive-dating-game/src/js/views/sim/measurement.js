@@ -94,12 +94,10 @@ define(function (require) {
         },
 
         treeSelected: function() {
-            this.sceneView.showTree();
             this.simulation.set('mode', MeasurementSimulation.MODE_TREE);
         },
 
         rockSelected: function() {
-            this.sceneView.showVolcano();
             this.simulation.set('mode', MeasurementSimulation.MODE_ROCK);
         },
 

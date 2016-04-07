@@ -33,6 +33,7 @@ define(function(require) {
             DecayProportionChartView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.simulation, 'reset', this.simulationReset);
+            this.listenTo(this.simulation, 'change:mode', this.clearData);
             this.listenTo(this.simulation.meter, 'change:nucleusType', this.nucleusTypeChanged);
             this.nucleusTypeChanged(this.simulation.meter, this.simulation.meter.get('nucleusType'));
         },
@@ -74,6 +75,7 @@ define(function(require) {
         nucleusTypeChanged: function(meter, nucleusType) {
             this.updateTimeSpan();
             this.updateIsotope();
+            this.clearData();
         },
 
         simulationReset: function() {

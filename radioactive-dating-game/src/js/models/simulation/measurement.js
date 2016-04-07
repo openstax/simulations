@@ -30,6 +30,15 @@ define(function (require, exports, module) {
         /**
          * Initializes the models used in the simulation
          */
+        initialize: function(attributes, options) {
+            ItemDatingSimulation.prototype.initialize.apply(this, [attributes, options]);
+
+            this.on('change:mode', this.modeChanged);
+        },
+
+        /**
+         * Initializes the models used in the simulation
+         */
         initComponents: function() {
             ItemDatingSimulation.prototype.initComponents.apply(this, arguments);
 
@@ -65,6 +74,8 @@ define(function (require, exports, module) {
             // Reset volcano and add it to items
             this.volcano.reset();
             this.items.add(this.volcano);
+            // Set the position of the meter to where the rock will be
+            this.meter.setPosition(AgingRock.FINAL_X, AgingRock.FINAL_Y);
             // Reset counters and flags
             this._volcanoErupting = false;
             this._rockCooling = false;
@@ -200,6 +211,13 @@ define(function (require, exports, module) {
         modeChanged: function(simulation, mode) {
             // Clear datable items
             this.items.reset();
+
+            if (mode === MeasurementSimulation.MODE_TREE) {
+
+            }
+            else {
+                this.resetRockMode();
+            }
         },
 
         agingRockClosureStateChanged: function(item, closureState) {

@@ -47,7 +47,7 @@ define(function(require) {
             this.listenTo(this.simulation, 'eruption-start',     this.eruptionStarted);
             this.listenTo(this.simulation, 'eruption-end',       this.eruptionEnded);
             this.listenTo(this.simulation, 'aging-rock-emitted', this.agingRockEmitted);
-            this.listenTo(this.simulation, 'reset',              this.simulationReset);
+            this.listenTo(this.simulation, 'reset',              this.reset);
             this.listenTo(this.simulation, 'change:paused',      this.pausedChanged);
         },
 
@@ -84,6 +84,17 @@ define(function(require) {
             });
 
             this.backgroundEffectsLayer.addChild(this.flyingRockCollectionView.displayObject);
+        },
+
+        reset: function() {
+            this.$resetButton.hide();
+            this.$eruptVolcanoButton.show();
+            if (this.agingRockView)
+                this.agingRockView.remove();
+            this.fog.alpha = 0;
+            this.volcanoSmokeView.stopSmoking();
+            this.volcanoSmokeView.clearSmoke();
+            this.tremorSound.stop();
         },
 
         getBackgroundTexture: function() {
@@ -236,17 +247,6 @@ define(function(require) {
                         break;
                 }
             });
-        },
-
-        simulationReset: function() {
-            this.$resetButton.hide();
-            this.$eruptVolcanoButton.show();
-            if (this.agingRockView)
-                this.agingRockView.remove();
-            this.fog.alpha = 0;
-            this.volcanoSmokeView.stopSmoking();
-            this.volcanoSmokeView.clearSmoke();
-            this.tremorSound.stop();
         },
 
         pausedChanged: function(simulation, paused) {

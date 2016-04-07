@@ -83,6 +83,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.model, 'change:nucleusType', this.nucleusTypeChanged);
+            this.listenTo(this.model, 'change:position',    this.updatePosition);
         },
 
         /**
@@ -215,6 +216,8 @@ define(function(require) {
             this.geigerProbe.scale.x = scale;
             this.geigerProbe.scale.y = scale;
 
+            this.updatePosition(this.model, this.model.get('position'));
+
             this.drawCord();
         },
 
@@ -230,14 +233,9 @@ define(function(require) {
                 var dx = event.data.global.x - this._lastPosition.x;
                 var dy = event.data.global.y - this._lastPosition.y;
 
-                this.geigerProbe.x += dx;
-                this.geigerProbe.y += dy;
-
-                var viewPosition = this._viewPosition.set(this.geigerProbe.x, this.geigerProbe.y);
+                var viewPosition = this._viewPosition.set(this.geigerProbe.x + dx, this.geigerProbe.y + dy);
                 var modelPosition = this.mvt.viewToModel(viewPosition);
                 this.model.setPosition(modelPosition);
-
-                this.drawCord();
 
                 this._lastPosition.x = event.data.global.x;
                 this._lastPosition.y = event.data.global.y;
@@ -297,6 +295,13 @@ define(function(require) {
         nucleusTypeChanged: function(model, nucleusType) {
             var text = (nucleusType === NucleusType.CARBON_14) ? 'Carbon-14' : 'Uranium-238';
             this.$el.find('.readout-label').html(text + ':');
+        },
+
+        updatePosition: function(model, position) {
+            var viewPosition = this.mvt.modelToView(position);
+            this.geigerProbe.x = viewPosition.x;
+            this.geigerProbe.y = viewPosition.y;
+            this.drawCord();
         }
 
     });

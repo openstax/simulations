@@ -62,6 +62,8 @@ define(function(require) {
             return PIXI.Texture.EMPTY;
         },
 
+        reset: function() {},
+
         renderElement: function() {
             return this;
         },
