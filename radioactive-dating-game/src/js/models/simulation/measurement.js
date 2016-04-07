@@ -12,6 +12,7 @@ define(function (require, exports, module) {
     var FlyingRock             = require('radioactive-dating-game/models/datable-item/flying-rock');
     var AgingRock              = require('radioactive-dating-game/models/datable-item/aging-rock');
     var Volcano                = require('radioactive-dating-game/models/datable-item/volcano');
+    var AgingTree              = require('radioactive-dating-game/models/datable-item/aging-tree');
     var AnimatedDatableItem    = require('radioactive-dating-game/models/datable-item/animated');
 
     /**
@@ -98,7 +99,7 @@ define(function (require, exports, module) {
         },
 
         resetTreeMode: function() {
-
+            
         },
 
         /**
@@ -114,7 +115,9 @@ define(function (require, exports, module) {
         },
 
         updateTreeMode: function(time, deltaTime) {
-
+            // Update the models
+            for (i = 0; i < this.items.length; i++)
+                this.items.at(i).update(time, deltaTime);
         },
 
         updateRockMode: function(time, deltaTime) {
@@ -225,7 +228,7 @@ define(function (require, exports, module) {
                 timeConversionFactor: MeasurementSimulation.INITIAL_TREE_AGING_RATE
             });
             this.items.add(this.agingTree);
-            this.trigger('tree-added');
+            this.trigger('tree-planted');
         },
 
         forceClosure: function() {
