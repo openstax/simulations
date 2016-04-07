@@ -199,7 +199,7 @@ define(function(require) {
         },
 
         resetVolcano: function() {
-            this.simulation.resetVolcano();
+            this.simulation.reset();
         },
 
         eruptionStarted: function() {

@@ -57,33 +57,48 @@ define(function (require, exports, module) {
             });
         },
 
-        /**
-         * Resets the model components
-         */
-        resetComponents: function() {
-            ItemDatingSimulation.prototype.resetComponents.apply(this, arguments);
+        reset: function() {
+            // Reset sim time
+            this.time = 0;
+
+            // Clear datable items
+            this.items.reset();
+
+            // Do mode-specific resetting
+            if (this.get('mode') === MeasurementSimulation.MODE_TREE)
+                this.resetTreeMode();
+            else
+                this.resetRockMode();
+
+            // Trigger the reset event
+            this.trigger('reset');
         },
 
         resetRockMode: function() {
-            // Reset sim time
-            this.time = 0;
             // Clear rocks
             this.flyingRocks.reset();
+
             // Clear aging rock
             if (this.agingRock)
                 this.agingRock.destroy();
             this.agingRock = null;
+
             // Reset volcano and add it to items
             this.volcano.reset();
             this.items.add(this.volcano);
+
             // Set the position of the meter to where the rock will be
             this.meter.setPosition(AgingRock.FINAL_X, AgingRock.FINAL_Y);
+
             // Reset counters and flags
             this.set('aging', false);
             this._volcanoErupting = false;
-            this._rockCooling = false;
             this._rockEmissionCounter = MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME;
             this._timeAccelerationCount = 0;
+        },
+
+        resetTreeMode: function() {
+
         },
 
         /**
@@ -136,7 +151,6 @@ define(function (require, exports, module) {
 
                 if (this.time >= MeasurementSimulation.ERUPTION_END_TIME) {
                     this._volcanoErupting = false;
-                    this._rockCooling = true;
                     this.trigger('eruption-end');
                 }
             }
@@ -189,16 +203,29 @@ define(function (require, exports, module) {
         },
 
         eruptVolcano: function() {
-            this.resetRockMode();
+            // Reset sim time
+            this.time = 0;
+            // Let everyone know the scene should be aging now
             this.set('aging', true);
+            // Set internal flags to start the ball rolling
             this._volcanoErupting = true;
+            // Trigger an event for the eruption
             this.trigger('eruption-start');
         },
 
-        resetVolcano: function() {
-            this.resetRockMode();
-            this.trigger('eruption-end');
-            this.trigger('reset');
+        /**
+         * Start simulating the life of a tree
+         */
+        plantTree: function() {
+            this.set('aging', true);
+            // Create and add the tree
+            this.agingTree = new AgingTree({
+                position: MeasurementSimulation.INITIAL_TREE_POSITION, 
+                width:    MeasurementSimulation.INITIAL_TREE_WIDTH,
+                timeConversionFactor: MeasurementSimulation.INITIAL_TREE_AGING_RATE
+            });
+            this.items.add(this.agingTree);
+            this.trigger('tree-added');
         },
 
         forceClosure: function() {
@@ -213,15 +240,7 @@ define(function (require, exports, module) {
         },
 
         modeChanged: function(simulation, mode) {
-            // Clear datable items
-            this.items.reset();
-
-            if (mode === MeasurementSimulation.MODE_TREE) {
-
-            }
-            else {
-                this.resetRockMode();
-            }
+            this.reset();
         },
 
         agingRockClosureStateChanged: function(item, closureState) {

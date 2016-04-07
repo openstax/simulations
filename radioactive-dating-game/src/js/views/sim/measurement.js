@@ -24,7 +24,8 @@ define(function (require) {
 
         events: _.extend({}, RadioactiveDatingGameSimView.prototype.events, {
             'click #object-tree' : 'treeSelected',
-            'click #object-rock' : 'rockSelected'
+            'click #object-rock' : 'rockSelected',
+            'click .reset-btn'   : 'reset'
         }),
 
         /**
@@ -101,6 +102,10 @@ define(function (require) {
             RadioactiveDatingGameSimView.prototype.postRender.apply(this, arguments);
 
             return this;
+        },
+
+        reset: function() {
+            this.simulation.reset();
         },
 
         update: function(time, deltaTime) {
