@@ -49,8 +49,7 @@ define(function (require) {
             
             if (this.get('height') < AgingTree.FULL_GROWN_TREE_HEIGHT && this.get('closureState') !== AgingTree.CLOSED) {
                 // Grow a little bit.
-                this.set('width',  this.get('width')  * AgingTree.GROWTH_RATE);
-                this.set('height', this.get('height') * AgingTree.GROWTH_RATE);
+                this.set('width',  this.get('width') * AgingTree.GROWTH_RATE);
                 
                 // Shift up a bit so that it looks like the tree is growing up out of the ground.
                 var center = this.getPosition();
@@ -92,12 +91,12 @@ define(function (require) {
                     //   puts the probe at the base of the tree it will remain in
                     //   contact with the tree after it has fallen.  This was
                     //   requested by Noah P.
-                    if (this._fallCounter < AgingTree.FALL_COUNT / 2) {
-                        this.translate(
-                            -this.get('width') * 0.015, 
-                            this.get('height') * 0.005
-                        );
-                    }
+                    // if (this._fallCounter < AgingTree.FALL_COUNT / 2) {
+                    //     this.translate(
+                    //         -this.get('width') * 0.015, 
+                    //         this.get('height') * 0.005
+                    //     );
+                    // }
                     
                     // Move to the next step in the cycle.
                     this._fallCounter--;
@@ -123,7 +122,7 @@ define(function (require) {
         },
 
         rotateAboutBottomCenter: function(deltaTheta) {
-            var totalTranslation = this.get('height') * Math.sin(deltaTheta / 2);
+            var totalTranslation = this.get('height') * 0.9 * Math.sin(deltaTheta / 2);
             var centerAngle = this.get('rotation') + (deltaTheta / 2);
             var xTranslation = totalTranslation * Math.cos(centerAngle);
             var yTranslation = -totalTranslation * Math.sin(centerAngle);

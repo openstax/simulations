@@ -94,8 +94,8 @@ define(function (require) {
     MeasurementSimulation.FLYING_ROCK_WIDTH = 8;
     MeasurementSimulation.INITIAL_AGING_ROCK_WIDTH = 10;
 
-    MeasurementSimulation.INITIAL_TREE_POSITION = new Vector2(-150, 150);
-    MeasurementSimulation.INITIAL_TREE_WIDTH = 100;
+    MeasurementSimulation.INITIAL_TREE_POSITION = new Vector2(-150, 130);
+    MeasurementSimulation.INITIAL_TREE_WIDTH = 60;
 
     Constants.MeasurementSimulation = MeasurementSimulation;
 
@@ -199,7 +199,7 @@ define(function (require) {
 
     var AgingTree = {};
 
-    AgingTree.FULL_GROWN_TREE_HEIGHT = 220; // Model units, roughly meters.
+    AgingTree.FULL_GROWN_TREE_HEIGHT = 300; // Model units
     AgingTree.GROWTH_RATE = 1.03; // High number for faster growth.
     AgingTree.AGE_OF_NATURAL_DEATH = HalfLifeInfo.convertYearsToMs(1000);
     AgingTree.FADE_TO_DEAD_TREE_COUNT = 30; // Controls how long it takes for tree to die.
