@@ -96,6 +96,7 @@ define(function (require) {
 
     MeasurementSimulation.INITIAL_TREE_POSITION = new Vector2(-150, 130);
     MeasurementSimulation.INITIAL_TREE_WIDTH = 60;
+    MeasurementSimulation.INITIAL_TREE_METER_POSITION = new Vector2(-150, 100);
 
     Constants.MeasurementSimulation = MeasurementSimulation;
 

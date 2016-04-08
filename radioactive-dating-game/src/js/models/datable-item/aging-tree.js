@@ -48,7 +48,6 @@ define(function (require) {
             }
             
             // Handle growth.
-            
             if (this.get('height') < AgingTree.FULL_GROWN_TREE_HEIGHT && this.get('closureState') !== AgingTree.CLOSED) {
                 // Grow a little bit.
                 this.set('width',  this.get('width') * AgingTree.GROWTH_RATE);
@@ -89,17 +88,6 @@ define(function (require) {
                 else if (this._fallCounter > 0) {
                     this.rotateAboutBottomCenter(AgingTree.FALL_ANGLE_SCALE_FACTOR * (AgingTree.FALL_COUNT - this._fallCounter));
                     
-                    // Tweak the translation just a little such that if the user
-                    //   puts the probe at the base of the tree it will remain in
-                    //   contact with the tree after it has fallen.  This was
-                    //   requested by Noah P.
-                    // if (this._fallCounter < AgingTree.FALL_COUNT / 2) {
-                    //     this.translate(
-                    //         -this.get('width') * 0.015, 
-                    //         this.get('height') * 0.005
-                    //     );
-                    // }
-                    
                     // Move to the next step in the cycle.
                     this._fallCounter--;
                 }
@@ -127,8 +115,10 @@ define(function (require) {
 
                     this._decomposeCounter--;
                     
-                    if (this._decomposeCounter === 0)
+                    if (this._decomposeCounter === 0) {
                         this.set('decomposed', 1);
+                        this.set('width', this.get('width') * (100 / 580), { silent: true });
+                    }
                 }
             }
         },

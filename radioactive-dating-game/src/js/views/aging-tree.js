@@ -97,7 +97,7 @@ define(function(require) {
             this.displayObject.scale.x = scale;
             this.displayObject.scale.y = scale;
 
-            var heightWidthRatio =  this.textures[0].height / this.textures[0].width;
+            var heightWidthRatio = this.textures[0].height / this.textures[0].width;
             this.model.set('height', this.model.get('width') * heightWidthRatio);
         },
 

@@ -48,7 +48,9 @@ define(function (require, exports, module) {
             this.items = new Backbone.Collection();
             this.flyingRocks = new Backbone.Collection();
 
-            this.meter = new RadiometricDatingMeter();
+            this.meter = new RadiometricDatingMeter({
+                position: MeasurementSimulation.INITIAL_TREE_METER_POSITION
+            });
 
             this.volcano = new Volcano({
                 position: MeasurementSimulation.VOLCANO_POSITION,
@@ -108,6 +110,9 @@ define(function (require, exports, module) {
             if (this.agingTree)
                 this.agingTree.destroy();
             this.agingTree = null;
+
+            // Set the position of the meter to where the rock will be
+            this.meter.setPosition(MeasurementSimulation.INITIAL_TREE_METER_POSITION);
         },
 
         /**
