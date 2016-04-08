@@ -70,6 +70,9 @@ define(function(require) {
             this.tickColor     = Colors.parseHex(DecayProportionChartView.TICK_MARK_COLOR);
             this.tickLabelsWidth = 46;
 
+            this.dataTimes = [];
+            this.dataPercents = [];
+
             this.calculateGraphDimensions();
 
             // Initialize the graphics
@@ -397,8 +400,18 @@ define(function(require) {
             }
         },
 
+        recordDataPoint: function(time, percent) {
+            var x = this.graphOriginX + time * this.msToPixelsFactor;
+            if (x <= this.graphOriginX + this.graphWidth) {
+                this.dataTimes.push(time);
+                this.dataPercents.push(percent);
+            }
+        },
+
         clearData: function() {
             this.dataGraphics.clear();
+            this.dataTimes = [];
+            this.dataPercents = [];
         },
 
         update: function(time, deltaTime, paused) {},

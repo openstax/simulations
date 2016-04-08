@@ -153,23 +153,29 @@ define(function(require) {
             }
         },
 
-        drawGraph: function() {
+        drawGraphData: function() {
+            for (var i = 0; i < this.dataTimes.length; i++)
+                this.drawDataPoint(this.dataTimes[i], this.dataPercents[i], this.isotopeColor);
+        },
+
+        addCurrentGraphData: function() {
+            var percentage = this.simulation.meter.getPercentageOfDatingElementRemaining();
+            if (!isNaN(percentage)) {
+                var time = this.simulation.getAdjustedTime();
+                this.drawDataPoint(time, percentage / 100, this.isotopeColor);
+                this.recordDataPoint(time, percentage / 100);
+            }
+        },
+
+        updateGraph: function() {
             this.drawXAxis();
             this.drawYAxis();
             this.updateLayout();
         },
 
-        drawCurrentGraphData: function() {
-            var percentage = this.simulation.meter.getPercentageOfDatingElementRemaining();
-            if (!isNaN(percentage)) {
-                var time = this.simulation.getAdjustedTime();
-                this.drawDataPoint(time, percentage / 100, this.isotopeColor);
-            }
-        },
-
         update: function(time, deltaTime, paused) {
             if (!paused && this.simulation.time > 0) {
-                this.drawCurrentGraphData();
+                this.addCurrentGraphData();
             }
         },
 
@@ -188,38 +194,54 @@ define(function(require) {
 
         setCarbonMode: function() {
             this.carbonMode = true;
+            
             this.carbonControls.visible = true;
             this.paddingTop = this.carbonModePaddingTop;
             this.calculateGraphDimensions();
-            this.drawGraph();
+
+            this.clearData();
+            this.updateGraph();
         },
 
         setUraniumMode: function() {
             this.carbonMode = false;
+
             this.carbonControls.visible = false;
             this.paddingTop = this.defaultPaddingTop;
             this.calculateGraphDimensions();
-            this.drawGraph();
+
+            this.clearData();
+            this.updateGraph();
         },
 
         setCarbonPercentMode: function() {
             this.carbonPercentTab.select();
             this.carbonRatioTab.deselect();
+
             this.paddingLeft = this.defaultPaddingLeft;
             this.tickLabelsWidth = this.defaultTickLabelsWidth;
             this.calculateGraphDimensions();
+
             this.ratioMode = false;
-            this.drawGraph();
+
+            this.dataGraphics.clear();
+            this.updateGraph();
+            this.drawGraphData();
         },
 
         setCarbonRatioMode: function() {
             this.carbonRatioTab.select();
             this.carbonPercentTab.deselect();
+
             this.paddingLeft = this.ratioModePaddingLeft;
             this.tickLabelsWidth = this.ratioModeTickLabelsWidth;
             this.calculateGraphDimensions();
+
             this.ratioMode = true;
-            this.drawGraph();
+
+            this.dataGraphics.clear();
+            this.updateGraph();
+            this.drawGraphData();
         },
 
         nucleusTypeChanged: function(meter, nucleusType) {

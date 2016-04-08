@@ -97,7 +97,7 @@ define(function (require, exports, module) {
             this.items.add(this.volcano);
 
             // Set the position of the meter to where the rock will be
-            this.meter.setPosition(AgingRock.FINAL_X, AgingRock.FINAL_Y);
+            this.meter.setPosition(MeasurementSimulation.INITIAL_ROCK_METER_POSITION);
 
             // Reset counters and flags
             this._volcanoErupting = false;

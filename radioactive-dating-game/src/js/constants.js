@@ -93,6 +93,7 @@ define(function (require) {
     MeasurementSimulation.VOLCANO_HEIGHT = 112;
     MeasurementSimulation.FLYING_ROCK_WIDTH = 8;
     MeasurementSimulation.INITIAL_AGING_ROCK_WIDTH = 10;
+    MeasurementSimulation.INITIAL_ROCK_METER_POSITION = new Vector2(-200, 88);
 
     MeasurementSimulation.INITIAL_TREE_POSITION = new Vector2(-150, 130);
     MeasurementSimulation.INITIAL_TREE_WIDTH = 60;
