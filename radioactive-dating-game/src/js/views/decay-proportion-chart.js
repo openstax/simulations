@@ -60,10 +60,6 @@ define(function(require) {
             this.paddingRight   = options.paddingRight;
             this.paddingTop     = options.paddingTop;
             this.padding        = options.padding;
-            this.graphWidth     = this.width - this.paddingLeft - this.paddingRight;
-            this.graphHeight    = this.height - this.paddingTop - this.paddingBottom;
-            this.graphOriginX   = this.paddingLeft;
-            this.graphOriginY   = this.height - this.paddingBottom;
             this.bgColor        = Colors.parseHex(options.bgColor);
             this.bgAlpha        = options.bgAlpha;
             this.yAxisLabelText = options.yAxisLabelText;
@@ -72,9 +68,19 @@ define(function(require) {
 
             this.axisLineColor = Colors.parseHex(DecayProportionChartView.AXIS_LINE_COLOR);
             this.tickColor     = Colors.parseHex(DecayProportionChartView.TICK_MARK_COLOR);
+            this.tickLabelsWidth = 46;
+
+            this.calculateGraphDimensions();
 
             // Initialize the graphics
             this.initGraphics();
+        },
+
+        calculateGraphDimensions: function() {
+            this.graphWidth     = this.width - this.paddingLeft - this.paddingRight;
+            this.graphHeight    = this.height - this.paddingTop - this.paddingBottom;
+            this.graphOriginX   = this.paddingLeft;
+            this.graphOriginY   = this.height - this.paddingBottom;
         },
 
         /**
@@ -104,6 +110,49 @@ define(function(require) {
         },
 
         initXAxis: function() {
+            this.xAxisContainer = new PIXI.Container();
+            this.displayObject.addChild(this.xAxisContainer);
+
+            this.drawXAxis();
+        },
+
+        initYAxis: function() {
+            this.yAxisContainer = new PIXI.Container();
+            this.displayObject.addChild(this.yAxisContainer);
+
+            this.drawYAxis();
+        },
+
+        initHalfLifeMarkers: function() {
+            this.halfLifeLineGraphics = new PIXI.Graphics();
+            this.halfLifeLabels = new PIXI.Container();
+
+            this.displayObject.addChild(this.halfLifeLineGraphics);
+            this.displayObject.addChild(this.halfLifeLabels);
+        },
+
+        initData: function() {
+            if (this.lineMode) {
+                this._lastX = 0;
+                this._lastActivePercent = 1;
+            }
+
+            this.dataGraphics = new PIXI.Graphics();
+
+            var mask = new PIXI.Graphics();
+            mask.beginFill();
+            mask.drawRect(this.graphOriginX, this.graphOriginY - this.graphHeight, this.graphWidth, this.graphHeight);
+            mask.endFill();
+
+            this.dataGraphics.mask = mask;
+
+            this.displayObject.addChild(this.dataGraphics);
+            this.displayObject.addChild(mask);
+        },
+
+        drawXAxis: function() {
+            this.xAxisContainer.removeChildren();
+
             // Draw axis line
             var axisLine = new PIXI.Graphics();
             axisLine.lineStyle(DecayProportionChartView.AXIS_LINE_WIDTH, this.axisLineColor, 1);
@@ -138,73 +187,11 @@ define(function(require) {
             topAxisLabel.anchor.y = 1;
 
             // Add everything
-            this.displayObject.addChild(axisLine);
-            this.displayObject.addChild(this.xAxisTicks);
-            this.displayObject.addChild(this.xAxisTickLabels);
-            this.displayObject.addChild(bottomAxisLabel);
-            this.displayObject.addChild(topAxisLabel);
-        },
-
-        initYAxis: function() {
-            var tickLabelThickness = 46;
-
-            var label = new PIXI.Text(this.yAxisLabelText, {
-                font: Constants.DecayProportionChartView.AXIS_LABEL_FONT,
-                fill: Constants.DecayProportionChartView.AXIS_LABEL_COLOR,
-                align: 'center'
-            });
-            label.resolution = this.getResolution();
-            label.x = this.graphOriginX - tickLabelThickness;
-            label.y = this.graphOriginY - this.graphHeight / 2;
-            label.anchor.x = 0.5;
-            label.anchor.y = 1;
-            label.rotation = -Math.PI / 2;
-
-            // Draw axis line, border, and y-tick lines
-            var graphics = new PIXI.Graphics();
-            graphics.lineStyle(DecayProportionChartView.BORDER_WIDTH, Colors.parseHex(DecayProportionChartView.BORDER_COLOR), DecayProportionChartView.BORDER_ALPHA);
-            graphics.drawRect(this.graphOriginX, this.graphOriginY - this.graphHeight, this.graphWidth, this.graphHeight);
-
-            graphics.lineStyle(DecayProportionChartView.Y_VALUE_LINE_WIDTH, Colors.parseHex(DecayProportionChartView.Y_VALUE_LINE_COLOR), DecayProportionChartView.Y_VALUE_LINE_ALPHA);
-            for (var p = 0.25; p <= 0.75; p += 0.25) {
-                var y = this.graphOriginY - p * this.graphHeight;
-
-                graphics.moveTo(this.graphOriginX, y);
-                graphics.lineTo(this.graphOriginX + this.graphWidth, y);    
-            }
-
-            this.yAxisLabels = new PIXI.Container();
-
-            this.displayObject.addChild(graphics);
-            this.displayObject.addChild(label);
-            this.displayObject.addChild(this.yAxisLabels);
-        },
-
-        initHalfLifeMarkers: function() {
-            this.halfLifeLineGraphics = new PIXI.Graphics();
-            this.halfLifeLabels = new PIXI.Container();
-
-            this.displayObject.addChild(this.halfLifeLineGraphics);
-            this.displayObject.addChild(this.halfLifeLabels);
-        },
-
-        initData: function() {
-            if (this.lineMode) {
-                this._lastX = 0;
-                this._lastActivePercent = 1;
-            }
-
-            this.dataGraphics = new PIXI.Graphics();
-
-            var mask = new PIXI.Graphics();
-            mask.beginFill();
-            mask.drawRect(this.graphOriginX, this.graphOriginY - this.graphHeight, this.graphWidth, this.graphHeight);
-            mask.endFill();
-
-            this.dataGraphics.mask = mask;
-
-            this.displayObject.addChild(this.dataGraphics);
-            this.displayObject.addChild(mask);
+            this.xAxisContainer.addChild(axisLine);
+            this.xAxisContainer.addChild(this.xAxisTicks);
+            this.xAxisContainer.addChild(this.xAxisTickLabels);
+            this.xAxisContainer.addChild(bottomAxisLabel);
+            this.xAxisContainer.addChild(topAxisLabel);
         },
 
         drawXAxisTicks: function() {
@@ -287,6 +274,41 @@ define(function(require) {
             label.resolution = this.getResolution();
 
             this.xAxisTickLabels.addChild(label);
+        },
+
+        drawYAxis: function() {
+            this.yAxisContainer.removeChildren();
+
+            var label = new PIXI.Text(this.yAxisLabelText, {
+                font: Constants.DecayProportionChartView.AXIS_LABEL_FONT,
+                fill: Constants.DecayProportionChartView.AXIS_LABEL_COLOR,
+                align: 'center'
+            });
+            label.resolution = this.getResolution();
+            label.x = this.graphOriginX - this.tickLabelsWidth;
+            label.y = this.graphOriginY - this.graphHeight / 2;
+            label.anchor.x = 0.5;
+            label.anchor.y = 1;
+            label.rotation = -Math.PI / 2;
+
+            // Draw axis line, border, and y-tick lines
+            var graphics = new PIXI.Graphics();
+            graphics.lineStyle(DecayProportionChartView.BORDER_WIDTH, Colors.parseHex(DecayProportionChartView.BORDER_COLOR), DecayProportionChartView.BORDER_ALPHA);
+            graphics.drawRect(this.graphOriginX, this.graphOriginY - this.graphHeight, this.graphWidth, this.graphHeight);
+
+            graphics.lineStyle(DecayProportionChartView.Y_VALUE_LINE_WIDTH, Colors.parseHex(DecayProportionChartView.Y_VALUE_LINE_COLOR), DecayProportionChartView.Y_VALUE_LINE_ALPHA);
+            for (var p = 0.25; p <= 0.75; p += 0.25) {
+                var y = this.graphOriginY - p * this.graphHeight;
+
+                graphics.moveTo(this.graphOriginX, y);
+                graphics.lineTo(this.graphOriginX + this.graphWidth, y);    
+            }
+
+            this.yAxisLabels = new PIXI.Container();
+
+            this.yAxisContainer.addChild(graphics);
+            this.yAxisContainer.addChild(label);
+            this.yAxisContainer.addChild(this.yAxisLabels);
         },
 
         drawYAxisLabels: function() {
