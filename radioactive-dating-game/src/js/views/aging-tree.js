@@ -82,6 +82,7 @@ define(function(require) {
 
         showTextures: function(texture1Index, texture2Index, percentOfTexture2) {
             this.sprite1.texture = this.textures[texture1Index];
+            this.sprite1.alpha = 1 - percentOfTexture2;
             this.sprite2.texture = this.textures[texture2Index];
             this.sprite2.alpha = percentOfTexture2;
         },

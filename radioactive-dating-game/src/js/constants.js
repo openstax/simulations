@@ -199,7 +199,7 @@ define(function (require) {
 
     var AgingTree = {};
 
-    AgingTree.FULL_GROWN_TREE_HEIGHT = 300; // Model units
+    AgingTree.FULL_GROWN_TREE_HEIGHT = 400; // Model units
     AgingTree.GROWTH_RATE = 1.03; // High number for faster growth.
     AgingTree.AGE_OF_NATURAL_DEATH = HalfLifeInfo.convertYearsToMs(1000);
     AgingTree.FADE_TO_DEAD_TREE_COUNT = 30; // Controls how long it takes for tree to die.
