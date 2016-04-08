@@ -37,12 +37,14 @@ define(function(require) {
 
             this.carbonButtonHeight = 40;
             this.carbonModePaddingTop = 90;
-            this.ratioModePaddingLeft = 130;
+            this.ratioModePaddingLeft = 114;
             this.ratioModeTickLabelsWidth = 86;
+            this.ratioModeYAxisLabelText = '\u00B9\u2074C / \u00B9\u00B2C Ratio';
 
             this.defaultPaddingTop = 45;
             this.defaultPaddingLeft = 90;
             this.defaultTickLabelsWidth = 46;
+            this.defaultYAxisLabelText = 'Percent of\nElement Remaining';
 
             DecayProportionChartView.prototype.initialize.apply(this, [options]);            
 
@@ -170,7 +172,7 @@ define(function(require) {
         updateGraph: function() {
             this.drawXAxis();
             this.drawYAxis();
-            this.updateLayout();
+            this.setTimeParameters(this.timeSpan, this.halfLife);
         },
 
         update: function(time, deltaTime, paused) {
@@ -194,7 +196,7 @@ define(function(require) {
 
         setCarbonMode: function() {
             this.carbonMode = true;
-            
+
             this.carbonControls.visible = true;
             this.paddingTop = this.carbonModePaddingTop;
             this.calculateGraphDimensions();
@@ -220,6 +222,7 @@ define(function(require) {
 
             this.paddingLeft = this.defaultPaddingLeft;
             this.tickLabelsWidth = this.defaultTickLabelsWidth;
+            this.yAxisLabelText = this.defaultYAxisLabelText;
             this.calculateGraphDimensions();
 
             this.ratioMode = false;
@@ -235,6 +238,7 @@ define(function(require) {
 
             this.paddingLeft = this.ratioModePaddingLeft;
             this.tickLabelsWidth = this.ratioModeTickLabelsWidth;
+            this.yAxisLabelText = this.ratioModeYAxisLabelText;
             this.calculateGraphDimensions();
 
             this.ratioMode = true;
