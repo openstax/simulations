@@ -54,7 +54,7 @@ define(function(require) {
         },
 
         update: function(time, deltaTime, paused) {
-            if (!paused) {
+            if (!paused && this.simulation.time > 0) {
                 this.drawCurrentGraphData();
             }
         },
