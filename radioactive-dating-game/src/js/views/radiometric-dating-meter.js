@@ -84,6 +84,7 @@ define(function(require) {
 
             this.listenTo(this.model, 'change:nucleusType', this.nucleusTypeChanged);
             this.listenTo(this.model, 'change:position',    this.updatePosition);
+            this.listenTo(this.simulation, 'change:mode',   this.simulationModeChanged);
         },
 
         /**
@@ -195,16 +196,20 @@ define(function(require) {
             }
 
             if (!paused) {
-                var percentage = this.model.getPercentageOfDatingElementRemaining();
-                if (percentage !== this._percentage) {
-                    this._percentage = percentage;
-                    if (isNaN(percentage))
-                        this.$readoutValue.html('--');
-                    else if (Math.round(percentage) === 100)
-                        this.$readoutValue.html(Math.round(percentage) + '%');
-                    else
-                        this.$readoutValue.html(percentage.toFixed(1) + '%');
-                }
+                this.updateReadout();
+            }
+        },
+
+        updateReadout: function() {
+            var percentage = this.model.getPercentageOfDatingElementRemaining();
+            if (percentage !== this._percentage) {
+                this._percentage = percentage;
+                if (isNaN(percentage))
+                    this.$readoutValue.html('--');
+                else if (Math.round(percentage) === 100)
+                    this.$readoutValue.html(Math.round(percentage) + '%');
+                else
+                    this.$readoutValue.html(percentage.toFixed(1) + '%');
             }
         },
 
@@ -219,6 +224,19 @@ define(function(require) {
             this.updatePosition(this.model, this.model.get('position'));
 
             this.drawCord();
+        },
+
+        updatePosition: function(model, position) {
+            var viewPosition = this.mvt.modelToView(position);
+            this.geigerProbe.x = viewPosition.x;
+            this.geigerProbe.y = viewPosition.y;
+            this.drawCord();
+
+            // If we're paused, we still want it to work, but this is overkill if it's not paused.
+            if (this.simulation.get('paused')) {
+                this.simulation.updateMeter();
+                this.updateReadout();
+            }
         },
 
         dragStart: function(event) {
@@ -278,10 +296,12 @@ define(function(require) {
 
         setTargetToObjects: function() {
             this.model.set('measurementMode', RadiometricDatingMeter.OBJECTS);
+            this.updateReadout();
         },
 
         setTargetToAir: function() {
             this.model.set('measurementMode', RadiometricDatingMeter.AIR);
+            this.updateReadout();
         },
 
         selectCarbon14: function() {
@@ -295,13 +315,11 @@ define(function(require) {
         nucleusTypeChanged: function(model, nucleusType) {
             var text = (nucleusType === NucleusType.CARBON_14) ? 'Carbon-14' : 'Uranium-238';
             this.$el.find('.readout-label').html(text + ':');
+            this.updateReadout();
         },
 
-        updatePosition: function(model, position) {
-            var viewPosition = this.mvt.modelToView(position);
-            this.geigerProbe.x = viewPosition.x;
-            this.geigerProbe.y = viewPosition.y;
-            this.drawCord();
+        simulationModeChanged: function() {
+            this.updateReadout();
         }
 
     });

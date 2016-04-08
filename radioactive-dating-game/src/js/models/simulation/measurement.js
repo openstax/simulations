@@ -79,6 +79,9 @@ define(function (require, exports, module) {
             // Reset flags
             this._simulationStarted = false;
 
+            // Update the meter because we're probably paused
+            this.updateMeter();
+
             // Trigger the reset event
             this.trigger('reset');
         },
@@ -124,7 +127,7 @@ define(function (require, exports, module) {
             else
                 this.updateTreeMode(time, deltaTime);
 
-            this.meter.determineItemBeingTouched(this.items.models);
+            this.updateMeter(time, deltaTime);
         },
 
         updateTreeMode: function(time, deltaTime) {
@@ -199,6 +202,10 @@ define(function (require, exports, module) {
 
             for (i = 0; i < this.flyingRocks.length; i++)
                 this.flyingRocks.at(i).update(time, deltaTime);
+        },
+
+        updateMeter: function(time, deltaTime) {
+            this.meter.determineItemBeingTouched(this.items.models);
         },
 
         getRockEmissionInterval: function() {
