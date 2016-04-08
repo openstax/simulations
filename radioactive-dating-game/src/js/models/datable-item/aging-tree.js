@@ -18,7 +18,8 @@ define(function (require) {
 
         defaults: _.extend({}, AnimatedDatableItem.prototype.defaults, {
             isOrganic: true,
-            dead: 0 // How dead it is from 0 to 1
+            dead: 0, // How dead it is from 0 to 1
+            decomposed: 0 // How decomposed does it look
         }),
 
         initialize: function(attributes, options) {
@@ -30,10 +31,11 @@ define(function (require) {
 
         initAnimationParameters: function() {
             this._closurePossibleSent = false;
-            this._fadeCounter = AgingTree.FADE_TO_DEAD_TREE_COUNT;
+            this._dyingCounter = AgingTree.DEATH_COUNT;
             this._swayCounter = AgingTree.SWAY_COUNT;
             this._fallCounter = AgingTree.FALL_COUNT;
             this._bounceCounter = AgingTree.BOUNCE_COUNT;
+            this._decomposeCounter = AgingTree.DECOMPOSE_COUNT;
             this._previousAngle;
         },
 
@@ -57,14 +59,14 @@ define(function (require) {
             }
             
             // Handle death by natural causes.
-            if (this.get('closureState') !== AgingTree.CLOSED && age > AgingTree.AGE_OF_NATURAL_DEATH && this._fadeCounter > 0) {
-                var fadeAmount = 1 / AgingTree.FADE_TO_DEAD_TREE_COUNT;
+            if (this.get('closureState') !== AgingTree.CLOSED && age > AgingTree.AGE_OF_NATURAL_DEATH && this._dyingCounter > 0) {
+                var fadeAmount = 1 / AgingTree.DEATH_COUNT;
                 this.set('dead', Math.min(this.get('dead') + fadeAmount, 1));
 
-                this._fadeCounter--;
+                this._dyingCounter--;
                 
                 // Time to die, a.k.a. to radiometrically "close".
-                if (this._fadeCounter === 0)
+                if (this._dyingCounter === 0)
                     this.set('closureState', AgingTree.CLOSED);
             }
 
@@ -117,6 +119,16 @@ define(function (require) {
                         this.set('rotation', this._previousAngle);
                     }
                     this._bounceCounter--;
+                }
+
+                if (this._bounceCounter === 0 && this._decomposeCounter > 0) {
+                    var decomposeAmount = 1 / AgingTree.DECOMPOSE_COUNT;
+                    this.set('decomposed', Math.min(this.get('decomposed') + decomposeAmount, 1));
+
+                    this._decomposeCounter--;
+                    
+                    if (this._decomposeCounter === 0)
+                        this.set('decomposed', 1);
                 }
             }
         },

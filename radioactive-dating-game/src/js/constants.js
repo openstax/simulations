@@ -202,13 +202,14 @@ define(function (require) {
     AgingTree.FULL_GROWN_TREE_HEIGHT = 400; // Model units
     AgingTree.GROWTH_RATE = 1.03; // High number for faster growth.
     AgingTree.AGE_OF_NATURAL_DEATH = HalfLifeInfo.convertYearsToMs(1000);
-    AgingTree.FADE_TO_DEAD_TREE_COUNT = 30; // Controls how long it takes for tree to die.
+    AgingTree.DEATH_COUNT = 30; // Controls how long it takes for tree to die.
     AgingTree.SWAY_COUNT = 30; // Controls how long tree sways before falling over.
     AgingTree.MAX_SWAY_DEFLECTION = 0.01; // In radians, controls amount of sway.
     AgingTree.FALL_COUNT = 30; // Controls how long it takes the tree to fall over.
     AgingTree.FALL_ANGLE_SCALE_FACTOR = Math.PI / (AgingTree.FALL_COUNT * AgingTree.FALL_COUNT);
     AgingTree.BOUNCE_COUNT = 9; // Controls length of bounce after falling.
     AgingTree.BOUNCE_PROPORTION = 0.01; // Controls magnitude of bounds.
+    AgingTree.DECOMPOSE_COUNT = 60; // Controls how long it takes for the tree to decompose
 
     Constants.AgingTree = AgingTree;
 

@@ -24,7 +24,7 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:dead',     this.updateGraphics);
+            this.listenTo(this.model, 'change:dead change:decomposed', this.updateGraphics);
             this.listenTo(this.model, 'change:width',    this.updateScale);
             this.listenTo(this.model, 'change:position', this.updatePosition);
             this.listenTo(this.model, 'change:rotation', this.updateRotation);
@@ -69,22 +69,26 @@ define(function(require) {
          */
         updateGraphics: function() {
             var dead = this.model.get('dead');
-            var spriteChangePercent = 0.5;
+            var decomposed = this.model.get('decomposed');
 
-            if (dead < spriteChangePercent)
-                this.showTextures(0, 1, dead / spriteChangePercent);
+            if (dead < 1)
+                this.fadeTextures(0, 1, dead);
             else
-                this.showTextures(1, 2, (dead - spriteChangePercent) / (1 - spriteChangePercent));
-
-            if (dead === 1)
-                this.sprite1.visible = false;
+                this.fadeOutTexture(1, 2, decomposed);
         },
 
-        showTextures: function(texture1Index, texture2Index, percentOfTexture2) {
+        fadeTextures: function(texture1Index, texture2Index, percentOfTexture2) {
             this.sprite1.texture = this.textures[texture1Index];
             this.sprite1.alpha = 1 - percentOfTexture2;
             this.sprite2.texture = this.textures[texture2Index];
             this.sprite2.alpha = percentOfTexture2;
+        },
+
+        fadeOutTexture: function(texture1Index, texture2Index, percentOfTexture2) {
+            this.sprite1.texture = this.textures[texture1Index];
+            this.sprite1.alpha = 1 - percentOfTexture2;
+            this.sprite2.texture = this.textures[texture2Index];
+            this.sprite2.alpha = 1;
         },
 
         updateScale: function() {
