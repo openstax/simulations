@@ -32,9 +32,15 @@ define(function (require) {
             MotionObject.prototype.initialize.apply(this, [attributes, options]);
 
             this.age = this.get('age');
+            this.startingAttributes = this.toJSON();
 
             this._bounds = new Rectangle();
             this._vector = new Vector2();
+        },
+
+        reset: function() {
+            this.set(this.startingAttributes);
+            this.age = this.get('age');
         },
 
         rotate: function(rotationDelta) {
@@ -83,6 +89,10 @@ define(function (require) {
             var relativeBounds = this.getRelativeBounds();
 
             return relativeBounds.contains(rotatedRelativePoint);
+        },
+
+        isOrganic: function() {
+            return this.get('isOrganic');
         }
 
     }, {
@@ -116,6 +126,16 @@ define(function (require) {
         }
 
     });
+
+
+    DatableItem.DATABLE_AIR = new DatableItem({
+        name: 'Datable Air', 
+        width: 0, 
+        rotation: 0, 
+        age: 0, 
+        isOrganic: true
+    });
+
 
     return DatableItem;
 });

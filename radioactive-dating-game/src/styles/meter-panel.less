@@ -1,0 +1,36 @@
+@import "../../../nuclear-physics/node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "../../../nuclear-physics/src/styles/mixins.less";
+
+.meter-panel {
+    .panel();
+    .user-select(none);
+    position: absolute;
+
+    .readout-wrapper {
+        font-size: 120%;
+        margin-bottom: 12px;
+
+        .readout-label {
+            color: #3DA937;
+            font-weight: 500;
+        }
+
+        .readout-value {
+            float: right;
+            text-align: right;
+        }
+    }
+
+    .radio-buttons {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            margin-bottom: 4px;
+        }
+    }
+}

@@ -16,7 +16,7 @@ define(function(require) {
     var AtomCanisterView               = require('views/atom-canister');
     var SphericalNucleusCollectionView = require('views/spherical-nucleus-collection');
 
-    var DecayRatesGraphView = require('radioactive-dating-game/views/decay-rates-graph');
+    var DecayRatesChartView = require('radioactive-dating-game/views/decay-proportion-chart/decay-rates');
 
     var Constants = require('constants');
 
@@ -106,7 +106,7 @@ define(function(require) {
             this.initMVT();
             this.initAtomCanister();
             this.initNucleusCollectionView();
-            this.initDecayRatesGraphView();
+            this.initDecayRatesChartView();
 
             this.stage.addChild(this.dummyLayer);
         },
@@ -172,8 +172,8 @@ define(function(require) {
             this.nucleusLayer.addChild(this.nucleusCollectionView.displayObject);
         },
 
-        initDecayRatesGraphView: function() {
-            this.decayRatesGraphView = new DecayRatesGraphView({
+        initDecayRatesChartView: function() {
+            this.decayRatesGraphView = new DecayRatesChartView({
                 simulation: this.simulation,
                 width: this.getWidthBetweenPanels()
             });

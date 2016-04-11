@@ -82,13 +82,35 @@ define(function (require) {
     MeasurementSimulation.FLYING_ROCK_END_EMISSION_TIME   = 5000; // Simulation milliseconds
     MeasurementSimulation.ERUPTION_END_TIME               = 6000; // Simulation milliseconds
 
+    // Constants that control how time accelerates after the volcano has
+    // erupted.
+    MeasurementSimulation.TIME_ACC_COUNTER_RESET_VAL = 50;
+    MeasurementSimulation.TIME_ACC_INCREMENT = (MeasurementSimulation.FINAL_ROCK_AGING_RATE - MeasurementSimulation.INITIAL_ROCK_AGING_RATE) / (Math.pow(2, MeasurementSimulation.TIME_ACC_COUNTER_RESET_VAL) - 1); 
+
     MeasurementSimulation.VOLCANO_TOP_POSITION = new Vector2(140, 250);
+    MeasurementSimulation.VOLCANO_POSITION = new Vector2(140, 210);
+    MeasurementSimulation.VOLCANO_WIDTH = 120;
+    MeasurementSimulation.VOLCANO_HEIGHT = 112;
     MeasurementSimulation.FLYING_ROCK_WIDTH = 8;
 
     MeasurementSimulation.INITIAL_TREE_WIDTH = 10;
     MeasurementSimulation.INITIAL_AGING_ROCK_WIDTH = 10;
 
     Constants.MeasurementSimulation = MeasurementSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                       RADIOMETRIC DATING METER                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var RadiometricDatingMeter = {};
+
+    RadiometricDatingMeter.OBJECTS = 0;
+    RadiometricDatingMeter.AIR = 1;
+
+    Constants.RadiometricDatingMeter = RadiometricDatingMeter;
 
 
     /*************************************************************************
@@ -157,41 +179,54 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                               VOLCANO                               **
+     **                                                                     **
+     *************************************************************************/
+
+    var Volcano = {};
+
+    Volcano.PRE_ERUPTION_INITIAL_AGE = HalfLifeInfo.convertYearsToMs(1E9);
+
+    Constants.Volcano = Volcano;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                       DECAY RATES GRAPH VIEW                        **
      **                                                                     **
      *************************************************************************/
 
-    var DecayRatesGraphView = {};
+    var DecayProportionChartView = {};
 
-    DecayRatesGraphView.AXIS_LABEL_FONT    = Constants.NucleusDecayChart.AXIS_LABEL_FONT;
-    DecayRatesGraphView.AXIS_LABEL_COLOR   = Constants.NucleusDecayChart.AXIS_LABEL_COLOR;
-    DecayRatesGraphView.AXIS_LINE_WIDTH    = Constants.NucleusDecayChart.AXIS_LINE_WIDTH;
-    DecayRatesGraphView.AXIS_LINE_COLOR    = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
-    DecayRatesGraphView.BORDER_COLOR       = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
-    DecayRatesGraphView.BORDER_WIDTH       = 1;
-    DecayRatesGraphView.BORDER_ALPHA       = 0.7;
-    DecayRatesGraphView.Y_VALUE_LINE_COLOR = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
-    DecayRatesGraphView.Y_VALUE_LINE_WIDTH = 1;
-    DecayRatesGraphView.Y_VALUE_LINE_ALPHA = 0.1;
-    DecayRatesGraphView.TICK_MARK_LENGTH   = Constants.NucleusDecayChart.TICK_MARK_LENGTH;
-    DecayRatesGraphView.TICK_MARK_WIDTH    = Constants.NucleusDecayChart.TICK_MARK_WIDTH;
-    DecayRatesGraphView.TICK_MARK_COLOR    = Constants.NucleusDecayChart.TICK_MARK_COLOR;
-    DecayRatesGraphView.SMALL_LABEL_FONT   = Constants.NucleusDecayChart.SMALL_LABEL_FONT;
-    DecayRatesGraphView.LARGE_LABEL_FONT   = Constants.NucleusDecayChart.LARGE_LABEL_FONT;
-    DecayRatesGraphView.ISOTOPE_FONT_SIZE  = Constants.NucleusDecayChart.ISOTOPE_FONT_SIZE;
+    DecayProportionChartView.AXIS_LABEL_FONT    = Constants.NucleusDecayChart.AXIS_LABEL_FONT;
+    DecayProportionChartView.AXIS_LABEL_COLOR   = Constants.NucleusDecayChart.AXIS_LABEL_COLOR;
+    DecayProportionChartView.AXIS_LINE_WIDTH    = Constants.NucleusDecayChart.AXIS_LINE_WIDTH;
+    DecayProportionChartView.AXIS_LINE_COLOR    = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
+    DecayProportionChartView.BORDER_COLOR       = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
+    DecayProportionChartView.BORDER_WIDTH       = 1;
+    DecayProportionChartView.BORDER_ALPHA       = 0.7;
+    DecayProportionChartView.Y_VALUE_LINE_COLOR = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
+    DecayProportionChartView.Y_VALUE_LINE_WIDTH = 1;
+    DecayProportionChartView.Y_VALUE_LINE_ALPHA = 0.1;
+    DecayProportionChartView.TICK_MARK_LENGTH   = Constants.NucleusDecayChart.TICK_MARK_LENGTH;
+    DecayProportionChartView.TICK_MARK_WIDTH    = Constants.NucleusDecayChart.TICK_MARK_WIDTH;
+    DecayProportionChartView.TICK_MARK_COLOR    = Constants.NucleusDecayChart.TICK_MARK_COLOR;
+    DecayProportionChartView.SMALL_LABEL_FONT   = Constants.NucleusDecayChart.SMALL_LABEL_FONT;
+    DecayProportionChartView.LARGE_LABEL_FONT   = Constants.NucleusDecayChart.LARGE_LABEL_FONT;
+    DecayProportionChartView.ISOTOPE_FONT_SIZE  = Constants.NucleusDecayChart.ISOTOPE_FONT_SIZE;
 
-    DecayRatesGraphView.HALF_LIFE_LINE_WIDTH  = Constants.NucleusDecayChart.HALF_LIFE_LINE_WIDTH;
-    DecayRatesGraphView.HALF_LIFE_LINE_DASHES = Constants.NucleusDecayChart.HALF_LIFE_LINE_DASHES;
-    DecayRatesGraphView.HALF_LIFE_LINE_COLOR  = Constants.NucleusDecayChart.HALF_LIFE_LINE_COLOR;
-    DecayRatesGraphView.HALF_LIFE_LINE_ALPHA  = Constants.NucleusDecayChart.HALF_LIFE_LINE_ALPHA;
+    DecayProportionChartView.HALF_LIFE_LINE_WIDTH  = Constants.NucleusDecayChart.HALF_LIFE_LINE_WIDTH;
+    DecayProportionChartView.HALF_LIFE_LINE_DASHES = Constants.NucleusDecayChart.HALF_LIFE_LINE_DASHES;
+    DecayProportionChartView.HALF_LIFE_LINE_COLOR  = Constants.NucleusDecayChart.HALF_LIFE_LINE_COLOR;
+    DecayProportionChartView.HALF_LIFE_LINE_ALPHA  = Constants.NucleusDecayChart.HALF_LIFE_LINE_ALPHA;
 
-    DecayRatesGraphView.DECAY_LABEL_COLOR = Constants.NucleusDecayChart.DECAY_LABEL_COLOR
-    DecayRatesGraphView.DECAY_LABEL_FONT  = Constants.NucleusDecayChart.DECAY_LABEL_FONT
-    DecayRatesGraphView.DECAY_VALUE_FONT  = Constants.NucleusDecayChart.DECAY_VALUE_FONT
+    DecayProportionChartView.DECAY_LABEL_COLOR = Constants.NucleusDecayChart.DECAY_LABEL_COLOR
+    DecayProportionChartView.DECAY_LABEL_FONT  = Constants.NucleusDecayChart.DECAY_LABEL_FONT
+    DecayProportionChartView.DECAY_VALUE_FONT  = Constants.NucleusDecayChart.DECAY_VALUE_FONT
 
-    DecayRatesGraphView.POINT_RADIUS = 2;
+    DecayProportionChartView.POINT_RADIUS = 2;
 
-    Constants.DecayRatesGraphView = DecayRatesGraphView;
+    Constants.DecayProportionChartView = DecayProportionChartView;
 
 
     /*************************************************************************

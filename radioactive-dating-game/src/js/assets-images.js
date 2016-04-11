@@ -18,6 +18,9 @@ define(function (require) {
         MEASUREMENT_BACKGROUND:         'measurement-background.png',
         MEASUREMENT_BACKGROUND_VOLCANO: 'measurement-background-volcano.png',
 
-        SMOKE_PARTICLE: 'smoke-particle.png'
+        SMOKE_PARTICLE: 'smoke-particle.png',
+
+        AIR_PROBE:    'air-probe.png',
+        GEIGER_PROBE: 'geiger-probe.png'
     };
 });

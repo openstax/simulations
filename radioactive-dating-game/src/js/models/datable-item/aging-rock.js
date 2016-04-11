@@ -24,8 +24,6 @@ define(function (require) {
         initialize: function(attributes, options) {
             AnimatedDatableItem.prototype.initialize.apply(this, [attributes, options]);
 
-            this.startingAttributes = this.toJSON();
-
             // Set animation parameters
             this.initAnimationParameters();
         },
@@ -86,12 +84,6 @@ define(function (require) {
             }
 
             this._k = k;
-        },
-
-        reset: function() {
-            this.set(this.startingAttributes);
-            this.age = this.get('age');
-            this.initAnimationParameters();
         },
 
         animate: function(age, deltaTime) {

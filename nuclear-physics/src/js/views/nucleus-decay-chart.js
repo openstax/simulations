@@ -5,14 +5,13 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-                         require('common/v3/pixi/extensions');
+                         require('common/v3/pixi/create-drop-shadow');
                          require('common/v3/pixi/draw-stick-arrow');
                          require('common/v3/pixi/draw-arrow');
                          require('common/v3/pixi/dash-to');
     var AppView        = require('common/v3/app/app');
     var PixiView       = require('common/v3/pixi/view');
     var Colors         = require('common/colors/colors');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
     var Rectangle      = require('common/math/rectangle');
 
     var HalfLifeInfo  = require('models/half-life-info');
@@ -58,8 +57,8 @@ define(function(require) {
                 paddingRight: 15,
                 paddingTop: 15,
                 padding: 15,
-                bgColor: '#F89198',
-                bgAlpha: 1,
+                bgColor: '#fff',
+                bgAlpha: 0.2,
 
                 xAxisLabelText: 'Time (yrs)',
                 yAxisLabelText: 'Isotope',
@@ -118,23 +117,8 @@ define(function(require) {
         },
 
         initPanel: function() {
-            // Draw the shadow
-            var outline = new PiecewiseCurve()
-                .moveTo(0, 0)
-                .lineTo(this.width, 0)
-                .lineTo(this.width, this.height)
-                .lineTo(0, this.height)
-                .close();
-
-            var drawStyle = {
-                lineWidth: 11,
-                strokeStyle: 'rgba(0,0,0,0)',
-                shadowBlur: 11,
-                fillStyle: 'rgba(0,0,0,1)'
-            };
-
-            var shadow = PIXI.Sprite.fromPiecewiseCurve(outline, drawStyle);
-            shadow.alpha = 0.25;
+            var rectangle = new Rectangle(0, 0, this.width, this.height);
+            var shadow = PIXI.createDropShadow(rectangle);
             this.displayObject.addChild(shadow);
 
             // Draw the panel
