@@ -24,7 +24,8 @@ define(function (require) {
 
         events: _.extend({}, RadioactiveDatingGameSimView.prototype.events, {
             'click #object-tree' : 'treeSelected',
-            'click #object-rock' : 'rockSelected'
+            'click #object-rock' : 'rockSelected',
+            'click .reset-btn'   : 'reset'
         }),
 
         /**
@@ -46,14 +47,16 @@ define(function (require) {
 
             RadioactiveDatingGameSimView.prototype.initialize.apply(this, [options]);
 
-            this.listenTo(this.simulation, 'change:aging', this.agingChanged);
+            this.listenTo(this.simulation, 'reset', this.updateTime);
         },
 
         /**
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new MeasurementSimulation();
+            this.simulation = new MeasurementSimulation({
+                paused: true
+            });
         },
 
         /**
@@ -103,6 +106,10 @@ define(function (require) {
             return this;
         },
 
+        reset: function() {
+            this.simulation.reset();
+        },
+
         update: function(time, deltaTime) {
             RadioactiveDatingGameSimView.prototype.update.apply(this, arguments);
 
@@ -110,13 +117,7 @@ define(function (require) {
         },
 
         updateTime: function() {
-            if (this.simulation.isAging())
-                this.$time.html(TimeFormatter.formatTime(this.simulation.getAdjustedTime(), true));
-        },
-
-        agingChanged: function(simulation, aging) {
-            if (!aging)
-                this.$time.html(TimeFormatter.formatTime(this.simulation.getAdjustedTime(), true));
+            this.$time.html(TimeFormatter.formatTime(this.simulation.getAdjustedTime(), true));
         },
 
         treeSelected: function() {

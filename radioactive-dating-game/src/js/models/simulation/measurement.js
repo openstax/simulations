@@ -12,6 +12,7 @@ define(function (require, exports, module) {
     var FlyingRock             = require('radioactive-dating-game/models/datable-item/flying-rock');
     var AgingRock              = require('radioactive-dating-game/models/datable-item/aging-rock');
     var Volcano                = require('radioactive-dating-game/models/datable-item/volcano');
+    var AgingTree              = require('radioactive-dating-game/models/datable-item/aging-tree');
     var AnimatedDatableItem    = require('radioactive-dating-game/models/datable-item/animated');
 
     /**
@@ -25,8 +26,7 @@ define(function (require, exports, module) {
     var MeasurementSimulation = ItemDatingSimulation.extend({
 
         defaults: _.extend({}, ItemDatingSimulation.prototype.defaults, {
-            mode: Constants.MeasurementSimulation.MODE_TREE,
-            aging: false
+            mode: Constants.MeasurementSimulation.MODE_TREE
         }),
 
         /**
@@ -35,7 +35,8 @@ define(function (require, exports, module) {
         initialize: function(attributes, options) {
             ItemDatingSimulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.on('change:mode', this.modeChanged);
+            this.on('change:mode',   this.modeChanged);
+            this.on('change:paused', this.pausedChanged);
         },
 
         /**
@@ -47,7 +48,9 @@ define(function (require, exports, module) {
             this.items = new Backbone.Collection();
             this.flyingRocks = new Backbone.Collection();
 
-            this.meter = new RadiometricDatingMeter();
+            this.meter = new RadiometricDatingMeter({
+                position: MeasurementSimulation.INITIAL_TREE_METER_POSITION
+            });
 
             this.volcano = new Volcano({
                 position: MeasurementSimulation.VOLCANO_POSITION,
@@ -57,33 +60,62 @@ define(function (require, exports, module) {
             });
         },
 
-        /**
-         * Resets the model components
-         */
-        resetComponents: function() {
-            ItemDatingSimulation.prototype.resetComponents.apply(this, arguments);
+        reset: function() {
+            // It's always paused at the start
+            this.pause();
+
+            // Reset sim time
+            this.time = 0;
+
+            // Clear datable items
+            this.items.reset();
+
+            // Do mode-specific resetting
+            if (this.get('mode') === MeasurementSimulation.MODE_TREE)
+                this.resetTreeMode();
+            else
+                this.resetRockMode();
+
+            // Reset flags
+            this._simulationStarted = false;
+
+            // Update the meter because we're probably paused
+            this.updateMeter();
+
+            // Trigger the reset event
+            this.trigger('reset');
         },
 
         resetRockMode: function() {
-            // Reset sim time
-            this.time = 0;
             // Clear rocks
             this.flyingRocks.reset();
+
             // Clear aging rock
             if (this.agingRock)
                 this.agingRock.destroy();
             this.agingRock = null;
+
             // Reset volcano and add it to items
             this.volcano.reset();
             this.items.add(this.volcano);
+
             // Set the position of the meter to where the rock will be
-            this.meter.setPosition(AgingRock.FINAL_X, AgingRock.FINAL_Y);
+            this.meter.setPosition(MeasurementSimulation.INITIAL_ROCK_METER_POSITION);
+
             // Reset counters and flags
-            this.set('aging', false);
             this._volcanoErupting = false;
-            this._rockCooling = false;
             this._rockEmissionCounter = MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME;
             this._timeAccelerationCount = 0;
+        },
+
+        resetTreeMode: function() {
+            // Clear aging tree
+            if (this.agingTree)
+                this.agingTree.destroy();
+            this.agingTree = null;
+
+            // Set the position of the meter to where the rock will be
+            this.meter.setPosition(MeasurementSimulation.INITIAL_TREE_METER_POSITION);
         },
 
         /**
@@ -95,11 +127,13 @@ define(function (require, exports, module) {
             else
                 this.updateTreeMode(time, deltaTime);
 
-            this.meter.determineItemBeingTouched(this.items.models);
+            this.updateMeter(time, deltaTime);
         },
 
         updateTreeMode: function(time, deltaTime) {
-
+            // Update the models
+            for (i = 0; i < this.items.length; i++)
+                this.items.at(i).update(time, deltaTime);
         },
 
         updateRockMode: function(time, deltaTime) {
@@ -136,7 +170,6 @@ define(function (require, exports, module) {
 
                 if (this.time >= MeasurementSimulation.ERUPTION_END_TIME) {
                     this._volcanoErupting = false;
-                    this._rockCooling = true;
                     this.trigger('eruption-end');
                 }
             }
@@ -171,6 +204,10 @@ define(function (require, exports, module) {
                 this.flyingRocks.at(i).update(time, deltaTime);
         },
 
+        updateMeter: function(time, deltaTime) {
+            this.meter.determineItemBeingTouched(this.items.models);
+        },
+
         getRockEmissionInterval: function() {
             var baseInterval = MeasurementSimulation.FLYING_ROCK_EMISSION_INTERVAL;
             var deviationWindow = MeasurementSimulation.FLYING_ROCK_EMISSION_INTERVAL * MeasurementSimulation.FLYING_ROCK_EMISSION_DEVIATION;
@@ -178,27 +215,40 @@ define(function (require, exports, module) {
         },
 
         getAdjustedTime: function() {
-            if (this.get('mode') === MeasurementSimulation.MODE_TREE) {
-                // Return the tree's getTotalAge()
-            }
-            else {
-                // Return the volcano's getTotalAge()
+            if (this.get('mode') === MeasurementSimulation.MODE_ROCK)
                 return this.volcano.getTotalAge();
-            }
-            return this.time;
+            else if (this.agingTree)
+                return this.agingTree.getTotalAge();
+            else
+                return this.time;
         },
 
         eruptVolcano: function() {
-            this.resetRockMode();
-            this.set('aging', true);
+            // Set internal flags to start the ball rolling
+            this._simulationStarted = true;
             this._volcanoErupting = true;
+            // Unpause it
+            this.play();
+            // Trigger an event for the eruption
             this.trigger('eruption-start');
         },
 
-        resetVolcano: function() {
-            this.resetRockMode();
-            this.trigger('eruption-end');
-            this.trigger('reset');
+        /**
+         * Start simulating the life of a tree
+         */
+        plantTree: function() {
+            // Set internal flags to start the ball rolling
+            this._simulationStarted = true;
+            // Unpause it
+            this.play();
+            // Create and add the tree
+            this.agingTree = new AgingTree({
+                position: MeasurementSimulation.INITIAL_TREE_POSITION, 
+                width:    MeasurementSimulation.INITIAL_TREE_WIDTH,
+                timeConversionFactor: MeasurementSimulation.INITIAL_TREE_AGING_RATE
+            });
+            this.items.add(this.agingTree);
+            this.trigger('tree-planted');
         },
 
         forceClosure: function() {
@@ -213,15 +263,7 @@ define(function (require, exports, module) {
         },
 
         modeChanged: function(simulation, mode) {
-            // Clear datable items
-            this.items.reset();
-
-            if (mode === MeasurementSimulation.MODE_TREE) {
-
-            }
-            else {
-                this.resetRockMode();
-            }
+            this.reset();
         },
 
         agingRockClosureStateChanged: function(item, closureState) {
@@ -233,8 +275,14 @@ define(function (require, exports, module) {
             this.volcano.set('closureState', closureState);
         },
 
-        isAging: function() {
-            return this.get('aging');
+        pausedChanged: function(simulation, paused) {
+            if (!paused && !this._simulationStarted) {
+                // We're unpausing it, and the starting event hasn't occurred yet, so make it happen.
+                if (this.get('mode') === MeasurementSimulation.MODE_TREE)
+                    this.plantTree();
+                else
+                    this.eruptVolcano();
+            }
         }
 
     }, Constants.MeasurementSimulation);

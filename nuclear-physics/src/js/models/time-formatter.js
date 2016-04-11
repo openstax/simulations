@@ -117,6 +117,8 @@ define(function (require) {
                     var digit = parseInt(chars.charAt(i));
                     if (digit == '2' || digit == '3')
                         exponentString += String.fromCharCode(parseInt('00B' + digit, 16));
+                    else if (digit == '1')
+                        exponentString += String.fromCharCode(parseInt('00B9', 16));
                     else
                         exponentString += String.fromCharCode(parseInt('207' + digit, 16));
                 }    

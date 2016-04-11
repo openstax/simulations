@@ -92,9 +92,12 @@ define(function (require) {
     MeasurementSimulation.VOLCANO_WIDTH = 120;
     MeasurementSimulation.VOLCANO_HEIGHT = 112;
     MeasurementSimulation.FLYING_ROCK_WIDTH = 8;
-
-    MeasurementSimulation.INITIAL_TREE_WIDTH = 10;
     MeasurementSimulation.INITIAL_AGING_ROCK_WIDTH = 10;
+    MeasurementSimulation.INITIAL_ROCK_METER_POSITION = new Vector2(-200, 88);
+
+    MeasurementSimulation.INITIAL_TREE_POSITION = new Vector2(-150, 130);
+    MeasurementSimulation.INITIAL_TREE_WIDTH = 60;
+    MeasurementSimulation.INITIAL_TREE_METER_POSITION = new Vector2(-150, 100);
 
     Constants.MeasurementSimulation = MeasurementSimulation;
 
@@ -188,6 +191,29 @@ define(function (require) {
     Volcano.PRE_ERUPTION_INITIAL_AGE = HalfLifeInfo.convertYearsToMs(1E9);
 
     Constants.Volcano = Volcano;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                              AGING TREE                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var AgingTree = {};
+
+    AgingTree.FULL_GROWN_TREE_HEIGHT = 400; // Model units
+    AgingTree.GROWTH_RATE = 1.03; // High number for faster growth.
+    AgingTree.AGE_OF_NATURAL_DEATH = HalfLifeInfo.convertYearsToMs(1000);
+    AgingTree.DEATH_COUNT = 30; // Controls how long it takes for tree to die.
+    AgingTree.SWAY_COUNT = 30; // Controls how long tree sways before falling over.
+    AgingTree.MAX_SWAY_DEFLECTION = 0.01; // In radians, controls amount of sway.
+    AgingTree.FALL_COUNT = 30; // Controls how long it takes the tree to fall over.
+    AgingTree.FALL_ANGLE_SCALE_FACTOR = Math.PI / (AgingTree.FALL_COUNT * AgingTree.FALL_COUNT);
+    AgingTree.BOUNCE_COUNT = 9; // Controls length of bounce after falling.
+    AgingTree.BOUNCE_PROPORTION = 0.01; // Controls magnitude of bounds.
+    AgingTree.DECOMPOSE_COUNT = 60; // Controls how long it takes for the tree to decompose
+
+    Constants.AgingTree = AgingTree;
 
 
     /*************************************************************************
