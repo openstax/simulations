@@ -21,6 +21,8 @@ define(function (require) {
         SMOKE_PARTICLE: 'smoke-particle.png',
 
         AIR_PROBE:    'air-probe.png',
-        GEIGER_PROBE: 'geiger-probe.png'
+        GEIGER_PROBE: 'geiger-probe.png',
+
+        DATING_GAME_BACKGROUND: 'dating-game-background.png'
     };
 });
