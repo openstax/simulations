@@ -16,6 +16,7 @@ define(function(require) {
     var RadiometricDatingMeterView          = require('radioactive-dating-game/views/radiometric-dating-meter');
     var LandscapeView                       = require('radioactive-dating-game/views/landscape');
     var DatingGameLandscapeView             = require('radioactive-dating-game/views/landscape/dating-game');
+    var DatableItemView                     = require('radioactive-dating-game/views/datable-item');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -41,7 +42,7 @@ define(function(require) {
         },
 
         initMVT: function() {
-            this.mvt = LandscapeView.createMVT(this.width, this.height);
+            this.mvt = DatingGameLandscapeView.createMVT(this.width, this.height);
         },
 
         initGraphics: function() {
@@ -49,6 +50,7 @@ define(function(require) {
 
             this.initMVT();
             this.initBackground();
+            this.initItems();
             this.initRadiometricDatingMeter();
             this.initDecayProportionGraph();
         },
@@ -63,6 +65,17 @@ define(function(require) {
 
             this.stage.addChild(this.landscape.displayObject);
             this.$ui.append(this.landscape.renderElement().el);
+        },
+
+        initItems: function() {
+            for (var i = 0; i < this.simulation.items.length; i++) {
+                var itemViews = new DatableItemView({
+                    model: this.simulation.items.at(i),
+                    mvt: this.mvt
+                });
+
+                this.stage.addChild(itemViews.displayObject);
+            }
         },
 
         initRadiometricDatingMeter: function() {

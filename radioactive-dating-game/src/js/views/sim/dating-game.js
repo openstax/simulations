@@ -6,7 +6,7 @@ define(function (require) {
 
     var TimeFormatter = require('models/time-formatter');
 
-    var MeasurementSimulation = require('radioactive-dating-game/models/simulation/measurement');
+    var DatingGameSimulation = require('radioactive-dating-game/models/simulation/dating-game');
 
     var RadioactiveDatingGameSimView = require('radioactive-dating-game/views/sim');
     var DatingGameSceneView          = require('radioactive-dating-game/views/scene/dating-game');
@@ -48,7 +48,7 @@ define(function (require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new MeasurementSimulation();
+            this.simulation = new DatingGameSimulation();
         },
 
         /**

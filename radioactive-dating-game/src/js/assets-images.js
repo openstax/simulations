@@ -12,6 +12,9 @@ define(function (require) {
         ROCK_A_2:  'rock-a-2.png',
         ROCK_B_0:  'rock-b-0.png',
         ROCK_C_0:  'rock-c-0.png',
+        ROCK_D:    'rock-d.png',
+        ROCK_E:    'rock-e.png',
+        ROCK_F:    'rock-f.png',
 
         TREE_ICON: 'tree-icon.png',
 
@@ -23,6 +26,16 @@ define(function (require) {
         AIR_PROBE:    'air-probe.png',
         GEIGER_PROBE: 'geiger-probe.png',
 
-        DATING_GAME_BACKGROUND: 'dating-game-background.png'
+        DATING_GAME_BACKGROUND: 'dating-game-background.png',
+
+        HOUSE:            'village-house.png',
+        TRILOBYTE_FOSSIL: 'trilobyte_fossil.png',
+        SKULL_ANIMAL:     'longhorn-skull.png',
+        FISH_FOSSIL:      'fish_fossil.png',
+        FISH_BONES:       'fish_bones.png',
+        DINOSAUR_SKULL:   'dinosaur_skull.png',
+        HUMAN_SKULL:      'skull_human.png',
+        CUP:              'cup.png',
+        BONE:             'bone.png'
     };
 });

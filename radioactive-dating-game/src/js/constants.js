@@ -42,7 +42,7 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                        HALF-LIFE SIMULATION                         **
+     **                       DECAY RATES SIMULATION                        **
      **                                                                     **
      *************************************************************************/
 
@@ -100,6 +100,19 @@ define(function (require) {
     MeasurementSimulation.INITIAL_TREE_METER_POSITION = new Vector2(-150, 100);
 
     Constants.MeasurementSimulation = MeasurementSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                        HALF-LIFE SIMULATION                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var DatingGameSimulation = {};
+
+    DatingGameSimulation.INITIAL_METER_POSITION = new Vector2(540, 180);
+
+    Constants.DatingGameSimulation = DatingGameSimulation;
 
 
     /*************************************************************************

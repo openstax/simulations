@@ -1,0 +1,94 @@
+define(function (require, exports, module) {
+
+    'use strict';
+
+    var _        = require('underscore');
+    var Backbone = require('backbone');
+
+    var Vector2 = require('common/math/vector2');
+
+    var HalfLifeInfo = require('models/half-life-info');
+
+    var ItemDatingSimulation   = require('radioactive-dating-game/models/simulation/item-dating');
+    var RadiometricDatingMeter = require('radioactive-dating-game/models/radiometric-dating-meter');
+    var DatableItem            = require('radioactive-dating-game/models/datable-item');
+
+    /**
+     * Constants
+     */
+    var Constants = require('constants');
+    var Assets = require('assets');
+
+    /**
+     * Simulation model for multi-nucleus radioactive-dating-game simulation
+     */
+    var DatingGameSimulation = ItemDatingSimulation.extend({
+
+        defaults: _.extend({}, ItemDatingSimulation.prototype.defaults, {
+            
+        }),
+
+        /**
+         * Initializes the models used in the simulation
+         */
+        initialize: function(attributes, options) {
+            ItemDatingSimulation.prototype.initialize.apply(this, [attributes, options]);
+        },
+
+        /**
+         * Initializes the models used in the simulation
+         */
+        initComponents: function() {
+            ItemDatingSimulation.prototype.initComponents.apply(this, arguments);
+
+            this.items = new Backbone.Collection();
+
+            var Images = Assets.Images;
+            var PI = Math.PI;
+                
+            // Add the datable objects.
+            // Params:    name,                 image file,              position,              width, rotation, age,                                isOrganic
+            this.addItem('House',               Images.HOUSE,            new Vector2( 780, 400),   130,      0, HalfLifeInfo.convertYearsToMs(75),      true);
+            this.addItem('Trilobyte',           Images.TRILOBYTE_FOSSIL, new Vector2(   6, -11.25), 25,      0, HalfLifeInfo.convertYearsToMs(309.6E6), true);
+            this.addItem('Animal Skull',        Images.SKULL_ANIMAL,     new Vector2( 140, 310),    70, PI/4-1, HalfLifeInfo.convertYearsToMs(150),     true);
+            this.addItem('Living Tree',         Images.TREE_1,           new Vector2( 240, 400),   130,      0, 0,                                      true);
+            this.addItem('Distant Living Tree', Images.TREE_1,           new Vector2( 530, 386),    30,      0, 0,                                      true);
+            this.addItem('Fish Fossil',         Images.FISH_FOSSIL,      new Vector2( -20,  -8),    70,      0, HalfLifeInfo.convertYearsToMs(28E6),    true);
+            this.addItem('Dead Tree',           Images.TREE_3,           new Vector2(1060, 320),   220,   PI/2, HalfLifeInfo.convertYearsToMs(220),     true);
+            this.addItem('Fish Bones',          Images.FISH_BONES,       new Vector2(  10,  -4.5),  50,      0, HalfLifeInfo.convertYearsToMs(16E3),    true);
+            this.addItem('Rock 1',              Images.ROCK_B_0,         new Vector2(  -4,  -8),    30,      0, HalfLifeInfo.convertYearsToMs(137E6),   false);
+            this.addItem('Rock 2',              Images.ROCK_C_0,         new Vector2( -15, -11),    15,      0, HalfLifeInfo.convertYearsToMs(261E6),   false);
+            this.addItem('Rock 3',              Images.ROCK_D,           new Vector2( -20, -14.5),  22.5,    0, HalfLifeInfo.convertYearsToMs(448.5E6), false);
+            this.addItem('Rock 4',              Images.ROCK_E,           new Vector2(  -5, -14.5),  15,      0, HalfLifeInfo.convertYearsToMs(723E6),   false);
+            this.addItem('Rock 5',              Images.ROCK_F,           new Vector2(  16, -14.5),  20,      0, HalfLifeInfo.convertYearsToMs(1.25E9),  false);
+            this.addItem('Dinosaur Skull',      Images.DINOSAUR_SKULL,   new Vector2(  14,  -7.5),  40,      0, HalfLifeInfo.convertYearsToMs(155E6),   true);
+            this.addItem('Human Skull',         Images.HUMAN_SKULL,      new Vector2(  20,  -1.5),  24,      0, HalfLifeInfo.convertYearsToMs(2200),    true);
+            this.addItem('Wooden Cup',          Images.CUP,              new Vector2(   3,  -1.85), 17,  -PI/3, HalfLifeInfo.convertYearsToMs(1035),    true);
+            this.addItem('Bone',                Images.BONE,             new Vector2( 330,  246),   70,      0, HalfLifeInfo.convertYearsToMs(1450),    true);
+            this.addItem('Human Skull',         Images.HUMAN_SKULL,      new Vector2( -10,  -4.5),  20,      1, HalfLifeInfo.convertYearsToMs(40E3),    true);
+            
+            this.meter = new RadiometricDatingMeter({
+                position: DatingGameSimulation.INITIAL_METER_POSITION
+            });
+        },
+
+        addItem: function(name, image, position, width, rotation, age, isOrganic) {
+            this.items.add(new DatableItem({
+                name: name,
+                image: image,
+                position: position,
+                width: width,
+                rotation: rotation,
+                age: age,
+                isOrganic: isOrganic
+            }));
+        },
+
+        reset: function() {
+            
+        }
+
+    }, Constants.DatingGameSimulation);
+
+    return DatingGameSimulation;
+});
