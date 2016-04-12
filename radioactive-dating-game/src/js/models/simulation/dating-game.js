@@ -62,8 +62,8 @@ define(function (require, exports, module) {
             this.addItem('Rock 4',              Images.ROCK_B,           new Vector2( 600,  24),    46,      0, HalfLifeInfo.convertYearsToMs(723E6),   false);
             this.addItem('Rock 5',              Images.ROCK_C,           new Vector2( 900,  24),    46,      0, HalfLifeInfo.convertYearsToMs(1.25E9),  false);
             this.addItem('Dinosaur Skull',      Images.DINOSAUR_SKULL,   new Vector2( 960, 134),    80,      0, HalfLifeInfo.convertYearsToMs(155E6),   true);
-            this.addItem('Human Skull',         Images.HUMAN_SKULL,      new Vector2( 960, 250),    40,      0, HalfLifeInfo.convertYearsToMs(2200),    true);
-            this.addItem('Wooden Cup',          Images.CUP,              new Vector2( 700, 246),    40,  -PI/3, HalfLifeInfo.convertYearsToMs(1035),    true);
+            this.addItem('Human Skull',         Images.HUMAN_SKULL,      new Vector2( 960, 250),    30,      0, HalfLifeInfo.convertYearsToMs(2200),    true);
+            this.addItem('Wooden Cup',          Images.CUP,              new Vector2( 700, 246),    30,  -PI/3, HalfLifeInfo.convertYearsToMs(1035),    true);
             this.addItem('Bone',                Images.BONE,             new Vector2( 330, 246),    70,      0, HalfLifeInfo.convertYearsToMs(1450),    true);
             this.addItem('Human Skull',         Images.HUMAN_SKULL,      new Vector2( 450, 190),    30,      1, HalfLifeInfo.convertYearsToMs(40E3),    true);
             

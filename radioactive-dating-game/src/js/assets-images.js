@@ -15,7 +15,6 @@ define(function (require) {
         ROCK_B_0:  'rock-b-0.png',
         ROCK_C  :  'rock-c.png',
         ROCK_C_0:  'rock-c-0.png',
-        ROCK_D:    'rock-d.png',
         ROCK_E:    'rock-e.png',
         ROCK_F:    'rock-f.png',
 
@@ -37,7 +36,7 @@ define(function (require) {
         FISH_FOSSIL:      'fish-fossil.png',
         FISH_BONES:       'fish-bones.png',
         DINOSAUR_SKULL:   'dinosaur_skull.png',
-        HUMAN_SKULL:      'skull_human.png',
+        HUMAN_SKULL:      'human-skull.png',
         CUP:              'cup.png',
         BONE:             'bone.png'
     };
