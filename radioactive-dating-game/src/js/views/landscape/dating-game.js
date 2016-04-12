@@ -13,7 +13,7 @@ define(function(require) {
     var Assets = require('assets');
     var Constants = require('constants');
 
-    var SHORT_SCREEN_BACKGROUND_WIDTH = Constants.LandscapeView.SHORT_SCREEN_BACKGROUND_WIDTH;
+    var SHORT_SCREEN_BACKGROUND_WIDTH = 960;
     var DEFAULT_BACKGROUND_WIDTH = 1400;
 
     /**
@@ -47,10 +47,6 @@ define(function(require) {
             var scale = targetSceneWidth / this.background.width;
             this.background.scale.x = scale;
             this.background.scale.y = scale;
-        },
-
-        reset: function() {
-            
         }
 
     }, {

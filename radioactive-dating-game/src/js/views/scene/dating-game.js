@@ -82,7 +82,8 @@ define(function(require) {
             this.radiometricDatingMeterView = new RadiometricDatingMeterView({
                 model: this.simulation.meter,
                 simulation: this.simulation,
-                mvt: this.mvt
+                mvt: this.mvt,
+                panelHeight: this.getPanelHeight()
             });
 
             if (AppView.windowIsShort())
@@ -98,7 +99,7 @@ define(function(require) {
             var panelMargin = (AppView.windowIsShort()) ? 12 : 20;
             var probePanelWidth = this.radiometricDatingMeterView.getPanelWidth() + panelMargin;
             var width = this.getWidthBetweenPanels() - probePanelWidth;
-            var height = 216;
+            var height = this.getPanelHeight();
 
             this.decayRatesGraphView = new DatableItemDecayProportionChartView({
                 simulation: this.simulation,
@@ -119,6 +120,13 @@ define(function(require) {
             this.radiometricDatingMeterView.update(time, deltaTime, paused);
 
             this.landscape.update(time, deltaTime, paused);
+        },
+
+        getPanelHeight: function() {
+            if (AppView.windowIsShort())
+                return 186;
+            else
+                return 216;
         },
 
         setSoundVolumeMute: function() {

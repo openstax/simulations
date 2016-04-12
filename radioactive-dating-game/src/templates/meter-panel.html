@@ -8,11 +8,11 @@
 
     <ul class="radio-buttons">
         <li>
-            <input type="radio" name="probe-type" value="carbon-14" class="probe-type-carbon-14" id="probe-type-carbon-14-<%= unique %>" checked>
+            <input type="radio" name="probe-type-<%= unique %>" value="carbon-14" class="probe-type-carbon-14" id="probe-type-carbon-14-<%= unique %>" checked>
             <label for="probe-type-carbon-14-<%= unique %>">Carbon-14</label>
         </li>
         <li>
-            <input type="radio" name="probe-type" value="uranium-238" class="probe-type-uranium-238" id="probe-type-uranium-238-<%= unique %>">
+            <input type="radio" name="probe-type-<%= unique %>" value="uranium-238" class="probe-type-uranium-238" id="probe-type-uranium-238-<%= unique %>">
             <label for="probe-type-uranium-238-<%= unique %>">Uranium-238</label>
         </li>
     </ul>
@@ -21,11 +21,11 @@
 
     <ul class="radio-buttons">
         <li>
-            <input type="radio" name="measuring-target" class="measuring-target-objects" value="objects" id="measuring-target-objects-<%= unique %>" checked>
+            <input type="radio" name="measuring-target-<%= unique %>" class="measuring-target-objects" value="objects" id="measuring-target-objects-<%= unique %>" checked>
             <label for="measuring-target-objects-<%= unique %>">Objects</label>
         </li>
         <li>
-            <input type="radio" name="measuring-target" class="measuring-target-air" value="air" id="measuring-target-air-<%= unique %>">
+            <input type="radio" name="measuring-target-<%= unique %>" class="measuring-target-air" value="air" id="measuring-target-air-<%= unique %>">
             <label for="measuring-target-air-<%= unique %>">Air</label>
         </li>
     </ul>
