@@ -86,6 +86,17 @@ define(function (require, exports, module) {
 
         reset: function() {
             
+        },
+
+        /**
+         * Runs every frame of the simulation loop.
+         */
+        _update: function(time, deltaTime) {
+            this.updateMeter(time, deltaTime);
+        },
+
+        updateMeter: function(time, deltaTime) {
+            this.meter.determineItemBeingTouched(this.items.models);
         }
 
     }, Constants.DatingGameSimulation);

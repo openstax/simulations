@@ -12,11 +12,11 @@ define(function(require) {
 
     var NuclearPhysicsSceneView = require('views/scene');
 
-    var DatableItemDecayProportionChartView = require('radioactive-dating-game/views/decay-proportion-chart/datable-item');
-    var RadiometricDatingMeterView          = require('radioactive-dating-game/views/radiometric-dating-meter');
-    var LandscapeView                       = require('radioactive-dating-game/views/landscape');
-    var DatingGameLandscapeView             = require('radioactive-dating-game/views/landscape/dating-game');
-    var DatableItemView                     = require('radioactive-dating-game/views/datable-item');
+    var PrePopulatedDecayProportionChartView = require('radioactive-dating-game/views/decay-proportion-chart/pre-populated');
+    var RadiometricDatingMeterView           = require('radioactive-dating-game/views/radiometric-dating-meter');
+    var LandscapeView                        = require('radioactive-dating-game/views/landscape');
+    var DatingGameLandscapeView              = require('radioactive-dating-game/views/landscape/dating-game');
+    var DatableItemView                      = require('radioactive-dating-game/views/datable-item');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -101,7 +101,7 @@ define(function(require) {
             var width = this.getWidthBetweenPanels() - probePanelWidth;
             var height = this.getPanelHeight();
 
-            this.decayRatesGraphView = new DatableItemDecayProportionChartView({
+            this.decayRatesGraphView = new PrePopulatedDecayProportionChartView({
                 simulation: this.simulation,
                 width: width,
                 height: height
