@@ -36,7 +36,7 @@ define(function(require) {
             }, options);
 
             this.carbonButtonHeight = 40;
-            this.carbonModePaddingTop = 90;
+            this.carbonModePaddingRight = 55;
             this.ratioModePaddingLeft = 114;
             this.ratioModeTickLabelsWidth = 86;
             this.ratioModeYAxisLabelText = '\u00B9\u2074C / \u00B9\u00B2C Ratio';
@@ -58,7 +58,7 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            this.paddingTop = this.carbonModePaddingTop;
+            this.paddingRight = this.carbonModePaddingRight;
             this.calculateGraphDimensions();
 
             DecayProportionChartView.prototype.initGraphics.apply(this, arguments);
@@ -70,7 +70,8 @@ define(function(require) {
             this.carbonPercentTab = this.createTab('Percent of \u00B9\u2074C');
             this.carbonRatioTab   = this.createTab('\u00B9\u2074C / \u00B9\u00B2C Ratio');
 
-            this.carbonRatioTab.x = this.width / 2;
+            this.carbonPercentTab.y = this.height / 2;
+            this.carbonRatioTab.y = this.height;
             this.carbonRatioTab.deselect();
             this.carbonPercentTab.select();
 
@@ -87,25 +88,27 @@ define(function(require) {
 
             var graphics = new PIXI.Graphics();
             graphics.beginFill(darkTabColor, darkTabAlpha);
-            graphics.drawRect(0, 0, this.width / 2, this.carbonButtonHeight);
+            graphics.drawRect(0, 0, this.height / 2, this.carbonButtonHeight);
             graphics.endFill();
 
             var text = new PIXI.Text(labelText, {
-                font: DecayProportionChartView.LARGE_LABEL_FONT,
+                font: DecayProportionChartView.SMALL_LABEL_FONT,
                 fill: DecayProportionChartView.AXIS_LINE_COLOR
             });
             text.resolution = this.getResolution();
             text.anchor.x = 0.5;
             text.anchor.y = 0.5;
             text.y = this.carbonButtonHeight / 2;
-            text.x = this.width * 0.25;
+            text.x = this.height * 0.25;
 
             var container = new PIXI.Container();
             container.addChild(graphics);
             container.addChild(text);
 
-            container.hitArea = new PIXI.Rectangle(0, 0, this.width / 2, this.carbonButtonHeight);
+            container.hitArea = new PIXI.Rectangle(0, 0, this.height / 2, this.carbonButtonHeight);
             container.buttonMode = true;
+            container.rotation = -Math.PI / 2;
+            container.x = this.width - this.carbonButtonHeight;
 
             container.deselect = function() {
                 graphics.visible = true;
@@ -198,7 +201,7 @@ define(function(require) {
             this.carbonMode = true;
 
             this.carbonControls.visible = true;
-            this.paddingTop = this.carbonModePaddingTop;
+            this.paddingRight = this.carbonModePaddingRight;
             this.calculateGraphDimensions();
 
             this.clearData();
@@ -209,7 +212,7 @@ define(function(require) {
             this.carbonMode = false;
 
             this.carbonControls.visible = false;
-            this.paddingTop = this.defaultPaddingTop;
+            this.paddingRight = this.defaultPaddingTop;
             this.calculateGraphDimensions();
 
             this.clearData();

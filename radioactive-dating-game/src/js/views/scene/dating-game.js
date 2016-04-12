@@ -83,7 +83,8 @@ define(function(require) {
                 model: this.simulation.meter,
                 simulation: this.simulation,
                 mvt: this.mvt,
-                panelHeight: this.getPanelHeight()
+                panelHeight: this.getPanelHeight(),
+                includeCustom: true
             });
 
             if (AppView.windowIsShort())
@@ -123,10 +124,7 @@ define(function(require) {
         },
 
         getPanelHeight: function() {
-            if (AppView.windowIsShort())
-                return 186;
-            else
-                return 216;
+            return 176;
         },
 
         setSoundVolumeMute: function() {
