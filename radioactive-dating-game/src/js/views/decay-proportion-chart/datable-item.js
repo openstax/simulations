@@ -50,7 +50,9 @@ define(function(require) {
 
             this.listenTo(this.simulation, 'reset', this.simulationReset);
             this.listenTo(this.simulation, 'change:mode', this.clearData);
-            this.listenTo(this.simulation.meter, 'change:nucleusType', this.nucleusTypeChanged);
+            this.listenTo(this.simulation.meter, 'change:nucleusType',             this.nucleusTypeChanged);
+            this.listenTo(this.simulation.meter, 'change:halfLifeOfCustomNucleus', this.halfLifeChanged);  
+
             this.nucleusTypeChanged(this.simulation.meter, this.simulation.meter.get('nucleusType'));
         },
 
@@ -187,7 +189,11 @@ define(function(require) {
         updateTimeSpan: function() {
             // Set the time span of the chart based on the nucleus type.
             var nucleusType = this.simulation.meter.get('nucleusType');
-            var halfLife = HalfLifeInfo.getHalfLifeForNucleusType(nucleusType);
+
+            var halfLife = (nucleusType === NucleusType.HEAVY_CUSTOM) ?
+                this.simulation.meter.get('halfLifeOfCustomNucleus') :
+                HalfLifeInfo.getHalfLifeForNucleusType(nucleusType);
+
             this.setTimeParameters(halfLife * 3.2, halfLife);
         },
 
@@ -261,6 +267,10 @@ define(function(require) {
             this.updateIsotope();
 
             this.clearData();
+        },
+
+        halfLifeChanged: function(meter, halfLife) {
+            this.updateTimeSpan();
         },
 
         simulationReset: function() {

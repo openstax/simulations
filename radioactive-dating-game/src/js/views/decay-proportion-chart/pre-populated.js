@@ -26,7 +26,7 @@ define(function(require) {
                 
             }, options);
 
-            DatableItemDecayProportionChartView.prototype.initialize.apply(this, [options]);            
+            DatableItemDecayProportionChartView.prototype.initialize.apply(this, [options]);       
         },
 
         /**

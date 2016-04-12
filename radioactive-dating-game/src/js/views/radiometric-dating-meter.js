@@ -12,7 +12,8 @@ define(function(require) {
     var Rectangle      = require('common/math/rectangle');
     var Vector2        = require('common/math/vector2');
 
-    var NucleusType = require('models/nucleus-type');
+    var NucleusType  = require('models/nucleus-type');
+    var HalfLifeInfo = require('models/half-life-info');
 
     var RadiometricDatingMeter = require('radioactive-dating-game/models/radiometric-dating-meter');
 
@@ -39,6 +40,8 @@ define(function(require) {
 
             'click .measuring-target-objects' : 'setTargetToObjects',
             'click .measuring-target-air'     : 'setTargetToAir',
+
+            'change .half-life' : 'changeHalfLife'
         },
 
         events: {
@@ -335,6 +338,12 @@ define(function(require) {
 
         hideCustomOptions: function() {
             this.$el.find('.custom-options-wrapper').hide();
+        },
+
+        changeHalfLife: function(event) {
+            var years = parseInt($(event.target).val());
+            var ms = HalfLifeInfo.convertYearsToMs(years);
+            this.model.set('halfLifeOfCustomNucleus', ms);
         },
 
         nucleusTypeChanged: function(model, nucleusType) {
