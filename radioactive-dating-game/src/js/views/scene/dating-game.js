@@ -19,6 +19,7 @@ define(function(require) {
     var DatingGameLandscapeView              = require('radioactive-dating-game/views/landscape/dating-game');
     var DatableItemView                      = require('radioactive-dating-game/views/datable-item');
     var AnswerInputView                      = require('radioactive-dating-game/views/answer-input');
+    var AnswerLabelView                      = require('radioactive-dating-game/views/answer-label');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -37,6 +38,8 @@ define(function(require) {
         initialize: function(options) {
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
 
+            this.answerLabelViews = [];
+
             this.passSound = new buzz.sound('audio/ding', {
                 formats: ['ogg', 'mp3', 'wav'],
                 volume: this.lowVolume
@@ -50,8 +53,18 @@ define(function(require) {
             //     volume: this.lowVolume
             // });
 
+            // Cached objects
+            this._answerPosition = new Vector2();
+
             this.listenTo(this.simulation, 'estimate-passed', this.estimatePassed);
             this.listenTo(this.simulation, 'estimate-failed', this.estimateFailed);
+        },
+
+        render: function() {
+            NuclearPhysicsSceneView.prototype.render.apply(this, arguments);
+
+            this.$answerLabels = $('<div>');
+            this.$ui.append(this.$answerLabels);
         },
 
         reset: function() {
@@ -168,6 +181,59 @@ define(function(require) {
             return 176;
         },
 
+        getItemView: function(item) {
+            for (var i = 0; i < this.itemViews.length; i++) {
+                if (this.itemViews[i].model === item)
+                    return this.itemViews[i];
+            }
+            return null;
+        },
+
+        getAnswerLabelView: function(item) {
+            for (var i = 0; i < this.answerLabelViews.length; i++) {
+                if (this.answerLabelViews[i].model === item)
+                    return this.answerLabelViews[i];
+            }
+            return null;
+        },
+
+        removeAnswerLabelView: function(item) {
+            for (var i = 0; i < this.answerLabelViews.length; i++) {
+                if (this.answerLabelViews[i].model === item) {
+                    this.answerLabelViews[i].remove();
+                    this.answerLabelViews.splice(i, 1);
+                    return;
+                }
+            }
+        },
+
+        getAnswerPosition: function(item) {
+            var itemView = this.getItemView(item);
+            var itemBounds = itemView.getBounds();
+            var itemPosition = this.mvt.modelToView(item.getPosition());
+
+            return this._answerPosition.set(
+                itemBounds.x + itemBounds.width + 8,
+                itemPosition.y
+            );
+        },
+
+        showAnswerLabel: function(item, answer, passed) {
+            this.removeAnswerLabelView(item);
+
+            var position = this.getAnswerPosition(item);
+            var answerLabelView = new AnswerLabelView({
+                model: item,
+                x: position.x,
+                y: position.y,
+                answer: answer,
+                passed: passed
+            });
+
+            this.$answerLabels.append(answerLabelView.el);
+            this.answerLabelViews.push(answerLabelView);
+        },
+
         setSoundVolumeMute: function() {
             this.passSound.setVolume(0);
             this.failSound.setVolume(0);
@@ -185,12 +251,15 @@ define(function(require) {
 
         estimatePassed: function(item, estimate) {
             this.passSound.play();
+
+            this.showAnswerLabel(item, estimate, true);
         },
 
         estimateFailed: function(item, estimate) {
             this.failSound.play();
-        }
 
+            this.showAnswerLabel(item, estimate, false);
+        }
 
     });
 

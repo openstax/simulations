@@ -108,7 +108,7 @@ define(function (require, exports, module) {
         setEstimate: function(item, estimate) {
             this.estimates[item.cid] = estimate;
 
-            if (this.estimatePasses(item, estimate))
+            if (this.estimatePasses(item, HalfLifeInfo.convertYearsToMs(estimate)))
                 this.trigger('estimate-passed', item, estimate);
             else
                 this.trigger('estimate-failed', item, estimate);

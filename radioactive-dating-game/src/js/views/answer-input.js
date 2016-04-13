@@ -9,8 +9,6 @@ define(function(require) {
     var Rectangle = require('common/math/rectangle');
     var Vector2 = require('common/math/vector2');
 
-    var HalfLifeInfo = require('models/half-life-info');
-
     var RadiometricDatingMeter = require('radioactive-dating-game/models/radiometric-dating-meter');
 
     // CSS
@@ -70,10 +68,8 @@ define(function(require) {
         formSubmitted: function() {
             var item = this.simulation.meter.get('itemBeingTouched');
             if (item) {
-                var estimate = HalfLifeInfo.convertYearsToMs(parseInt(this.$('.answer').val()));
-                var passes = this.simulation.estimatePasses(item, estimate);
+                var estimate = parseInt(this.$('.answer').val());
                 this.simulation.setEstimate(item, estimate);
-                console.log(passes)
                 this.hide();
                 this.reset();
             }
