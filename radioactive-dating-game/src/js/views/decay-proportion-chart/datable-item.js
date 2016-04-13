@@ -271,6 +271,7 @@ define(function(require) {
 
         halfLifeChanged: function(meter, halfLife) {
             this.updateTimeSpan();
+            this.clearData();
         },
 
         simulationReset: function() {
