@@ -38,6 +38,7 @@ define(function (require) {
         DINOSAUR_SKULL:   'dinosaur_skull.png',
         HUMAN_SKULL:      'human-skull.png',
         CUP:              'cup.png',
-        BONE:             'bone.png'
+        BONE:             'bone.png',
+        DEAD_TREE:        'dead-tree.png'
     };
 });

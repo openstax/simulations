@@ -17,6 +17,7 @@ define(function(require) {
     var LandscapeView                        = require('radioactive-dating-game/views/landscape');
     var DatingGameLandscapeView              = require('radioactive-dating-game/views/landscape/dating-game');
     var DatableItemView                      = require('radioactive-dating-game/views/datable-item');
+    var AnswerInputView                      = require('radioactive-dating-game/views/answer-input');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -53,6 +54,7 @@ define(function(require) {
             this.initItems();
             this.initRadiometricDatingMeter();
             this.initDecayProportionGraph();
+            this.initAnswerInputView();
         },
 
         initBackground: function() {
@@ -68,13 +70,16 @@ define(function(require) {
         },
 
         initItems: function() {
+            this.itemViews = [];
+
             for (var i = 0; i < this.simulation.items.length; i++) {
-                var itemViews = new DatableItemView({
+                var itemView = new DatableItemView({
                     model: this.simulation.items.at(i),
                     mvt: this.mvt
                 });
 
-                this.stage.addChild(itemViews.displayObject);
+                this.itemViews.push(itemView);
+                this.stage.addChild(itemView.displayObject);
             }
         },
 
@@ -114,6 +119,22 @@ define(function(require) {
             this.stage.addChild(this.decayRatesGraphView.displayObject);
         },
 
+        initAnswerInputView: function() {
+            this.answerInputView = new AnswerInputView({
+                simulation: this.simulation,
+                mvt: this.mvt,
+                sceneWidth: this.width,
+                sceneHeight: this.height,
+                itemViews: this.itemViews
+            });
+
+            this.answerInputView.render();
+
+            this.$ui.append(this.answerInputView.el);
+
+            this.answerInputView.postRender();
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
 
@@ -128,15 +149,15 @@ define(function(require) {
         },
 
         setSoundVolumeMute: function() {
-            this.landscape.setSoundVolumeMute();
+            
         },
 
         setSoundVolumeLow: function() {
-            this.landscape.setSoundVolumeLow();
+            
         },
 
         setSoundVolumeHigh: function() {
-            this.landscape.setSoundVolumeHigh();
+            
         }
 
     });

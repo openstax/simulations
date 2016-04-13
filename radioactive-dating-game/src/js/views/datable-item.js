@@ -69,6 +69,14 @@ define(function(require) {
 
         updateRotation: function(model, rotation) {
             this.displayObject.rotation = rotation
+        },
+
+        getBounds: function() {
+            return this.sprite.getBounds();
+        },
+
+        getPosition: function() {
+            return this.displayObject.position;
         }
 
     });

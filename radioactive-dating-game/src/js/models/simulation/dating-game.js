@@ -54,7 +54,7 @@ define(function (require, exports, module) {
             this.addItem('Living Tree',         Images.TREE_1,           new Vector2( 240, 400),   130,      0, 0,                                      true);
             this.addItem('Distant Living Tree', Images.TREE_1,           new Vector2( 530, 386),    30,      0, 0,                                      true);
             this.addItem('Fish Fossil',         Images.FISH_FOSSIL,      new Vector2( 300, 134),   100,      0, HalfLifeInfo.convertYearsToMs(28E6),    true);
-            this.addItem('Dead Tree',           Images.TREE_3,           new Vector2(1060, 320),   220,   PI/2, HalfLifeInfo.convertYearsToMs(220),     true);
+            this.addItem('Dead Tree',           Images.DEAD_TREE,        new Vector2(1000, 320),    34,   PI/2, HalfLifeInfo.convertYearsToMs(220),     true);
             this.addItem('Fish Bones',          Images.FISH_BONES,       new Vector2( 860, 190),    90,      0, HalfLifeInfo.convertYearsToMs(16E3),    true);
             this.addItem('Rock 1',              Images.ROCK_E,           new Vector2( 580, 134),    50,      0, HalfLifeInfo.convertYearsToMs(137E6),   false);
             this.addItem('Rock 2',              Images.ROCK_F,           new Vector2( 400,  80),    40,      0, HalfLifeInfo.convertYearsToMs(261E6),   false);
@@ -70,6 +70,8 @@ define(function (require, exports, module) {
             this.meter = new RadiometricDatingMeter({
                 position: DatingGameSimulation.INITIAL_METER_POSITION
             });
+
+            this.estimates = [];
         },
 
         addItem: function(name, image, position, width, rotation, age, isOrganic) {
@@ -85,7 +87,7 @@ define(function (require, exports, module) {
         },
 
         reset: function() {
-            
+            this.estimates = [];
         },
 
         /**
@@ -97,6 +99,32 @@ define(function (require, exports, module) {
 
         updateMeter: function(time, deltaTime) {
             this.meter.determineItemBeingTouched(this.items.models);
+        },
+
+        getEstimate: function(item) {
+            return this.estimates[item.cid];
+        },
+
+        setEstimate: function(item, estimate) {
+            this.estimates[item.cid] = estimate;
+
+            if (this.estimatePasses(item, estimate))
+                this.trigger('estimate-passed', item, estimate);
+            else
+                this.trigger('estimate-failed', item, estimate);
+        },
+
+        /**
+         * Returns whether or not the given age estimate is close enough
+         *   for the given item.
+         */
+        estimatePasses: function(item, estimatedAge) {
+            var actualAge = item.getRadiometricAge();
+
+            return (
+                (estimatedAge <= actualAge * (1 + DatingGameSimulation.AGE_GUESS_TOLERANCE_PERCENTAGE)) &&
+                (estimatedAge >= actualAge * (1 - DatingGameSimulation.AGE_GUESS_TOLERANCE_PERCENTAGE))
+            );
         }
 
     }, Constants.DatingGameSimulation);

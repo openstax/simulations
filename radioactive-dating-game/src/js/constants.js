@@ -104,13 +104,18 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                        HALF-LIFE SIMULATION                         **
+     **                        DATING GAME SIMULATION                       **
      **                                                                     **
      *************************************************************************/
 
     var DatingGameSimulation = {};
 
     DatingGameSimulation.INITIAL_METER_POSITION = new Vector2(540, 180);
+    // Constant that controls how close the user must be to the actual age
+    //   of an item to be considered correct.  This is a percentage, and a
+    //   value of 0 means the user must be perfectly accurate and a value
+    //   of 1 means that they can be off by as much as the value of the age.
+    DatingGameSimulation.AGE_GUESS_TOLERANCE_PERCENTAGE = 0.2;
 
     Constants.DatingGameSimulation = DatingGameSimulation;
 
