@@ -10,6 +10,7 @@ define(function(require) {
     var Vector2 = require('common/math/vector2');
 
     var RadiometricDatingMeter = require('radioactive-dating-game/models/radiometric-dating-meter');
+    var DatableItem            = require('radioactive-dating-game/models/datable-item');
 
     // CSS
     require('less!radioactive-dating-game/styles/answer-input');
@@ -88,7 +89,7 @@ define(function(require) {
         determineVisibility: function() {
             var measurementMode = this.simulation.meter.get('measurementMode');
             var itemBeingTouched = this.simulation.meter.get('itemBeingTouched');
-            if (itemBeingTouched && measurementMode === RadiometricDatingMeter.OBJECTS) {
+            if (itemBeingTouched && itemBeingTouched !== DatableItem.DATABLE_AIR && measurementMode === RadiometricDatingMeter.OBJECTS) {
                 // Move it into position
                 var position = this.findSpotForWindow(itemBeingTouched);
                 this.$el.css({ 
