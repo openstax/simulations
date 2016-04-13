@@ -4,6 +4,7 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
+    var buzz = require('buzz');
 
     var AppView            = require('common/v3/app/app');
     var ModelViewTransform = require('common/math/model-view-transform');
@@ -30,8 +31,27 @@ define(function(require) {
      */
     var DatingGameSceneView = NuclearPhysicsSceneView.extend({
 
+        lowVolume: 40,
+        highVolume: 100,
+
         initialize: function(options) {
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
+
+            this.passSound = new buzz.sound('audio/ding', {
+                formats: ['ogg', 'mp3', 'wav'],
+                volume: this.lowVolume
+            });
+            this.failSound = new buzz.sound('audio/buzz', {
+                formats: ['ogg', 'mp3', 'wav'],
+                volume: this.lowVolume
+            });
+            // this.winSound = new buzz.sound('audio/short-fanfare', {
+            //     formats: ['ogg', 'mp3', 'wav'],
+            //     volume: this.lowVolume
+            // });
+
+            this.listenTo(this.simulation, 'estimate-passed', this.estimatePassed);
+            this.listenTo(this.simulation, 'estimate-failed', this.estimateFailed);
         },
 
         reset: function() {
@@ -149,16 +169,28 @@ define(function(require) {
         },
 
         setSoundVolumeMute: function() {
-            
+            this.passSound.setVolume(0);
+            this.failSound.setVolume(0);
         },
 
         setSoundVolumeLow: function() {
-            
+            this.passSound.setVolume(this.lowVolume);
+            this.failSound.setVolume(this.lowVolume);
         },
 
         setSoundVolumeHigh: function() {
-            
+            this.passSound.setVolume(this.highVolume);
+            this.failSound.setVolume(this.highVolume);
+        },
+
+        estimatePassed: function(item, estimate) {
+            this.passSound.play();
+        },
+
+        estimateFailed: function(item, estimate) {
+            this.failSound.play();
         }
+
 
     });
 

@@ -105,6 +105,8 @@ define(function(require) {
 
                 // Show it
                 this.show();
+
+                this.$('.answer').focus();
             }
             else {
                 // Hide it
@@ -159,11 +161,11 @@ define(function(require) {
                         // The window can fit between the right edge of the object
                         // and the right edge of the canvas, so position it at the
                         // bottom of the canvas.
-                        yPos = this.sceneHeight - panelHeight - margin;
+                        yPos = this.sceneHeight - panelHeight;
                     }
                     else {
                         // Position it above the item.
-                        yPos = itemBounds.bottom() - panelHeight - margin;
+                        yPos = itemBounds.bottom() - panelHeight;
                     }
                 }
             }
