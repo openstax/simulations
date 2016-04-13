@@ -43,6 +43,18 @@ module.exports = function(grunt) {
 				],
 				dest: 'dist/common/'
 			},
+			nuclear_physics: {
+				expand: true, // required when using cwd
+				cwd: '../nuclear-physics/src/img/',
+				src: '**',
+				dest: 'dist/img/'
+			},
+			rutherford_scattering: {
+				expand: true, // required when using cwd
+				cwd: '../rutherford-scattering/src/img/',
+				src: '**',
+				dest: 'dist/img/'
+			},
 			screenshot: {
 				src: 'src/screenshot.png',
 				dest: 'dist/screenshot.png'
@@ -70,6 +82,10 @@ module.exports = function(grunt) {
 					optimize: 'uglify2',
 					name: 'main',
 					out: 'src/optimized.js',
+
+					paths: {
+						'assets': 'assets-dist'
+					},
 
 					less: {
 					    modifyVars: {
