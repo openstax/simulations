@@ -30,8 +30,8 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             this.initBounds();
-            this.initAlphaParticles();
-            this.rayGun = new RayGun({alphaParticles: this.alphaParticles});
+            this.initParticles();
+            this.initialRayGun();
         },
 
         _update: function(time, deltaTime) {
@@ -51,7 +51,11 @@ define(function (require, exports, module) {
             };
         },
 
-        initAlphaParticles: function() {},
+        initParticles: function() {},
+
+        initialRayGun: function() {
+            this.rayGun = new RayGun({particles: this.alphaParticles});
+        },
 
         resetAlphaParticles: function() {
             this.alphaParticles.reset();

@@ -39,7 +39,7 @@ define(function(require) {
             
         },
 
-        initMVT: function(){
+        initBoxMVT: function(){
             if (AppView.windowIsShort()) {
                 this.viewOriginX = Math.round(this.width / 2);
                 this.viewOriginY = Math.round((this.height - 50)/ 2);
@@ -57,7 +57,9 @@ define(function(require) {
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 this.scale
             );
+        },
 
+        initParticleMVT: function() {
             this.particleMVT = ModelViewTransform.createScaleMapping(Constants.PARTICLE_SCALE);
         },
 
@@ -89,7 +91,8 @@ define(function(require) {
             this.stage.addChild(this.bottomLayer);
             this.stage.addChild(this.topLayer);
 
-            this.initMVT();
+            this.initBoxMVT();
+            this.initParticleMVT();
             this.initRayGunMVT();
 
             this.initRayGunView();

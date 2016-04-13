@@ -9,6 +9,7 @@ define(function (require) {
 
     var HydrogenAtomSimulation = require('hydrogen-atom/models/simulation');
     var HydrogenAtomSceneView  = require('hydrogen-atom/views/scene');
+    var RutherfordAtomSimulation = require('rutherford-scattering/models/simulation/rutherford-atom');
 
     var Constants = require('constants');
 
@@ -71,7 +72,7 @@ define(function (require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new HydrogenAtomSimulation();
+            this.simulation = new RutherfordAtomSimulation();
         },
 
         /**
