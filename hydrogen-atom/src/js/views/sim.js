@@ -7,8 +7,8 @@ define(function (require) {
 
     var SimView = require('common/v3/app/sim');
 
-    var HydrogenAtomSimulation = require('models/simulation');
-    var HydrogenAtomSceneView  = require('views/scene');
+    var HydrogenAtomSimulation = require('hydrogen-atom/models/simulation');
+    var HydrogenAtomSceneView  = require('hydrogen-atom/views/scene');
 
     var Constants = require('constants');
 
@@ -17,13 +17,13 @@ define(function (require) {
     require('bootstrap-select');
 
     // CSS
-    require('less!styles/sim');
+    require('less!hydrogen-atom/styles/sim');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml = require('text!hydrogen-atom/templates/sim.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.

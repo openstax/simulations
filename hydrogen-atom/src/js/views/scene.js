@@ -7,13 +7,13 @@ define(function(require) {
 
     var PixiSceneView = require('common/v3/pixi/view/scene');
 
-    var Assets = require('assets');
+    var Assets = require('hydrogen-atom/assets');
 
     // Constants
     var Constants = require('constants');
 
     // CSS
-    require('less!styles/scene');
+    require('less!hydrogen-atom/styles/scene');
 
     /**
      *
