@@ -7,6 +7,8 @@ define(function(require) {
 
     var Colors = require('common/colors/colors');
 
+    var NucleusType = require('models/nucleus-type');
+
     var DatableItemDecayProportionChartView = require('radioactive-dating-game/views/decay-proportion-chart/datable-item');
 
     var Constants = require('constants');
@@ -67,8 +69,10 @@ define(function(require) {
                 fill: PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_VALUE_COLOR
             };
 
-            this.infoIsotopeContainer = new PIXI.Container();
-            this.infoIsotopeContainer.y = row1Y;
+            this.infoIsotopeLabel = new PIXI.Text('', labelOptions);
+            this.infoIsotopeLabel.resolution = this.getResolution();
+            this.infoIsotopeLabel.x = padding;
+            this.infoIsotopeLabel.y = row1Y;
             this.infoPercentValue = new PIXI.Text('56.7%', valueOptions);
             this.infoPercentValue.resolution = this.getResolution();
             this.infoPercentValue.x = PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_WIDTH - padding;
@@ -88,7 +92,7 @@ define(function(require) {
             this.handleLabel = new PIXI.Container();
             this.handleLabel.x = -PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_WIDTH / 2;
             this.handleLabel.y = -this.graphHeight - PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_MARGIN - PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_HEIGHT;
-            this.handleLabel.addChild(this.infoIsotopeContainer);
+            this.handleLabel.addChild(this.infoIsotopeLabel);
             this.handleLabel.addChild(this.infoPercentValue);
             this.handleLabel.addChild(this.infoTimeLabel);
             this.handleLabel.addChild(this.infoTimeValue);
@@ -193,8 +197,17 @@ define(function(require) {
             this.handle.x = this.graphOriginX + 200; // temporary for testing
         },
 
-        nucleusTypeChanged: function() {
+        nucleusTypeChanged: function(meter, nucleusType) {
             DatableItemDecayProportionChartView.prototype.nucleusTypeChanged.apply(this, arguments);
+
+            var isotope;
+            if (nucleusType === NucleusType.CARBON_14)
+                isotope = '\u00B9\u2074C';
+            else if (nucleusType === NucleusType.URANIUM_238)
+                isotope = '\u00B2\u00B3\u2078U';
+            else
+                isotope = '?';
+            this.infoIsotopeLabel.text = isotope + ':';
 
             this.generateData();
             this.drawGraphData();

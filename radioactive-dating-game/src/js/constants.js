@@ -289,8 +289,8 @@ define(function (require) {
     PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_LABEL_COLOR = '#000';
     PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_VALUE_FONT = '10px Helvetica Neue';
     PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_VALUE_COLOR = '#000';
-    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_BG_COLOR = '#fff';
-    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_BG_ALPHA = 0.8;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_BG_COLOR = '#EDF7FF';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_BG_ALPHA = 1;
     PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_RADIUS = 4;
 
     PrePopulatedDatableItemDecayProportionChartView.HANDLE_COLOR = '#21366b';
