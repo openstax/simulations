@@ -5,10 +5,16 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var Colors = require('common/colors/colors');
+
     var DatableItemDecayProportionChartView = require('radioactive-dating-game/views/decay-proportion-chart/datable-item');
 
     var Constants = require('constants');
-    var NUM_SAMPLES_ON_DECAY_CHART = 500;
+
+    var NUM_SAMPLES_ON_DECAY_CHART = Constants.PrePopulatedDatableItemDecayProportionChartView.NUM_SAMPLES_ON_DECAY_CHART;
+    var HANDLE_COLOR          = Colors.parseHex(Constants.PrePopulatedDatableItemDecayProportionChartView.HANDLE_COLOR);
+    var HANDLE_DRAGGING_COLOR = Colors.parseHex(Constants.PrePopulatedDatableItemDecayProportionChartView.HANDLE_DRAGGING_COLOR);
+    var INFO_BOX_BG_COLOR     = Colors.parseHex(Constants.PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_BG_COLOR);
 
     /**
      * A panel that contains a chart showing the timeline for decay of nuclei over time.
@@ -47,7 +53,46 @@ define(function(require) {
         },
 
         initHandle: function() {
+            var padding = 4;
+            var row1Y = padding;
+            var row2Y = padding + 13;
+
+            var labelOptions = {
+                font: PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_LABEL_FONT,
+                fill: PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_LABEL_COLOR
+            };
+
+            var valueOptions = {
+                font: PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_VALUE_FONT,
+                fill: PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_VALUE_COLOR
+            };
+
+            this.infoIsotopeContainer = new PIXI.Container();
+            this.infoIsotopeContainer.y = row1Y;
+            this.infoPercentValue = new PIXI.Text('56.7%', valueOptions);
+            this.infoPercentValue.resolution = this.getResolution();
+            this.infoPercentValue.x = PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_WIDTH - padding;
+            this.infoPercentValue.y = row1Y;
+            this.infoPercentValue.anchor.x = 1;
+
+            this.infoTimeLabel = new PIXI.Text('Time:', labelOptions);
+            this.infoTimeLabel.resolution = this.getResolution();
+            this.infoTimeLabel.x = padding;
+            this.infoTimeLabel.y = row2Y;
+            this.infoTimeValue = new PIXI.Text('4689 yrs', valueOptions);
+            this.infoTimeValue.resolution = this.getResolution();
+            this.infoTimeValue.x = PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_WIDTH - padding;
+            this.infoTimeValue.y = row2Y;
+            this.infoTimeValue.anchor.x = 1;
+
             this.handleLabel = new PIXI.Container();
+            this.handleLabel.x = -PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_WIDTH / 2;
+            this.handleLabel.y = -this.graphHeight - PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_MARGIN - PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_HEIGHT;
+            this.handleLabel.addChild(this.infoIsotopeContainer);
+            this.handleLabel.addChild(this.infoPercentValue);
+            this.handleLabel.addChild(this.infoTimeLabel);
+            this.handleLabel.addChild(this.infoTimeValue);
+
             this.handleGraphics = new PIXI.Graphics();
             this.handleDraggingGraphics = new PIXI.Graphics();
             this.handleDraggingGraphics.visible = false;
@@ -56,21 +101,27 @@ define(function(require) {
             this.handle = new PIXI.Container();
             this.handle.buttonMode = true;
             this.handle.defaultCursor = 'ew-resize';
-            this.handle.addChild(this.handleLabel);
             this.handle.addChild(this.handleGraphics);
             this.handle.addChild(this.handleDraggingGraphics);
             this.handle.addChild(this.handleHandle);
+            this.handle.addChild(this.handleLabel);
 
             this.displayObject.addChild(this.handle);
         },
 
         drawHandle: function() {
-            var graphics = this.handleGraphics;
-            var boxMargin = 6;
-            var boxWidth = 110;
-            var boxHeight = 32;
+            this._drawHandle(this.handleGraphics, HANDLE_COLOR, 6);
+            this._drawHandle(this.handleDraggingGraphics, HANDLE_DRAGGING_COLOR, 8);
+
+            var thickness = 12;
+            this.handleHandle.hitArea = new PIXI.Rectangle(-thickness / 2, -this.handleGraphics.height, thickness, this.handleGraphics.height);
+        },
+
+        _drawHandle: function(graphics, color, ballRadius) {
+            var boxMargin = PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_MARGIN;
+            var boxWidth = PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_WIDTH;
+            var boxHeight = PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_HEIGHT;
             var boxBottomY = -this.graphHeight - boxMargin;
-            var color = 0x21366b;
             var circleY = boxMargin * 2;
 
             graphics.clear();
@@ -78,34 +129,19 @@ define(function(require) {
             graphics.lineStyle(2, color, 1);
             graphics.moveTo(0, boxMargin);
             graphics.lineTo(0, boxBottomY);
-            graphics.beginFill(0xFFFFFF, 0.8);
-            graphics.drawRoundedRect(-boxWidth / 2, boxBottomY - boxHeight, boxWidth, boxHeight, 4);
+            graphics.beginFill(INFO_BOX_BG_COLOR, PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_BG_ALPHA);
+            graphics.drawRoundedRect(-boxWidth / 2, boxBottomY - boxHeight, boxWidth, boxHeight, PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_RADIUS);
             graphics.endFill();
             
             graphics.lineStyle(0, 0, 0);
             graphics.beginFill(color, 1);
-            graphics.drawCircle(0, circleY, boxMargin);
+            graphics.drawCircle(0, circleY, ballRadius);
             graphics.endFill();
             graphics.beginFill(color, 1);
             graphics.moveTo(0, 0);
             graphics.lineTo( boxMargin, circleY);
             graphics.lineTo(-boxMargin, circleY);
             graphics.endFill();
-
-            var radius = 8;
-            var draggingGraphics = this.handleDraggingGraphics;
-            draggingGraphics.clear();
-            draggingGraphics.beginFill(color, 1);
-            draggingGraphics.drawCircle(0, circleY, radius);
-            draggingGraphics.endFill();
-            draggingGraphics.beginFill(color, 1);
-            draggingGraphics.moveTo(0, 0);
-            draggingGraphics.lineTo( radius, circleY);
-            draggingGraphics.lineTo(-radius, circleY);
-            draggingGraphics.endFill();
-
-            var thickness = 12;
-            this.handleHandle.hitArea = new PIXI.Rectangle(-thickness / 2, boxBottomY, thickness, boxMargin - boxBottomY);
         },
 
         generateData: function() {
@@ -171,7 +207,7 @@ define(function(require) {
             this.drawGraphData();
         }
 
-    });
+    }, Constants.PrePopulatedDatableItemDecayProportionChartView);
 
 
     return PrePopulatedDatableItemDecayProportionChartView;

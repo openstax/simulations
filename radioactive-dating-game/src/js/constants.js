@@ -275,6 +275,32 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **       PRE-POPULATED DATABLE ITEM DECAY PROPORTION CHART VIEW        **
+     **                                                                     **
+     *************************************************************************/
+
+    var PrePopulatedDatableItemDecayProportionChartView = {};
+
+    PrePopulatedDatableItemDecayProportionChartView.NUM_SAMPLES_ON_DECAY_CHART = 500;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_MARGIN = 6;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_WIDTH = 86;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_HEIGHT = 32;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_LABEL_FONT = 'bold 10px Helvetica Neue';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_LABEL_COLOR = '#000';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_VALUE_FONT = '10px Helvetica Neue';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_VALUE_COLOR = '#000';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_BG_COLOR = '#fff';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_BG_ALPHA = 0.8;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_RADIUS = 4;
+
+    PrePopulatedDatableItemDecayProportionChartView.HANDLE_COLOR = '#21366b';
+    PrePopulatedDatableItemDecayProportionChartView.HANDLE_DRAGGING_COLOR = '#fff';
+
+    Constants.PrePopulatedDatableItemDecayProportionChartView = PrePopulatedDatableItemDecayProportionChartView;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                            LANDSCAPE VIEW                           **
      **                                                                     **
      *************************************************************************/
