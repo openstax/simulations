@@ -42,7 +42,7 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                        HALF-LIFE SIMULATION                         **
+     **                       DECAY RATES SIMULATION                        **
      **                                                                     **
      *************************************************************************/
 
@@ -100,6 +100,24 @@ define(function (require) {
     MeasurementSimulation.INITIAL_TREE_METER_POSITION = new Vector2(-150, 100);
 
     Constants.MeasurementSimulation = MeasurementSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                        DATING GAME SIMULATION                       **
+     **                                                                     **
+     *************************************************************************/
+
+    var DatingGameSimulation = {};
+
+    DatingGameSimulation.INITIAL_METER_POSITION = new Vector2(540, 180);
+    // Constant that controls how close the user must be to the actual age
+    //   of an item to be considered correct.  This is a percentage, and a
+    //   value of 0 means the user must be perfectly accurate and a value
+    //   of 1 means that they can be off by as much as the value of the age.
+    DatingGameSimulation.AGE_GUESS_TOLERANCE_PERCENTAGE = 0.2;
+
+    Constants.DatingGameSimulation = DatingGameSimulation;
 
 
     /*************************************************************************
@@ -253,6 +271,32 @@ define(function (require) {
     DecayProportionChartView.POINT_RADIUS = 2;
 
     Constants.DecayProportionChartView = DecayProportionChartView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **       PRE-POPULATED DATABLE ITEM DECAY PROPORTION CHART VIEW        **
+     **                                                                     **
+     *************************************************************************/
+
+    var PrePopulatedDatableItemDecayProportionChartView = {};
+
+    PrePopulatedDatableItemDecayProportionChartView.NUM_SAMPLES_ON_DECAY_CHART = 500;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_MARGIN = 6;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_WIDTH = 90;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_HEIGHT = 32;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_LABEL_FONT = 'bold 10px Helvetica Neue';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_LABEL_COLOR = '#000';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_VALUE_FONT = '10px Helvetica Neue';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_VALUE_COLOR = '#000';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_BG_COLOR = '#EDF7FF';
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_BG_ALPHA = 1;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_RADIUS = 4;
+
+    PrePopulatedDatableItemDecayProportionChartView.HANDLE_COLOR = '#21366b';
+    PrePopulatedDatableItemDecayProportionChartView.HANDLE_DRAGGING_COLOR = '#fff';
+
+    Constants.PrePopulatedDatableItemDecayProportionChartView = PrePopulatedDatableItemDecayProportionChartView;
 
 
     /*************************************************************************

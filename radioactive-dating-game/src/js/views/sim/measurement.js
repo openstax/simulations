@@ -85,7 +85,7 @@ define(function (require) {
                 objects: [{
                     name: 'tree',
                     label: 'Tree',
-                    src: Assets.Images.TREE_ICON,
+                    src: Assets.Images.TREE_1,
                     isDefault: true
                 }, {
                     name: 'rock',

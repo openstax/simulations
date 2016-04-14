@@ -8,6 +8,10 @@
 
     #gradient.vertical(#81C8FF; #fff; 0%; 85%);
 
+    #sim-dating-game & {
+        #gradient.vertical(#81C8FF; #fff; 0%; 60%);
+    }
+
     @media screen and (max-height: @short-window) {
         height: @short-scene-height;
     }
@@ -21,7 +25,8 @@
     height: 0;
 
     .reset-nucleus-btn,
-    .reset-nuclei-btn {
+    .reset-nuclei-btn,
+    .reset-game-btn {
         position: absolute;
         right: 268px;
         top: 190px;
@@ -40,6 +45,17 @@
 
         #sim-decay-rates & {
             top: 270px;
+        }
+
+        #sim-dating-game & {
+            top: (176px + @panel-margin * 2);
+            right: @panel-margin;
+
+            @media screen and (max-height: @short-window) {
+                top: (176px + @short-screen-panel-margin * 2);
+                right: @short-screen-panel-margin;
+                left: auto;
+            }
         }
     }
 
@@ -92,4 +108,53 @@
             }
         }
     }
+
+    .win-display {
+        position: absolute;
+        width: 100%;
+        height: @scene-height;
+        background: fadeout(#fff, 30%);
+        display: none;
+        z-index: 5000;
+        .transition(~'opacity 200ms');
+
+        @media screen and (max-height: @short-window) {
+            height: @short-scene-height;
+        }
+
+        span {
+            position: absolute;
+            width: 100%;
+            height: 100px;
+            line-height: 100px;
+            top: 50%;
+            margin-top: -50px;
+            text-align: center;
+            color: #77af41;
+            font-size: 100px;
+            text-shadow: 4px 4px 0px #A3C383;
+
+            .animation-name(win);
+            .animation-duration(200ms);
+            .animation-timing-function(linear);
+            .animation-fill-mode(forwards);           
+        }
+
+        &.animate-out {
+            opacity: 0;
+
+            span {
+                display: none;
+            }
+        }
+        
+    }
+}
+
+@win-rotation: -15deg;
+
+@keyframes win {
+      0% { .transform(rotate(0deg)          scale(0.7, 0.7)); }
+     70% { .transform(rotate(@win-rotation) scale(1.4, 1.4)); }
+    100% { .transform(rotate(@win-rotation) scale(1,   1)); }
 }

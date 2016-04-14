@@ -1,0 +1,40 @@
+@import "../../../nuclear-physics/node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "../../../nuclear-physics/src/styles/mixins.less";
+
+@height: 28px;
+@padding: 8px;
+@border-radius: 4px;
+
+.answer-label-view {
+    position: absolute;
+    height: @height;
+    margin-top: -(@height / 2);
+    color: #fff;
+    line-height: @height;
+    padding-left: @padding;
+    padding-right: @height;
+    border-radius: @border-radius;
+    border-top-right-radius: (@height / 2);
+    border-bottom-right-radius: (@height / 2);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    .user-select(none);
+    pointer-events: none;
+
+    &.passed {
+        background: #77af41;
+    }
+
+    &.failed {
+        background: #c2002f;
+    }
+
+    .icon-wrapper {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: @height;
+        line-height: @height;
+        text-align: center;
+    }
+}

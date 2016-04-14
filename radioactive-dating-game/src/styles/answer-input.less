@@ -1,0 +1,24 @@
+@import "../../../nuclear-physics/node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "../../../nuclear-physics/src/styles/mixins.less";
+
+.answer-input-view {
+    position: absolute;
+    .user-select(none);
+
+    .answer-input-panel {
+        background: rgba(222, 244, 255, 0.78);
+
+        .answer-wrapper {
+            margin-bottom: 12px;
+
+            .answer {
+                background: rgba(255, 255, 255, 0.75);
+            }
+
+            .units {
+                background: rgba(169, 169, 169, 0.25);
+            }
+        }
+    }
+}
