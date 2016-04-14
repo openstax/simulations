@@ -1,7 +1,7 @@
 <ul class="nucleus-chooser">
-<% _.each(items, function(item) { %>
+<% _.each(items, function(item, index) { %>
     <% var halfHeight = (item.start.height + item.end.height + 26) / 2; %>
-    <li style="margin-top: <%= halfHeight %>px; padding-bottom: <%= halfHeight / 2 %>px">
+    <li style="margin-top: <%= halfHeight %>px; padding-bottom: <%= halfHeight / 2 + ((index < items.length - 1) ? spacingOffset : 0) %>px">
         <input type="radio" name="nucleus-chooser-<%= unique %>" value="<%= item.nucleusType %>" id="nucleus-<%= item.nucleusType %>-<%= unique %>" <% if (item.isDefault) { %>checked<% } %>>
         <label for="nucleus-<%= item.nucleusType %>-<%= unique %>">
             <div class="nucleus-chooser-start" style="margin-top: <%= -halfHeight + 8 %>px">

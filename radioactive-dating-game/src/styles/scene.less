@@ -8,12 +8,17 @@
 
     #gradient.vertical(#81C8FF; #fff; 0%; 85%);
 
-    #sim-dating-game & {
-        #gradient.vertical(#81C8FF; #fff; 0%; 60%);
+    @media screen and (max-height: @short-window) {
+        height: (@short-scene-height - @short-screen-playback-controls-height);
     }
 
-    @media screen and (max-height: @short-window) {
-        height: @short-scene-height;
+    #sim-dating-game & {
+        height: (@scene-height + @playback-controls-height);
+        #gradient.vertical(#81C8FF; #fff; 0%; 60%);
+
+        @media screen and (max-height: @short-window) {
+            height: (@short-scene-height);
+        }
     }
 }
 
@@ -24,7 +29,6 @@
     width: 100%;
     height: 0;
 
-    .reset-nucleus-btn,
     .reset-nuclei-btn,
     .reset-game-btn {
         position: absolute;
@@ -40,11 +44,18 @@
 
         @media screen and (max-height: @short-window) {
             right: auto;
-            left: 33px;
+            left: 21px;
+            top: 162px;
         }
 
         #sim-decay-rates & {
             top: 270px;
+
+            @media screen and (max-height: @short-window) {
+                right: 32px;
+                left: auto;
+                top: 324px;
+            }
         }
 
         #sim-dating-game & {
@@ -88,7 +99,7 @@
         left: 100%;
 
         @media screen and (max-height: @short-window) {
-            top: (@short-scene-height - @height);
+            top: (@short-scene-height - @short-screen-playback-controls-height - @height);
         }
 
         button {

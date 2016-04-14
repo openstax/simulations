@@ -156,8 +156,8 @@ define(function(require) {
             var canisterWidth;
 
             if (AppView.windowIsShort()) {
-                canisterX = 12 + 21;
-                canisterY = 260;
+                canisterX = 21;
+                canisterY = 228;
                 canisterWidth = 160;
             }
             else {
