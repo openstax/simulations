@@ -7,7 +7,8 @@ define(function(require) {
 
     var Colors = require('common/colors/colors');
 
-    var NucleusType = require('models/nucleus-type');
+    var NucleusType  = require('models/nucleus-type');
+    var HalfLifeInfo = require('models/half-life-info');
 
     var DatableItemDecayProportionChartView = require('radioactive-dating-game/views/decay-proportion-chart/datable-item');
 
@@ -55,6 +56,9 @@ define(function(require) {
         },
 
         initHandle: function() {
+            // Starting place for the handle
+            this._lastRelativeHandlePosition = 0.5;
+
             var padding = 4;
             var row1Y = padding;
             var row2Y = padding + 13;
@@ -181,6 +185,8 @@ define(function(require) {
                     this.handle.x = this.graphOriginX;
                 if (this.handle.x > this.graphOriginX + this.graphWidth)
                     this.handle.x = this.graphOriginX + this.graphWidth;
+
+                this.updateHandleInfo();
             }
         },
 
@@ -203,7 +209,79 @@ define(function(require) {
 
         updateHandlePosition: function() {
             this.handle.y = this.graphOriginY;
-            this.handle.x = this.graphOriginX + 200; // temporary for testing
+            this.handle.x = this.graphOriginX + this._lastRelativeHandlePosition * this.graphWidth;
+        },
+
+        updateHandleInfo: function() {
+            var x = this.handle.x;
+            var time = (x - this.graphOriginX) / this.msToPixelsFactor;
+            var percent = this.getClosestDataValue(time);
+            this.infoPercentValue.text = (percent * 100).toFixed(1) + '%';
+            this.infoTimeValue.text = this.getTimeText(time);
+
+            // Save it in case we switch graphs
+            this._lastRelativeHandlePosition = (x - this.graphOriginX) / this.graphWidth;
+        },
+
+        getClosestDataValue: function(time) {
+            if (this.dataTimes.length === 0) {
+                // There are no data points, so return 0.
+                return 0;
+            }
+            else if (time < this.dataTimes[0]) {
+                // The request is for the space prior to the first data point,
+                //   so return the value for the first point.
+                return this.dataPercents[0];
+            }
+            else {
+                // Find the enclosing data points.
+                var times = this.dataTimes;
+                var leftIndex = null;
+                var rightIndex = null;
+
+                for (var i = 0; i < times.length; i++) {
+                    leftIndex = i;
+                    if (i === times.length - 1) {
+                        // We are at the end of the chart, and there are no
+                        // more points to be used, so use the last point for
+                        // both the left and right points.
+                        rightIndex = leftIndex;
+                    }
+                    else {
+                        rightIndex = i + 1;
+                        if (time >= times[leftIndex] && time < times[rightIndex]) {
+                            // This is the pair of points we are looking for.
+                            break;
+                        }
+                    }
+                }
+
+                if (time - times[leftIndex] <= times[rightIndex] - time)
+                    return this.dataPercents[leftIndex];
+                else
+                    return this.dataPercents[rightIndex];
+            }
+
+            return returnValue;
+        },
+
+        getTimeText: function(time) {
+            var timeString;
+
+            if (time < HalfLifeInfo.convertYearsToMs(1E6)) {
+                // Use individual years.
+                timeString = HalfLifeInfo.convertMsToYears(time).toFixed(0) + ' yrs';
+            }
+            else if (time < HalfLifeInfo.convertYearsToMs(1E9)) {
+                // Use millions of years.
+                timeString = (HalfLifeInfo.convertMsToYears(time) / 1E6).toFixed(2) + ' MY';
+            }
+            else {
+                // Use billions of years.
+                timeString = (HalfLifeInfo.convertMsToYears( time ) / 1E9).toFixed(2) + ' BY';
+            }
+
+            return timeString;
         },
 
         nucleusTypeChanged: function(meter, nucleusType) {
@@ -230,6 +308,7 @@ define(function(require) {
 
             this.generateData();
             this.drawGraphData();
+            this.updateHandleInfo();
         },
 
         halfLifeChanged: function() {
@@ -237,6 +316,7 @@ define(function(require) {
 
             this.generateData();
             this.drawGraphData();
+            this.updateHandleInfo();
         }
 
     }, Constants.PrePopulatedDatableItemDecayProportionChartView);

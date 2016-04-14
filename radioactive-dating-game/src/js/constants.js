@@ -283,7 +283,7 @@ define(function (require) {
 
     PrePopulatedDatableItemDecayProportionChartView.NUM_SAMPLES_ON_DECAY_CHART = 500;
     PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_MARGIN = 6;
-    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_WIDTH = 86;
+    PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_WIDTH = 90;
     PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_HEIGHT = 32;
     PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_LABEL_FONT = 'bold 10px Helvetica Neue';
     PrePopulatedDatableItemDecayProportionChartView.INFO_BOX_LABEL_COLOR = '#000';
