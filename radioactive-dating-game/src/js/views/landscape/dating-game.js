@@ -56,9 +56,11 @@ define(function(require) {
                 SHORT_SCREEN_BACKGROUND_WIDTH / LandscapeView.BACKGROUND_IMAGE_WIDTH: 
                 DEFAULT_BACKGROUND_WIDTH      / LandscapeView.BACKGROUND_IMAGE_WIDTH;
 
+            var x = AppView.windowIsShort() ? 130 : 0;
+
             return ModelViewTransform.createSinglePointScaleInvertedYMapping(
-                new Vector2(0, 0),      // Model origin
-                new Vector2(0, height), // View origin
+                new Vector2(0, 0),            // Model origin
+                new Vector2(x, height), // View origin
                 scale
             );
         }

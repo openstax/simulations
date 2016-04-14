@@ -52,7 +52,7 @@ define(function (require, exports, module) {
             this.addItem('Trilobyte',           Images.TRILOBYTE_FOSSIL, new Vector2(740,  78),    40,      0, HalfLifeInfo.convertYearsToMs(309.6E6), true);
             this.addItem('Animal Skull',        Images.SKULL_ANIMAL,     new Vector2(140, 310),    70, PI/4-1, HalfLifeInfo.convertYearsToMs(150),     true);
             this.addItem('Living Tree',         Images.TREE_1,           new Vector2(240, 400),   130,      0, 0,                                      true);
-            this.addItem('Distant Living Tree', Images.TREE_1,           new Vector2(530, 386),    30,      0, 0,                                      true);
+            this.addItem('Distant Living Tree', Images.TREE_1,           new Vector2(530, 378),    30,      0, 0,                                      true);
             this.addItem('Fish Fossil',         Images.FISH_FOSSIL,      new Vector2(300, 134),   100,      0, HalfLifeInfo.convertYearsToMs(28E6),    true);
             this.addItem('Dead Tree',           Images.DEAD_TREE,        new Vector2(400, 320),    26,   PI/2, HalfLifeInfo.convertYearsToMs(220),     true);
             this.addItem('Fish Bones',          Images.FISH_BONES,       new Vector2(800, 190),    90,      0, HalfLifeInfo.convertYearsToMs(16E3),    true);
