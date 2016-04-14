@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var AppView            = require('common/v3/app/app');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
@@ -22,7 +23,8 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                scale: 18
+                scale: AppView.windowIsShort() ? 16 : 18,
+                spacingOffset: AppView.windowIsShort() ? -13 : 0
             }, options);
 
             NucleusChooser.prototype.initialize.apply(this, [options]);

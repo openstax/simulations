@@ -31,10 +31,12 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                scale: 1
+                scale: 1,
+                spacingOffset: 0
             }, options);
 
             this.scale = options.scale;
+            this.spacingOffset = options.spacingOffset;
             this.simulation = options.simulation;
 
             this.initMVT();
@@ -115,6 +117,7 @@ define(function(require) {
             this.$el.html(this.template({ 
                 items: items,
                 imageContainerWidth: maxWidth / 2,
+                spacingOffset: this.spacingOffset,
                 unique: this.cid 
             }));
 
