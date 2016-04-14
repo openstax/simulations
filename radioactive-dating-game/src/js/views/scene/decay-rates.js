@@ -52,7 +52,10 @@ define(function(require) {
         },
 
         getTopPadding: function() {
-            return 230;
+            if (AppView.windowIsShort())
+                return 220;
+            else
+                return 230;
         },
 
         initMVT: function() {
@@ -117,8 +120,8 @@ define(function(require) {
             var canisterWidth;
 
             if (AppView.windowIsShort()) {
-                canisterX = 12 + 21;
-                canisterY = 260;
+                canisterX = 21;
+                canisterY = 254;
                 canisterWidth = 160;
             }
             else {

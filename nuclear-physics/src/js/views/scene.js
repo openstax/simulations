@@ -29,6 +29,9 @@ define(function(require) {
 
         getLeftPadding: function() {
             var $leftPanel = this.$el.parents('.sim-view').find('.sim-controls-left');
+            if ($leftPanel.length === 0)
+                return 0;
+
             if (AppView.windowIsShort())
                 return $leftPanel.outerWidth() + 12;
             else
@@ -39,6 +42,7 @@ define(function(require) {
             var $rightPanel = this.$el.parents('.sim-view').find('.sim-controls-right');
             if ($rightPanel.length === 0)
                 return 0;
+            
             if (AppView.windowIsShort())
                 return $rightPanel.outerWidth() + 12;
             else
