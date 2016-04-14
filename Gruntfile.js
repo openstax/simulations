@@ -12,9 +12,6 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		clean: {
-			dist: ['dist']
-		},
 		targethtml: {
 			dist: {
 				files: {
@@ -37,72 +34,39 @@ module.exports = function(grunt) {
 
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-	/**
-	 * Runs the `grunt dist` command for every sim that has changed since last build.
-	 *   The `--all` flag can be specified to force build of all sims instead of
-	 *   just the ones that have been updated.
-	 */
-	grunt.registerTask('run-dists', function() {
-		SimManager.buildSims(grunt.option('all'));
-	});
-
-	grunt.registerTask('fix-dist-directories', function(){
-		SimManager.fixDistDirs(grunt.option('all'));
-	});
-
 	grunt.registerTask('create-no-jekyll', function(){
 		grunt.file.write('./dist/.nojekyll', '');
 	});
 
-	grunt.registerTask('copy-dists', [
-		'clean:dist',
-		'copy:dist',
-		'fix-dist-directories'
-	]);
+	/**
+	 * Builds every sim that has changed since last build and copies it into the
+	 *   master `dist` directory.  It also renders the index page so the sim list
+	 *   is up to date.  The `--all` flag can be added to force build all sims
+	 *   instead of just the ones that have been updated.
+	 */
+	grunt.registerTask('dist', function() {
+		grunt.task.run([
+			'run-dists',
+			'clean-dists',
+			'copy-dists',
+			'targethtml:dist'
+		]);
+	});
 
-	grunt.registerTask('dist', [
-		'run-dists',
-		'copy-dists',
-		'targethtml:dist'
-	]);
-
+	/**
+	 * Does the same thing as the `dist` command but then deploys to GitHub Pages.
+	 */
 	grunt.registerTask('deploy', function() {
-		if (grunt.option('all')) {
-			grunt.task.run([
-				'dist',
-				'create-no-jekyll',
-				'gh-pages:deploy'
-			]);
-		}
-		else {
-			grunt.task.run([
-				'dist',
-				'create-no-jekyll',
-				'gh-pages:deploy'
-			]);
-		}
+		SimManager.buildSims(grunt.option('all'));
+
+		grunt.task.run([
+			'create-no-jekyll',
+			'gh-pages:deploy'
+		]);
 	});
 
 	grunt.registerTask('dev', [
 		'connect:dev'
 	]);
-
-	grunt.registerTask('npm-install', function() {
-		SimManager.npmInstall(grunt.option('all'));
-	});
-
-	/**
-	 * This task creates a new sim folder and renames all the references inside.
-	 *   Note that one must specify each argument by name.  Example:
-	 *
-	 *   `grunt create --dirName="plant-growth" --packageName="plant-growth" --classPrefix="PlantGrowth" --title="Plant Growth"`
-	 */
-	grunt.registerTask('create', 'Creates a new simulation project.', function() {
-		var dirName = grunt.option('dirName') || 'template-copy';
-		var packageName = grunt.option('packageName') || dirName;
-		var classPrefix = grunt.option('classPrefix') || 'TemplateCopy';
-		var title = grunt.option('title') || 'Template Copy';
-
-		SimManager.createNewSim(dirName, packageName, classPrefix, title);
-	});
+	
 };

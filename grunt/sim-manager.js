@@ -1,17 +1,9 @@
-var fs    = require('fs');
-var _     = require('underscore');
-var touch = require('touch');
+var fs     = require('fs');
+var _      = require('underscore');
+var touch  = require('touch');
+var wrench = require('wrench');
 
 module.exports = function(grunt) {
-	// Add extra grunt configurations
-	grunt.config.merge({
-		copy: {
-			dist: {
-				src: '*/dist/**/*',
-				dest: 'dist/'
-			}
-		}
-	});
 
 	// Pattern for matching gruntfiles in the root of each sim directory
 	var simGruntfilePatterns = [
@@ -100,6 +92,15 @@ module.exports = function(grunt) {
 		/**
 		 * Return just the directory names of each updated sim.
 		 */
+		getAllSimDirNames: function() {
+			return _.map(this.getAllSimDirs(), function(simDir) {
+				return simDir.substring(simDir.indexOf('/') + 1, simDir.lastIndexOf('/'));
+			});
+		},
+
+		/**
+		 * Return just the directory names of each updated sim.
+		 */
 		getUpdatedSimDirNames: function() {
 			return _.map(this.getUpdatedSimDirs(), function(simDir) {
 				return simDir.substring(simDir.indexOf('/') + 1, simDir.lastIndexOf('/'));
@@ -110,7 +111,7 @@ module.exports = function(grunt) {
 		 * Runs the `dist` command in each sim directory for either updated
 		 *   sims or all sims depending on the `forceBuildAll` flag.
 		 */
-		buildSims: function(forceBuildAll) {
+		runDists: function(forceBuildAll) {
 			// Get the function to call when all gruntfiles have been run
 			var done = grunt.task.current.async();
 
@@ -126,14 +127,20 @@ module.exports = function(grunt) {
 
 			// Create a callback for when a dist finishes running
 			var numSimsToBuild = simDirs.length;
+			var totalNumSims = this.getAllSimDirs().length;
 			var gruntsRunning = numSimsToBuild;
 			var checkFinished = function() {
 				gruntsRunning--;
 				if (gruntsRunning === 0) {
+					var unchangedOutput = '';
+					var numUnchanged = totalNumSims - numSimsToBuild;
+					if (numUnchanged > 0)
+						unchangedOutput = '; ' + numUnchanged + ' remained unchanged';
+
 					if (numSimsToBuild === 1)
-						grunt.log.writeln('>> 1 simulation compiled');
+						grunt.log.writeln('>> 1 simulation built' + unchangedOutput);
 					else
-						grunt.log.writeln('>> ' + numSimsToBuild + ' simulations compiled');
+						grunt.log.writeln('>> ' + numSimsToBuild + ' simulations built' + unchangedOutput);
 
 					// Update the build timestamp
 					touch('.build_timestamp');
@@ -155,47 +162,45 @@ module.exports = function(grunt) {
 			}
 		},
 
+		cleanDists: function(forceCleanAll) {
+			// Get the list of sim directories
+			var simDirNames = (forceCleanAll) ?
+				this.getAllSimDirNames() :
+				this.getUpdatedSimDirNames();
+
+			for (var i = 0; i < simDirNames.length; i++) {
+				var directory = './dist/' + simDirNames[i];
+				if (grunt.file.exists(directory))
+					wrench.rmdirSyncRecursive(directory);
+			}
+
+			if (simDirNames.length === 1)
+				grunt.log.writeln('>> 1 old simulation dist directory removed');
+			else
+				grunt.log.writeln('>> ' + simDirNames.length + ' old simulation dist directories removed');
+		},
+
 		/**
 		 *
 		 */
 		copyDists: function(forceCopyAll) {
+			// Get the list of sim directories
+			var simDirNames = (forceCopyAll) ?
+				this.getAllSimDirNames() :
+				this.getUpdatedSimDirNames();
 
-		},
-
-		/**
-		 * When the `dist` directories are copied to the master `dist` directory
-		 *   in the root of the simulations folder, they each are actually inside
-		 *   directories matching their sim project folder, and the the dist dirs
-		 *   need to be renamed as their sim project name and moved up a level to
-		 *   be directly in the `dist` root.
-		 */
-		fixDistDirs: function(forceFixAll) {
-			var distDir = './dist/';
-
-			// Get the list of subdirectories in the `dist` folder
-			var subDirs = fs.readdirSync('./dist/');
-			if (!forceFixAll) {
-				// Only keep the ones that have been updated
-				subDirs = _.intersection(subDirs, this.getUpdatedSimDirNames());
+			// Copy each dist folder into the master dist folder
+			for (var i = 0; i < simDirNames.length; i++) {
+				var dirName = simDirNames[i];
+				var src = './' + dirName + '/dist';
+				var dst = './dist/' + dirName;
+				wrench.copyDirSyncRecursive(src, dst);
 			}
 
-			var simDir, tempDir;
-			var simCount = 0;
-			for (var i = 0; i < subDirs.length; i++) {
-				simDir = distDir + subDirs[i];
-				tempDir = simDir + '.temp';
-				if (fs.lstatSync(simDir).isDirectory() && fs.existsSync(simDir + '/dist')) {
-					fs.renameSync(simDir + '/dist', tempDir);
-					fs.rmdirSync(simDir);
-					fs.renameSync(tempDir, simDir);
-					simCount++;
-				}
-			}
-
-			if (simCount === 1)
-				grunt.log.writeln('>> 1 simulation dist directory fixed');
+			if (simDirNames.length === 1)
+				grunt.log.writeln('>> 1 simulation dist directory copied into the master dist directory');
 			else
-				grunt.log.writeln('>> ' + simCount + ' simulations dist directory fixed');
+				grunt.log.writeln('>> ' + simDirNames.length + ' simulation dist directories copied into the master dist directory');
 		},
 
 		npmInstall: function(forceUpdateAll) {
@@ -259,8 +264,6 @@ module.exports = function(grunt) {
 		 * Creates a new sim folder and renames all the references inside.
 		 */
 		createNewSim: function(dirName, packageName, classPrefix, title) {
-			var wrench = require('wrench');
-
 			// Remove the current template's /dist directory if it exists--just slows down the copy
 			if (grunt.file.exists('./template/dist/'))
 				wrench.rmdirSyncRecursive('./template/dist/');
@@ -303,6 +306,44 @@ module.exports = function(grunt) {
 		}
 
 	};
+
+
+	/**
+	 * Runs the `grunt dist` command for every sim that has changed since last build.
+	 *   The `--all` flag can be specified to force build of all sims instead of
+	 *   just the ones that have been updated.
+	 */
+	grunt.registerTask('run-dists', function() {
+		SimManager.runDists(grunt.option('all'));
+	});
+
+	grunt.registerTask('clean-dists', function() {
+		SimManager.cleanDists(grunt.option('all'));
+	});
+
+	grunt.registerTask('copy-dists', function() {
+		SimManager.copyDists(grunt.option('all'));
+	});
+
+	grunt.registerTask('npm-install', function() {
+		SimManager.npmInstall(grunt.option('all'));
+	});
+
+	/**
+	 * This task creates a new sim folder and renames all the references inside.
+	 *   Note that one must specify each argument by name.  Example:
+	 *
+	 *   `grunt create --dirName="plant-growth" --packageName="plant-growth" --classPrefix="PlantGrowth" --title="Plant Growth"`
+	 */
+	grunt.registerTask('create', 'Creates a new simulation project.', function() {
+		var dirName = grunt.option('dirName') || 'template-copy';
+		var packageName = grunt.option('packageName') || dirName;
+		var classPrefix = grunt.option('classPrefix') || 'TemplateCopy';
+		var title = grunt.option('title') || 'Template Copy';
+
+		SimManager.createNewSim(dirName, packageName, classPrefix, title);
+	});
+
 
 	return SimManager;
 };
