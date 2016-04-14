@@ -80,7 +80,8 @@ define(function(require) {
         },
 
         reset: function() {
-            
+            this.simulation.reset();
+            this.removeAnswerLabelViews();
         },
 
         getTopPadding: function() {
@@ -216,6 +217,13 @@ define(function(require) {
                     this.answerLabelViews.splice(i, 1);
                     return;
                 }
+            }
+        },
+
+        removeAnswerLabelViews: function() {
+            for (var i = this.answerLabelViews.length - 1; i >= 0; i--) {
+                this.answerLabelViews[i].remove();
+                this.answerLabelViews.splice(i, 1);
             }
         },
 
