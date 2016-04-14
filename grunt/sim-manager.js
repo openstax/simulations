@@ -1,5 +1,6 @@
-var fs = require('fs');
-var _  = require('underscore');
+var fs    = require('fs');
+var _     = require('underscore');
+var touch = require('touch');
 
 module.exports = function(grunt) {
 	// Add extra grunt configurations
@@ -43,9 +44,13 @@ module.exports = function(grunt) {
 		 */
 		getAllSimDirs: function() {
 			var gruntfiles = this.getAllSimGruntfiles();
-			return _.map(gruntfiles, function(gruntfile) {
+			var dirs = _.map(gruntfiles, function(gruntfile) {
 				// Gets the path leading up to Gruntfile.js
 				return gruntfile.substring(0, gruntfile.indexOf('Gruntfile.js'));
+			});
+
+			return _.reject(dirs, function(dir) {
+				return (dir.indexOf('common') !== -1);
 			});
 		},
 
@@ -57,9 +62,39 @@ module.exports = function(grunt) {
 		 *   it pass through if the build timestamp is older.
 		 */
 		getUpdatedSimDirs: function() {
-			var allDirs = this.getAllSimDirs();
-			// TODO: filter out all of the ones that aren't up-to-date
-			return allDirs;
+			// If we've already cached the list, return it
+			if (this._updatedSimDirs)
+				return this._updatedSimDirs;
+
+			// Otherwise, spawn some `find` tasks and find out which sim folders have new files.
+			var spawnSync = require('child_process').spawnSync;
+			var dirs = this.getAllSimDirs();
+
+			// Check if there is even a build timestamp; if not, it's our first time running it,
+			//   and we need to build all of them anyway.
+			if (!fs.existsSync('.build_timestamp'))
+				return dirs;
+
+			for (var i = dirs.length - 1; i >= 0; i--) {
+				// Look for files that are newer than the `.build_timestamp` and aren't in any
+				//   of those big nasty folders that we don't care about.
+				var process = spawnSync('find', [
+					dirs[i], 
+					'-type', 'f', 
+					'-newer', '.build_timestamp', 
+					'-not', '-iwholename', '*node_modules*', 
+					'-not', '-iwholename', '*bower_components*', 
+					'-not', '-iwholename', '*dist*'
+				]);
+
+				// If there was no output (no newer file found), remove it from the list
+				if (process.stdout == '')
+					dirs.splice(i, 1);
+			}
+
+			this._updatedSimDirs = dirs;
+
+			return dirs;
 		},
 
 		/**
@@ -84,6 +119,11 @@ module.exports = function(grunt) {
 				this.getAllSimDirs() :
 				this.getUpdatedSimDirs();
 
+			if (simDirs.length === 0) {
+				grunt.log.writeln('>> All simulations are already up-to-date.');
+				return;
+			}
+
 			// Create a callback for when a dist finishes running
 			var numSimsToBuild = simDirs.length;
 			var gruntsRunning = numSimsToBuild;
@@ -94,6 +134,10 @@ module.exports = function(grunt) {
 						grunt.log.writeln('>> 1 simulation compiled');
 					else
 						grunt.log.writeln('>> ' + numSimsToBuild + ' simulations compiled');
+
+					// Update the build timestamp
+					touch('.build_timestamp');
+
 					done();
 				}
 			};
