@@ -4,16 +4,21 @@
 
 .scene-view {
     width: 100%;
-    height: @scene-height;
+    height: (@scene-height - @playback-controls-height);
 
     #gradient.vertical(#81C8FF; #fff; 0%; 85%);
 
-    #sim-dating-game & {
-        #gradient.vertical(#81C8FF; #fff; 0%; 60%);
+    @media screen and (max-height: @short-window) {
+        height: (@short-scene-height - @short-screen-playback-controls-height);
     }
 
-    @media screen and (max-height: @short-window) {
-        height: @short-scene-height;
+    #sim-dating-game & {
+        height: @scene-height;
+        #gradient.vertical(#81C8FF; #fff; 0%; 60%);
+
+        @media screen and (max-height: @short-window) {
+            height: (@short-scene-height);
+        }
     }
 }
 
@@ -88,7 +93,7 @@
         left: 100%;
 
         @media screen and (max-height: @short-window) {
-            top: (@short-scene-height - @height);
+            top: (@short-scene-height - @short-screen-playback-controls-height - @height);
         }
 
         button {
