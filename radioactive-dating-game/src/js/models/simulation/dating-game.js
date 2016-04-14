@@ -112,6 +112,9 @@ define(function (require, exports, module) {
                 this.trigger('estimate-passed', item, estimate);
             else
                 this.trigger('estimate-failed', item, estimate);
+
+            if (this.allEstimatesPass())
+                this.trigger('win');
         },
 
         /**
@@ -125,6 +128,18 @@ define(function (require, exports, module) {
                 (estimatedAge <= actualAge * (1 + DatingGameSimulation.AGE_GUESS_TOLERANCE_PERCENTAGE)) &&
                 (estimatedAge >= actualAge * (1 - DatingGameSimulation.AGE_GUESS_TOLERANCE_PERCENTAGE))
             );
+        },
+
+        allEstimatesPass: function() {
+            for (var i = 0; i < this.items.length; i++) {
+                var item = this.items.at(i);
+                var estimate = HalfLifeInfo.convertYearsToMs(this.estimates[item.cid]);
+
+                if (estimate === undefined || !this.estimatePasses(item, estimate))
+                    return false;
+            }
+
+            return true;
         }
 
     }, Constants.DatingGameSimulation);

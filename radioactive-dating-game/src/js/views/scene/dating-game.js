@@ -48,16 +48,17 @@ define(function(require) {
                 formats: ['ogg', 'mp3', 'wav'],
                 volume: this.lowVolume
             });
-            // this.winSound = new buzz.sound('audio/short-fanfare', {
-            //     formats: ['ogg', 'mp3', 'wav'],
-            //     volume: this.lowVolume
-            // });
+            this.winSound = new buzz.sound('audio/short-fanfare', {
+                formats: ['ogg', 'mp3', 'wav'],
+                volume: this.lowVolume
+            });
 
             // Cached objects
             this._answerPosition = new Vector2();
 
             this.listenTo(this.simulation, 'estimate-passed', this.estimatePassed);
             this.listenTo(this.simulation, 'estimate-failed', this.estimateFailed);
+            this.listenTo(this.simulation, 'win', this.win);
         },
 
         renderContent: function() {
@@ -71,8 +72,11 @@ define(function(require) {
 
             this.$answerLabels = $('<div>');
 
+            this.$winDisplay = $('<div class="win-display"><span>Success!</span></div>');
+
             this.$ui.append(this.$resetButton);
             this.$ui.append(this.$answerLabels);
+            this.$ui.append(this.$winDisplay);
         },
 
         reset: function() {
@@ -245,16 +249,19 @@ define(function(require) {
         setSoundVolumeMute: function() {
             this.passSound.setVolume(0);
             this.failSound.setVolume(0);
+            this.winSound.setVolume(0);
         },
 
         setSoundVolumeLow: function() {
             this.passSound.setVolume(this.lowVolume);
             this.failSound.setVolume(this.lowVolume);
+            this.winSound.setVolume(this.lowVolume);
         },
 
         setSoundVolumeHigh: function() {
             this.passSound.setVolume(this.highVolume);
             this.failSound.setVolume(this.highVolume);
+            this.winSound.setVolume(this.highVolume);
         },
 
         estimatePassed: function(item, estimate) {
@@ -267,6 +274,29 @@ define(function(require) {
             this.failSound.play();
 
             this.showAnswerLabel(item, estimate, false);
+        },
+
+        win: function() {
+            this.winSound.play();
+            this.showWinDisplay(2000);
+        },
+
+        showWinDisplay: function(duration) {
+            this.$winDisplay.show();
+            var self = this;
+            setTimeout(function() {
+                self.hideWinDisplay();
+            }, duration);
+        },
+
+        hideWinDisplay: function() {
+            this.$winDisplay.addClass('animate-out');
+            var $winDisplay = this.$winDisplay;
+            setTimeout(function() {
+                $winDisplay
+                    .hide()
+                    .removeClass('animate-out');
+            }, 200);
         }
 
     });
