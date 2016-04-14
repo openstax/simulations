@@ -60,10 +60,18 @@ define(function(require) {
             this.listenTo(this.simulation, 'estimate-failed', this.estimateFailed);
         },
 
-        render: function() {
-            NuclearPhysicsSceneView.prototype.render.apply(this, arguments);
+        renderContent: function() {
+            NuclearPhysicsSceneView.prototype.renderContent.apply(this, arguments);
+
+            var self = this;
+            this.$resetButton = $('<button class="btn btn-lg reset-game-btn">Reset Game</button>');
+            this.$resetButton.on('click', function() {
+                self.reset();
+            });
 
             this.$answerLabels = $('<div>');
+
+            this.$ui.append(this.$resetButton);
             this.$ui.append(this.$answerLabels);
         },
 

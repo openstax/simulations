@@ -25,7 +25,8 @@
     height: 0;
 
     .reset-nucleus-btn,
-    .reset-nuclei-btn {
+    .reset-nuclei-btn,
+    .reset-game-btn {
         position: absolute;
         right: 268px;
         top: 190px;
@@ -44,6 +45,17 @@
 
         #sim-decay-rates & {
             top: 270px;
+        }
+
+        #sim-dating-game & {
+            top: (176px + @panel-margin * 2);
+            right: @panel-margin;
+
+            @media screen and (max-height: @short-window) {
+                top: (176px + @short-screen-panel-margin * 2);
+                right: @short-screen-panel-margin;
+                left: auto;
+            }
         }
     }
 
