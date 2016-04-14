@@ -347,7 +347,14 @@ define(function(require) {
         },
 
         nucleusTypeChanged: function(model, nucleusType) {
-            var text = (nucleusType === NucleusType.CARBON_14) ? 'Carbon-14' : 'Uranium-238';
+            var text;
+            if (nucleusType === NucleusType.CARBON_14)
+                text = 'Carbon-14';
+            else if (nucleusType === NucleusType.URANIUM_238)
+                text = 'Uranium-238';
+            else
+                text = 'Custom';
+            
             this.$el.find('.readout-label').html(text + ':');
             this.updateReadout();
         },
