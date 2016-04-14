@@ -5,12 +5,21 @@
     min-height: inherit;
 }
 
-.sound-btn-wrapper {
+/**
+ * Sim Settings, top right
+ */
+.sim-settings {
     position: absolute;
     top: -36px;
-    right: 30px;
+    right: 0;
+    z-index: 10;
 
-    > .sound-btn {
+    > div {
+        float: left;
+        margin: 0 4px;
+    }
+
+    button {
         background: @gray-lightest;
         color: @link-color;
         outline: none;
@@ -20,26 +29,100 @@
         height: 28px;
         text-align: center;
 
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:active {
+        &:hover, &:active, &.active {
             background: @link-color;
             color: #fff;
         }
 
-        &.sound-btn-mute,
-        &.sound-btn-low {
-            display: none;
+        &.active{
+            &:hover{
+                background: fade(@link-color, 75%);
+            }
         }
     }
 }
 
-.hello-world {
+.sim-controls-wrapper {
     position: absolute;
-    top: 44%;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
+    right: @panel-margin;
+    top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        right: (@short-screen-panel-margin + 1);
+        top: @short-screen-panel-margin;
+    }
+}
+
+@media screen and (max-height: @short-window) {
+    .sim-controls-wrapper {
+        position: inherit;
+        top: auto;
+        right: auto;
+    }
+
+    .sim-controls-left {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        left: (@short-screen-panel-margin + 1);
+    }
+
+    .sim-controls-right {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: (@short-screen-panel-margin + 1);
+    }
+}
+
+.sim-controls {
+    .panel();
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+
+    h2 {
+        font-size: 16px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    label {
+        color: #222;
+        cursor: pointer;
+    }
+
+    .slider {
+        cursor: pointer;
+    }
+
+    .slider-header {
+        display: block;
+        margin-bottom: -4px;
+    }
+
+    .slider-value {
+        float: right;
+        font-weight: 400;
+    }
+
+    .slider-container {
+        margin-bottom: 8px;
+    }
+
 }
