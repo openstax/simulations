@@ -84,7 +84,7 @@ module.exports = function(grunt) {
 					out: 'src/optimized.js',
 
 					paths: {
-						'assets': '"assets-dist"'
+						'assets': 'assets-dist',
 						'styles/font-awesome' : '../styles/font-awesome'
 					},
 
