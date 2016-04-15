@@ -71,8 +71,8 @@ define(function(require) {
 
             if (AppView.windowIsShort()) {
                 // Center between the two columns
-                this.viewOriginX = Math.round(m + this.width / 2);
-                this.viewOriginY = Math.round(m + usableHeight / 2);
+                this.viewOriginX = Math.round(this.width / 2);
+                this.viewOriginY = Math.round(40 + usableHeight / 2);
             }
             else {
                 // Center in the usable area on the left
@@ -121,14 +121,11 @@ define(function(require) {
             });
 
             this.externalFieldControlView.displayObject.x = this.width  - ExternalFieldControlView.RIGHT;
-            this.externalFieldControlView.displayObject.y = this.height - ExternalFieldControlView.BOTTOM;
 
             this.stage.addChild(this.externalFieldControlView.displayObject);
             this.$ui.append(this.externalFieldControlView.el);
 
-            this.externalFieldControlView.$el.css({
-                'top': (this.height - ExternalFieldControlView.BOTTOM - ExternalFieldControlView.PANEL_HEIGHT) + 'px'
-            });
+            this.updateExternalFieldControlPosition();
         },
 
         reset: function() {
@@ -137,6 +134,21 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             this.electricFieldView.update(time, deltaTime);
+        },
+
+        updateExternalFieldControlPosition: function() {
+            if (AppView.windowIsShort()) {
+                this.externalFieldControlView.displayObject.y = 20 + ExternalFieldControlView.PANEL_HEIGHT;
+                this.externalFieldControlView.$el.css({
+                    'top': 20 + 'px'
+                });
+            }
+            else {
+                this.externalFieldControlView.displayObject.y = this.height - ExternalFieldControlView.BOTTOM;
+                this.externalFieldControlView.$el.css({
+                    'top': (this.height - ExternalFieldControlView.BOTTOM - ExternalFieldControlView.PANEL_HEIGHT) + 'px'
+                });
+            }
         },
 
         particlesReset: function(particles) {
