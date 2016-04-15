@@ -464,6 +464,9 @@ define(function (require, exports, module) {
          *   is closest to the specified time.
          */
         findStateWithClosestTime: function(time) {
+            if (!this._historyTimes)
+                return null;
+            
             var stateIndex = binarySearch.closest(this._historyTimes, time);
             return this.stateHistory[stateIndex];
         },
