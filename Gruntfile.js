@@ -57,9 +57,8 @@ module.exports = function(grunt) {
 	 * Does the same thing as the `dist` command but then deploys to GitHub Pages.
 	 */
 	grunt.registerTask('deploy', function() {
-		SimManager.buildSims(grunt.option('all'));
-
 		grunt.task.run([
+			'dist',
 			'create-no-jekyll',
 			'gh-pages:deploy'
 		]);
@@ -68,5 +67,5 @@ module.exports = function(grunt) {
 	grunt.registerTask('dev', [
 		'connect:dev'
 	]);
-	
+
 };

@@ -54,7 +54,10 @@ module.exports = function(grunt) {
 		 *   it pass through if the build timestamp is older.
 		 */
 		getUpdatedSimDirs: function() {
-			// If we've already cached the list, return it
+			// If we've already cached the list, return it.  Saving a cached
+			//   list ensures that we have the same list of updated sims
+			//   across multiple tasks being run together--even after the
+			//   runDists task finishes and touches the .build_timestamp file.
 			if (this._updatedSimDirs)
 				return this._updatedSimDirs;
 
@@ -64,8 +67,10 @@ module.exports = function(grunt) {
 
 			// Check if there is even a build timestamp; if not, it's our first time running it,
 			//   and we need to build all of them anyway.
-			if (!fs.existsSync('.build_timestamp'))
+			if (!fs.existsSync('.build_timestamp')) {
+				this._updatedSimDirs = dirs;
 				return dirs;
+			}
 
 			for (var i = dirs.length - 1; i >= 0; i--) {
 				// Look for files that are newer than the `.build_timestamp` and aren't in any
@@ -112,9 +117,6 @@ module.exports = function(grunt) {
 		 *   sims or all sims depending on the `forceBuildAll` flag.
 		 */
 		runDists: function(forceBuildAll) {
-			// Get the function to call when all gruntfiles have been run
-			var done = grunt.task.current.async();
-
 			// Get the list of sim directories
 			var simDirs = (forceBuildAll) ?
 				this.getAllSimDirs() :
@@ -124,6 +126,9 @@ module.exports = function(grunt) {
 				grunt.log.writeln('>> All simulations are already up-to-date.');
 				return;
 			}
+
+			// Get the function to call when all gruntfiles have been run
+			var done = grunt.task.current.async();
 
 			// Create a callback for when a dist finishes running
 			var numSimsToBuild = simDirs.length;
@@ -168,16 +173,19 @@ module.exports = function(grunt) {
 				this.getAllSimDirNames() :
 				this.getUpdatedSimDirNames();
 
+			var dirsCleaned = 0;
 			for (var i = 0; i < simDirNames.length; i++) {
 				var directory = './dist/' + simDirNames[i];
-				if (grunt.file.exists(directory))
+				if (grunt.file.exists(directory)) {
 					wrench.rmdirSyncRecursive(directory);
+					dirsCleaned++;
+				}
 			}
 
-			if (simDirNames.length === 1)
+			if (dirsCleaned === 1)
 				grunt.log.writeln('>> 1 old simulation dist directory removed');
 			else
-				grunt.log.writeln('>> ' + simDirNames.length + ' old simulation dist directories removed');
+				grunt.log.writeln('>> ' + dirsCleaned + ' old simulation dist directories removed');
 		},
 
 		/**
@@ -190,17 +198,22 @@ module.exports = function(grunt) {
 				this.getUpdatedSimDirNames();
 
 			// Copy each dist folder into the master dist folder
+			var dirsCopied = 0;
 			for (var i = 0; i < simDirNames.length; i++) {
 				var dirName = simDirNames[i];
 				var src = './' + dirName + '/dist';
 				var dst = './dist/' + dirName;
-				wrench.copyDirSyncRecursive(src, dst);
+
+				if (grunt.file.exists(src)) {
+					wrench.copyDirSyncRecursive(src, dst);
+					dirsCopied++;
+				}
 			}
 
-			if (simDirNames.length === 1)
+			if (dirsCopied === 1)
 				grunt.log.writeln('>> 1 simulation dist directory copied into the master dist directory');
 			else
-				grunt.log.writeln('>> ' + simDirNames.length + ' simulation dist directories copied into the master dist directory');
+				grunt.log.writeln('>> ' + dirsCopied + ' simulation dist directories copied into the master dist directory');
 		},
 
 		npmInstall: function(forceUpdateAll) {
