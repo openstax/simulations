@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var NuclearFissionSimView = require('nuclear-fission/views/sim');
+    var OneNucleusLegendView  = require('nuclear-fission/views/one-nucleus-legend');
 
     var Constants = require('constants');
 
@@ -37,6 +38,12 @@ define(function (require) {
             }, options);
 
             NuclearFissionSimView.prototype.initialize.apply(this, [options]);
+
+            this.initLegend();
+        },
+
+        initLegend: function() {
+            this.legendView = new OneNucleusLegendView();
         },
 
         /**
@@ -71,6 +78,22 @@ define(function (require) {
             this.$el.append(this.playbackControlsTemplate({
                 unique: this.cid
             }));
+        },
+
+        renderLegend: function() {
+            this.legendView.render();
+            this.$('.legend-panel').append(this.legendView.el);
+        },
+
+        /**
+         * Renders everything
+         */
+        postRender: function() {
+            NuclearFissionSimView.prototype.postRender.apply(this, arguments);
+
+            this.renderLegend();
+
+            return this;
         }
 
     });
