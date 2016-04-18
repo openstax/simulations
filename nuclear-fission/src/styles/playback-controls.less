@@ -83,13 +83,32 @@
         float: right;
     }
 
-    .show-labels-check-wrapper {
+    .nuclei-fissioned-wrapper {
         position: absolute;
         top: 22px;
-        right: 128px;
+        right: 160px;
 
         @media screen and (max-height: @short-window) {
             top: 15px;
+        }
+        
+        .u-235-fissioned-img-wrapper {
+            display: inline-block;
+            vertical-align: middle;
+            margin-top: -5px;
+            margin-right: 8px;
+
+            img {
+                width: 24px;
+                
+            }
+        }
+
+        .value {
+            display: inline-block;
+            width: 60px;
+            float: right;
+            margin-left: 4px;
         }
     }
     

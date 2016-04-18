@@ -59,17 +59,6 @@ define(function (require) {
          * Renders everything
          */
         render: function() {
-            NuclearFissionSimView.prototype.render.apply(this, arguments);
-
-            this.renderPlaybackControls();
-
-            return this;
-        },
-
-        /**
-         * Renders page content. Should be overriden by child classes
-         */
-        renderScaffolding: function() {
             var iconMVT = new ModelViewTransform.createScaleMapping(5);
             var iconLabelScale = 0.4;
 
@@ -85,16 +74,25 @@ define(function (require) {
                 1
             );
 
-            var uranium235IsotopeLabelImg = PixiToImage.displayObjectToDataURI(
-                IsotopeSymbolGenerator.generate(uranium235, 28), 
-                1
-            );
+            this.uranium235Img = uranium235Img;
+            this.uranium238Img = uranium238Img;
 
+            NuclearFissionSimView.prototype.render.apply(this, arguments);
+
+            this.renderPlaybackControls();
+
+            return this;
+        },
+
+        /**
+         * Renders page content. Should be overriden by child classes
+         */
+        renderScaffolding: function() {
             var data = {
                 Constants: Constants,
                 simulation: this.simulation,
-                uranium235Img: uranium235Img,
-                uranium238Img: uranium238Img
+                uranium235Img: this.uranium235Img,
+                uranium238Img: this.uranium238Img
             };
 
             this.$el.html(this.template(data));
@@ -125,7 +123,8 @@ define(function (require) {
          */
         renderPlaybackControls: function() {
             this.$el.append(this.playbackControlsTemplate({
-                unique: this.cid
+                unique: this.cid,
+                uranium235Img: this.uranium235Img
             }));
         },
 
