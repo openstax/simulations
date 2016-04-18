@@ -2,54 +2,56 @@ define(function(require) {
 
     'use strict';
 
-    var LegendView = require('views/legend');
+    var Uranium238Nucleus = require('models/nucleus/uranium-238');
+    var Nucleon           = require('models/nucleon');
 
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
+
+    var OneNucleusLegendView = require('nuclear-fission/views/legend/one-nucleus');
 
     /**
      * 
      */
-    var ChainReactionLegendView = LegendView.extend({
+    var ChainReactionLegendView = OneNucleusLegendView.extend({
 
         initialize: function(options) {
             options = _.extend({
                 scale: 16
             }, options);
 
-            LegendView.prototype.initialize.apply(this, [options]);
+            OneNucleusLegendView.prototype.initialize.apply(this, [options]);
         },
 
         /**
          * Creates the views and labels that will be used to render the legend
          */
         initItems: function() {
-            var items = [];
+            OneNucleusLegendView.prototype.initItems.apply(this, arguments);
 
-            // Neutron
-            items.push({
-                label: 'Neutron',
-                displayObject: ParticleGraphicsGenerator.generateNeutron(this.mvt)
+            // Take the last one off so we can just push the other uraniums on the end
+            var daughterNucleiItem = this.items.pop();
+            
+            var nucleusMVT = this.getNucleusMVT();
+            var nucleusLabelScale = this.getNucleusLabelScale();
+
+            // Uranium-238
+            var uranium238 = Uranium238Nucleus.create();
+            this.items.push({
+                label: 'Uranium-238',
+                displayObject: ParticleGraphicsGenerator.generateLabeledNucleus(uranium238, nucleusMVT, this.renderer, false, nucleusLabelScale, true)
             });
 
-            // Proton
-            items.push({
-                label: 'Proton',
-                displayObject: ParticleGraphicsGenerator.generateProton(this.mvt)
+            // Uranium-239 which is a uranium-238 that has absorbed a neutron
+            var uranium239 = Uranium238Nucleus.create();
+            uranium239.captureParticle(Nucleon.create({ type: Nucleon.NEUTRON }));
+
+            this.items.push({
+                label: 'Uranium-239',
+                displayObject: ParticleGraphicsGenerator.generateLabeledNucleus(uranium239, nucleusMVT, this.renderer, false, nucleusLabelScale, true)
             });
 
-            // Uranium-235
-            items.push({
-                label: 'Uranium-235',
-                displayObject: ParticleGraphicsGenerator.generateElectron(this.mvt)
-            });
-
-            // Daughter Nuclei
-            items.push({
-                label: 'Daughter Nuclei',
-                displayObject: ParticleGraphicsGenerator.generateAntineutrino(this.mvt)
-            });
-
-            this.items = items;
+            // Then add the daughter nuclei back on the end
+            this.items.push(daughterNucleiItem);
         }
 
     });

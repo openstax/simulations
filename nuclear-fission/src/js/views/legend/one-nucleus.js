@@ -44,8 +44,8 @@ define(function(require) {
                 displayObject: ParticleGraphicsGenerator.generateProton(this.mvt)
             });
 
-            var nucleusMVT = new ModelViewTransform.createScaleMapping(this.scale * 0.5);
-            var nucleusLabelScale = 0.4;
+            var nucleusMVT = this.getNucleusMVT();
+            var nucleusLabelScale = this.getNucleusLabelScale();
 
             // Uranium-235
             var uranium235 = Uranium235Nucleus.create();
@@ -75,6 +75,14 @@ define(function(require) {
             });
 
             this.items = items;
+        },
+
+        getNucleusMVT: function() {
+            return new ModelViewTransform.createScaleMapping(this.scale * 0.5);
+        },
+
+        getNucleusLabelScale: function() {
+            return 0.4;
         }
 
     });
