@@ -2,6 +2,14 @@ define(function (require) {
 
     'use strict';
 
+    var PixiToImage        = require('common/v3/pixi/pixi-to-image');
+    var ModelViewTransform = require('common/math/model-view-transform');
+
+    var Uranium235Nucleus = require('models/nucleus/uranium-235');
+    var Uranium238Nucleus = require('models/nucleus/uranium-238');
+
+    var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
+
     var NuclearFissionSimView   = require('nuclear-fission/views/sim');
     var ChainReactionLegendView = require('nuclear-fission/views/legend/chain-reaction');
 
@@ -61,9 +69,26 @@ define(function (require) {
          * Renders page content. Should be overriden by child classes
          */
         renderScaffolding: function() {
+            var iconMVT = new ModelViewTransform.createScaleMapping(5);
+            var iconLabelScale = 0.4;
+
+            var uranium235 = Uranium235Nucleus.create();
+            var uranium235Img = PixiToImage.displayObjectToDataURI(
+                ParticleGraphicsGenerator.generateLabeledNucleus(uranium235, iconMVT, this.sceneView.renderer, false, iconLabelScale, true), 
+                1
+            );
+
+            var uranium238 = Uranium238Nucleus.create();
+            var uranium238Img = PixiToImage.displayObjectToDataURI(
+                ParticleGraphicsGenerator.generateLabeledNucleus(uranium238, iconMVT, this.sceneView.renderer, false, iconLabelScale, true), 
+                1
+            );
+
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                uranium235Img: uranium235Img,
+                uranium238Img: uranium238Img
             };
 
             this.$el.html(this.template(data));

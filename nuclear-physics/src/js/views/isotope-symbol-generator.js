@@ -49,7 +49,7 @@ define(function(require) {
             var resolution = PixiView.prototype.getResolution();
             var fontStart = 'bold ';
             var fontEnd = 'px Helvetica Neue';
-            var shadowColor = Colors.hexToValue(color) > Colors.hexToValue('#777') ? '#000' : '#fff';
+            var shadowColor = (Colors.hexToValue(color) > Colors.hexToValue('#777') || color == Constants.URANIUM_235_LABEL_COLOR) ? '#000' : '#fff';
             var shadowDistance = 1;
 
             var symbol = new PIXI.Text(chemicalSymbol, {
