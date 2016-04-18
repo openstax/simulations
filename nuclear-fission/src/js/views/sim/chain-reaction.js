@@ -9,6 +9,7 @@ define(function (require) {
     var Uranium238Nucleus = require('models/nucleus/uranium-238');
 
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
+    var IsotopeSymbolGenerator    = require('views/isotope-symbol-generator');
 
     var NuclearFissionSimView   = require('nuclear-fission/views/sim');
     var ChainReactionLegendView = require('nuclear-fission/views/legend/chain-reaction');
@@ -81,6 +82,11 @@ define(function (require) {
             var uranium238 = Uranium238Nucleus.create();
             var uranium238Img = PixiToImage.displayObjectToDataURI(
                 ParticleGraphicsGenerator.generateLabeledNucleus(uranium238, iconMVT, this.sceneView.renderer, false, iconLabelScale, true), 
+                1
+            );
+
+            var uranium235IsotopeLabelImg = PixiToImage.displayObjectToDataURI(
+                IsotopeSymbolGenerator.generate(uranium235, 28), 
                 1
             );
 
