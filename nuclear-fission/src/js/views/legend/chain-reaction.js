@@ -14,14 +14,6 @@ define(function(require) {
      */
     var ChainReactionLegendView = OneNucleusLegendView.extend({
 
-        initialize: function(options) {
-            options = _.extend({
-                scale: 16
-            }, options);
-
-            OneNucleusLegendView.prototype.initialize.apply(this, [options]);
-        },
-
         /**
          * Creates the views and labels that will be used to render the legend
          */

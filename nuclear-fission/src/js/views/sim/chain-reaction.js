@@ -21,7 +21,7 @@ define(function (require) {
     var playbackControlsHtml = require('text!nuclear-fission/templates/chain-reaction-playback-controls.html');
 
     /**
-     * Multiple Atoms tab
+     * Chain Reaction tab
      */
     var ChainReactionSimView = NuclearFissionSimView.extend({
 

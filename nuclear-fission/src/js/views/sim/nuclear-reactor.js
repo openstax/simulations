@@ -2,19 +2,19 @@ define(function (require) {
 
     'use strict';
 
-    var NuclearFissionSimView = require('nuclear-fission/views/sim');
-    var OneNucleusLegendView  = require('nuclear-fission/views/legend/one-nucleus');
+    var NuclearFissionSimView    = require('nuclear-fission/views/sim');
+    var NuclearReactorLegendView = require('nuclear-fission/views/legend/nuclear-reactor');
 
     var Constants = require('constants');
 
     // HTML
-    var simHtml              = require('text!nuclear-fission/templates/one-nucleus-sim.html');
+    var simHtml              = require('text!nuclear-fission/templates/nuclear-reactor-sim.html');
     var playbackControlsHtml = require('text!nuclear-fission/templates/simple-playback-controls.html');
 
     /**
-     * One Nucleus tab
+     * Nuclear Reactor tab
      */
-    var OneNucleusSimView = NuclearFissionSimView.extend({
+    var NuclearReactorSimView = NuclearFissionSimView.extend({
 
         events: _.extend({}, NuclearFissionSimView.prototype.events, {
             
@@ -33,8 +33,8 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Fission: One Nucleus',
-                name: 'one-nucleus'
+                title: 'Nuclear Reactor',
+                name: 'nuclear-reactor'
             }, options);
 
             NuclearFissionSimView.prototype.initialize.apply(this, [options]);
@@ -43,7 +43,7 @@ define(function (require) {
         },
 
         initLegend: function() {
-            this.legendView = new OneNucleusLegendView({ renderer: this.sceneView.renderer });
+            this.legendView = new NuclearReactorLegendView({ renderer: this.sceneView.renderer });
         },
 
         /**
@@ -98,5 +98,5 @@ define(function (require) {
 
     });
 
-    return OneNucleusSimView;
+    return NuclearReactorSimView;
 });
