@@ -2,19 +2,19 @@ define(function (require) {
 
     'use strict';
 
-    var NuclearFissionSimView = require('nuclear-fission/views/sim');
-    var OneNucleusLegendView  = require('nuclear-fission/views/legend/one-nucleus');
+    var NuclearFissionSimView   = require('nuclear-fission/views/sim');
+    var ChainReactionLegendView = require('nuclear-fission/views/legend/chain-reaction');
 
     var Constants = require('constants');
 
     // HTML
-    var simHtml              = require('text!nuclear-fission/templates/one-nucleus-sim.html');
-    var playbackControlsHtml = require('text!nuclear-fission/templates/simple-playback-controls.html');
+    var simHtml              = require('text!nuclear-fission/templates/chain-reaction-sim.html');
+    var playbackControlsHtml = require('text!nuclear-fission/templates/chain-reaction-playback-controls.html');
 
     /**
      * Multiple Atoms tab
      */
-    var OneNucleusSimView = NuclearFissionSimView.extend({
+    var ChainReactionSimView = NuclearFissionSimView.extend({
 
         events: _.extend({}, NuclearFissionSimView.prototype.events, {
             
@@ -33,8 +33,8 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Fission: One Nucleus',
-                name: 'one-nucleus'
+                title: 'Chain Reaction',
+                name: 'chain-reaction'
             }, options);
 
             NuclearFissionSimView.prototype.initialize.apply(this, [options]);
@@ -43,7 +43,7 @@ define(function (require) {
         },
 
         initLegend: function() {
-            this.legendView = new OneNucleusLegendView({ renderer: this.sceneView.renderer });
+            this.legendView = new ChainReactionLegendView();
         },
 
         /**
@@ -67,6 +67,24 @@ define(function (require) {
             };
 
             this.$el.html(this.template(data));
+
+            this.$('.u-235-slider').noUiSlider({
+                start: 1,
+                connect: 'lower',
+                range: {
+                    'min': 0,
+                    'max': 100
+                }
+            });
+
+            this.$('.u-238-slider').noUiSlider({
+                start: 0,
+                connect: 'lower',
+                range: {
+                    'min': 0,
+                    'max': 100
+                }
+            });
 
             this.$('select').selectpicker();
         },
@@ -98,5 +116,5 @@ define(function (require) {
 
     });
 
-    return OneNucleusSimView;
+    return ChainReactionSimView;
 });

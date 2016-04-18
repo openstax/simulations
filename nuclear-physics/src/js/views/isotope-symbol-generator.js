@@ -139,7 +139,7 @@ define(function(require) {
                 case NucleusType.LEAD_206:                return Constants.LEAD_LABEL_COLOR;
                 case NucleusType.LEAD_207:                return Constants.LEAD_LABEL_COLOR;
                 case NucleusType.POLONIUM_211:            return Constants.POLONIUM_LABEL_COLOR;
-                case NucleusType.URANIUM_235:             return Constants.URANIUM_COLOR;
+                case NucleusType.URANIUM_235:             return Constants.URANIUM_235_LABEL_COLOR;
                 case NucleusType.URANIUM_236:             return Constants.URANIUM_236_LABEL_COLOR;
                 case NucleusType.URANIUM_238:             return Constants.URANIUM_238_LABEL_COLOR;
                 case NucleusType.URANIUM_239:             return Constants.URANIUM_239_LABEL_COLOR;

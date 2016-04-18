@@ -9,7 +9,7 @@ define(function(require) {
     /**
      * 
      */
-    var OneNucleusLegendView = LegendView.extend({
+    var ChainReactionLegendView = LegendView.extend({
 
         initialize: function(options) {
             options = _.extend({
@@ -54,5 +54,5 @@ define(function(require) {
 
     });
 
-    return OneNucleusLegendView;
+    return ChainReactionLegendView;
 });
