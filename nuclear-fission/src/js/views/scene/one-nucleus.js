@@ -37,8 +37,10 @@ define(function(require) {
 
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
 
-            this.listenTo(this.simulation.freeNucleons, 'add',    this.nucleonEmitted);
-            this.listenTo(this.simulation.freeNucleons, 'remove', this.nucleonRemoved);
+            // this.listenTo(this.simulation.freeNucleons, 'add',    this.nucleonEmitted);
+            // this.listenTo(this.simulation.freeNucleons, 'remove', this.nucleonRemoved);
+            this.listenTo(this.simulation.neutronSource, 'neutron-generated', this.neutronGenerated);
+            this.listenTo(this.simulation.freeNucleons, 'destroy', this.nucleonDestroyed);
         },
 
         renderContent: function() {
@@ -155,13 +157,13 @@ define(function(require) {
             this.simulation.reset();
         },
 
-        nucleonEmitted: function(nucleon) {
-            var nucleonView = this.createParticleView(nucleon);
+        neutronGenerated: function(neutron) {
+            var nucleonView = this.createParticleView(neutron);
             this.particleViews.push(nucleonView);
             this.nucleusLayer.addChild(nucleonView.displayObject);
         },
 
-        nucleonRemoved: function(nucleon) {
+        nucleonDestroyed: function(nucleon) {
             for (var i = 0; i < this.particleViews.length; i++) {
                 if (this.particleViews[i].model === nucleon) {
                     this.particleViews[i].remove();
@@ -170,6 +172,22 @@ define(function(require) {
                 }
             }
         }
+
+        // nucleonEmitted: function(nucleon) {
+        //     var nucleonView = this.createParticleView(nucleon);
+        //     this.particleViews.push(nucleonView);
+        //     this.nucleusLayer.addChild(nucleonView.displayObject);
+        // },
+
+        // nucleonRemoved: function(nucleon) {
+        //     for (var i = 0; i < this.particleViews.length; i++) {
+        //         if (this.particleViews[i].model === nucleon) {
+        //             this.particleViews[i].remove();
+        //             this.particleViews.splice(i, 1);
+        //             return;
+        //         }
+        //     }
+        // }
 
     });
 

@@ -109,11 +109,16 @@ define(function (require) {
                     // Should never happen, debug if it does.
                     throw 'Error: Unexpected nucleus constituent type.';
                 }
+
+                this.constituents.push(constituents[i]);
             }
 
             this.numAlphas = numAlphas;
             this.set('numProtons', numProtons);
             this.set('numNeutrons', numNeutrons);
+
+            // Recalculate our diameter
+            this.updateDiameter();
         },
 
         /**

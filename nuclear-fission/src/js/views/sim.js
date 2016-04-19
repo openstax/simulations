@@ -25,7 +25,10 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click .play-btn'  : 'play',
+            'click .pause-btn' : 'pause',
+            'click .step-btn'  : 'step',
+            'click .reset-btn' : 'reset'
         },
 
         /**
@@ -36,7 +39,7 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Nuclear Fission',
-                name: 'nuclear-fission',
+                name: 'nuclear-fission'
             }, options);
 
             NuclearPhysicsSimView.prototype.initialize.apply(this, [options]);

@@ -40,7 +40,8 @@ define(function (require, exports, module) {
         initComponents: function() {
             // Add a nucleus of Uranium 235 to the model.
             this.primaryNucleus = Uranium235CompositeNucleus.create({
-                fissionInterval: OneNucleusSimulation.FISSION_INTERVAL
+                fissionInterval: OneNucleusSimulation.FISSION_INTERVAL,
+                simulation: this
             });
 
             this.daughterNucleus;

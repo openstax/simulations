@@ -224,8 +224,7 @@ define(function (require) {
                     numProtonsNeeded--;
                     this.set('numProtons', this.get('numProtons') - 1);
                 }
-
-                if ((numAlphasNeeded > 0) && (constituent instanceof AlphaParticle)) {
+                else if ((numAlphasNeeded > 0) && (constituent instanceof AlphaParticle)) {
                     daughterNucleusConstituents.push(constituent);
                     this.constituents.splice(i, 1);
                     numAlphasNeeded--;
