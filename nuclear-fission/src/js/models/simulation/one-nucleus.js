@@ -13,7 +13,8 @@ define(function (require, exports, module) {
     var Nucleon                    = require('models/nucleon');
     var AlphaParticle              = require('models/alpha-particle');
     var AtomicNucleus              = require('models/atomic-nucleus');
-    var NeutronSource              = require('models/neutron-source');
+
+    var NeutronSource = require('nuclear-fission/models/neutron-source');
 
     /**
      * Constants
@@ -89,6 +90,9 @@ define(function (require, exports, module) {
          * Runs every frame of the simulation loop.
          */
         _update: function(time, deltaTime) {
+            // Update the primary nucleus
+            this.primaryNucleus.update(time, deltaTime);
+
             // Update the velocity and acceleration of the daughter nuclei (if they exist).
             this.updateNucleiBehavior(time, deltaTime);
 
@@ -98,6 +102,9 @@ define(function (require, exports, module) {
 
         updateNucleiBehavior: function(time, deltaTime) {
             if (this.daughterNucleus) {
+                // Update the daughter nucleus
+                this.daughterNucleus.update(time, deltaTime);
+
                 // The nuclei have fissioned and are traveling away from each
                 //   other. As they do this, the acceleration decreases because
                 //   the force they exert on each other becomes smaller. That's

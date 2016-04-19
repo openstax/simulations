@@ -22,6 +22,8 @@ define(function(require) {
     var SingleNucleusDecayChart   = require('views/nucleus-decay-chart/single');
     var ExplodingNucleusView      = require('views/nucleus/exploding');
 
+    var NeutronSourceView = require('nuclear-fission/views/neutron-source');
+
     var NuclearPhysicsSceneView = require('views/scene');
 
     /**
@@ -83,6 +85,7 @@ define(function(require) {
 
             this.initMVT();
             this.initNucleus();
+            this.initNeutronSourceView();
         },
 
         initNucleus: function() {
@@ -103,6 +106,16 @@ define(function(require) {
                 renderer: this.renderer
             });
             this.nucleusLayer.addChild(this.nucleusView.displayObject);
+        },
+
+        initNeutronSourceView: function() {
+            this.neutronSourceView = new NeutronSourceView({
+                model: this.simulation.neutronSource,
+                mvt: this.mvt,
+                rotationEnabled: false
+            });
+
+            this.stage.addChild(this.neutronSourceView.displayObject);
         },
 
         createParticleView: function(particle) {
@@ -131,8 +144,8 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
 
-            if (this.nucleusView)
-                this.nucleusView.update(time, deltaTime, paused);
+            this.nucleusView.update(time, deltaTime, paused);
+            this.neutronSourceView.update(time, deltaTime, paused);
 
             for (var i = 0; i < this.particleViews.length; i++)
                 this.particleViews[i].update(time, deltaTime, paused);
