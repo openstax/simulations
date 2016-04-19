@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var OneNucleusSimulation = require('nuclear-fission/models/simulation/one-nucleus');
+
     var NuclearFissionSimView = require('nuclear-fission/views/sim');
     var OneNucleusLegendView  = require('nuclear-fission/views/legend/one-nucleus');
 
@@ -40,6 +42,13 @@ define(function (require) {
             NuclearFissionSimView.prototype.initialize.apply(this, [options]);
 
             this.initLegend();
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new OneNucleusSimulation();
         },
 
         initLegend: function() {

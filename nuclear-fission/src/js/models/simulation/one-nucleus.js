@@ -13,6 +13,7 @@ define(function (require, exports, module) {
     var Nucleon                    = require('models/nucleon');
     var AlphaParticle              = require('models/alpha-particle');
     var AtomicNucleus              = require('models/atomic-nucleus');
+    var NeutronSource              = require('models/neutron-source');
 
     /**
      * Constants
@@ -29,11 +30,7 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
-            
-
             NuclearPhysicsSimulation.prototype.initialize.apply(this, [attributes, options]);
-
-            
         },
 
         /**
@@ -58,14 +55,13 @@ define(function (require, exports, module) {
             this.initialParentAccel = new Vector2();
             this.initialDaughterAccel = new Vector2();
 
-            this.listenTo(this.primaryNucleus, 'nucleus-change', this.atomicWeightChanged);
             this.listenTo(this.neutronSource, 'neutron-generated', this.neutronGenerated);
         },
 
         /**
          * Resets the model components
          */
-        resetComponents: function() {
+        reset: function() {
             // Reset the primary nucleus.
             this.primaryNucleus.reset(this.freeNucleons, this.daughterNucleus);
 
@@ -134,6 +130,11 @@ define(function (require, exports, module) {
                         this.freeNucleons.remove(freeNucleon);
                 }
             }
+        },
+
+        triggerNucleusChange: function(nucleus, byProducts) {
+            this.atomicWeightChanged(nucleus, byProducts);
+            this.trigger('nucleus-change', nucleus, byProducts);
         },
 
         /**
