@@ -1,4 +1,3 @@
-var fs     = require('fs');
 var _      = require('underscore');
 var touch  = require('touch');
 var wrench = require('wrench');
@@ -67,7 +66,7 @@ module.exports = function(grunt) {
 
 			// Check if there is even a build timestamp; if not, it's our first time running it,
 			//   and we need to build all of them anyway.
-			if (!fs.existsSync('.build_timestamp')) {
+			if (!grunt.file.exists('.build_timestamp')) {
 				this._updatedSimDirs = dirs;
 				return dirs;
 			}
