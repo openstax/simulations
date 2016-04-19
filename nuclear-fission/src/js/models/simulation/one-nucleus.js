@@ -158,7 +158,7 @@ define(function (require, exports, module) {
                     if (byProduct instanceof Nucleon) {
                         // Set a direction and velocity for this neutron.
                         var angle = Math.random() * Math.PI / 3;
-                        if (Math.random < 0.5)
+                        if (Math.random() < 0.5)
                             angle += Math.PI;
                         
                         var xVel = Math.sin(angle) * OneNucleusSimulation.MOVING_NUCLEON_VELOCITY;
@@ -178,8 +178,8 @@ define(function (require, exports, module) {
                         // Set random but opposite directions for the
                         // nuclei.  Limit them to be roughly horizontal so
                         // that they will be easier to see.
-                        var angle = (Math.random() * Math.PI / 3 ) + (Math.PI / 3);
-                        if (Math.random < 0.5)
+                        var angle = (Math.random() * Math.PI / 3) + (Math.PI / 3);
+                        if (Math.random() < 0.5)
                             angle += Math.PI;
                         
                         var xVel = Math.sin(angle) * OneNucleusSimulation.INITIAL_NUCLEUS_VELOCITY;
