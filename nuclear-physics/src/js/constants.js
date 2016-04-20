@@ -331,6 +331,26 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                         URANIUM 235 NUCLEUS                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var Uranium235Nucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.
+    Uranium235Nucleus.PROTONS  = 92;
+    Uranium235Nucleus.NEUTRONS = 143;
+
+    // Number of neutrons and protons in the daughter nucleus that is produced
+    // if and when this nucleus fissions.  This nucleus represents Krypton-92.
+    Uranium235Nucleus.DAUGHTER_NUCLEUS_PROTONS = 36;
+    Uranium235Nucleus.DAUGHTER_NUCLEUS_NEUTRONS = 56;
+
+    Constants.Uranium235Nucleus = Uranium235Nucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                         URANIUM 238 NUCLEUS                         **
      **                                                                     **
      *************************************************************************/

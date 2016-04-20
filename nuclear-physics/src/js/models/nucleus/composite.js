@@ -4,7 +4,8 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var range = require('common/math/range');
+    var range   = require('common/math/range');
+    var Vector2 = require('common/math/vector2');
 
     var AtomicNucleus = require('models/atomic-nucleus');
     var Nucleon       = require('models/nucleon');
@@ -14,6 +15,8 @@ define(function (require) {
 
     // Initialize the placement zones to be on opposite sides of one another
     var _placementZoneAngleRanges = [];
+    // Keeps track of which cached angle range we're on
+    var _currentPlacementZoneIndex = 0;
     var numZones = 8;
     var angleIncrement = 2 * Math.PI / numZones;
     for (var i = 0; i < numZones; i++)
@@ -39,10 +42,6 @@ define(function (require) {
             // The number of alpha particles that will be part of the constituents
             //   of this nucleus.
             this.numAlphas = 0;
-
-            // Keeps track of which cached angle range we're on
-            this._currentPlacementZoneIndex = 0;
-
 
             // Figure out the proportion of the protons and neutrons that will be
             //   tied up in alpha particles. This is not based on any formula, just
@@ -188,23 +187,40 @@ define(function (require) {
         },
 
         placeNucleon: function(nucleon, centerPos, minDistance, maxDistance, placementZoneAngleRange) {
-            var distance = minDistance + Math.random() * (maxDistance - minDistance);
-            var angle = placementZoneAngleRange.random();
-            var xPos = centerPos.x + Math.cos(angle) * distance;
-            var yPos = centerPos.y + Math.sin(angle) * distance;
-            nucleon.setPosition(xPos, yPos);
+            var nucleonPosition = CompositeAtomicNucleus.getRandomNucleonPosition(centerPos, minDistance, maxDistance, placementZoneAngleRange);
+            nucleon.setPosition(nucleonPosition);
         },
 
         getNextPlacementZone: function() {
-            this._currentPlacementZoneIndex = (this._currentPlacementZoneIndex + 1 + _placementZoneAngleRanges.length / 2) % _placementZoneAngleRanges.length;
-            return _placementZoneAngleRanges[this._currentPlacementZoneIndex];
+            return CompositeAtomicNucleus.getNextPlacementZone();
         },
 
         getConstituents: function() {
             return this.constituents;
         }
 
-    }, Constants.CompositeAtomicNucleus);
+    }, _.extend({
+
+        getRandomNucleonPosition: function(centerPos, minDistance, maxDistance, placementZoneAngleRange) {
+            if (!this._nucleonPosition)
+                this._nucleonPosition = new Vector2();
+
+            var distance = minDistance + Math.random() * (maxDistance - minDistance);
+            var angle = placementZoneAngleRange.random();
+            var xPos = centerPos.x + Math.cos(angle) * distance;
+            var yPos = centerPos.y + Math.sin(angle) * distance;
+
+            this._nucleonPosition.set(xPos, yPos);
+
+            return this._nucleonPosition;
+        },
+
+        getNextPlacementZone: function() {
+            _currentPlacementZoneIndex = (_currentPlacementZoneIndex + 1 + _placementZoneAngleRanges.length / 2) % _placementZoneAngleRanges.length;
+            return _placementZoneAngleRanges[_currentPlacementZoneIndex];
+        }
+
+    }, Constants.CompositeAtomicNucleus));
 
     return CompositeAtomicNucleus;
 });
