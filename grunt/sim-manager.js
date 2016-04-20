@@ -80,7 +80,9 @@ module.exports = function(grunt) {
 					'-newer', '.build_timestamp', 
 					'-not', '-iwholename', '*node_modules*', 
 					'-not', '-iwholename', '*bower_components*', 
-					'-not', '-iwholename', '*dist*'
+					'-not', '-iwholename', '*dist*',
+					'-print',
+					'-quit'
 				]);
 
 				// If there was no output (no newer file found), remove it from the list
