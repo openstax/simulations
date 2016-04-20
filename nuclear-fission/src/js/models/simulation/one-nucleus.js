@@ -71,6 +71,7 @@ define(function (require, exports, module) {
                 // Fission has occurred, so the daughter must be reset, meaning
                 //   that it essentially goes away.
                 this.daughterNucleus.reset();
+                this.daughterNucleus.destroy();
                 this.daughterNucleus = null;
             }
 

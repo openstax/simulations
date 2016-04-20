@@ -82,7 +82,10 @@ define(function(require) {
         initGraphics: function() {
             NuclearPhysicsSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.particlesLayer = new PIXI.Container();
             this.nucleusLayer = new PIXI.Container();
+
+            this.stage.addChild(this.particlesLayer);
             this.stage.addChild(this.nucleusLayer);
 
             this.initMVT();
@@ -96,7 +99,7 @@ define(function(require) {
             for (var i = 0; i < constituents.length; i++) {
                 var particleView = this.createParticleView(constituents[i]);
                 this.particleViews.push(particleView);
-                this.nucleusLayer.addChild(particleView.displayObject);
+                this.particlesLayer.addChild(particleView.displayObject);
             }
 
             // Add the exploding nucleus view, which in this case is just the label and explosion animation
@@ -160,7 +163,7 @@ define(function(require) {
         neutronGenerated: function(neutron) {
             var nucleonView = this.createParticleView(neutron);
             this.particleViews.push(nucleonView);
-            this.nucleusLayer.addChild(nucleonView.displayObject);
+            this.particlesLayer.addChild(nucleonView.displayObject);
         },
 
         nucleonDestroyed: function(nucleon) {
@@ -172,22 +175,6 @@ define(function(require) {
                 }
             }
         }
-
-        // nucleonEmitted: function(nucleon) {
-        //     var nucleonView = this.createParticleView(nucleon);
-        //     this.particleViews.push(nucleonView);
-        //     this.nucleusLayer.addChild(nucleonView.displayObject);
-        // },
-
-        // nucleonRemoved: function(nucleon) {
-        //     for (var i = 0; i < this.particleViews.length; i++) {
-        //         if (this.particleViews[i].model === nucleon) {
-        //             this.particleViews[i].remove();
-        //             this.particleViews.splice(i, 1);
-        //             return;
-        //         }
-        //     }
-        // }
 
     });
 
