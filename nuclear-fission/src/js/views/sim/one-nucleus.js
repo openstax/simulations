@@ -2,8 +2,11 @@ define(function (require) {
 
     'use strict';
 
+    var OneNucleusSimulation = require('nuclear-fission/models/simulation/one-nucleus');
+
     var NuclearFissionSimView = require('nuclear-fission/views/sim');
     var OneNucleusLegendView  = require('nuclear-fission/views/legend/one-nucleus');
+    var OneNucleusSceneView   = require('nuclear-fission/views/scene/one-nucleus');
 
     var Constants = require('constants');
 
@@ -42,6 +45,25 @@ define(function (require) {
             this.initLegend();
         },
 
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new OneNucleusSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new OneNucleusSceneView({
+                simulation: this.simulation
+            });
+        },
+
+        /**
+         * Initializes the LegendView.
+         */
         initLegend: function() {
             this.legendView = new OneNucleusLegendView({ renderer: this.sceneView.renderer });
         },

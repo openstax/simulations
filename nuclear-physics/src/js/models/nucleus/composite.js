@@ -43,41 +43,77 @@ define(function (require) {
             //   of this nucleus.
             this.numAlphas = 0;
 
-            // Figure out the proportion of the protons and neutrons that will be
-            //   tied up in alpha particles. This is not based on any formula, just
-            //   worked out with the educators as something that looks good and is
-            //   representative enough of reality to work for this sim.  Note that
-            //   below a certain atomic weight so don't put ANY nucleons into alpha
-            //   particles.
-            if (this.get('numProtons') + this.get('numNeutrons') > 50){
-                this.numAlphas = ((this.get('numProtons') + this.get('numNeutrons')) / 2) / 4;  // Assume half of all particles are tied up in alphas.
-            }
-            
-            // Add the constituent particles that make up this nucleus.  We do this
-            //   in such a way that the particles are interspersed in the list,
-            //   particularly towards the end of the list, since this works out
-            //   better for the view.
-            var numFreeProtons  = this.get('numProtons')  - (this.numAlphas * 2);
-            var numFreeNeutrons = this.get('numNeutrons') - (this.numAlphas * 2);
-            var maxParticles = Math.max(Math.max(numFreeProtons, numFreeNeutrons), this.numAlphas);
-
-            for (var i = (maxParticles - 1); i >= 0; i--) {
-                if (i < this.numAlphas) {
-                    this.constituents.push(AlphaParticle.create());
-                }
-                if (i < numFreeProtons) {
-                    this.constituents.push(Nucleon.create({ type: Nucleon.PROTON, tunnelingEnabled: true }));
-                }
-                if (i < numFreeNeutrons) {
-                    this.constituents.push(Nucleon.create({ type: Nucleon.NEUTRON, tunnelingEnabled: true }));
-                }
-            }
+            if (options && options.constituents)
+                this.initConstituentsFromArray(options.constituents);
+            else
+                this.initConstituentsFromCounts(this.get('numProtons'), this.get('numNeutrons'));
             
             // Set initial positions of all nucleons.
             this.setInitialNucleonPositions();
 
             // Set the initial agitation factor.
             this.updateAgitationFactor();
+        },
+
+        initConstituentsFromCounts: function(numProtons, numNeutrons) {
+            // Figure out the proportion of the protons and neutrons that will be
+            //   tied up in alpha particles. This is not based on any formula, just
+            //   worked out with the educators as something that looks good and is
+            //   representative enough of reality to work for this sim.  Note that
+            //   below a certain atomic weight so don't put ANY nucleons into alpha
+            //   particles.
+            if (numProtons + numNeutrons > 50)
+                this.numAlphas = ((numProtons + numNeutrons) / 2) / 4;  // Assume half of all particles are tied up in alphas.
+            
+            // Add the constituent particles that make up this nucleus.  We do this
+            //   in such a way that the particles are interspersed in the list,
+            //   particularly towards the end of the list, since this works out
+            //   better for the view.
+            var numFreeProtons  = numProtons  - (this.numAlphas * 2);
+            var numFreeNeutrons = numNeutrons - (this.numAlphas * 2);
+            var maxParticles = Math.max(Math.max(numFreeProtons, numFreeNeutrons), this.numAlphas);
+
+            for (var i = (maxParticles - 1); i >= 0; i--) {
+                if (i < this.numAlphas)
+                    this.constituents.push(AlphaParticle.create());
+                
+                if (i < numFreeProtons)
+                    this.constituents.push(Nucleon.create({ type: Nucleon.PROTON, tunnelingEnabled: true }));
+                
+                if (i < numFreeNeutrons)
+                    this.constituents.push(Nucleon.create({ type: Nucleon.NEUTRON, tunnelingEnabled: true }));
+            }
+        },
+
+        initConstituentsFromArray: function(constituents) {
+            this.constituents = [];
+
+            // Figure out the makeup of the constituents.
+            var numAlphas = 0;
+            var numProtons = 0;
+            var numNeutrons = 0;
+            for (var i = 0; i < constituents.length; i++) {
+                if (constituents[i] instanceof AlphaParticle) {
+                    numAlphas++;
+                    numNeutrons += 2;
+                    numProtons += 2;
+                }
+                else if (constituents[i] instanceof Nucleon) {
+                    var nucleon = constituents[i];
+                    if (nucleon.get('type') === Nucleon.PROTON)
+                        numNeutrons++;
+                    else
+                        numProtons++;
+                }
+                else {
+                    // Should never happen, debug if it does.
+                    throw 'Error: Unexpected nucleus constituent type.';
+                }
+            }
+
+            this.numAlphas = numAlphas;
+            this.set('numProtons', numProtons);
+            this.set('numNeutrons', numNeutrons);
         },
 
         /**
