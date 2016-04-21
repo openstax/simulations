@@ -65,6 +65,23 @@ define(function (require) {
     FissionEnergyChartView.LEGEND_LABEL_FONT = 'bold 12px Helvetica Neue';
     FissionEnergyChartView.LEGEND_LABEL_COLOR = '#000';
 
+    // Important Note: The Y-axis of this graph is not using real units,
+    //   such as MeV, because if it did the proportions would be too hard
+    //   to see.  It is thus "hollywooded" to look correct. The following
+    //   constants control the scale of the Y-axis and the important
+    //   points within the graph in the Y dimension.
+    FissionEnergyChartView.Y_AXIS_TOTAL_POSITVE_SPAN = 100;
+    FissionEnergyChartView.BOTTOM_OF_ENERGY_WELL = 65;
+    FissionEnergyChartView.PEAK_OF_ENERGY_WELL = 80;
+    
+    // Constants the control dynamic chart behavior.
+    FissionEnergyChartView.NUM_UPWARD_STEPS_FOR_NUCLEUS = 5;
+    
+    // Possible state values for tracking the relevant state of the model.
+    FissionEnergyChartView.STATE_IDLE = 0;
+    FissionEnergyChartView.STATE_FISSIONING = 1;
+    FissionEnergyChartView.STATE_FISSIONED = 2;
+
     Constants.FissionEnergyChartView = FissionEnergyChartView;
 
 

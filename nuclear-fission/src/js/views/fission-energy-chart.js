@@ -67,6 +67,7 @@ define(function(require) {
             this.yAxisLineXOffset = 60;
             this.arrowHeadWidth = 8;
             this.arrowHeadLength = 6;
+            this.energyLineMargin = 10;
 
             this.calculateGraphDimensions();
 
@@ -88,8 +89,11 @@ define(function(require) {
             this.initPanel();
             this.initXAxis();
             this.initYAxis();
-            this.initData();
+            this.initEnergyLines();
+            this.initNuclei();
             this.initLegend();
+
+            this.drawPotentialEnergyWell();
         },
 
         initPanel: function() {
@@ -121,9 +125,15 @@ define(function(require) {
             this.drawYAxis();
         },
 
-        initData: function() {
-            this.dataGraphics = new PIXI.Graphics();
-            this.displayObject.addChild(this.dataGraphics);
+        initEnergyLines: function() {
+            this.totalEnergyGraphics = new PIXI.Graphics();
+            this.potentialEnergyGraphics = new PIXI.Graphics();
+            this.displayObject.addChild(this.totalEnergyGraphics);
+            this.displayObject.addChild(this.potentialEnergyGraphics);
+        },
+
+        initNuclei: function() {
+            this.nucleusDiameter = 50;
         },
 
         initLegend: function() {
@@ -274,6 +284,120 @@ define(function(require) {
 
             this.yAxisContainer.addChild(axisLine);
             this.yAxisContainer.addChild(label);
+        },
+
+        /**
+         * This method draws the line that represents the potential energy well
+         *   for the nucleus.
+         */
+        drawPotentialEnergyWell: function() {
+            
+            // Clear the existing curve.
+            var graphics = this.potentialEnergyGraphics;
+            graphics.clear();
+            graphics.lineStyle(FissionEnergyChartView.LINE_WIDTH, POTENTIAL_LINE_COLOR, FissionEnergyChartView.LINE_ALPHA);
+            
+            var margin     = this.energyLineMargin;
+            var startX     = this.graphOriginX + margin;
+            var centerX    = this.graphOriginX + this.graphWidth / 2;
+            var endX       = this.graphOriginX + this.graphWidth - margin;
+            var xScreenPos = startX;
+
+            // The following multiplier is used to scale the left and right tails of
+            //   the curve to values that make the visual representation reasonable.
+            var energyWellWidth = this.nucleusDiameter;
+            var tailMultiplier = energyWellWidth * FissionEnergyChartView.PEAK_OF_ENERGY_WELL / 2;
+            
+            // Define the crossover zone between the calculation for the tails
+            //   and the calculation for the energy well.  This is arbitrarily
+            //   chosen to make the curve look good.
+            var crossoverDistanceFromCenter = energyWellWidth * 0.6;
+            var crossoverZoneWidth = energyWellWidth / 4;
+            
+            // Move to the starting point for the curve.
+            var yGraphPos = (1 / (centerX - xScreenPos)) * tailMultiplier;
+            graphics.moveTo(xScreenPos, this.convertGraphToScreenY(yGraphPos)); 
+
+            // Draw the curve.
+            while (xScreenPos < endX) {
+                xScreenPos += 1;
+                
+                var xGraphPos = xScreenPos - centerX;
+                    
+                if (xScreenPos < centerX - crossoverDistanceFromCenter - crossoverZoneWidth / 2) {
+                    // Left side (tail) of the curve.
+                    yGraphPos = (1/-xGraphPos) * tailMultiplier;
+                    graphics.lineTo(xScreenPos, this.convertGraphToScreenY(yGraphPos));
+                    xScreenPos += 5;
+                }
+                else if (xScreenPos < centerX - crossoverDistanceFromCenter + crossoverZoneWidth / 2) {
+                    // Crossing into the well.
+                    var wellWeightingFactor = this.computeWellWeightingFactor(
+                        centerX, xScreenPos, crossoverDistanceFromCenter, crossoverZoneWidth
+                    );
+                    yGraphPos = (
+                        (((1 / -xGraphPos) * tailMultiplier) * (1 - wellWeightingFactor)) + 
+                        (this.calculateWellValue(xGraphPos) * (wellWeightingFactor))
+                    );
+                    graphics.lineTo(xScreenPos, this.convertGraphToScreenY(yGraphPos));
+                    xScreenPos++;
+                }
+                else if (xScreenPos < centerX + crossoverDistanceFromCenter - crossoverZoneWidth / 2) {
+                    // Inside the well.
+                    yGraphPos = this.calculateWellValue(xGraphPos);
+                    graphics.lineTo(xScreenPos, this.convertGraphToScreenY(yGraphPos));
+                    xScreenPos++;
+                }
+                else if (xScreenPos < centerX + crossoverDistanceFromCenter + crossoverZoneWidth / 2) {
+                    // Crossing out of the well.
+                    var wellWeightingFactor = this.computeWellWeightingFactor(centerX, xScreenPos, crossoverDistanceFromCenter, crossoverZoneWidth);
+                    yGraphPos = (
+                        (((1 / xGraphPos) * tailMultiplier) * (1 - wellWeightingFactor)) + 
+                        (this.calculateWellValue(xGraphPos) * (wellWeightingFactor))
+                    );
+                    graphics.lineTo(xScreenPos, this.convertGraphToScreenY(yGraphPos));
+                    xScreenPos++;
+                }
+                else if (xScreenPos < endX) {
+                    // Right side (tail) of the curve.
+                    yGraphPos = (1 / xGraphPos) * tailMultiplier;
+                    graphics.lineTo(xScreenPos, this.convertGraphToScreenY(yGraphPos));
+                    xScreenPos += 5;
+                }
+                else {
+                    // Just increment the screen position so we will fall out of the loop.
+                    xScreenPos += 10;
+                }
+            }
+        },
+
+        /**
+         * Compute the weighting factor that is used to "crossfade" between the tail
+         *   portion of the graph and the center energy well.
+         */
+        computeWellWeightingFactor: function(centerX, xScreenPos, crossoverDistanceFromCenter, crossoverZoneWidth) {
+            // The computation is not linear - it is made to be weighted more heavily on either end.
+            var linearFactor = 1 - (
+                (
+                    Math.abs(centerX - xScreenPos) - crossoverDistanceFromCenter + crossoverZoneWidth / 2
+                ) / crossoverZoneWidth
+            );
+            return (-Math.cos(Math.PI * linearFactor) + 1) / 2;
+        },
+
+        calculateWellValue: function(xGraphPos) {
+            return FissionEnergyChartView.BOTTOM_OF_ENERGY_WELL + (
+                (Math.cos(((xGraphPos * 2 / this.nucleusDiameter) - 1) * Math.PI) + 1) * 
+                (FissionEnergyChartView.PEAK_OF_ENERGY_WELL - FissionEnergyChartView.BOTTOM_OF_ENERGY_WELL) / 
+                2
+            );
+        },
+
+        /**
+         * Convert a Y axis value in graph units to a screen value.
+         */
+        convertGraphToScreenY: function(y) {
+            return (this.graphOriginY - (y * (this.graphHeight / FissionEnergyChartView.Y_AXIS_TOTAL_POSITVE_SPAN)));
         },
 
         update: function(time, deltaTime, paused) {}
