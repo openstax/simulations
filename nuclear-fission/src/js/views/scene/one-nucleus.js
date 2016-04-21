@@ -23,6 +23,7 @@ define(function(require) {
     var ExplodingNucleusView      = require('views/nucleus/exploding');
 
     var NeutronSourceView = require('nuclear-fission/views/neutron-source');
+    var FissionEnergyChartView = require('nuclear-fission/views/fission-energy-chart');
 
     var NuclearPhysicsSceneView = require('views/scene');
 
@@ -61,12 +62,8 @@ define(function(require) {
             return 220;
         },
 
-        getRightPadding: function() {
-            return 0;
-        },
-
         initMVT: function() {
-            this.viewOriginX = this.getLeftPadding() + this.getAvailableWidth() / 2;
+            this.viewOriginX = this.width / 2;
             this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;
 
             var pixelsPerFemtometer = 6;
@@ -91,6 +88,7 @@ define(function(require) {
             this.initMVT();
             this.initNucleus();
             this.initNeutronSourceView();
+            this.initFissionEnergyChart();
         },
 
         initNucleus: function() {
@@ -121,6 +119,25 @@ define(function(require) {
             });
 
             this.stage.addChild(this.neutronSourceView.displayObject);
+        },
+
+        initFissionEnergyChart: function() {
+            this.fissionEnergyChartView = new FissionEnergyChartView({
+                simulation: this.simulation,
+                width: this.getWidthBetweenPanels(),
+                renderer: this.renderer
+            });
+
+            if (AppView.windowIsShort()) {
+                this.fissionEnergyChartView.displayObject.x = this.getLeftPadding() + 12;
+                this.fissionEnergyChartView.displayObject.y = 12;
+            }
+            else {
+                this.fissionEnergyChartView.displayObject.x = this.getLeftPadding() + 20;
+                this.fissionEnergyChartView.displayObject.y = 20;
+            }
+
+            this.stage.addChild(this.fissionEnergyChartView.displayObject);
         },
 
         createParticleView: function(particle) {
