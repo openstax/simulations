@@ -7,6 +7,7 @@ define(function(require) {
 
                          require('common/v3/pixi/create-drop-shadow');
                          require('common/v3/pixi/draw-stick-arrow');
+                         require('common/v3/pixi/dash-to');
     var AppView        = require('common/v3/app/app');
     var PixiView       = require('common/v3/pixi/view');
     var Colors         = require('common/colors/colors');
@@ -67,7 +68,8 @@ define(function(require) {
             this.yAxisLineXOffset = 60;
             this.arrowHeadWidth = 8;
             this.arrowHeadLength = 6;
-            this.energyLineMargin = 10;
+            this.energyLineMargin = 0;
+            this.yAxisLabelWidth = 48;
 
             this.calculateGraphDimensions();
 
@@ -93,7 +95,8 @@ define(function(require) {
             this.initNuclei();
             this.initLegend();
 
-            this.drawPotentialEnergyWell();
+            this.drawTotalEnergyLine();
+            this.drawPotentialEnergyLine();
         },
 
         initPanel: function() {
@@ -286,11 +289,30 @@ define(function(require) {
             this.yAxisContainer.addChild(label);
         },
 
+        drawTotalEnergyLine: function() {
+            var graphics = this.totalEnergyGraphics;
+            graphics.clear();
+            graphics.lineStyle(FissionEnergyChartView.LINE_WIDTH, TOTAL_ENERGY_LINE_COLOR, FissionEnergyChartView.LINE_ALPHA);
+
+            var margin = this.energyLineMargin;
+            graphics.moveTo(this.graphOriginX + this.graphWidth - margin, 0);
+            graphics.lineTo(this.graphOriginX + this.yAxisLineXOffset, 0);
+            graphics.moveTo(this.graphOriginX + this.yAxisLineXOffset - this.yAxisLabelWidth, 0);
+            graphics.lineTo(this.graphOriginX + margin, 0);
+
+            graphics.lineStyle(FissionEnergyChartView.LINE_WIDTH, TOTAL_ENERGY_LINE_COLOR, 0.6);
+            graphics.moveTo(this.graphOriginX + this.yAxisLineXOffset, 0);
+            graphics.dashTo(this.graphOriginX + this.yAxisLineXOffset - this.yAxisLabelWidth, 0, [2, 2]);
+
+            // Position it in its default position -- MAYBE THIS IS TEMPORARY TODO
+            graphics.y = this.graphOriginY - this.graphHeight * 0.64;
+        },
+
         /**
          * This method draws the line that represents the potential energy well
          *   for the nucleus.
          */
-        drawPotentialEnergyWell: function() {
+        drawPotentialEnergyLine: function() {
             
             // Clear the existing curve.
             var graphics = this.potentialEnergyGraphics;
@@ -400,7 +422,11 @@ define(function(require) {
             return (this.graphOriginY - (y * (this.graphHeight / FissionEnergyChartView.Y_AXIS_TOTAL_POSITVE_SPAN)));
         },
 
-        update: function(time, deltaTime, paused) {}
+        update: function(time, deltaTime, paused) {},
+
+        updateNucleiPositions: function(time, deltaTime, paused) {
+
+        }
 
     }, Constants.FissionEnergyChartView);
 

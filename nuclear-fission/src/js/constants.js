@@ -61,7 +61,7 @@ define(function (require) {
 
     FissionEnergyChartView.LEGEND_WIDTH = 160;
     FissionEnergyChartView.LEGEND_HEIGHT = 60;
-    FissionEnergyChartView.LEGEND_Y = 50;
+    FissionEnergyChartView.LEGEND_Y = 34;
     FissionEnergyChartView.LEGEND_LABEL_FONT = 'bold 12px Helvetica Neue';
     FissionEnergyChartView.LEGEND_LABEL_COLOR = '#000';
 
