@@ -164,6 +164,16 @@ define(function (require) {
         },
 
         /**
+         * Returns whether the nucleus' atomic weight has changed since it was created.
+         */
+        atomicWeightHasChanged: function() {
+            if (this.get('numProtons') !== this.originalNumProtons || this.get('numNeutrons') !== this.originalNumNeutrons)
+                return true;
+            else
+                return false;
+        },
+
+        /**
          * Returns a value indicating the amount of adjusted time that the nucleus
          *   has been active without decaying.  Adjusted time is based on the time
          *   adjustment factor that is used to scale the amount of time that a

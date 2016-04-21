@@ -32,7 +32,7 @@ define(function(require) {
 
             this.initGraphics();
 
-            this._nucleusDecayed = this.model.hasDecayed();
+            this._atomicWeightChanged = this.model.atomicWeightHasChanged();
         },
 
         /**
@@ -45,8 +45,8 @@ define(function(require) {
         update: function(time, deltaTime) {
             this.updatePosition();
 
-            if (this._nucleusDecayed !== this.model.hasDecayed()) {
-                this._nucleusDecayed = this.model.hasDecayed();
+            if (this._atomicWeightChanged !== this.model.atomicWeightHasChanged()) {
+                this._atomicWeightChanged = this.model.atomicWeightHasChanged();
                 this.nucleusChanged();
             }
         },
