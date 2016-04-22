@@ -123,9 +123,11 @@ define(function(require) {
 
         initFissionEnergyChart: function() {
             this.fissionEnergyChartView = new FissionEnergyChartView({
+                model: this.simulation.primaryNucleus,
                 simulation: this.simulation,
                 width: this.getWidthBetweenPanels(),
-                renderer: this.renderer
+                renderer: this.renderer,
+                mvt: this.mvt
             });
 
             if (AppView.windowIsShort()) {
@@ -168,6 +170,7 @@ define(function(require) {
 
             this.nucleusView.update(time, deltaTime, paused);
             this.neutronSourceView.update(time, deltaTime, paused);
+            this.fissionEnergyChartView.update(time, deltaTime, paused);
 
             for (var i = 0; i < this.particleViews.length; i++)
                 this.particleViews[i].update(time, deltaTime, paused);
