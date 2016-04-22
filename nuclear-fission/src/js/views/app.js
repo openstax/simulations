@@ -4,7 +4,9 @@ define(function(require) {
 
     var NuclearPhysicsAppView = require('views/app');
 
-    var OneNucleusSimView = require('nuclear-fission/views/sim/one-nucleus');
+    var OneNucleusSimView     = require('nuclear-fission/views/sim/one-nucleus');
+    var ChainReactionSimView  = require('nuclear-fission/views/sim/chain-reaction');
+    var NuclearReactorSimView = require('nuclear-fission/views/sim/nuclear-reactor');
 
     var Assets = require('assets');
 
@@ -15,7 +17,9 @@ define(function(require) {
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            OneNucleusSimView
+            OneNucleusSimView,
+            ChainReactionSimView,
+            NuclearReactorSimView
         ]
 
     });

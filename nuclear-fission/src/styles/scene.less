@@ -12,3 +12,26 @@
         height: @short-scene-height;
     }
 }
+
+.scene-view-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+
+    .reset-nucleus-btn,
+    .reset-nuclei-btn {
+        position: absolute;
+        left: 32px;
+        top: 32px;
+        width: 160px;
+        background-color: @link-color;
+        color: #fff;
+        margin: 0;
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+}

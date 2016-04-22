@@ -8,6 +8,9 @@ define(function(require) {
     var PixiToTexture = require('common/v3/pixi/pixi-to-texture');
     var Vector2       = require('common/math/vector2');
 
+    var Nucleon                = require('models/nucleon');
+    var CompositeAtomicNucleus = require('models/nucleus/composite');
+
     var IsotopeSymbolGenerator = require('views/isotope-symbol-generator');
 
     var Constants = require('constants');
@@ -33,6 +36,7 @@ define(function(require) {
     var ParticleGraphicsGenerator = {
 
         _vec2: new Vector2(),
+        _zeroVec: new Vector2(),
 
         _nucleusCache: {},
         _labeledNucleusCache: {},
@@ -79,7 +83,7 @@ define(function(require) {
             cache[scale][numProtons][numNeutrons].push(texture);
         },
 
-        generateLabeledNucleus: function(nucleus, mvt, renderer, hideNucleons, labelScale) {
+        generateLabeledNucleus: function(nucleus, mvt, renderer, hideNucleons, labelScale, normalized) {
             var sprite;
             var noCachingAsBitmap = false;
             if (labelScale === undefined)
@@ -108,7 +112,9 @@ define(function(require) {
                 var cachedTextures = this.getCachedNucleusTextures(renderer, '_labeledNucleusCache', numProtons, numNeutrons, mvt);
                 if (cachedTextures === null || cachedTextures.length < this.minCachedTextureCount) {
                     // Create a nucleus sprite
-                    var nucleusSprite = this.createNucleusSprite(numProtons, numNeutrons, mvt);
+                    var nucleusSprite = (normalized) ?
+                        this.createNormalizedNucleusSprite(numProtons, numNeutrons, mvt, nucleus.get('tunnelingRegionRadius')) :
+                        this.createNucleusSprite(numProtons, numNeutrons, mvt);
                     // Create its isotope symbol
                     var fontSize = mvt.modelToViewDeltaX(nucleus.get('diameter')) * 0.8 * labelScale;
                     var isotopeSymbol = IsotopeSymbolGenerator.generate(nucleus, fontSize);
@@ -141,7 +147,7 @@ define(function(require) {
         /**
          * Create the image that will be used to visually represent this nucleus.
          */
-        generateNucleus: function(nucleus, mvt, renderer, hideNucleons) {
+        generateNucleus: function(nucleus, mvt, renderer, hideNucleons, normalized) {
             var sprite;
             var noCachingAsBitmap = false;
             
@@ -161,7 +167,9 @@ define(function(require) {
 
                 var cachedTextures = this.getCachedNucleusTextures(renderer, '_nucleusCache', numProtons, numNeutrons, mvt);
                 if (cachedTextures === null || cachedTextures.length < this.minCachedTextureCount) {
-                    var nucleusSprite = this.createNucleusSprite(numProtons, numNeutrons, mvt);
+                    var nucleusSprite = (normalized) ?
+                        this.createNormalizedNucleusSprite(numProtons, numNeutrons, mvt, nucleus.get('tunnelingRegionRadius')) :
+                        this.createNucleusSprite(numProtons, numNeutrons, mvt);
                     // If we don't have a renderer, don't bother with creating a texture
                     if (!renderer)
                         return this.wrapSprite(nucleusSprite);
@@ -198,17 +206,11 @@ define(function(require) {
             // Shuffle it
             nucleons = _.shuffle(nucleons);
 
-            // Now arrange them randomly so they all fit within the nucleus radius
-            var rotationStep = (Math.PI * 2) / nucleons.length;
-            var vec = this._vec2;
-            for (i = 0; i < nucleons.length; i++) {
-                vec.set(Math.random() * (viewNucleusRadius - nucleons[i].width / 2), 0);
-                vec.rotate(i * rotationStep);
-                nucleons[i].x = vec.x;
-                nucleons[i].y = vec.y;
+            // Add them all to the container
+            for (i = 0; i < nucleons.length; i++)
                 container.addChild(nucleons[i]);
-            }
-
+            
+            // Set their positions in the appropriate manner for the nucleus' size
             if (nucleons.length == 3) {
                 // This is a special case of a 3-neucleon nucleus.  Position all
                 //   nucleons to be initially visible.
@@ -232,9 +234,12 @@ define(function(require) {
                 var numberToPlacePerCycle = 2;
                 var numberOfNucleiPlaced = 0;
                 while (numberOfNucleiPlaced < nucleons.length) {
-                    for (var i = 0; i < numberToPlacePerCycle; i++){
+                    for (var i = 0; i < numberToPlacePerCycle; i++) {
+                        var position = CompositeAtomicNucleus.getRandomNucleonPosition(this._zeroVec, minDistance, maxDistance, this.getNextPlacementZone());
                         var particle = nucleons[nucleons.length - 1 - numberOfNucleiPlaced];
-                        this.placeNucleon(particle, this.get('position'), minDistance, maxDistance, this.getNextPlacementZone());
+                        particle.x = position.x;
+                        particle.y = position.y;
+
                         numberOfNucleiPlaced++;
                         if (numberOfNucleiPlaced >= nucleons.length)
                             break;
@@ -248,8 +253,11 @@ define(function(require) {
                 // This is a relatively large nucleus.  Have each particle place
                 //   itself randomly somewhere within the radius of the nucleus.
                 var tunnelingRegion = mvt.modelToViewDeltaX(Math.min(tunnelingRegionRadius, viewNucleusRadius * 3));
-                for (var j = 0; j < nucleons.length; j++)
-                    nucleons[j].tunnel(this.get('position'), 0, this.get('diameter') / 2, tunnelingRegion);
+                for (var j = 0; j < nucleons.length; j++) {
+                    var nucleonPosition = Nucleon.tunnel(this._zeroVec, 0, viewNucleusRadius, tunnelingRegion);
+                    nucleons[j].x = nucleonPosition.x;
+                    nucleons[j].y = nucleonPosition.y;
+                }
             }
 
             return container;

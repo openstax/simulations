@@ -5,3 +5,120 @@
 .sims .sim-content {
     min-height: inherit;
 }
+
+.sim-controls-wrapper {
+    position: absolute;
+    right: @panel-margin;
+    top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        right: (@short-screen-panel-margin + 1);
+        top: @short-screen-panel-margin;
+    }
+}
+
+@media screen and (max-height: @short-window) {
+    .sim-controls-wrapper {
+        position: inherit;
+        top: auto;
+        right: auto;
+    }
+
+    .sim-controls-left {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        left: (@short-screen-panel-margin + 1);
+    }
+
+    .sim-controls-right {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: (@short-screen-panel-margin + 1);
+    }
+}
+
+.sim-controls {
+    .panel();
+    width: @panel-width;
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+
+    h2 {
+        font-size: 16px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    hr {
+        margin-top: 14px;
+        margin-bottom: 14px;
+        border: none;
+        border-top: 1px solid rgba(0, 0, 0, 0.09);
+    }
+
+    label {
+        color: #222;
+    }
+
+    .slider .noUi-background {
+        background: rgb(251, 223, 232);
+    }
+
+    .slider-header {
+        border-bottom: none;
+        margin-bottom: -4px;
+        font-weight: bold;
+
+        .slider-value {
+            float: right;
+            font-weight: normal;
+        }
+    }
+
+    .u-235-slider-wrapper,
+    .u-238-slider-wrapper {
+        .u-235-img-wrapper,
+        .u-238-img-wrapper {
+            display: inline-block;
+            vertical-align: middle;
+            margin-top: -5px;
+            margin-right: 8px;
+
+            img {
+                width: 24px;
+            }
+        }
+    }
+
+    .u-235-slider-wrapper {
+        margin-top: 4px;
+        margin-bottom: 18px;
+    }
+
+    .u-238-slider-wrapper {
+        margin-bottom: -6px;
+    }
+
+    &.legend-panel {
+        font-size: 13px;
+    }
+
+}

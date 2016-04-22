@@ -47,31 +47,11 @@ define(function (require) {
          * @param tunnelRadius - Radius at which this particle could tunnel out of nucleus.
          */
         tunnel: function(center, minDistance, nucleusRadius, tunnelRadius) {
-            if (this.get('tunnelingEnabled')){
-                
-                // Create a probability distribution that will cause the particles to
-                //   be fairly evenly spread around the core of the nucleus and appear
-                //   occasionally at the outer reaches.
-        
-                var multiplier = Math.random();
-                
-                if (multiplier > 0.8) {
-                    // Cause the distribution to tail off in the outer regions of the
-                    // nucleus.
-                    multiplier = Math.random() * Math.random();
-                }
-                
-                var newRadius = minDistance + (multiplier * (nucleusRadius - minDistance));
-                
-                // Calculate the new angle, in radians, from the origin.
-                var newAngle = Math.random() * 2 * Math.PI;
-                
-                // Convert from polar to Cartesian coordinates.
-                var xPos = Math.cos(newAngle) * newRadius;
-                var yPos = Math.sin(newAngle) * newRadius;
+            if (this.get('tunnelingEnabled')) {
+                var newPosition = Nucleon.tunnel(center, minDistance, nucleusRadius, tunnelRadius);
                 
                 // Save the new position.
-                this.setPosition(xPos + center.x, yPos + center.y);
+                this.setPosition(newPosition);
             }
         },
         
@@ -89,7 +69,47 @@ define(function (require) {
             }
         }
 
-    }, Constants.Nucleon);
+    }, _.extend({
+
+        /**
+         * This method simulates the quantum tunneling behavior, which means that
+         *   it causes the particle to move to some new random location within the
+         *   confines of the supplied parameters.
+         * 
+         * @param minDistance - Minimum distance from origin (0,0).  This is generally 0.
+         * @param nucleusRadius - Radius of the nucleus where this particle resides.
+         * @param tunnelRadius - Radius at which this particle could tunnel out of nucleus.
+         */
+        tunnel: function(center, minDistance, nucleusRadius, tunnelRadius) {
+            if (!this._tunnelPosition)
+                this._tunnelPosition = new Vector2();
+
+            // Create a probability distribution that will cause the particles to
+            //   be fairly evenly spread around the core of the nucleus and appear
+            //   occasionally at the outer reaches.
+            var multiplier = Math.random();
+            if (multiplier > 0.8) {
+                // Cause the distribution to tail off in the outer regions of the
+                // nucleus.
+                multiplier = Math.random() * Math.random();
+            }
+            
+            var newRadius = minDistance + (multiplier * (nucleusRadius - minDistance));
+            
+            // Calculate the new angle, in radians, from the origin.
+            var newAngle = Math.random() * 2 * Math.PI;
+            
+            // Convert from polar to Cartesian coordinates.
+            var xPos = Math.cos(newAngle) * newRadius;
+            var yPos = Math.sin(newAngle) * newRadius;
+            
+            // Save the new position.
+            this._tunnelPosition.set(xPos + center.x, yPos + center.y);
+
+            return this._tunnelPosition;
+        }
+
+    }, Constants.Nucleon));
 
     return Nucleon;
 });
