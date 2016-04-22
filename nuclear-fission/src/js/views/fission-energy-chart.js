@@ -166,6 +166,8 @@ define(function(require) {
             this.displayObject.addChild(this.daughterNucleus2);
 
             this.nucleusDiameter = 50;
+
+            this.updateNucleiPositions();
         },
 
         initLegend: function() {
@@ -300,7 +302,7 @@ define(function(require) {
             });
             label.resolution = this.getResolution();
             label.x = this.graphOriginX + this.yAxisLineXOffset;
-            label.y = this.graphOriginY - this.graphHeight / 2;
+            label.y = this.graphOriginY - this.graphHeight / 2 + 5;
             label.anchor.x = 0.5;
             label.anchor.y = 1.2;
             label.rotation = -Math.PI / 2;
@@ -329,7 +331,7 @@ define(function(require) {
             graphics.moveTo(this.graphOriginX + this.yAxisLineXOffset - this.yAxisLabelWidth, 0);
             graphics.lineTo(this.graphOriginX + margin, 0);
 
-            graphics.lineStyle(FissionEnergyChartView.LINE_WIDTH, TOTAL_ENERGY_LINE_COLOR, 0.6);
+            graphics.lineStyle(FissionEnergyChartView.LINE_WIDTH, TOTAL_ENERGY_LINE_COLOR, 0.5);
             graphics.moveTo(this.graphOriginX + this.yAxisLineXOffset, 0);
             graphics.dashTo(this.graphOriginX + this.yAxisLineXOffset - this.yAxisLabelWidth, 0, [2, 2]);
 
@@ -452,8 +454,11 @@ define(function(require) {
         },
 
         update: function(time, deltaTime, paused) {
-            if (this.fissionState == FissionEnergyChartView.STATE_FISSIONING || 
-                this.fissionState == FissionEnergyChartView.STATE_FISSIONED) {
+            if (!paused && (
+                    this.fissionState == FissionEnergyChartView.STATE_FISSIONING || 
+                    this.fissionState == FissionEnergyChartView.STATE_FISSIONED
+                )
+            ) {
                 this.updateNucleiPositions(time, deltaTime);
             }
         },
@@ -466,13 +471,13 @@ define(function(require) {
                 case FissionEnergyChartView.STATE_IDLE:
                     // Position the unfissioned nucleus image at the bottom of the energy well.
                     this.unfissionedNucleus.visible = true;
-                    xPos = this.graphOriginX / 2 + this.graphWidth / 2 - this.unfissionedNucleus.width / 2;
-                    yPos = this.convertGraphToScreenY(FissionEnergyChartView.BOTTOM_OF_ENERGY_WELL) - this.unfissionedNucleus.height / 2;
+                    xPos = this.graphOriginX + this.graphWidth / 2;
+                    yPos = this.convertGraphToScreenY(FissionEnergyChartView.BOTTOM_OF_ENERGY_WELL);
                     this.unfissionedNucleus.x = xPos;
                     this.unfissionedNucleus.y = yPos;
                     
                     // Position the total energy line, also at the bottom of the well.
-                    this.totalEnergyGraphics.y = yPos + this.unfissionedNucleus.height / 2
+                    this.totalEnergyGraphics.y = yPos;
 
                     break;
                 
@@ -480,11 +485,11 @@ define(function(require) {
                     // Move the unfissioned nucleus up toward the top of the energy
                     //   well.  Jitter it to create the impression of instability.
 
-                    xPos = this.graphOriginX / 2 + this.graphWidth / 2 - this.unfissionedNucleus.width / 2;
+                    xPos = this.graphOriginX + this.graphWidth / 2;
                     
                     // Cause the nucleus to move upward.
                     var nucleusBasePosY = this.convertGraphToScreenY(FissionEnergyChartView.BOTTOM_OF_ENERGY_WELL);
-                    var nucleusTopPosY = this.convertGraphToScreenY(FissionEnergyChartView.PEAK_OF_ENERGY_WELL) - this.unfissionedNucleus.height / 2;
+                    var nucleusTopPosY  = this.convertGraphToScreenY(FissionEnergyChartView.PEAK_OF_ENERGY_WELL);
                     
                     if (this.unfissionedNucleus.y > nucleusTopPosY) {
                         yPos = this.unfissionedNucleus.y + (
@@ -500,12 +505,12 @@ define(function(require) {
                     
                     // Create a bit of jitter along the x-axis to create a look of
                     // instability.
-                    xPos += xPos * (Math.random() - 0.5) * 0.10;
+                    xPos += xPos * (Math.random() - 0.5) * 0.10;//(Math.random() - 0.5) * this.nucleusDiameter * 0.8;
                     this.unfissionedNucleus.x = xPos;
                     this.unfissionedNucleus.y = yPos;
                     
                     // Move the total energy line up with the nucleus.
-                    this.totalEnergyGraphics.y = yPos + this.unfissionedNucleus.height / 2;
+                    this.totalEnergyGraphics.y = yPos;
 
                     break;
                 
@@ -517,11 +522,11 @@ define(function(require) {
                     yPos = this.convertGraphToScreenY(FissionEnergyChartView.PEAK_OF_ENERGY_WELL);
                     
                     // Figure out X position of the larger daughter nucleus.
-                    xPos = this.graphOriginX / 2 + this.graphWidth / 2 + this.mvt.modelToViewDeltaX(this.model);
+                    xPos = this.graphOriginX + this.graphWidth / 2 + this.mvt.modelToViewDeltaX(this.model.getX());
                     if ((xPos < this.graphOriginX + this.graphWidth) && (xPos > this.graphOriginX)) {
                         // Set the position for this image.
-                        this.daughterNucleus2.x = xPos - this.daughterNucleus2.width / 2; 
-                        this.daughterNucleus2.y = yPos - this.daughterNucleus2.height / 2;
+                        this.daughterNucleus2.x = xPos; 
+                        this.daughterNucleus2.y = yPos;
                     }
                     else {
                         // Don't bother showing and updating the nucleus if it is off the chart.
@@ -530,11 +535,11 @@ define(function(require) {
                     
                     // Figure out X position of the smaller daughter nucleus.
                     if (this.daughterNucleusModel) {
-                        xPos = this.graphOriginX / 2 + this.graphWidth / 2 + this.mvt.modelToViewDeltaX(this.daughterNucleusModel);
+                        xPos = this.graphOriginX + this.graphWidth / 2 + this.mvt.modelToViewDeltaX(this.daughterNucleusModel.getX());
                         if ((xPos < this.graphOriginX + this.graphWidth) && (xPos > this.graphOriginX)) {
                             // Set the position for this image.
-                            this.daughterNucleus1.x = xPos - this.daughterNucleus2.width / 2;
-                            this.daughterNucleus1.y = yPos - this.daughterNucleus2.height / 2;
+                            this.daughterNucleus1.x = xPos;
+                            this.daughterNucleus1.y = yPos;
                         }
                         else {
                             // Don't bother showing and updating the nucleus if it is off the chart.
@@ -560,7 +565,7 @@ define(function(require) {
                     throw 'Daughter nucleus not found.';
                 
                 this.fissionState = FissionEnergyChartView.STATE_FISSIONED;
-                this.unfissionedNucleus.visible = ( false );
+                this.unfissionedNucleus.visible = false;
                 this.daughterNucleus1.visible = true;
                 this.daughterNucleus2.visible = true;
                 this.updateNucleiPositions();
