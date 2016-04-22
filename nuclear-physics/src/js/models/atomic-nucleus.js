@@ -79,9 +79,11 @@ define(function (require) {
         },
 
         update: function(time, deltaTime) {
-            // Move
-            this.updateVelocity(deltaTime);
-            this.updatePositionFromVelocity(deltaTime);
+            // Update the velocity.
+            this.setVelocity(this.get('velocity').add(this.get('acceleration')));
+
+            // Update the position.
+            this.setPosition(this.get('position').add(this.get('velocity')));
 
             // Take any action necessary related to decay.
             if (this.isDecayActive()) {
