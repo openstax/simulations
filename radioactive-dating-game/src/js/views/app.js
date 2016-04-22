@@ -2,6 +2,9 @@ define(function(require) {
     
     'use strict';
 
+    var _ = require('underscore');
+    var $ = require('jquery');
+
     var NuclearPhysicsAppView = require('views/app');
     
     var HalfLifeSimView    = require('radioactive-dating-game/views/sim/half-life');

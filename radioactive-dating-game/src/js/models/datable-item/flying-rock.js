@@ -2,9 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    
-    var Rectangle = require('common/math/rectangle');
-    var Vector2   = require('common/math/vector2');
+    var _ = require('underscore');
 
     var AnimatedDatableItem = require('radioactive-dating-game/models/datable-item/animated');
 

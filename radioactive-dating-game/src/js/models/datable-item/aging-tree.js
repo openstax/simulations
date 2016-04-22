@@ -2,8 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var Rectangle = require('common/math/rectangle');
-    var Vector2   = require('common/math/vector2');
+    var _ = require('underscore');
 
     var AnimatedDatableItem = require('radioactive-dating-game/models/datable-item/animated');
 
@@ -36,7 +35,7 @@ define(function (require) {
             this._fallCounter = AgingTree.FALL_COUNT;
             this._bounceCounter = AgingTree.BOUNCE_COUNT;
             this._decomposeCounter = AgingTree.DECOMPOSE_COUNT;
-            this._previousAngle;
+            this._previousAngle = undefined;
         },
 
         animate: function(age, deltaTime) {
