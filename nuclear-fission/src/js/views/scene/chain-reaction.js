@@ -40,7 +40,8 @@ define(function(require) {
             this.listenTo(this.simulation.neutronSource, 'neutron-generated', this.neutronGenerated);
             this.listenTo(this.simulation.freeNeutrons, 'destroy', this.neutronDestroyed);
 
-            this.listenTo(this.simulation, 'nucleus-added', this.nucleusAdded);
+            this.listenTo(this.simulation, 'nucleus-added',   this.nucleusAdded);
+            this.listenTo(this.simulation, 'nucleus-removed', this.nucleusRemoved);
         },
 
         renderContent: function() {
@@ -58,7 +59,7 @@ define(function(require) {
         },
 
         initMVT: function() {
-            this.viewOriginX = this.width / 2;
+            this.viewOriginX = this.getLeftPadding() + this.getAvailableWidth() / 2;
             this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;
 
             var pixelsPerFemtometer = 3;
@@ -82,6 +83,7 @@ define(function(require) {
 
             this.initMVT();
             this.initNeutronSourceView();
+            this.initStartingNuclei();
         },
 
         initNeutronSourceView: function() {
@@ -93,6 +95,16 @@ define(function(require) {
             });
 
             this.stage.addChild(this.neutronSourceView.displayObject);
+        },
+
+        initStartingNuclei: function() {
+            var i;
+
+            for (i = 0; i < this.simulation.u235Nuclei.length; i++)
+                this.nucleusAdded(this.simulation.u235Nuclei.at(i));
+
+            for (i = 0; i < this.simulation.u238Nuclei.length; i++)
+                this.nucleusAdded(this.simulation.u238Nuclei.at(i));
         },
 
         createParticleView: function(particle) {
@@ -156,6 +168,16 @@ define(function(require) {
 
             this.nucleusViews.push(nucleusView);
             this.nucleusLayer.addChild(nucleusView.displayObject);
+        },
+
+        nucleusRemoved: function(nucleus) {
+            for (var i = 0; i < this.nucleusViews.length; i++) {
+                if (this.nucleusViews[i].model === nucleus) {
+                    this.nucleusViews[i].remove();
+                    this.nucleusViews.splice(i, 1);
+                    return;
+                }
+            }
         }
 
     });

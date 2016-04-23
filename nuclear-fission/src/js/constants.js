@@ -50,15 +50,14 @@ define(function (require) {
     ChainReactionSimulation.CONTAINMENT_VESSEL_MARGIN = 12;
 
     // Constants that control the position of the neutron source.
-    ChainReactionSimulation.NEUTRON_SOURCE_POS_X = -50;
-    ChainReactionSimulation.NEUTRON_SOURCE_POS_Y = 0;
+    ChainReactionSimulation.NEUTRON_SOURCE_POSITION = new Vector2(-50, 0);
 
     // Constant rect that defines a space around the neutron source where
     //   nuclei cannot initially be located.  This is just tweaked until
     //   things look right.
     ChainReactionSimulation.NEUTRON_SOURCE_OFF_LIMITS_RECT = new Rectangle(
-        ChainReactionSimulation.NEUTRON_SOURCE_POS_X - 70, 
-        ChainReactionSimulation.NEUTRON_SOURCE_POS_Y - 20, 
+        ChainReactionSimulation.NEUTRON_SOURCE_POSITION.x - 70, 
+        ChainReactionSimulation.NEUTRON_SOURCE_POSITION.y - 20, 
         80, 
         50
     );

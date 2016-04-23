@@ -34,13 +34,14 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
-            NuclearPhysicsSimulation.prototype.initialize.apply(this, [attributes, options]);
-
             // Cached objects
             this._point = new Vector2();
 
             // Bind these functions so we can pass them as function parameters
             _.bindAll(this, 'createU235Nucleus', 'createU238Nucleus');
+
+            // Call parent initialize function
+            NuclearPhysicsSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             // Bind listeners
             this.on('change:numU235Nuclei', this.numU235NucleiChanged);
@@ -53,7 +54,8 @@ define(function (require, exports, module) {
         initComponents: function() {
             // Add the neutron source to the side of the model.
             this.neutronSource = new NeutronSource({
-                position: new Vector2(-30, 0)
+                position: ChainReactionSimulation.NEUTRON_SOURCE_POSITION,
+                firingAngle: ChainReactionSimulation.INITIAL_NEUTRON_SOURCE_ANGLE
             });
 
             this.containmentVessel = new ContainmentVessel({
@@ -69,6 +71,10 @@ define(function (require, exports, module) {
 
             // Daughter nuclei that have been removed from the model in order to save
             this.ghostDaughterNuclei = 0;
+
+            // Add starting nuclei
+            this.addOrRemoveNuclei(this.u235Nuclei, this.get('numU235Nuclei'), 0, this.createU235Nucleus);
+            this.addOrRemoveNuclei(this.u238Nuclei, this.get('numU238Nuclei'), 0, this.createU238Nucleus);
 
             // Bind listeners
             this.listenTo(this.neutronSource, 'neutron-generated', this.neutronGenerated);
@@ -114,6 +120,8 @@ define(function (require, exports, module) {
             for (i = this.containedElements.length - 1; i >= 0; i--)
                 this.containedElements[i].destroy();
 
+            this.trigger('remove-all-particles');
+
             // Zero out the counter that keeps track of daughter nuclei that have
             //   been removed because they moved out of range of the model.
             this.ghostDaughterNuclei = 0;
@@ -153,6 +161,7 @@ define(function (require, exports, module) {
                     Math.abs(nucleus.getY()) > (ChainReactionSimulation.MAX_NUCLEUS_RANGE_Y / 2)
                 ) {
                     // Get rid of this element.
+                    this.triggerNucleusRemoved(this.daughterNuclei.at(i));
                     this.daughterNuclei.at(i).destroy();
                     this.ghostDaughterNuclei++;
                 }
@@ -165,8 +174,10 @@ define(function (require, exports, module) {
          */
         removeDecayedU235Nuclei: function() {
             if (this.daughterNuclei.length > 0) {
-                for (var i = this.daughterNuclei.length - 1; i >= 0; i--)
-                    this.daughterNuclei[i].destroy();
+                for (var i = this.daughterNuclei.length - 1; i >= 0; i--) {
+                    this.triggerNucleusRemoved(this.daughterNuclei.at(i));
+                    this.daughterNuclei.at(i).destroy();
+                }
             }
 
             if (this.ghostDaughterNuclei > 0)
@@ -258,6 +269,10 @@ define(function (require, exports, module) {
 
         triggerNucleusAdded: function(nucleus) {
             this.trigger('nucleus-added', nucleus);
+        },
+
+        triggerNucleusRemoved: function(nucleus) {
+            this.trigger('nucleus-removed', nucleus);
         },
 
         /**
@@ -375,8 +390,10 @@ define(function (require, exports, module) {
                 //   list, since this leaves the nucleus at the origin for last.
                 var numNucleiToRemove = Math.abs(difference);
                 for (var i = 0; i < numNucleiToRemove; i++) {
-                    if (collection.length > 0)
+                    if (collection.length > 0) {
+                        this.triggerNucleusRemoved(collection.last());
                         collection.last().destroy();
+                    }
                 }
             }
         },
