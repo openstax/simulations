@@ -29,7 +29,8 @@ define(function (require) {
     var ChainReactionSimView = NuclearFissionSimView.extend({
 
         events: _.extend({}, NuclearFissionSimView.prototype.events, {
-            
+            'slide .u-235-slider' : 'changeNumU235Nuclei',
+            'slide .u-238-slider' : 'changeNumU238Nuclei'
         }),
 
         /**
@@ -134,6 +135,9 @@ define(function (require) {
                 }
             });
 
+            this.$u235 = this.$('#u-235');
+            this.$u238 = this.$('#u-238');
+
             this.$('select').selectpicker();
         },
 
@@ -161,7 +165,29 @@ define(function (require) {
             this.renderLegend();
 
             return this;
-        }
+        },
+
+        /**
+         * Responds to changes in the u-235 slider
+         */
+        changeNumU235Nuclei: function(event) {
+            var num = parseInt($(event.target).val());
+            this.inputLock(function() {
+                this.$u235.text(num + ((num === 1) ? ' Nucleus' : ' Nuclei'));
+                this.simulation.set('numU235Nuclei', num);
+            });
+        },
+
+        /**
+         * Responds to changes in the u-238 slider
+         */
+        changeNumU238Nuclei: function(event) {
+            var num = parseInt($(event.target).val());
+            this.inputLock(function() {
+                this.$u238.text(num + ((num === 1) ? ' Nucleus' : ' Nuclei'));
+                this.simulation.set('numU238Nuclei', num);
+            });
+        },
 
     });
 

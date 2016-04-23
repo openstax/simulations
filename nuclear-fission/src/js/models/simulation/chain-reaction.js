@@ -8,11 +8,12 @@ define(function (require, exports, module) {
     var VanillaCollection = require('common/collections/vanilla');
     var Vector2           = require('common/math/vector2');
 
-    var NuclearPhysicsSimulation   = require('models/simulation');
-    var Uranium235CompositeNucleus = require('models/nucleus/uranium-235-composite');
-    var Nucleon                    = require('models/nucleon');
-    var AlphaParticle              = require('models/alpha-particle');
-    var AtomicNucleus              = require('models/atomic-nucleus');
+    var NuclearPhysicsSimulation = require('models/simulation');
+    var Uranium235Nucleus        = require('models/nucleus/uranium-235');
+    var Uranium238Nucleus        = require('models/nucleus/uranium-238');
+    var Nucleon                  = require('models/nucleon');
+    var AlphaParticle            = require('models/alpha-particle');
+    var AtomicNucleus            = require('models/atomic-nucleus');
 
     var ContainmentVessel = require('nuclear-fission/models/containment-vessel');
     var NeutronSource     = require('nuclear-fission/models/neutron-source');
@@ -61,6 +62,7 @@ define(function (require, exports, module) {
 
             this.u235Nuclei        = new VanillaCollection();
             this.u238Nuclei        = new VanillaCollection();
+            this.u239Nuclei        = new VanillaCollection();
             this.daughterNuclei    = new VanillaCollection();
             this.freeNeutrons      = new VanillaCollection();
             this.containedElements = new VanillaCollection();
@@ -99,6 +101,9 @@ define(function (require, exports, module) {
 
             for (i = this.u238Nuclei.length - 1; i >= 0; i--)
                 this.u238Nuclei[i].destroy();
+
+            for (i = this.u239Nuclei.length - 1; i >= 0; i--)
+                this.u239Nuclei[i].destroy();
 
             for (i = this.daughterNuclei.length - 1; i >= 0; i--)
                 this.daughterNuclei[i].destroy();
@@ -251,6 +256,69 @@ define(function (require, exports, module) {
             this.trigger('nucleus-change', nucleus, byProducts);
         },
 
+        triggerNucleusAdded: function(nucleus) {
+            this.trigger('nucleus-added', nucleus);
+        },
+
+        /**
+         * Handle a change in atomic weight of the primary nucleus, which generally
+         *   indicates a fission event.
+         */
+        atomicWeightChanged: function(nucleus, byProducts) {
+            if (byProducts) {
+                // There are some byproducts of this event that need to be
+                //   managed by this object.
+                for (var i = 0; i < byProducts.length; i++) {
+                    var byProduct = byProducts[i];
+                    if (byProduct instanceof Nucleon) {
+                        // Set a direction and velocity for this element.
+                        var angle = (Math.random() * Math.PI * 2);
+                        var xVel = Math.sin(angle) * ChainReactionSimulation.FREED_NEUTRON_VELOCITY;
+                        var yVel = Math.cos(angle) * ChainReactionSimulation.FREED_NEUTRON_VELOCITY;
+                        byProduct.setVelocity(xVel, yVel);
+
+                        // Add this new particle to our list.
+                        this.freeNeutrons.add(byProduct);
+                    }
+                    else if (byProduct instanceof AtomicNucleus) {
+                        // Save the new daughter and let any listeners
+                        // know that it exists.
+                        var daughterNucleus = byProduct;
+                        this.daughterNuclei.add(daughterNucleus);
+                        this.triggerNucleusAdded(daughterNucleus);
+
+                        // Set random but opposite directions for the produced
+                        // nuclei.
+                        var angle = (Math.random() * Math.PI * 2);
+                        var xVel = Math.sin(angle) * ChainReactionSimulation.INITIAL_DAUGHTER_NUCLEUS_VELOCITY;
+                        var yVel = Math.cos(angle) * ChainReactionSimulation.INITIAL_DAUGHTER_NUCLEUS_VELOCITY;
+                        var xAcc = Math.sin(angle) * ChainReactionSimulation.DAUGHTER_NUCLEUS_ACCELERATION;
+                        var yAcc = Math.cos(angle) * ChainReactionSimulation.DAUGHTER_NUCLEUS_ACCELERATION;
+                        nucleus.setVelocity(xVel, yVel);
+                        nucleus.setAcceleration(xAcc, yAcc);
+                        daughterNucleus.setVelocity(-xVel, -yVel);
+                        daughterNucleus.setAcceleration(-xAcc, -yAcc);
+                        
+                        if (!(nucleus instanceof Uranium235Nucleus))
+                            throw 'Nucleus in fission event expected to be Uranium-235';
+
+                        // Move the 'parent' nucleus to the list of daughter
+                        //   nuclei so that it doesn't continue to be involved in
+                        //   the fission detection calculations.
+                        this.u235Nuclei.remove(nucleus);
+                        this.daughterNuclei.add(nucleus);
+                    }
+                    else {
+                        // We should never get here, debug it if it does.
+                        throw 'Error: Unexpected byproduct of decay event.';
+                    }
+                }
+            }
+            else if (nucleus instanceof Uranium238Nucleus) {
+
+            }
+        },
+
         /**
          * Reacts to a change in the number of U235 nuclei that are present in the model.
          *   Note that this can only be done before the chain reaction has been started.
@@ -293,6 +361,9 @@ define(function (require, exports, module) {
                     var nucleus = nucleusCreationFunction(position);
 
                     collection.add(nucleus);
+
+                    // Let listeners know that a nucleus has been added to the sim
+                    this.triggerNucleusAdded(nucleus);
                 }
 
                 // Reset any impacts that may have accumulated in the containment
@@ -370,7 +441,7 @@ define(function (require, exports, module) {
          * Checks an array of nuclei to see if any of them have come into contact
          *   with the containment vessel and "freezes" any that have.
          */
-        checkContainment: function( ArrayList nuclei ) {
+        checkContainment: function(nuclei) {
             var numNuclei = nuclei.length;
             for (var i = 0; i < numNuclei; i++) {
                 var nucleus = nuclei.at(i);

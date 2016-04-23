@@ -14,15 +14,11 @@ define(function(require) {
     var Electron      = require('models/electron');
     var Antineutrino  = require('models/antineutrino');
 
-    var NucleonView               = require('views/nucleon');
-    var AlphaParticleView         = require('views/alpha-particle');
-    var ElectronView              = require('views/electron');
-    var AntineutrinoView          = require('views/antineutrino');
-    var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
-    var SingleNucleusDecayChart   = require('views/nucleus-decay-chart/single');
-    var ExplodingNucleusView      = require('views/nucleus/exploding');
+    var NucleonView          = require('views/nucleon');
+    var AlphaParticleView    = require('views/alpha-particle');
+    var ExplodingNucleusView = require('views/nucleus/exploding');
 
-    var NeutronSourceView = require('nuclear-fission/views/neutron-source');
+    var NeutronSourceView      = require('nuclear-fission/views/neutron-source');
     var FissionEnergyChartView = require('nuclear-fission/views/fission-energy-chart');
 
     var NuclearPhysicsSceneView = require('views/scene');

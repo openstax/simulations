@@ -155,5 +155,6 @@ define(function (require) {
     Constants.FissionEnergyChartView = FissionEnergyChartView;
 
 
+
     return Constants;
 });
