@@ -22,7 +22,7 @@ define(function(require) {
     var SingleNucleusDecayChart   = require('views/nucleus-decay-chart/single');
     var ExplodingNucleusView      = require('views/nucleus/exploding');
 
-    var NeutronSourceView = require('nuclear-fission/views/neutron-source');
+    var NeutronSourceView      = require('nuclear-fission/views/neutron-source');
     var FissionEnergyChartView = require('nuclear-fission/views/fission-energy-chart');
 
     var NuclearPhysicsSceneView = require('views/scene');
@@ -56,10 +56,6 @@ define(function(require) {
             
         },
 
-        getTopPadding: function() {
-            return 220;
-        },
-
         initMVT: function() {
             this.viewOriginX = this.width / 2;
             this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;
@@ -86,7 +82,6 @@ define(function(require) {
             this.initMVT();
             this.initNucleus();
             this.initNeutronSourceView();
-            this.initFissionEnergyChart();
         },
 
         initNucleus: function() {
@@ -117,27 +112,6 @@ define(function(require) {
             });
 
             this.stage.addChild(this.neutronSourceView.displayObject);
-        },
-
-        initFissionEnergyChart: function() {
-            this.fissionEnergyChartView = new FissionEnergyChartView({
-                model: this.simulation.primaryNucleus,
-                simulation: this.simulation,
-                width: this.getWidthBetweenPanels(),
-                renderer: this.renderer,
-                mvt: this.mvt
-            });
-
-            if (AppView.windowIsShort()) {
-                this.fissionEnergyChartView.displayObject.x = this.getLeftPadding() + 12;
-                this.fissionEnergyChartView.displayObject.y = 12;
-            }
-            else {
-                this.fissionEnergyChartView.displayObject.x = this.getLeftPadding() + 20;
-                this.fissionEnergyChartView.displayObject.y = 20;
-            }
-
-            this.stage.addChild(this.fissionEnergyChartView.displayObject);
         },
 
         createParticleView: function(particle) {

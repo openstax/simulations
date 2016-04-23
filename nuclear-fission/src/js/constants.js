@@ -2,8 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var range   = require('common/math/range');
-    var Vector2 =require('common/math/vector2');
+    var range     = require('common/math/range');
+    var Vector2   = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
 
     var NucleusType  = require('models/nucleus-type');
     var HalfLifeInfo = require('models/half-life-info');
@@ -30,6 +31,75 @@ define(function (require) {
     OneNucleusSimulation.FISSION_INTERVAL = 1200;
 
     Constants.OneNucleusSimulation = OneNucleusSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                      CHAIN REACTION SIMULATION                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var ChainReactionSimulation = {};
+
+    // Constants that control the range within the model where nuclei may be
+    //   initially located.
+    ChainReactionSimulation.MAX_NUCLEUS_RANGE_X = 400;
+    ChainReactionSimulation.MAX_NUCLEUS_RANGE_Y = ChainReactionSimulation.MAX_NUCLEUS_RANGE_X * 0.75;
+    ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT = 12;
+    ChainReactionSimulation.INITIAL_CONTAINMENT_VESSEL_RADIUS = ChainReactionSimulation.MAX_NUCLEUS_RANGE_X / 6;
+    ChainReactionSimulation.CONTAINMENT_VESSEL_MARGIN = 12;
+
+    // Constants that control the position of the neutron source.
+    ChainReactionSimulation.NEUTRON_SOURCE_POS_X = -50;
+    ChainReactionSimulation.NEUTRON_SOURCE_POS_Y = 0;
+
+    // Constant rect that defines a space around the neutron source where
+    //   nuclei cannot initially be located.  This is just tweaked until
+    //   things look right.
+    ChainReactionSimulation.NEUTRON_SOURCE_OFF_LIMITS_RECT = new Rectangle(
+        ChainReactionSimulation.NEUTRON_SOURCE_POS_X - 70, 
+        ChainReactionSimulation.NEUTRON_SOURCE_POS_Y - 20, 
+        80, 
+        50
+    );
+
+    // Constants that control the behavior of fission products.
+    ChainReactionSimulation.FREED_NEUTRON_VELOCITY = 3;
+    ChainReactionSimulation.INITIAL_DAUGHTER_NUCLEUS_VELOCITY = 0;
+    ChainReactionSimulation.DAUGHTER_NUCLEUS_ACCELERATION = 0.2;
+
+    // Constants for impact of collisions with containment vessel, arbitrary
+    //   values empirically determined.
+    ChainReactionSimulation.NEUTRON_COLLISION_IMPACT = 1;
+    ChainReactionSimulation.NUCLEUS_COLLISION_IMPACT = 10;
+
+    // Constants for convenience and optimization.
+    ChainReactionSimulation.ZERO_ACCELERATION = new Vector2(0, 0);
+    ChainReactionSimulation.INITIAL_NEUTRON_SOURCE_ANGLE = -0.07;
+
+    Constants.ChainReactionSimulation = ChainReactionSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                          CONTAINMENT VESSEL                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var ContainmentVessel = {};
+
+    ContainmentVessel.CONTAINMENT_RANGE = 10;  // In femtometers.
+    ContainmentVessel.APERTURE_HEIGHT = 18;    // In femtometers.
+    ContainmentVessel.APERTURE_WIDTH = ContainmentVessel.CONTAINMENT_RANGE * 2.0;  // In femtometers.
+    ContainmentVessel.MINIMUM_RADIUS = 15;
+    
+    // The following value controls how many impacts must occur to cause the
+    //   containment vessel to explode.  The goal, as prescribed by the educators,
+    //   is that explosion won't occur unless the containment vessel is enlarged
+    //   somewhat.
+    ContainmentVessel.CONTAINMENT_EXPLOSION_THRESHOLD = 1200;
+
+    Constants.ContainmentVessel = ContainmentVessel;
 
 
     /*************************************************************************

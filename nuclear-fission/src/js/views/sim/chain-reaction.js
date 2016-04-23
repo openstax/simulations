@@ -8,11 +8,14 @@ define(function (require) {
     var Uranium235Nucleus = require('models/nucleus/uranium-235');
     var Uranium238Nucleus = require('models/nucleus/uranium-238');
 
+    var ChainReactionSimulation = require('nuclear-fission/models/simulation/chain-reaction');
+
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
     var IsotopeSymbolGenerator    = require('views/isotope-symbol-generator');
 
     var NuclearFissionSimView   = require('nuclear-fission/views/sim');
     var ChainReactionLegendView = require('nuclear-fission/views/legend/chain-reaction');
+    var ChainReactionSceneView  = require('nuclear-fission/views/scene/chain-reaction');
 
     var Constants = require('constants');
 
@@ -49,6 +52,22 @@ define(function (require) {
             NuclearFissionSimView.prototype.initialize.apply(this, [options]);
 
             this.initLegend();
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new ChainReactionSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new ChainReactionSceneView({
+                simulation: this.simulation
+            });
         },
 
         initLegend: function() {
