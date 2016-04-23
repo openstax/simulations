@@ -103,6 +103,29 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                       CONTAINMENT VESSEL VIEW                       **
+     **                                                                     **
+     *************************************************************************/
+
+    var ContainmentVesselView = {};
+
+    ContainmentVesselView.CONTAINMENT_VESSEL_THICKNESS = 30;
+
+    ContainmentVesselView.ARROW_LENGTH      = 60;
+    ContainmentVesselView.ARROW_TAIL_WIDTH  = 30;
+    ContainmentVesselView.ARROW_HEAD_WIDTH  = 50;
+    ContainmentVesselView.ARROW_HEAD_HEIGHT = 30;
+    ContainmentVesselView.ARROW_COLOR = '#21366b';
+    ContainmentVesselView.ARROW_ANGLE = Math.PI / 4;
+
+    ContainmentVesselView.MAX_FRAGMENT_VELOCITY = 5;
+    ContainmentVesselView.MAX_FRAGMENT_SPIN_RATE = 0.02;
+
+    Constants.ContainmentVesselView = ContainmentVesselView;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                      FISSION ENERGY CHART VIEW                      **
      **                                                                     **
      *************************************************************************/

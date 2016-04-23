@@ -29,6 +29,8 @@ define(function (require) {
     var ChainReactionSimView = NuclearFissionSimView.extend({
 
         events: _.extend({}, NuclearFissionSimView.prototype.events, {
+            'check #containment-vessel-check' : 'toggleContainmentVessel',
+
             'slide .u-235-slider' : 'changeNumU235Nuclei',
             'slide .u-238-slider' : 'changeNumU238Nuclei'
         }),
@@ -165,6 +167,16 @@ define(function (require) {
             this.renderLegend();
 
             return this;
+        },
+
+        /**
+         * Enables or disables the containment vessel
+         */
+        toggleContainmentVessel: function(event) {
+            if ($(event.target).is(':checked'))
+                this.simulation.containmentVessel.set('enabled', true);
+            else
+                this.simulation.containmentVessel.set('enabled', false);
         },
 
         /**
