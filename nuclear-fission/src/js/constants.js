@@ -110,11 +110,13 @@ define(function (require) {
     var ContainmentVesselView = {};
 
     ContainmentVesselView.CONTAINMENT_VESSEL_THICKNESS = 30;
+    ContainmentVesselView.CONTAINMENT_VESSEL_COLOR = '#000';
+    ContainmentVesselView.CONTAINMENT_VESSEL_RING_SEGMENTS = 32;
 
-    ContainmentVesselView.ARROW_LENGTH      = 60;
+    ContainmentVesselView.ARROW_LENGTH      = 70;
     ContainmentVesselView.ARROW_TAIL_WIDTH  = 30;
     ContainmentVesselView.ARROW_HEAD_WIDTH  = 50;
-    ContainmentVesselView.ARROW_HEAD_HEIGHT = 30;
+    ContainmentVesselView.ARROW_HEAD_LENGTH = 30;
     ContainmentVesselView.ARROW_COLOR = '#21366b';
     ContainmentVesselView.ARROW_ANGLE = Math.PI / 4;
 
