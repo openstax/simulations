@@ -92,7 +92,7 @@ define(function(require) {
             this.neutronSourceView = new NeutronSourceView({
                 model: this.simulation.neutronSource,
                 mvt: this.mvt,
-                modelWidth: 58,
+                modelWidth: 52,
                 rotationEnabled: true
             });
 

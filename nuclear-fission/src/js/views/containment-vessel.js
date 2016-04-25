@@ -51,11 +51,14 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
+            this.containmentVesselGraphicsMask = new PIXI.Graphics();
+
             this.containmentVesselGraphics = new PIXI.Graphics();
+            this.containmentVesselGraphics.mask = this.containmentVesselGraphicsMask;
             this.containmentVesselGraphics.buttonMode = true;
-            this.containmentVesselGraphics.mask = new PIXI.Graphics();
 
             this.containmentVesselHoverGraphics = new PIXI.Graphics();
+            this.containmentVesselHoverGraphics.mask = this.containmentVesselGraphicsMask;
             this.containmentVesselHoverGraphics.visible = false;
 
             this.arrowContainer1 = this.createArrow();
@@ -68,7 +71,7 @@ define(function(require) {
             this.arrowContainer4.rotation =  ContainmentVesselView.ARROW_ANGLE + Math.PI / 2;
 
             this.displayObject.addChild(this.containmentVesselGraphics);
-            this.displayObject.addChild(this.containmentVesselGraphics.mask);
+            this.displayObject.addChild(this.containmentVesselGraphicsMask);
             this.displayObject.addChild(this.containmentVesselHoverGraphics);
             this.displayObject.addChild(this.arrowContainer1);
             this.displayObject.addChild(this.arrowContainer2);
@@ -143,6 +146,8 @@ define(function(require) {
             var radius = this.mvt.modelToViewDeltaX(this.model.get('radius'));
             var thickness = ContainmentVesselView.CONTAINMENT_VESSEL_THICKNESS;
             var halfThickness = thickness / 2;
+            var apertureHeight = this.mvt.modelToViewDeltaX(this.model.getApertureHeight());
+            var halfApertureHeight = apertureHeight / 2;
 
             var graphics = this.containmentVesselGraphics;
             graphics.clear();
@@ -155,7 +160,13 @@ define(function(require) {
             hoverGraphics.lineStyle(thickness, CONTAINMENT_VESSEL_HOVER_COLOR, 1);
             hoverGraphics.drawCircle(0, 0, radius);
 
-            var mask = this.containmentVesselGraphics.mask;
+            var mask = this.containmentVesselGraphicsMask;
+            mask.clear();
+            mask.beginFill();
+            mask.drawRect(-radius - thickness, -radius - thickness, (radius + thickness) * 2, radius + thickness - halfApertureHeight);
+            mask.drawRect(-radius - thickness, halfApertureHeight,  (radius + thickness) * 2, radius + thickness - halfApertureHeight);
+            mask.drawRect(0, -halfApertureHeight, radius + thickness, apertureHeight);
+            mask.endFill();
 
             var x = radius + halfThickness + 6;
             this.arrowContainer1.setRadius(x);
@@ -284,6 +295,13 @@ define(function(require) {
                     this.showUnpressedButtonTexture();
                 }
             }
+        },
+
+        updateVisibility: function() {
+            if (this.model.get('enabled'))
+                this.displayObject.visible = true;
+            else
+                this.displayObject.visible = false;
         },
 
         explodedChanged: function(containmentVessel, exploded) {

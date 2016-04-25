@@ -109,6 +109,10 @@ define(function (require) {
             );
         },
 
+        getApertureHeight: function() {
+            return ContainmentVessel.APERTURE_HEIGHT;
+        },
+
         /**
          * Update the location of the aperture based on the radius of the vessel.
          *   The location of the aperture is assumed to be on the left side of

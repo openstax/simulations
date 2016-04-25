@@ -29,7 +29,7 @@ define(function (require) {
     var ChainReactionSimView = NuclearFissionSimView.extend({
 
         events: _.extend({}, NuclearFissionSimView.prototype.events, {
-            'check #containment-vessel-check' : 'toggleContainmentVessel',
+            'click #containment-vessel-check' : 'toggleContainmentVessel',
 
             'slide .u-235-slider' : 'changeNumU235Nuclei',
             'slide .u-238-slider' : 'changeNumU238Nuclei'

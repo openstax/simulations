@@ -103,22 +103,22 @@ define(function (require, exports, module) {
             var i;
 
             for (i = this.u235Nuclei.length - 1; i >= 0; i--)
-                this.u235Nuclei[i].destroy();
+                this.u235Nuclei.at(i).destroy();
 
             for (i = this.u238Nuclei.length - 1; i >= 0; i--)
-                this.u238Nuclei[i].destroy();
+                this.u238Nuclei.at(i).destroy();
 
             for (i = this.u239Nuclei.length - 1; i >= 0; i--)
-                this.u239Nuclei[i].destroy();
+                this.u239Nuclei.at(i).destroy();
 
             for (i = this.daughterNuclei.length - 1; i >= 0; i--)
-                this.daughterNuclei[i].destroy();
+                this.daughterNuclei.at(i).destroy();
 
             for (i = this.freeNeutrons.length - 1; i >= 0; i--)
-                this.freeNeutrons[i].destroy();
+                this.freeNeutrons.at(i).destroy();
 
             for (i = this.containedElements.length - 1; i >= 0; i--)
-                this.containedElements[i].destroy();
+                this.containedElements.at(i).destroy();
 
             this.trigger('remove-all-particles');
 
@@ -535,12 +535,12 @@ define(function (require, exports, module) {
                 // The containment vessel was just enabled, so we need to get rid
                 // of existing nuclei and set up the initial conditions.
                 this.removeAllParticles();
-                setNumU235Nuclei( 1 );
+                this.set('numU235Nuclei', 1);
             }
             else {
                 // Containment vessel was turned off, so contained particles
                 // should go away.
-                removeContainedParticles();
+                this.removeContainedParticles();
             }
         },
 
