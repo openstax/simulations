@@ -196,6 +196,7 @@ define(function (require) {
         changeNumU235Nuclei: function(event) {
             var num = parseInt($(event.target).val());
             this.inputLock(function() {
+                this.simulation.removeDecayedU235Nuclei();
                 this.$u235.text(this.getNucleusCountText(num));
                 this.simulation.set('numU235Nuclei', num);
             });

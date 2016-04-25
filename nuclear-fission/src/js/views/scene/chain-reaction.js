@@ -29,7 +29,7 @@ define(function(require) {
     /**
      *
      */
-    var OneNucleusSceneView = NuclearPhysicsSceneView.extend({
+    var ChainReactionSceneView = NuclearPhysicsSceneView.extend({
 
         initialize: function(options) {
             this.showingLabels = true;
@@ -43,7 +43,7 @@ define(function(require) {
 
             this.listenTo(this.simulation, 'nucleus-added',        this.nucleusAdded);
             this.listenTo(this.simulation, 'nucleus-removed',      this.nucleusRemoved);
-            this.listenTo(this.simulation, 'remove-all-particles', this.allNucleiRemoved);
+            this.listenTo(this.simulation, 'remove-all-particles', this.allParticlesRemoved);
         },
 
         renderContent: function() {
@@ -150,6 +150,9 @@ define(function(require) {
 
             for (var i = 0; i < this.particleViews.length; i++)
                 this.particleViews[i].update(time, deltaTime, paused);
+
+            for (var i = 0; i < this.nucleusViews.length; i++)
+                this.nucleusViews[i].update(time, deltaTime, paused);
         },
 
         resetNucleus: function() {
@@ -193,7 +196,7 @@ define(function(require) {
             }
         },
 
-        allNucleiRemoved: function() {
+        allParticlesRemoved: function() {
             for (var i = this.nucleusViews.length - 1; i >= 0; i--) {
                 this.nucleusViews[i].remove();
                 this.nucleusViews.splice(i, 1);
@@ -202,5 +205,5 @@ define(function(require) {
 
     });
 
-    return OneNucleusSceneView;
+    return ChainReactionSceneView;
 });

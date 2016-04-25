@@ -4,8 +4,9 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var AtomicNucleus = require('models/atomic-nucleus');
-    var Nucleon       = require('models/nucleon');
+    var AtomicNucleus   = require('models/atomic-nucleus');
+    var DaughterNucleus = require('models/nucleus/daughter');
+    var Nucleon         = require('models/nucleon');
 
     var Constants = require('constants');
 

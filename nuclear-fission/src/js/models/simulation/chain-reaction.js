@@ -259,6 +259,23 @@ define(function (require, exports, module) {
          */
         _update: function(time, deltaTime) {
             // Move any free particles that exist.
+            this.updateFreeNeutrons(time, deltaTime);
+
+            // Update nuclei
+            this.updateNuclei(time, deltaTime);
+
+            if (this.containmentVessel.get('enabled')) {
+                // The containment vessel is on, so we need to freeze any
+                //   particles that are contained by it.
+                this.checkContainment(this.u235Nuclei);
+                this.checkContainment(this.daughterNuclei);
+            }
+
+            // Check for model elements that have moved out of the simulation scope.
+            this.removeOutOfRangeElements();
+        },
+
+        updateFreeNeutrons: function(time, deltaTime) {
             var numFreeNeutrons = this.freeNeutrons.length;
             for (var i = numFreeNeutrons - 1; i >= 0; i--) {
                 var freeNeutron = this.freeNeutrons.at(i);
@@ -276,7 +293,7 @@ define(function (require, exports, module) {
                     var nucleus = this.u235Nuclei.at(j);
                     if (freeNeutron.get('position').distance(nucleus.get('position')) <= nucleus.get('diameter') / 2) {
                         // The particle is within capture range - see if the nucleus can capture it.
-                        particleAbsorbed = nucleus.captureParticle(freeNeutron);
+                        particleAbsorbed = nucleus.captureParticle(freeNeutron, time);
                     }
                 }
 
@@ -285,7 +302,7 @@ define(function (require, exports, module) {
                     var nucleus = this.u238Nuclei.at(j);
                     if (freeNeutron.get('position').distance(nucleus.get('position')) <= nucleus.get('diameter') / 2) {
                         // The particle is within capture range - see if the nucleus can capture it.
-                        particleAbsorbed = nucleus.captureParticle(freeNeutron);
+                        particleAbsorbed = nucleus.captureParticle(freeNeutron, time);
                     }
                 }
 
@@ -305,16 +322,22 @@ define(function (require, exports, module) {
                     this.freeNeutrons.remove(freeNeutron);
                 }
             }
+        },
 
-            if (this.containmentVessel.get('enabled')) {
-                // The containment vessel is on, so we need to freeze any
-                //   particles that are contained by it.
-                this.checkContainment(this.u235Nuclei);
-                this.checkContainment(this.daughterNuclei);
-            }
+        updateNuclei: function(time, deltaTime) {
+            var i;
 
-            // Check for model elements that have moved out of the simulation scope.
-            this.removeOutOfRangeElements();
+            for (i = 0; i < this.u235Nuclei.length; i++)
+                this.u235Nuclei.at(i).update(time, deltaTime);
+
+            for (i = 0; i < this.u238Nuclei.length; i++)
+                this.u238Nuclei.at(i).update(time, deltaTime);
+
+            for (i = 0; i < this.u239Nuclei.length; i++)
+                this.u239Nuclei.at(i).update(time, deltaTime);
+
+            for (i = 0; i < this.daughterNuclei.length; i++)
+                this.daughterNuclei.at(i).update(time, deltaTime);
         },
 
         triggerNucleusChange: function(nucleus, byProducts) {
