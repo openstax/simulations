@@ -15,6 +15,8 @@ define(function(require) {
     var CONTAINMENT_VESSEL_HOVER_COLOR = Colors.parseHex(Constants.ContainmentVesselView.CONTAINMENT_VESSEL_HOVER_COLOR);
     var ARROW_COLOR                    = Colors.parseHex(Constants.ContainmentVesselView.ARROW_COLOR);
 
+    var renderDebugGraphics = true;
+
     /**
      * A view that represents the containment vessel
      */
@@ -181,45 +183,65 @@ define(function(require) {
             var halfThickness = thickness / 2;
             var innerRadius = radius - halfThickness;
             var outerRadius = radius + halfThickness;
-            var twoPi = Math.PI * 2;
-            var numSegments = ContainmentVesselView.CONTAINMENT_VESSEL_RING_SEGMENTS;
+            
+            // We need to find the angle between those points on the circle's
+            //   circumference that correspond to the top and bottom of the
+            //   container's aperture, relative to the center of the container.
+            //   Once we've found that angle, we can use it to determine how
+            //   many segments we should leave out.
+            var apertureHeight = this.mvt.modelToViewDeltaY(this.model.getApertureHeight());
+            var theta = Math.asin((apertureHeight / 2) / innerRadius) * 2;
+            var defaultNumSegments = ContainmentVesselView.CONTAINMENT_VESSEL_RING_SEGMENTS;
+            var radiansPerSegment = (Math.PI * 2) / defaultNumSegments;
+            var numSegmentsToLeaveOut = Math.ceil((theta / radiansPerSegment) / 2) * 2;
+            var numSegments = defaultNumSegments - numSegmentsToLeaveOut;
+            var rotation = Math.PI + (numSegmentsToLeaveOut * radiansPerSegment) / 2;
+            
             var i;
             var points = [];
 
-            // var graphics = this.debugGraphics;
-            // graphics.clear();
-            // graphics.lineStyle(1, 0xFFFF00, 1);
-            // graphics.moveTo(
-            //     Math.cos(0) * outerRadius,
-            //     Math.sin(0) * outerRadius
-            // );
+            if (renderDebugGraphics) {
+                var graphics = this.debugGraphics;
+                graphics.clear();
+                graphics.lineStyle(1, 0x0000FF, 1);
+                graphics.moveTo(
+                    Math.cos(0 + rotation) * innerRadius,
+                    Math.sin(0 + rotation) * innerRadius
+                );
+            }
 
             // Create the outer ring of points
             for (i = 0; i <= numSegments; i++) {
-                points.push(Math.cos(twoPi * (i / numSegments)) * outerRadius);
-                points.push(Math.sin(twoPi * (i / numSegments)) * outerRadius);
-                // graphics.lineTo(
-                //     Math.cos(twoPi * (i / numSegments)) * outerRadius,
-                //     Math.sin(twoPi * (i / numSegments)) * outerRadius
-                // );
+                points.push(Math.cos(radiansPerSegment * i + rotation) * outerRadius);
+                points.push(Math.sin(radiansPerSegment * i + rotation) * outerRadius);
+                if (renderDebugGraphics) {
+                    graphics.lineTo(
+                        Math.cos(radiansPerSegment * i + rotation) * outerRadius,
+                        Math.sin(radiansPerSegment * i + rotation) * outerRadius
+                    );
+                }
             }
             // Create the inner ring of points, turning around and going the other way
             for (i = numSegments; i >= 0; i--) {
-                points.push(Math.cos(twoPi * (i / numSegments)) * innerRadius);
-                points.push(Math.sin(twoPi * (i / numSegments)) * innerRadius);
-                // graphics.lineTo(
-                //     Math.cos(twoPi * (i / numSegments)) * innerRadius,
-                //     Math.sin(twoPi * (i / numSegments)) * innerRadius
-                // );
+                points.push(Math.cos(radiansPerSegment * i + rotation) * innerRadius);
+                points.push(Math.sin(radiansPerSegment * i + rotation) * innerRadius);
+                if (renderDebugGraphics) {
+                    graphics.lineTo(
+                        Math.cos(radiansPerSegment * i + rotation) * innerRadius,
+                        Math.sin(radiansPerSegment * i + rotation) * innerRadius
+                    );
+                }
             }
 
             // Then back to the beginning
-            points.push(Math.cos(0) * outerRadius);
-            points.push(Math.sin(0) * outerRadius);
-            // graphics.lineTo(
-            //     Math.cos(0) * outerRadius,
-            //     Math.sin(0) * outerRadius
-            // );
+            points.push(Math.cos(0 + rotation) * outerRadius);
+            points.push(Math.sin(0 + rotation) * outerRadius);
+            if (renderDebugGraphics) {
+                // graphics.lineTo(
+                //     Math.cos(0 + rotation) * outerRadius,
+                //     Math.sin(0 + rotation) * outerRadius
+                // );    
+            }
 
             return new PIXI.Polygon(points);
         },
