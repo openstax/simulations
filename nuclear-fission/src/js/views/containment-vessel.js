@@ -45,6 +45,8 @@ define(function(require) {
             this.listenTo(this.model, 'change:radius',   this.draw);
             this.listenTo(this.model, 'change:enabled',  this.updateVisibility);
             this.listenTo(this.model, 'change:exploded', this.explodedChanged);
+
+            this.updateVisibility();
         },
 
         /**

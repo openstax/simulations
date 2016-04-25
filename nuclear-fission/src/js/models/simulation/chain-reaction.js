@@ -73,8 +73,8 @@ define(function (require, exports, module) {
             this.ghostDaughterNuclei = 0;
 
             // Add starting nuclei
-            this.addOrRemoveNuclei(this.u235Nuclei, this.get('numU235Nuclei'), 0, this.createU235Nucleus);
-            this.addOrRemoveNuclei(this.u238Nuclei, this.get('numU238Nuclei'), 0, this.createU238Nucleus);
+            this.addOrRemoveNuclei(this.u235Nuclei, this.get('numU235Nuclei'), this.createU235Nucleus);
+            this.addOrRemoveNuclei(this.u238Nuclei, this.get('numU238Nuclei'), this.createU238Nucleus);
 
             // Bind listeners
             this.listenTo(this.neutronSource, 'neutron-generated', this.neutronGenerated);
@@ -374,7 +374,7 @@ define(function (require, exports, module) {
          *   Note that this can only be done before the chain reaction has been started.
          */
         numU235NucleiChanged: function(simulation, numU235Nuclei) {
-            this.addOrRemoveNuclei(this.u235Nuclei, numU235Nuclei, this.previous('numU235Nuclei'), this.createU235Nucleus);
+            this.addOrRemoveNuclei(this.u235Nuclei, numU235Nuclei, this.createU235Nucleus);
         },
 
         /**
@@ -382,20 +382,21 @@ define(function (require, exports, module) {
          *   Note that this can only be done before the chain reaction has been started.
          */
         numU238NucleiChanged: function(simulation, numU238Nuclei) {
-            this.addOrRemoveNuclei(this.u238Nuclei, numU238Nuclei, this.previous('numU238Nuclei'), this.createU238Nucleus);
+            this.addOrRemoveNuclei(this.u238Nuclei, numU238Nuclei, this.createU238Nucleus);
         },
 
         /**
          * Adds or removes nuclei from a collection depending on the requested count.
          */
-        addOrRemoveNuclei: function(collection, currentCount, previousCount, nucleusCreationFunction) {
-            var difference = currentCount - previousCount;
+        addOrRemoveNuclei: function(collection, disiredCount, nucleusCreationFunction) {
+            var currentCount = collection.length;
+            var difference = disiredCount - currentCount;
             if (difference > 0) {
                 // We need to add some new nuclei.
                 for (var i = 0; i < difference; i++) {
                     var position;
 
-                    if (previousCount === 0 && i === 0) {
+                    if (currentCount === 0 && i === 0) {
                         // This is the first nucleus, so put it at the origin.
                         position = this._point.set(0, 0);
                     }
@@ -446,47 +447,55 @@ define(function (require, exports, module) {
                 var yPos = (ChainReactionSimulation.MAX_NUCLEUS_RANGE_Y / 2) * (Math.random() - 0.5);
                 var position = this._point.set(xPos, yPos);
 
-                // Check if this point is available.
-                var pointAvailable = true;
-
-                if (this.containmentVessel.get('enabled') &&
-                    position.distance(0, 0) > this.containmentVessel.get('radius') - ChainReactionSimulation.CONTAINMENT_VESSEL_MARGIN
-                ) {
-                    pointAvailable = false;
-                }
-                else if (ChainReactionSimulation.NEUTRON_SOURCE_OFF_LIMITS_RECT.contains(position)) {
-                    // Too close to the neutron source.
-                    pointAvailable = false;
-                }
-
-                for (j = 0; (j < this.u235Nuclei.length) && (pointAvailable === true); j++) {
-                    if (position.distance(this.u235Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT) {
-                        // This point is taken.
-                        pointAvailable = false;
-                    }
-                }
-                for (j = 0; (j < this.u238Nuclei.length) && (pointAvailable === true); j++) {
-                    if (position.distance(this.u238Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT) {
-                        // This point is taken.
-                        pointAvailable = false;
-                    }
-                }
-                for (j = 0; (j < this.u239Nuclei.length) && (pointAvailable === true); j++) {
-                    if (position.distance(this.u239Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT) {
-                        // This point is taken.
-                        pointAvailable = false;
-                    }
-                }
-
-                if (pointAvailable) {
-                    // We have found a usable location.  Return it.
+                // If it's a usable location, return it.
+                if (this.isNucleusPositionAvailable(position))
                     return position;
-                }
             }
 
             // If we get to this point in the code, it means that we were unable
             //   to locate a usable point.  Return null.
             return null;
+        },
+
+        /**
+         * Checks if there is anything that would make this position unavailable and returns
+         *   a boolean representing whether it's available or not.
+         */
+        isNucleusPositionAvailable: function(position) {
+            if (this.containmentVessel.get('enabled') &&
+                position.distance(0, 0) > this.containmentVessel.get('radius') - ChainReactionSimulation.CONTAINMENT_VESSEL_MARGIN
+            ) {
+                return false;
+            }
+            else if (ChainReactionSimulation.NEUTRON_SOURCE_OFF_LIMITS_RECT.contains(position)) {
+                // Too close to the neutron source.
+                return false;
+            }
+
+            var j;
+
+            for (j = 0; j < this.u235Nuclei.length; j++) {
+                if (position.distance(this.u235Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT) {
+                    // This point is taken.
+                    return false;
+                }
+            }
+
+            for (j = 0; j < this.u238Nuclei.length; j++) {
+                if (position.distance(this.u238Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT) {
+                    // This point is taken.
+                    return false;
+                }
+            }
+
+            for (j = 0; j < this.u239Nuclei.length; j++) {
+                if (position.distance(this.u239Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT) {
+                    // This point is taken.
+                    return false;
+                }
+            }
+
+            return true;
         },
 
         /**

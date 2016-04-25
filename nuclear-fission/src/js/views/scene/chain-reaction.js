@@ -41,8 +41,9 @@ define(function(require) {
             this.listenTo(this.simulation.neutronSource, 'neutron-generated', this.neutronGenerated);
             this.listenTo(this.simulation.freeNeutrons, 'destroy', this.neutronDestroyed);
 
-            this.listenTo(this.simulation, 'nucleus-added',   this.nucleusAdded);
-            this.listenTo(this.simulation, 'nucleus-removed', this.nucleusRemoved);
+            this.listenTo(this.simulation, 'nucleus-added',        this.nucleusAdded);
+            this.listenTo(this.simulation, 'nucleus-removed',      this.nucleusRemoved);
+            this.listenTo(this.simulation, 'remove-all-particles', this.allNucleiRemoved);
         },
 
         renderContent: function() {
@@ -189,6 +190,13 @@ define(function(require) {
                     this.nucleusViews.splice(i, 1);
                     return;
                 }
+            }
+        },
+
+        allNucleiRemoved: function() {
+            for (var i = this.nucleusViews.length - 1; i >= 0; i--) {
+                this.nucleusViews[i].remove();
+                this.nucleusViews.splice(i, 1);
             }
         }
 
