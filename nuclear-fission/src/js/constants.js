@@ -45,7 +45,7 @@ define(function (require) {
     //   initially located.
     ChainReactionSimulation.MAX_NUCLEUS_RANGE_X = 400;
     ChainReactionSimulation.MAX_NUCLEUS_RANGE_Y = ChainReactionSimulation.MAX_NUCLEUS_RANGE_X * 0.85;
-    ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT = 12;
+    ChainReactionSimulation.INTER_NUCLEUS_PROXIMITY_LIMIT = 12;
     ChainReactionSimulation.INITIAL_CONTAINMENT_VESSEL_RADIUS = ChainReactionSimulation.MAX_NUCLEUS_RANGE_X / 6;
     ChainReactionSimulation.CONTAINMENT_VESSEL_MARGIN = 12;
 

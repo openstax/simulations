@@ -48,7 +48,7 @@ define(function(require) {
 
         renderContent: function() {
             var self = this;
-            this.$resetButton = $('<button class="btn btn-lg reset-nucleus-btn">Reset Nucleus</button>');
+            this.$resetButton = $('<button class="btn btn-lg reset-nuclei-btn">Reset Nuclei</button>');
             this.$resetButton.on('click', function() {
                 self.resetNucleus();
             });

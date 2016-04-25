@@ -122,6 +122,10 @@ define(function (require, exports, module) {
 
             this.trigger('remove-all-particles');
 
+            // Update the nuclei counts because we just cleared them out
+            this.set('numU235Nuclei', this.u235Nuclei.length, { silent: true });
+            this.set('numU238Nuclei', this.u238Nuclei.length, { silent: true });
+
             // Zero out the counter that keeps track of daughter nuclei that have
             //   been removed because they moved out of range of the model.
             this.ghostDaughterNuclei = 0;
@@ -166,6 +170,10 @@ define(function (require, exports, module) {
                     this.ghostDaughterNuclei++;
                 }
             }
+
+            // Update the nuclei counts because we probably changed them
+            this.set('numU235Nuclei', this.u235Nuclei.length, { silent: true });
+            this.set('numU238Nuclei', this.u238Nuclei.length, { silent: true });
         },
 
         /**
@@ -182,6 +190,10 @@ define(function (require, exports, module) {
 
             if (this.ghostDaughterNuclei > 0)
                 this.ghostDaughterNuclei = 0;
+
+            // Update the nuclei counts because we probably changed them
+            this.set('numU235Nuclei', this.u235Nuclei.length, { silent: true });
+            this.set('numU238Nuclei', this.u238Nuclei.length, { silent: true });
         },
 
         /**
@@ -221,6 +233,10 @@ define(function (require, exports, module) {
 
                 this.containedElements.at(i).destroy();
             }
+
+            // Update the nuclei counts because we probably changed them
+            this.set('numU235Nuclei', this.u235Nuclei.length, { silent: true });
+            this.set('numU238Nuclei', this.u238Nuclei.length, { silent: true });
         },
 
         createU235Nucleus: function(position) {
@@ -277,7 +293,7 @@ define(function (require, exports, module) {
                     // The particle has become part of a larger nucleus, so we
                     //   need to take it off the list of free particles and let the
                     //   view know that it has disappeared as a separate entity.
-                    this.freeNeutrons.remove(freeNeutron);
+                    freeNeutron.destroy();
                 }
                 else if (
                     !this.containedElements.contains(freeNeutron) &&
@@ -481,21 +497,21 @@ define(function (require, exports, module) {
             var j;
 
             for (j = 0; j < this.u235Nuclei.length; j++) {
-                if (position.distance(this.u235Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT) {
+                if (position.distance(this.u235Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITY_LIMIT) {
                     // This point is taken.
                     return false;
                 }
             }
 
             for (j = 0; j < this.u238Nuclei.length; j++) {
-                if (position.distance(this.u238Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT) {
+                if (position.distance(this.u238Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITY_LIMIT) {
                     // This point is taken.
                     return false;
                 }
             }
 
             for (j = 0; j < this.u239Nuclei.length; j++) {
-                if (position.distance(this.u239Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITRY_LIMIT) {
+                if (position.distance(this.u239Nuclei.at(j).get('position')) < ChainReactionSimulation.INTER_NUCLEUS_PROXIMITY_LIMIT) {
                     // This point is taken.
                     return false;
                 }

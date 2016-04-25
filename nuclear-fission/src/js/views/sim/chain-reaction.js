@@ -181,29 +181,6 @@ define(function (require) {
         },
 
         /**
-         * This is run every tick of the updater.  It updates the wave
-         *   simulation and the views.
-         */
-        update: function(time, deltaTime) {
-            NuclearFissionSimView.prototype.update.apply(this, arguments);
-
-        },
-
-        updateNumU235: function() {
-            this.$u235Slider.val(this.simulation.get('numU235Nuclei'));
-            this.$u235.text(this.getNucleusCountText(this.simulation.get('numU235Nuclei')));
-        },
-
-        updateNumU238: function() {
-            this.$u238Slider.val(this.simulation.get('numU238Nuclei'));
-            this.$u238.text(this.getNucleusCountText(this.simulation.get('numU238Nuclei')));
-        },
-
-        getNucleusCountText: function(count) {
-            return count + ((count === 1) ? ' Nucleus' : ' Nuclei');
-        },
-
-        /**
          * Enables or disables the containment vessel
          */
         toggleContainmentVessel: function(event) {
@@ -241,6 +218,20 @@ define(function (require) {
 
         numU238NucleiChanged: function(simulation, numU238Nuclei) {
             this.updateLock(this.updateNumU238);
+        },
+
+        updateNumU235: function() {
+            this.$u235Slider.val(this.simulation.get('numU235Nuclei'));
+            this.$u235.text(this.getNucleusCountText(this.simulation.get('numU235Nuclei')));
+        },
+
+        updateNumU238: function() {
+            this.$u238Slider.val(this.simulation.get('numU238Nuclei'));
+            this.$u238.text(this.getNucleusCountText(this.simulation.get('numU238Nuclei')));
+        },
+
+        getNucleusCountText: function(count) {
+            return count + ((count === 1) ? ' Nucleus' : ' Nuclei');
         }
 
     });
