@@ -47,6 +47,8 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
+            
+
             this.containmentVesselGraphics = new PIXI.Graphics();
             this.containmentVesselGraphics.buttonMode = true;
             this.containmentVesselGraphics.mask = new PIXI.Graphics();
@@ -127,40 +129,40 @@ define(function(require) {
             var i;
             var points = [];
 
-            var graphics = this.debugGraphics;
-            graphics.clear();
-            graphics.lineStyle(1, 0xFFFF00, 1);
-            graphics.moveTo(
-                Math.cos(0) * outerRadius,
-                Math.sin(0) * outerRadius
-            );
+            // var graphics = this.debugGraphics;
+            // graphics.clear();
+            // graphics.lineStyle(1, 0xFFFF00, 1);
+            // graphics.moveTo(
+            //     Math.cos(0) * outerRadius,
+            //     Math.sin(0) * outerRadius
+            // );
 
             // Create the outer ring of points
             for (i = 0; i <= numSegments; i++) {
                 points.push(Math.cos(twoPi * (i / numSegments)) * outerRadius);
                 points.push(Math.sin(twoPi * (i / numSegments)) * outerRadius);
-                graphics.lineTo(
-                    Math.cos(twoPi * (i / numSegments)) * outerRadius,
-                    Math.sin(twoPi * (i / numSegments)) * outerRadius
-                );
+                // graphics.lineTo(
+                //     Math.cos(twoPi * (i / numSegments)) * outerRadius,
+                //     Math.sin(twoPi * (i / numSegments)) * outerRadius
+                // );
             }
             // Create the inner ring of points, turning around and going the other way
             for (i = numSegments; i >= 0; i--) {
                 points.push(Math.cos(twoPi * (i / numSegments)) * innerRadius);
                 points.push(Math.sin(twoPi * (i / numSegments)) * innerRadius);
-                graphics.lineTo(
-                    Math.cos(twoPi * (i / numSegments)) * innerRadius,
-                    Math.sin(twoPi * (i / numSegments)) * innerRadius
-                );
+                // graphics.lineTo(
+                //     Math.cos(twoPi * (i / numSegments)) * innerRadius,
+                //     Math.sin(twoPi * (i / numSegments)) * innerRadius
+                // );
             }
 
             // Then back to the beginning
             points.push(Math.cos(0) * outerRadius);
             points.push(Math.sin(0) * outerRadius);
-            graphics.lineTo(
-                Math.cos(0) * outerRadius,
-                Math.sin(0) * outerRadius
-            );
+            // graphics.lineTo(
+            //     Math.cos(0) * outerRadius,
+            //     Math.sin(0) * outerRadius
+            // );
 
             return new PIXI.Polygon(points);
         },
@@ -171,8 +173,13 @@ define(function(require) {
 
         drag: function(event) {
             if (this.dragging) {
+                var dx = event.data.global.x - this.displayObject.x;
+                var dy = event.data.global.y - this.displayObject.y;
+                var distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
+                var modelRadius = this.mvt.viewToModelDeltaX(distanceFromCenter);
+                this.model.set('radius', modelRadius);
                 // this.model.setPosition(
-                //     this.mvt.viewToModelX(event.data.global.x),
+                //     this.mvt.viewToModelX(),
                 //     this.mvt.viewToModelY(event.data.global.y)
                 // );
             }

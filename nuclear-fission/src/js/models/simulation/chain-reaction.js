@@ -184,6 +184,41 @@ define(function (require, exports, module) {
                 this.ghostDaughterNuclei = 0;
         },
 
+        /**
+         * Remove any nuclei on the supplied list that are outside of the
+         *   containment vessel. This is generally used if and when the user
+         *   enables the containment vessel after having already added some
+         *   nuclei.
+         */
+        removeNucleiOutsideContainmentVessel: function(nuclei) {
+            var innerRadius = this.containmentVessel.get('radius') - ChainReactionSimulation.CONTAINMENT_VESSEL_MARGIN;
+
+            for (var i = nuclei.length - 1; i >= 0; i--) {
+                var nucleus = nuclei.at(i);
+                if (nucleus.getPosition().distance(0, 0) > innerRadius) {
+                    // Remove this nucleus.
+                    this.triggerNucleusRemoved(nucleus);
+                    nucleus.destroy();
+                }
+            }
+        },
+
+        /**
+         * Removed any nuclei or free nucleons that have been contained by the
+         *   containment vessel.
+         */
+        removeContainedParticles: function() {
+            var numContainedElements = this.containedElements.length;
+            for (var i = numContainedElements - 1; i >= 0; i--) {
+                var modelElement = this.containedElements.at(i);
+
+                if (modelElement instanceof AtomicNucleus)
+                    this.triggerNucleusRemoved(modelElement);
+
+                this.containedElements.at(i).destroy();
+            }
+        },
+
         createU235Nucleus: function(position) {
             return Uranium235Nucleus.create({
                 simulation: this,
