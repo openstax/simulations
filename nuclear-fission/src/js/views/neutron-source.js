@@ -6,6 +6,7 @@ define(function(require) {
 
     var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
+    var Vector2  = require('common/math/vector2');
     
     var Assets = require('assets');
     var Constants = require('constants');
@@ -17,7 +18,16 @@ define(function(require) {
 
         events: {
             'touchstart .button': 'click',
-            'mousedown  .button': 'click'
+            'mousedown  .button': 'click',
+
+            'touchstart      .dragHandle': 'dragStart',
+            'mousedown       .dragHandle': 'dragStart',
+            'touchmove       .dragHandle': 'drag',
+            'mousemove       .dragHandle': 'drag',
+            'touchend        .dragHandle': 'dragEnd',
+            'mouseup         .dragHandle': 'dragEnd',
+            'touchendoutside .dragHandle': 'dragEnd',
+            'mouseupoutside  .dragHandle': 'dragEnd'
         },
 
         /**
@@ -38,6 +48,10 @@ define(function(require) {
 
             this.initGraphics();
 
+            // Cached objects
+            this._dragOffset = new PIXI.Point();
+            this._vec2 = new Vector2();
+
             this.listenTo(this.model, 'change:firingAngle', this.updateRotation);
             this.listenTo(this.model, 'change:position',    this.updatePosition);
         },
@@ -54,14 +68,23 @@ define(function(require) {
             this.button.defaultCursor = 'pointer';
             this.button.anchor.x = 0.5;
             this.button.anchor.y = 0.5;
-            this.button.x = -30;
+            this.button.x = -23;
             this.button.scale.x = this.button.scale.y = 0.4;
 
+            this.dragHandle = new PIXI.Container();
+            this.dragHandle.hitArea = new PIXI.Rectangle(37, -16, 42, 32);
+            this.dragHandle.buttonMode = true;
+            this.dragHandle.defaultCursor = 'row-resize';
+
+            if (!this.rotationEnabled)
+                this.dragHandle.visible = false;
+
             this.gunSprite = Assets.createSprite(Assets.Images.NEUTRON_GUN);
-            this.gunSprite.anchor.x = (107 / 179);
+            this.gunSprite.anchor.x = (100 / 179);
             this.gunSprite.anchor.y =  (30 / 104);
             this.gunSprite.addChild(this.button);
-
+            this.gunSprite.addChild(this.dragHandle);
+            
             this.displayObject.addChild(this.gunSprite);
 
             this.updateMVT(this.mvt);
@@ -97,13 +120,29 @@ define(function(require) {
         },
 
         updateRotation: function(model, firingAngle) {
-            this.displayObject.rotation = firingAngle;
+            this.gunSprite.rotation = firingAngle;
         },
 
         updatePosition: function(model, position) {
             var viewPosition = this.mvt.modelToView(position);
             this.displayObject.x = viewPosition.x;
             this.displayObject.y = viewPosition.y;
+        },
+
+        dragStart: function(event) {
+            this.dragging = true;
+        },
+
+        drag: function(event) {
+            if (this.dragging) {
+                var vector = event.data.getLocalPosition(this.displayObject, this._dragOffset);
+                var angle = this._vec2.set(vector.x, vector.y).angle();
+                this.model.set('firingAngle', angle);
+            }
+        },
+
+        dragEnd: function(event) {
+            this.dragging = false;
         },
 
         click: function() {

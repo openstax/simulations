@@ -15,7 +15,7 @@ define(function(require) {
     var CONTAINMENT_VESSEL_HOVER_COLOR = Colors.parseHex(Constants.ContainmentVesselView.CONTAINMENT_VESSEL_HOVER_COLOR);
     var ARROW_COLOR                    = Colors.parseHex(Constants.ContainmentVesselView.ARROW_COLOR);
 
-    var renderDebugGraphics = true;
+    var renderDebugGraphics = false;
 
     /**
      * A view that represents the containment vessel
