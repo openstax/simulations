@@ -47,28 +47,25 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            
-
             this.containmentVesselGraphics = new PIXI.Graphics();
             this.containmentVesselGraphics.buttonMode = true;
             this.containmentVesselGraphics.mask = new PIXI.Graphics();
 
-            this.handle1Graphics = new PIXI.Graphics();
-            this.handle2Graphics = new PIXI.Graphics();
-            this.drawHandle(this.handle1Graphics);
-            this.drawHandle(this.handle2Graphics);
-
-            this.handle1 = new PIXI.Container();
-            this.handle2 = new PIXI.Container();
-            this.handle1.addChild(this.handle1Graphics);
-            this.handle2.addChild(this.handle2Graphics);
-            this.handle1.rotation = -ContainmentVesselView.ARROW_ANGLE;
-            this.handle2.rotation =  ContainmentVesselView.ARROW_ANGLE;
+            this.arrowContainer1 = this.createArrow();
+            this.arrowContainer2 = this.createArrow();
+            this.arrowContainer3 = this.createArrow();
+            this.arrowContainer4 = this.createArrow();
+            this.arrowContainer1.rotation = -ContainmentVesselView.ARROW_ANGLE;
+            this.arrowContainer2.rotation =  ContainmentVesselView.ARROW_ANGLE;
+            this.arrowContainer3.rotation = -ContainmentVesselView.ARROW_ANGLE - Math.PI / 2;
+            this.arrowContainer4.rotation =  ContainmentVesselView.ARROW_ANGLE + Math.PI / 2;
 
             this.displayObject.addChild(this.containmentVesselGraphics);
             this.displayObject.addChild(this.containmentVesselGraphics.mask);
-            this.displayObject.addChild(this.handle1);
-            this.displayObject.addChild(this.handle2);
+            this.displayObject.addChild(this.arrowContainer1);
+            this.displayObject.addChild(this.arrowContainer2);
+            this.displayObject.addChild(this.arrowContainer3);
+            this.displayObject.addChild(this.arrowContainer4);
 
             this.debugGraphics = new PIXI.Graphics();
             this.displayObject.addChild(this.debugGraphics);
@@ -76,13 +73,14 @@ define(function(require) {
             this.updateMVT(this.mvt);
         },
 
-        drawHandle: function(graphics) {
+        createArrow: function() {
             var length     = ContainmentVesselView.ARROW_LENGTH;
             var headWidth  = ContainmentVesselView.ARROW_HEAD_WIDTH;
             var headLength = ContainmentVesselView.ARROW_HEAD_LENGTH;
             var tailWidth  = ContainmentVesselView.ARROW_TAIL_WIDTH;
             var tailLength = length - headLength;
 
+            var graphics = new PIXI.Graphics();
             graphics.beginFill(ARROW_COLOR, 1);
             
             // Draw the arrow tail in a special way
@@ -100,6 +98,12 @@ define(function(require) {
             graphics.drawArrow(tailLength, 0, tailLength + headLength, 0, tailWidth, headWidth, headLength);
 
             graphics.endFill();
+
+            var container = new PIXI.Container();
+            container.addChild(graphics);
+            container.arrow = graphics;
+
+            return container;
         },
 
         draw: function() {
@@ -116,8 +120,10 @@ define(function(require) {
             var mask = this.containmentVesselGraphics.mask;
 
             var handleX = radius + halfThickness + 6;
-            this.handle1Graphics.x = handleX;
-            this.handle2Graphics.x = handleX;
+            this.arrowContainer1.arrow.x = handleX;
+            this.arrowContainer2.arrow.x = handleX;
+            this.arrowContainer3.arrow.x = handleX;
+            this.arrowContainer4.arrow.x = handleX;
         },
 
         getRingHitArea: function(radius, thickness) {
