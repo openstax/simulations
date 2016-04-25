@@ -60,7 +60,7 @@ define(function(require) {
             this.viewOriginX = this.width / 2;
             this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;
 
-            var pixelsPerFemtometer = 6;
+            var pixelsPerFemtometer = 7;
 
             // The center of the screen is actually (5, 5) in the original
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
