@@ -190,12 +190,18 @@ define(function(require) {
             //   Once we've found that angle, we can use it to determine how
             //   many segments we should leave out.
             var apertureHeight = this.mvt.modelToViewDeltaY(this.model.getApertureHeight());
-            var theta = Math.asin((apertureHeight / 2) / innerRadius) * 2;
+            var halfApertureHeight = apertureHeight / 2;
+            var theta = Math.asin(halfApertureHeight / innerRadius) * 2;
             var defaultNumSegments = ContainmentVesselView.CONTAINMENT_VESSEL_RING_SEGMENTS;
             var radiansPerSegment = (Math.PI * 2) / defaultNumSegments;
             var numSegmentsToLeaveOut = Math.ceil((theta / radiansPerSegment) / 2) * 2;
             var numSegments = defaultNumSegments - numSegmentsToLeaveOut;
             var rotation = Math.PI + (numSegmentsToLeaveOut * radiansPerSegment) / 2;
+
+            var startingX = -Math.sqrt(outerRadius * outerRadius - halfApertureHeight * halfApertureHeight);
+            var startingY = -halfApertureHeight;
+            var endingX = -Math.sqrt(innerRadius * innerRadius - halfApertureHeight * halfApertureHeight);
+            var endingY = -halfApertureHeight;
             
             var i;
             var points = [];
@@ -204,11 +210,13 @@ define(function(require) {
                 var graphics = this.debugGraphics;
                 graphics.clear();
                 graphics.lineStyle(1, 0x0000FF, 1);
-                graphics.moveTo(
-                    Math.cos(0 + rotation) * innerRadius,
-                    Math.sin(0 + rotation) * innerRadius
-                );
+                graphics.moveTo(endingX, endingY);
+                graphics.lineTo(startingX, startingY);
             }
+
+            // Add the more exact points of intersection with the aperture
+            points.push(startingX);
+            points.push(startingY);
 
             // Create the outer ring of points
             for (i = 0; i <= numSegments; i++) {
@@ -221,6 +229,18 @@ define(function(require) {
                     );
                 }
             }
+
+            // Add the more exact points of intersection with the aperture
+            points.push(startingX);
+            points.push(-startingY);
+            points.push(endingX);
+            points.push(-endingY);
+
+            if (renderDebugGraphics) {
+                graphics.lineTo(startingX, -startingY);
+                graphics.lineTo(endingX, -endingY);
+            }
+
             // Create the inner ring of points, turning around and going the other way
             for (i = numSegments; i >= 0; i--) {
                 points.push(Math.cos(radiansPerSegment * i + rotation) * innerRadius);
@@ -236,11 +256,10 @@ define(function(require) {
             // Then back to the beginning
             points.push(Math.cos(0 + rotation) * outerRadius);
             points.push(Math.sin(0 + rotation) * outerRadius);
+            points.push(endingX);
+            points.push(endingY);
             if (renderDebugGraphics) {
-                // graphics.lineTo(
-                //     Math.cos(0 + rotation) * outerRadius,
-                //     Math.sin(0 + rotation) * outerRadius
-                // );    
+                graphics.lineTo(endingX, endingY);
             }
 
             return new PIXI.Polygon(points);
