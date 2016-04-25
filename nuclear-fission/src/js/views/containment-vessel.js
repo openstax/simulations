@@ -11,8 +11,9 @@ define(function(require) {
     var Assets = require('assets');
     var Constants = require('constants');
 
-    var CONTAINMENT_VESSEL_COLOR = Colors.parseHex(Constants.ContainmentVesselView.CONTAINMENT_VESSEL_COLOR);
-    var ARROW_COLOR              = Colors.parseHex(Constants.ContainmentVesselView.ARROW_COLOR);
+    var CONTAINMENT_VESSEL_COLOR       = Colors.parseHex(Constants.ContainmentVesselView.CONTAINMENT_VESSEL_COLOR);
+    var CONTAINMENT_VESSEL_HOVER_COLOR = Colors.parseHex(Constants.ContainmentVesselView.CONTAINMENT_VESSEL_HOVER_COLOR);
+    var ARROW_COLOR                    = Colors.parseHex(Constants.ContainmentVesselView.ARROW_COLOR);
 
     /**
      * A view that represents the containment vessel
@@ -27,7 +28,10 @@ define(function(require) {
             'touchend        .containmentVesselGraphics': 'dragEnd',
             'mouseup         .containmentVesselGraphics': 'dragEnd',
             'touchendoutside .containmentVesselGraphics': 'dragEnd',
-            'mouseupoutside  .containmentVesselGraphics': 'dragEnd'
+            'mouseupoutside  .containmentVesselGraphics': 'dragEnd',
+
+            'mouseover       .containmentVesselGraphics': 'hover',
+            'mouseout        .containmentVesselGraphics': 'unhover'
         },
 
         /**
@@ -51,6 +55,9 @@ define(function(require) {
             this.containmentVesselGraphics.buttonMode = true;
             this.containmentVesselGraphics.mask = new PIXI.Graphics();
 
+            this.containmentVesselHoverGraphics = new PIXI.Graphics();
+            this.containmentVesselHoverGraphics.visible = false;
+
             this.arrowContainer1 = this.createArrow();
             this.arrowContainer2 = this.createArrow();
             this.arrowContainer3 = this.createArrow();
@@ -62,6 +69,7 @@ define(function(require) {
 
             this.displayObject.addChild(this.containmentVesselGraphics);
             this.displayObject.addChild(this.containmentVesselGraphics.mask);
+            this.displayObject.addChild(this.containmentVesselHoverGraphics);
             this.displayObject.addChild(this.arrowContainer1);
             this.displayObject.addChild(this.arrowContainer2);
             this.displayObject.addChild(this.arrowContainer3);
@@ -74,14 +82,45 @@ define(function(require) {
         },
 
         createArrow: function() {
+            var graphics = new PIXI.Graphics();
+            var hoverGraphics = new PIXI.Graphics();
+            hoverGraphics.visible = false;
+
+            this.drawArrow(graphics, ARROW_COLOR);
+            this.drawArrow(hoverGraphics, CONTAINMENT_VESSEL_HOVER_COLOR);
+
+            var arrowGraphicsContainer = new PIXI.Container();
+            arrowGraphicsContainer.addChild(graphics);
+            arrowGraphicsContainer.addChild(hoverGraphics);
+
+            var container = new PIXI.Container();
+            container.addChild(arrowGraphicsContainer);
+
+            container.showHoverGraphics = function() {
+                graphics.visible = false;
+                hoverGraphics.visible = true;
+            };
+
+            container.hideHoverGraphics = function() {
+                graphics.visible = true;
+                hoverGraphics.visible = false;
+            };
+
+            container.setRadius = function(radius) {
+                arrowGraphicsContainer.x = radius;
+            }
+
+            return container;
+        },
+
+        drawArrow: function(graphics, color) {
             var length     = ContainmentVesselView.ARROW_LENGTH;
             var headWidth  = ContainmentVesselView.ARROW_HEAD_WIDTH;
             var headLength = ContainmentVesselView.ARROW_HEAD_LENGTH;
             var tailWidth  = ContainmentVesselView.ARROW_TAIL_WIDTH;
             var tailLength = length - headLength;
 
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(ARROW_COLOR, 1);
+            graphics.beginFill(color, 1);
             
             // Draw the arrow tail in a special way
             var margin = 2; // Margin
@@ -98,12 +137,6 @@ define(function(require) {
             graphics.drawArrow(tailLength, 0, tailLength + headLength, 0, tailWidth, headWidth, headLength);
 
             graphics.endFill();
-
-            var container = new PIXI.Container();
-            container.addChild(graphics);
-            container.arrow = graphics;
-
-            return container;
         },
 
         draw: function() {
@@ -117,13 +150,18 @@ define(function(require) {
             graphics.drawCircle(0, 0, radius);
             graphics.hitArea = this.getRingHitArea(radius, thickness);
 
+            var hoverGraphics = this.containmentVesselHoverGraphics;
+            hoverGraphics.clear();
+            hoverGraphics.lineStyle(thickness, CONTAINMENT_VESSEL_HOVER_COLOR, 1);
+            hoverGraphics.drawCircle(0, 0, radius);
+
             var mask = this.containmentVesselGraphics.mask;
 
-            var handleX = radius + halfThickness + 6;
-            this.arrowContainer1.arrow.x = handleX;
-            this.arrowContainer2.arrow.x = handleX;
-            this.arrowContainer3.arrow.x = handleX;
-            this.arrowContainer4.arrow.x = handleX;
+            var x = radius + halfThickness + 6;
+            this.arrowContainer1.setRadius(x);
+            this.arrowContainer2.setRadius(x);
+            this.arrowContainer3.setRadius(x);
+            this.arrowContainer4.setRadius(x);
         },
 
         getRingHitArea: function(radius, thickness) {
@@ -175,6 +213,8 @@ define(function(require) {
 
         dragStart: function(event) {
             this.dragging = true;
+
+            this.showHoverGraphics();
         },
 
         drag: function(event) {
@@ -184,15 +224,41 @@ define(function(require) {
                 var distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
                 var modelRadius = this.mvt.viewToModelDeltaX(distanceFromCenter);
                 this.model.set('radius', modelRadius);
-                // this.model.setPosition(
-                //     this.mvt.viewToModelX(),
-                //     this.mvt.viewToModelY(event.data.global.y)
-                // );
             }
         },
 
         dragEnd: function(event) {
             this.dragging = false;
+
+            if (!this.hovering)
+                this.hideHoverGraphics();
+        },
+
+        hover: function() {
+            this.hovering = true;
+            this.showHoverGraphics();
+        },
+
+        unhover: function() {
+            this.hovering = false;
+            if (!this.dragging)
+                this.hideHoverGraphics();
+        },
+
+        showHoverGraphics: function() {
+            this.containmentVesselHoverGraphics.visible = true;
+            this.arrowContainer1.showHoverGraphics();
+            this.arrowContainer2.showHoverGraphics();
+            this.arrowContainer3.showHoverGraphics();
+            this.arrowContainer4.showHoverGraphics();
+        },
+
+        hideHoverGraphics: function() {
+            this.containmentVesselHoverGraphics.visible = false;
+            this.arrowContainer1.hideHoverGraphics();
+            this.arrowContainer2.hideHoverGraphics();
+            this.arrowContainer3.hideHoverGraphics();
+            this.arrowContainer4.hideHoverGraphics();
         },
 
         /**

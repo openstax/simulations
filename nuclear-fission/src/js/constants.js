@@ -112,6 +112,7 @@ define(function (require) {
     ContainmentVesselView.CONTAINMENT_VESSEL_THICKNESS = 30;
     ContainmentVesselView.CONTAINMENT_VESSEL_COLOR = '#000';
     ContainmentVesselView.CONTAINMENT_VESSEL_RING_SEGMENTS = 32;
+    ContainmentVesselView.CONTAINMENT_VESSEL_HOVER_COLOR = '#fff';
 
     ContainmentVesselView.ARROW_LENGTH      = 70;
     ContainmentVesselView.ARROW_TAIL_WIDTH  = 30;
