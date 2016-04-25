@@ -25,6 +25,9 @@ define(function(require) {
             if (nucleusType instanceof AtomicNucleus)
                 nucleusType = NucleusType.identifyNucleus(nucleusType.get('numProtons'), nucleusType.get('numNeutrons'));
 
+            if (nucleusType === null)
+                return new PIXI.Sprite(PIXI.Texture.EMPTY);
+
             var chemicalSymbol = this.getChemicalSymbol(nucleusType);
             var isotopeNumber = this.getIsotopeNumber(nucleusType);
             var color = this.getColor(nucleusType);

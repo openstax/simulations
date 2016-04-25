@@ -22,6 +22,9 @@ define(function(require) {
     var SingleNucleusDecayChart   = require('views/nucleus-decay-chart/single');
     var ExplodingNucleusView      = require('views/nucleus/exploding');
 
+    var NeutronSourceView = require('nuclear-fission/views/neutron-source');
+    var FissionEnergyChartView = require('nuclear-fission/views/fission-energy-chart');
+
     var NuclearPhysicsSceneView = require('views/scene');
 
     /**
@@ -35,8 +38,10 @@ define(function(require) {
 
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
 
-            this.listenTo(this.simulation.freeNucleons, 'add',    this.nucleonEmitted);
-            this.listenTo(this.simulation.freeNucleons, 'remove', this.nucleonRemoved);
+            // this.listenTo(this.simulation.freeNucleons, 'add',    this.nucleonEmitted);
+            // this.listenTo(this.simulation.freeNucleons, 'remove', this.nucleonRemoved);
+            this.listenTo(this.simulation.neutronSource, 'neutron-generated', this.neutronGenerated);
+            this.listenTo(this.simulation.freeNucleons, 'destroy', this.nucleonDestroyed);
         },
 
         renderContent: function() {
@@ -57,12 +62,8 @@ define(function(require) {
             return 220;
         },
 
-        getRightPadding: function() {
-            return 0;
-        },
-
         initMVT: function() {
-            this.viewOriginX = this.getLeftPadding() + this.getAvailableWidth() / 2;
+            this.viewOriginX = this.width / 2;
             this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;
 
             var pixelsPerFemtometer = 6;
@@ -78,11 +79,16 @@ define(function(require) {
         initGraphics: function() {
             NuclearPhysicsSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.particlesLayer = new PIXI.Container();
             this.nucleusLayer = new PIXI.Container();
+
+            this.stage.addChild(this.particlesLayer);
             this.stage.addChild(this.nucleusLayer);
 
             this.initMVT();
             this.initNucleus();
+            this.initNeutronSourceView();
+            this.initFissionEnergyChart();
         },
 
         initNucleus: function() {
@@ -91,7 +97,7 @@ define(function(require) {
             for (var i = 0; i < constituents.length; i++) {
                 var particleView = this.createParticleView(constituents[i]);
                 this.particleViews.push(particleView);
-                this.nucleusLayer.addChild(particleView.displayObject);
+                this.particlesLayer.addChild(particleView.displayObject);
             }
 
             // Add the exploding nucleus view, which in this case is just the label and explosion animation
@@ -103,6 +109,37 @@ define(function(require) {
                 renderer: this.renderer
             });
             this.nucleusLayer.addChild(this.nucleusView.displayObject);
+        },
+
+        initNeutronSourceView: function() {
+            this.neutronSourceView = new NeutronSourceView({
+                model: this.simulation.neutronSource,
+                mvt: this.mvt,
+                rotationEnabled: false
+            });
+
+            this.stage.addChild(this.neutronSourceView.displayObject);
+        },
+
+        initFissionEnergyChart: function() {
+            this.fissionEnergyChartView = new FissionEnergyChartView({
+                model: this.simulation.primaryNucleus,
+                simulation: this.simulation,
+                width: this.getWidthBetweenPanels(),
+                renderer: this.renderer,
+                mvt: this.mvt
+            });
+
+            if (AppView.windowIsShort()) {
+                this.fissionEnergyChartView.displayObject.x = this.getLeftPadding() + 12;
+                this.fissionEnergyChartView.displayObject.y = 12;
+            }
+            else {
+                this.fissionEnergyChartView.displayObject.x = this.getLeftPadding() + 20;
+                this.fissionEnergyChartView.displayObject.y = 20;
+            }
+
+            this.stage.addChild(this.fissionEnergyChartView.displayObject);
         },
 
         createParticleView: function(particle) {
@@ -131,8 +168,9 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
 
-            if (this.nucleusView)
-                this.nucleusView.update(time, deltaTime, paused);
+            this.nucleusView.update(time, deltaTime, paused);
+            this.neutronSourceView.update(time, deltaTime, paused);
+            this.fissionEnergyChartView.update(time, deltaTime, paused);
 
             for (var i = 0; i < this.particleViews.length; i++)
                 this.particleViews[i].update(time, deltaTime, paused);
@@ -142,13 +180,13 @@ define(function(require) {
             this.simulation.reset();
         },
 
-        nucleonEmitted: function(nucleon) {
-            var nucleonView = this.createParticleView(nucleon);
+        neutronGenerated: function(neutron) {
+            var nucleonView = this.createParticleView(neutron);
             this.particleViews.push(nucleonView);
-            this.nucleusLayer.addChild(nucleonView.displayObject);
+            this.particlesLayer.addChild(nucleonView.displayObject);
         },
 
-        nucleonRemoved: function(nucleon) {
+        nucleonDestroyed: function(nucleon) {
             for (var i = 0; i < this.particleViews.length; i++) {
                 if (this.particleViews[i].model === nucleon) {
                     this.particleViews[i].remove();

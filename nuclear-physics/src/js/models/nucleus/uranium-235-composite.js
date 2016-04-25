@@ -4,9 +4,10 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var CompositeAtomicNucleus = require('models/nucleus/composite');
-    var AlphaParticle          = require('models/alpha-particle');
-    var Nucleon                = require('models/nucleon');
+    var CompositeAtomicNucleus   = require('models/nucleus/composite');
+    var DaughterCompositeNucleus = require('models/nucleus/daughter-composite');
+    var AlphaParticle            = require('models/alpha-particle');
+    var Nucleon                  = require('models/nucleon');
 
     var Constants = require('constants');
 
@@ -59,7 +60,7 @@ define(function (require) {
                 freeParticle.set('tunnelingEnabled', true);
                 freeParticle.setPosition(this.get('position'));
                 freeParticle.setVelocity(0, 0);
-                this.constituents.add(freeParticle);
+                this.constituents.push(freeParticle);
 
                 this.updateAgitationFactor();
                 
@@ -223,8 +224,7 @@ define(function (require) {
                     numProtonsNeeded--;
                     this.set('numProtons', this.get('numProtons') - 1);
                 }
-
-                if ((numAlphasNeeded > 0) && (constituent instanceof AlphaParticle)) {
+                else if ((numAlphasNeeded > 0) && (constituent instanceof AlphaParticle)) {
                     daughterNucleusConstituents.push(constituent);
                     this.constituents.splice(i, 1);
                     numAlphasNeeded--;

@@ -13,7 +13,8 @@ define(function (require, exports, module) {
     var Nucleon                    = require('models/nucleon');
     var AlphaParticle              = require('models/alpha-particle');
     var AtomicNucleus              = require('models/atomic-nucleus');
-    var NeutronSource              = require('models/neutron-source');
+
+    var NeutronSource = require('nuclear-fission/models/neutron-source');
 
     /**
      * Constants
@@ -39,7 +40,8 @@ define(function (require, exports, module) {
         initComponents: function() {
             // Add a nucleus of Uranium 235 to the model.
             this.primaryNucleus = Uranium235CompositeNucleus.create({
-                fissionInterval: OneNucleusSimulation.FISSION_INTERVAL
+                fissionInterval: OneNucleusSimulation.FISSION_INTERVAL,
+                simulation: this
             });
 
             this.daughterNucleus;
@@ -69,6 +71,7 @@ define(function (require, exports, module) {
                 // Fission has occurred, so the daughter must be reset, meaning
                 //   that it essentially goes away.
                 this.daughterNucleus.reset();
+                this.daughterNucleus.destroy();
                 this.daughterNucleus = null;
             }
 
@@ -115,6 +118,16 @@ define(function (require, exports, module) {
                     );
                 }
             }
+
+            // Updating of the nuclei has to happen after the code above is run, or else the velocity
+            //   will get updated with the actual initial acceleration values, which are way too fast.
+
+            // Update the daughter nucleus
+            if (this.daughterNucleus)
+                this.daughterNucleus.update(time, deltaTime);
+
+            // Update the primary nucleus
+            this.primaryNucleus.update(time, deltaTime);
         },
 
         updateFreeNucleons: function(time, deltaTime) {
@@ -150,7 +163,7 @@ define(function (require, exports, module) {
                     if (byProduct instanceof Nucleon) {
                         // Set a direction and velocity for this neutron.
                         var angle = Math.random() * Math.PI / 3;
-                        if (Math.random < 0.5)
+                        if (Math.random() < 0.5)
                             angle += Math.PI;
                         
                         var xVel = Math.sin(angle) * OneNucleusSimulation.MOVING_NUCLEON_VELOCITY;
@@ -170,8 +183,8 @@ define(function (require, exports, module) {
                         // Set random but opposite directions for the
                         // nuclei.  Limit them to be roughly horizontal so
                         // that they will be easier to see.
-                        var angle = (Math.random() * Math.PI / 3 ) + (Math.PI / 3);
-                        if (Math.random < 0.5)
+                        var angle = (Math.random() * Math.PI / 3) + (Math.PI / 3);
+                        if (Math.random() < 0.5)
                             angle += Math.PI;
                         
                         var xVel = Math.sin(angle) * OneNucleusSimulation.INITIAL_NUCLEUS_VELOCITY;

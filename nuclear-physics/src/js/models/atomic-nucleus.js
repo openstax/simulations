@@ -79,9 +79,11 @@ define(function (require) {
         },
 
         update: function(time, deltaTime) {
-            // Move
-            this.updateVelocity(deltaTime);
-            this.updatePositionFromVelocity(deltaTime);
+            // Update the velocity.
+            this.setVelocity(this.get('velocity').add(this.get('acceleration')));
+
+            // Update the position.
+            this.setPosition(this.get('position').add(this.get('velocity')));
 
             // Take any action necessary related to decay.
             if (this.isDecayActive()) {
@@ -158,6 +160,16 @@ define(function (require) {
          */
         isDecayActive: function() {
             if (this.decayTime !== 0)
+                return true;
+            else
+                return false;
+        },
+
+        /**
+         * Returns whether the nucleus' atomic weight has changed since it was created.
+         */
+        atomicWeightHasChanged: function() {
+            if (this.get('numProtons') !== this.originalNumProtons || this.get('numNeutrons') !== this.originalNumNeutrons)
                 return true;
             else
                 return false;
