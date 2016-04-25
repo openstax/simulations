@@ -201,6 +201,10 @@ define(function (require, exports, module) {
                     nucleus.destroy();
                 }
             }
+
+            // Update the nuclei counts because we probably changed them
+            this.set('numU235Nuclei', this.u235Nuclei.length);
+            this.set('numU238Nuclei', this.u238Nuclei.length);
         },
 
         /**
@@ -375,6 +379,7 @@ define(function (require, exports, module) {
          */
         numU235NucleiChanged: function(simulation, numU235Nuclei) {
             this.addOrRemoveNuclei(this.u235Nuclei, numU235Nuclei, this.createU235Nucleus);
+            this.set('numU235Nuclei', this.u235Nuclei.length);
         },
 
         /**
@@ -383,6 +388,7 @@ define(function (require, exports, module) {
          */
         numU238NucleiChanged: function(simulation, numU238Nuclei) {
             this.addOrRemoveNuclei(this.u238Nuclei, numU238Nuclei, this.createU238Nucleus);
+            this.set('numU238Nuclei', this.u238Nuclei.length);
         },
 
         /**

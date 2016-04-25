@@ -32,7 +32,10 @@ define(function (require) {
             'click #containment-vessel-check' : 'toggleContainmentVessel',
 
             'slide .u-235-slider' : 'changeNumU235Nuclei',
-            'slide .u-238-slider' : 'changeNumU238Nuclei'
+            'slide .u-238-slider' : 'changeNumU238Nuclei',
+
+            'change .u-235-slider' : 'updateNumU235',
+            'change .u-238-slider' : 'updateNumU238'
         }),
 
         /**
@@ -52,9 +55,14 @@ define(function (require) {
                 name: 'chain-reaction'
             }, options);
 
+            _.bindAll(this, 'updateNumU235', 'updateNumU238');
+
             NuclearFissionSimView.prototype.initialize.apply(this, [options]);
 
             this.initLegend();
+
+            this.listenTo(this.simulation, 'change:numU235Nuclei', this.numU235NucleiChanged);
+            this.listenTo(this.simulation, 'change:numU238Nuclei', this.numU238NucleiChanged);
         },
 
         /**
@@ -119,7 +127,10 @@ define(function (require) {
 
             this.$el.html(this.template(data));
 
-            this.$('.u-235-slider').noUiSlider({
+            this.$u235Slider = this.$('.u-235-slider');
+            this.$u238Slider = this.$('.u-238-slider');
+
+            this.$u235Slider.noUiSlider({
                 start: 1,
                 connect: 'lower',
                 range: {
@@ -128,7 +139,7 @@ define(function (require) {
                 }
             });
 
-            this.$('.u-238-slider').noUiSlider({
+            this.$u238Slider.noUiSlider({
                 start: 0,
                 connect: 'lower',
                 range: {
@@ -170,6 +181,29 @@ define(function (require) {
         },
 
         /**
+         * This is run every tick of the updater.  It updates the wave
+         *   simulation and the views.
+         */
+        update: function(time, deltaTime) {
+            NuclearFissionSimView.prototype.update.apply(this, arguments);
+
+        },
+
+        updateNumU235: function() {
+            this.$u235Slider.val(this.simulation.get('numU235Nuclei'));
+            this.$u235.text(this.getNucleusCountText(this.simulation.get('numU235Nuclei')));
+        },
+
+        updateNumU238: function() {
+            this.$u238Slider.val(this.simulation.get('numU238Nuclei'));
+            this.$u238.text(this.getNucleusCountText(this.simulation.get('numU238Nuclei')));
+        },
+
+        getNucleusCountText: function(count) {
+            return count + ((count === 1) ? ' Nucleus' : ' Nuclei');
+        },
+
+        /**
          * Enables or disables the containment vessel
          */
         toggleContainmentVessel: function(event) {
@@ -185,7 +219,7 @@ define(function (require) {
         changeNumU235Nuclei: function(event) {
             var num = parseInt($(event.target).val());
             this.inputLock(function() {
-                this.$u235.text(num + ((num === 1) ? ' Nucleus' : ' Nuclei'));
+                this.$u235.text(this.getNucleusCountText(num));
                 this.simulation.set('numU235Nuclei', num);
             });
         },
@@ -196,10 +230,18 @@ define(function (require) {
         changeNumU238Nuclei: function(event) {
             var num = parseInt($(event.target).val());
             this.inputLock(function() {
-                this.$u238.text(num + ((num === 1) ? ' Nucleus' : ' Nuclei'));
+                this.$u238.text(this.getNucleusCountText(num));
                 this.simulation.set('numU238Nuclei', num);
             });
         },
+
+        numU235NucleiChanged: function(simulation, numU235Nuclei) {
+            this.updateLock(this.updateNumU235);
+        },
+
+        numU238NucleiChanged: function(simulation, numU238Nuclei) {
+            this.updateLock(this.updateNumU238);
+        }
 
     });
 
