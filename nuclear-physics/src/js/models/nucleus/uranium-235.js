@@ -89,6 +89,8 @@ define(function (require) {
          *   sort of decay, and may move.
          */
         update: function(time, deltaTime) {
+            AtomicNucleus.prototype.update.apply(this, arguments);
+
             // See if fission should occur.
             if ((this.fissionTime !== 0) && (time >= this.fissionTime)) {
                 // Fission the nucleus.  
@@ -126,6 +128,10 @@ define(function (require) {
             
             // Send out the decay event to all listeners.
             this.triggerNucleusChange(byProducts);
+        },
+
+        hasFissioned: function() {
+            return (this.get('numNeutrons') < this.originalNumNeutrons);
         }
 
     }, Constants.Uranium235Nucleus);
