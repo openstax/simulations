@@ -148,7 +148,7 @@ define(function (require, exports, module) {
         /**
          * Remove all nuclei and free neutrons from the model.
          */
-        removeAllParticles: function() {
+        removeAllParticles: function(propagateChanges) {
             var i;
 
             for (i = this.u235Nuclei.length - 1; i >= 0; i--)
@@ -172,8 +172,9 @@ define(function (require, exports, module) {
             this.trigger('remove-all-particles');
 
             // Update the nuclei counts because we just cleared them out
-            this.set('numU235Nuclei', this.u235Nuclei.length, { silent: true });
-            this.set('numU238Nuclei', this.u238Nuclei.length, { silent: true });
+            var options = (propagateChanges) ? {} : { silent: true };
+            this.set('numU235Nuclei', this.u235Nuclei.length, options);
+            this.set('numU238Nuclei', this.u238Nuclei.length, options);
 
             // Zero out the counter that keeps track of daughter nuclei that have
             //   been removed because they moved out of range of the model.
@@ -682,7 +683,7 @@ define(function (require, exports, module) {
             if (enabled) {
                 // The containment vessel was just enabled, so we need to get rid
                 // of existing nuclei and set up the initial conditions.
-                this.removeAllParticles();
+                this.removeAllParticles(true);
                 this.set('numU235Nuclei', 1);
             }
             else {
