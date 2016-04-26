@@ -156,13 +156,13 @@ define(function(require) {
             var graphics = this.containmentVesselGraphics;
             graphics.clear();
             graphics.lineStyle(thickness, CONTAINMENT_VESSEL_COLOR, 1);
-            graphics.drawCircle(0, 0, radius);
+            graphics.drawCircle(0, 0, radius + halfThickness);
             graphics.hitArea = this.getRingHitArea(radius, thickness);
 
             var hoverGraphics = this.containmentVesselHoverGraphics;
             hoverGraphics.clear();
             hoverGraphics.lineStyle(thickness, CONTAINMENT_VESSEL_HOVER_COLOR, 1);
-            hoverGraphics.drawCircle(0, 0, radius);
+            hoverGraphics.drawCircle(0, 0, radius + halfThickness);
 
             var mask = this.containmentVesselGraphicsMask;
             mask.clear();
@@ -172,7 +172,7 @@ define(function(require) {
             mask.drawRect(0, -halfApertureHeight, radius + thickness, apertureHeight);
             mask.endFill();
 
-            var x = radius + halfThickness + 6;
+            var x = radius + thickness + 6;
             this.arrowContainer1.setRadius(x);
             this.arrowContainer2.setRadius(x);
             this.arrowContainer3.setRadius(x);
@@ -180,9 +180,8 @@ define(function(require) {
         },
 
         getRingHitArea: function(radius, thickness) {
-            var halfThickness = thickness / 2;
-            var innerRadius = radius - halfThickness;
-            var outerRadius = radius + halfThickness;
+            var innerRadius = radius;
+            var outerRadius = radius + thickness;
             
             // We need to find the angle between those points on the circle's
             //   circumference that correspond to the top and bottom of the

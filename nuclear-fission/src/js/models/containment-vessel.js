@@ -88,7 +88,7 @@ define(function (require) {
                 var radius = this.get('radius');
 
                 if (distSqr >= Math.pow(radius, 2) &&
-                    distSqr < Math.pow(radius + Constants.CONTAINMENT_RANGE, 2) &&
+                    distSqr < Math.pow(radius + Constants.ContainmentVessel.CONTAINMENT_RANGE, 2) &&
                     !this.apertureRect.contains(x, y)
                 ) {
                     return true;
