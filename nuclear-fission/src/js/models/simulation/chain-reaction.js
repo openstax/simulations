@@ -496,7 +496,13 @@ define(function (require, exports, module) {
                 }
             }
             else if (nucleus instanceof Uranium238Nucleus) {
-
+                // This event may indicate that a U238 nucleus absorbed a neutron,
+                // which means that we no longer need to check if it wants to
+                // absorb any more.
+                if (nucleus.get('numNeutrons') === Uranium238Nucleus.NEUTRONS + 1) {
+                    this.u238Nuclei.remove(nucleus);
+                    this.u239Nuclei.add(nucleus);
+                }
             }
         },
 
