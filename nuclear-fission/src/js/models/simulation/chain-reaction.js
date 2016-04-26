@@ -30,7 +30,8 @@ define(function (require, exports, module) {
 
         defaults: _.extend({}, NuclearPhysicsSimulation.prototype.defaults, {
             numU235Nuclei: 1,
-            numU238Nuclei: 0
+            numU238Nuclei: 0,
+            percentU235Fissioned: 0
         }),
         
         initialize: function(attributes, options) {
@@ -91,9 +92,57 @@ define(function (require, exports, module) {
             
         },
 
-        destroyFreeNucleons: function() {
-            for (var i = this.freeNucleons.length - 1; i >= 0; i--)
-                this.freeNucleons.at(i).destroy();
+        /**
+         * Reset the existing nuclei that have decayed.
+         */
+        resetNuclei: function() {
+            var i;
+
+            // Reset the U235 nuclei that have decayed by determining how many
+            //   daughter nuclei exist and adding back half that many U235 nuclei.
+            var numDecayedU235Nuclei = (this.daughterNuclei.length + this.ghostDaughterNuclei) / 2;
+            this.set('numU235Nuclei', this.get('numU235Nuclei') + numDecayedU235Nuclei);
+
+            // Remove the daughter nuclei, since the original U235 nuclei that
+            //   they came from have been reset.
+            if (this.daughterNuclei.length > 0) {
+                for (i = 0; i < this.daughterNuclei.length; i++) {
+                    this.triggerNucleusRemoved(this.daughterNuclei.at(i));
+                    this.daughterNuclei.at(i).destroy();
+                }
+            }
+
+            if (this.ghostDaughterNuclei > 0) {
+                this.ghostDaughterNuclei = 0;
+            }
+
+            // Get rid of any free neutrons that are flying around.
+            this.destroyFreeNeutrons();
+
+            // Reset any U238 nuclei that have absorbed a neutron (and thus become
+            //   U239).  We do it this way instead of removing the old ones and
+            //   adding back new ones (like we do for U235) so that they stay in
+            //   the same location.
+            if (this.u239Nuclei.length > 0) {
+                for (i = this.u239Nuclei.length - 1; i >= 0; i--) {
+                    var nucleus = this.u239Nuclei.at(i);
+                    nucleus.reset();
+                    this.u238Nuclei.add(nucleus);
+                    this.u239Nuclei.remove(nucleus);
+                }
+            }
+
+            // Clear out any debris that had been captured by the containment
+            //   vessel.
+            for (var i = this.containedElements.length - 1; i >= 0; i--) {
+                this.triggerNucleusRemoved(this.containedElements.at(i));
+                this.containedElements.at(i).destroy();
+            }
+        },
+
+        destroyFreeNeutrons: function() {
+            for (var i = this.freeNeutrons.length - 1; i >= 0; i--)
+                this.freeNeutrons.at(i).destroy();
         },
 
         /**
@@ -255,6 +304,43 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Get the percentage of U235 nuclei that have fissioned.
+         */
+        getPercentageU235Fissioned: function() {
+            var unfissionedU235Nuclei = 0;
+            var fissionedU235Nuclei = 0;
+            var i;
+
+            // First check the collection of active U235 nuclei.
+            for (i = this.u235Nuclei.length - 1; i >= 0; i--) {
+                // Increment the total count.
+                unfissionedU235Nuclei++;
+
+                if (this.u235Nuclei.at(i).hasFissioned())
+                    fissionedU235Nuclei++;
+            }
+
+            // Now go through the daughter nuclei.
+            for (i = this.daughterNuclei.length - 1; i >= 0; i--) {
+                var nucleus = this.daughterNuclei.at(i);
+                if (nucleus instanceof Uranium235Nucleus && nucleus.hasFissioned())
+                    fissionedU235Nuclei++;
+            }
+
+            // Add in the "ghost nuclei", which are nuclei that were removed from
+            //   the sim because they went out of visual range.
+            fissionedU235Nuclei += this.ghostDaughterNuclei / 2;
+
+            if (unfissionedU235Nuclei + fissionedU235Nuclei === 0) {
+                // There are no U235 nuclei present, so return 0 and thereby
+                //   avoid any divide-by-zero issues.
+                return 0;
+            }
+
+            return 100 * (fissionedU235Nuclei / (unfissionedU235Nuclei + fissionedU235Nuclei));
+        },
+
+        /**
          * Runs every frame of the simulation loop.
          */
         _update: function(time, deltaTime) {
@@ -273,6 +359,8 @@ define(function (require, exports, module) {
 
             // Check for model elements that have moved out of the simulation scope.
             this.removeOutOfRangeElements();
+
+            this.set('percentU235Fissioned', this.getPercentageU235Fissioned());
         },
 
         updateFreeNeutrons: function(time, deltaTime) {

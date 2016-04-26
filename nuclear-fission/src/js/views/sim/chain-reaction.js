@@ -61,8 +61,9 @@ define(function (require) {
 
             this.initLegend();
 
-            this.listenTo(this.simulation, 'change:numU235Nuclei', this.numU235NucleiChanged);
-            this.listenTo(this.simulation, 'change:numU238Nuclei', this.numU238NucleiChanged);
+            this.listenTo(this.simulation, 'change:numU235Nuclei',        this.numU235NucleiChanged);
+            this.listenTo(this.simulation, 'change:numU238Nuclei',        this.numU238NucleiChanged);
+            this.listenTo(this.simulation, 'change:percentU235Fissioned', this.percentU235FissionedChanged);
         },
 
         /**
@@ -150,6 +151,7 @@ define(function (require) {
 
             this.$u235 = this.$('#u-235');
             this.$u238 = this.$('#u-238');
+            this.$u235Fissioned = this.$('#u-235-fissioned');
 
             this.$('select').selectpicker();
         },
@@ -233,6 +235,10 @@ define(function (require) {
 
         getNucleusCountText: function(count) {
             return count + ((count === 1) ? ' Nucleus' : ' Nuclei');
+        },
+
+        percentU235FissionedChanged: function(simulation, percentU235Fissioned) {
+            this.$u235Fissioned.html(percentU235Fissioned.toFixed(2) + '%');
         }
 
     });

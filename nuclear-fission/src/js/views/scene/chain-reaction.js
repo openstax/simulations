@@ -156,7 +156,7 @@ define(function(require) {
         },
 
         resetNucleus: function() {
-            this.simulation.reset();
+            this.simulation.resetNuclei();
         },
 
         neutronGenerated: function(neutron) {
