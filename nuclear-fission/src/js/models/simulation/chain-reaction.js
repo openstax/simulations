@@ -355,6 +355,20 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Returns a boolean value that indicates whether any nuclei are present
+         * in the model that have been changed by the chain reaction.  This can
+         * essentially be used as an indicator of whether or not the chain
+         * reaction has started.
+         */
+        getChangedNucleiExist: function() {
+            return (
+                this.daughterNuclei.length > 0 || 
+                this.u239Nuclei.length > 0 || 
+                this.ghostDaughterNuclei > 0
+            );
+        },
+
+        /**
          * Runs every frame of the simulation loop.
          */
         _update: function(time, deltaTime) {

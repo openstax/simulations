@@ -44,14 +44,19 @@ define(function(require) {
             this.listenTo(this.simulation, 'nucleus-added',        this.nucleusAdded);
             this.listenTo(this.simulation, 'nucleus-removed',      this.nucleusRemoved);
             this.listenTo(this.simulation, 'remove-all-particles', this.allParticlesRemoved);
+
+            this.listenTo(this.simulation, 'nucleus-change',       this.nucleusChanged);
+            this.listenTo(this.simulation, 'change:numU235Nuclei', this.numReactiveNucleiChanged);
+            this.listenTo(this.simulation, 'change:numU238Nuclei', this.numReactiveNucleiChanged);
         },
 
         renderContent: function() {
             var self = this;
             this.$resetButton = $('<button class="btn btn-lg reset-nuclei-btn">Reset Nuclei</button>');
             this.$resetButton.on('click', function() {
-                self.resetNucleus();
+                self.resetNuclei();
             });
+            this.$resetButton.hide();
 
             this.$ui.append(this.$resetButton);
         },
@@ -155,8 +160,9 @@ define(function(require) {
                 this.nucleusViews[i].update(time, deltaTime, paused);
         },
 
-        resetNucleus: function() {
+        resetNuclei: function() {
             this.simulation.resetNuclei();
+            this.hideResetButton();
         },
 
         neutronGenerated: function(neutron) {
@@ -194,6 +200,33 @@ define(function(require) {
                     return;
                 }
             }
+        },
+
+        showResetButtonWithDelay: function() {
+            // Clear the currently running one if it exists so we start over
+            if (this.buttonTimeout)
+                window.clearTimeout(this.buttonTimeout);
+
+            this.buttonTimeout = window.setTimeout(_.bind(function() {
+                this.$resetButton.show();
+                this.buttonTimeout = null;
+            }, this), 1500);
+        },
+
+        hideResetButton: function() {
+            if (this.buttonTimeout)
+                window.clearTimeout(this.buttonTimeout);
+            this.$resetButton.hide();
+        },
+
+        nucleusChanged: function() {
+            if (this.simulation.getChangedNucleiExist())
+                this.showResetButtonWithDelay();
+        },
+
+        numReactiveNucleiChanged: function() {
+            if (!this.simulation.getChangedNucleiExist())
+                this.hideResetButton();
         },
 
         allParticlesRemoved: function() {
