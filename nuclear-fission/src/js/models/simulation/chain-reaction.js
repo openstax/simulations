@@ -549,7 +549,7 @@ define(function (require, exports, module) {
                 for (var i = 0; i < difference; i++) {
                     var position;
 
-                    if (currentCount === 0 && i === 0) {
+                    if (this.u235Nuclei.length === 0 && this.u238Nuclei.length === 0 && i === 0) {
                         // This is the first nucleus, so put it at the origin.
                         position = this._point.set(0, 0);
                     }
