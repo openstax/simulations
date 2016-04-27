@@ -186,7 +186,6 @@ define(function (require) {
 
             this.$u235 = this.$('#u-235');
             this.$u238 = this.$('#u-238');
-            this.$u235Fissioned = this.$('#u-235-fissioned');
 
             this.$('select').selectpicker();
         },
@@ -199,6 +198,8 @@ define(function (require) {
                 unique: this.cid,
                 uranium235Img: this.uranium235Img
             }));
+
+            this.$u235Fissioned = this.$('#u-235-fissioned');
         },
 
         renderLegend: function() {

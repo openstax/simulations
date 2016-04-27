@@ -197,9 +197,16 @@ define(function(require) {
         },
 
         allParticlesRemoved: function() {
-            for (var i = this.nucleusViews.length - 1; i >= 0; i--) {
+            var i;
+
+            for (i = this.nucleusViews.length - 1; i >= 0; i--) {
                 this.nucleusViews[i].remove();
                 this.nucleusViews.splice(i, 1);
+            }
+
+            for (i = 0; i < this.particleViews.length; i++) {
+                this.particleViews[i].remove();
+                this.particleViews.splice(i, 1);
             }
         }
 
