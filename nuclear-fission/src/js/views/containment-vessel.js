@@ -454,9 +454,15 @@ define(function(require) {
         },
 
         explodedChanged: function(containmentVessel, exploded) {
-            this.defaultLayer.visible = false;
-            this.initExplosion();
-            this.explosionLayer.visible = true;
+            if (exploded) {
+                this.defaultLayer.visible = false;
+                this.initExplosion();
+                this.explosionLayer.visible = true;    
+            }
+            else {
+                this.defaultLayer.visible = true;
+                this.explosionLayer.visible = false;  
+            }
         }
 
     }, Constants.ContainmentVesselView);

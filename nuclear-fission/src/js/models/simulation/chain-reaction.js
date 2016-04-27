@@ -89,7 +89,20 @@ define(function (require, exports, module) {
          * Resets the model components
          */
         reset: function() {
-            
+            // Remove the nuclei and free neutrons.
+            this.removeAllParticles();
+
+            // Reset the containment vessel.
+            this.containmentVessel.reset();
+
+            // Set ourself back to the original state, which is with a single u235
+            // nucleus in the center.
+            this.set('numU235Nuclei', 1);
+            this.set('numU238Nuclei', 0);
+
+            // Put the neutron source back to its original position.
+            this.neutronSource.set('firingAngle', ChainReactionSimulation.INITIAL_NEUTRON_SOURCE_ANGLE);
+            this.neutronSource.setPosition(ChainReactionSimulation.NEUTRON_SOURCE_POSITION);
         },
 
         /**

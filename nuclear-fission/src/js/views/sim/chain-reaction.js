@@ -89,6 +89,38 @@ define(function (require) {
             this.legendView = new ChainReactionLegendView();
         },
 
+        resetSimulation: function() {
+            // Set pause the updater and reset everything
+            this.updater.pause();
+            this.updater.reset();
+            this.resetComponents();
+            this.resetControls();
+
+            // Resume normal function
+            this.updater.play();
+            this.play();
+            this.pausedChanged();
+        },
+
+        /**
+         * Resets all the components of the view.
+         */
+        resetComponents: function() {
+            NuclearFissionSimView.prototype.resetComponents.apply(this);
+            
+            this.sceneView.reset();
+        },
+
+        /**
+         * Resets all the controls back to their default state.
+         */
+        resetControls: function() {
+            this.$('#containment-vessel-check').prop('checked', false);
+            this.updateNumU235();
+            this.updateNumU238();
+            this.percentU235FissionedChanged(this.simulation, 0);
+        },
+
         /**
          * Renders everything
          */
