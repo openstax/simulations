@@ -18,6 +18,7 @@ define(function (require) {
     var ChainReactionSceneView  = require('nuclear-fission/views/scene/chain-reaction');
 
     var Constants = require('constants');
+    var Assets    = require('assets');
 
     // HTML
     var simHtml              = require('text!nuclear-fission/templates/chain-reaction-sim.html');
@@ -64,6 +65,8 @@ define(function (require) {
             this.listenTo(this.simulation, 'change:numU235Nuclei',        this.numU235NucleiChanged);
             this.listenTo(this.simulation, 'change:numU238Nuclei',        this.numU238NucleiChanged);
             this.listenTo(this.simulation, 'change:percentU235Fissioned', this.percentU235FissionedChanged);
+
+            this.listenTo(this.simulation.containmentVessel, 'change:exploded', this.explodedChanged);
         },
 
         /**
@@ -239,6 +242,52 @@ define(function (require) {
 
         percentU235FissionedChanged: function(simulation, percentU235Fissioned) {
             this.$u235Fissioned.html(percentU235Fissioned.toFixed(2) + '%');
+        },
+
+        explodedChanged: function(simulation, exploded) {
+            if (exploded) {
+                if (!this.$explosionOverlay) {
+                    this.$explosionOverlay = $('<div class="explosion-overlay">');
+                    this.$explosionOverlay.append('<div class="explosion-message">You have created an atomic bomb!</div>');
+                }
+
+                var texture = Assets.Texture(Assets.Images.MUSHROOM_CLOUD);
+                var src = texture.baseTexture.source.src;
+                var sceneWidth = this.sceneView.width;
+                var sceneHeight = this.sceneView.height;
+                var backgroundWidth;
+                var backgroundHeight;
+                var xOffset;
+                var yOffset;
+                if (texture.height < sceneHeight) {
+                    backgroundHeight = sceneHeight;
+                    backgroundWidth = backgroundHeight * (texture.width / texture.height);
+                    xOffset = -(backgroundWidth - sceneWidth) / 2;
+                    yOffset = 0;
+                }
+                else {
+                    backgroundWidth = sceneWidth;
+                    backgroundHeight = backgroundWidth * (texture.height / texture.width);
+                    xOffset = 0;
+                    yOffset = -(backgroundHeight - sceneHeight) / 2;
+                }
+
+                this.$explosionOverlay.css({
+                    background: 'url(' + src + ')',
+                    width: sceneWidth + 'px',
+                    height: sceneHeight + 'px',
+                    backgroundSize: backgroundWidth + 'px ' + backgroundHeight + 'px',
+                    backgroundPosition: xOffset + 'px ' + yOffset + 'px'
+                });
+
+                this.$explosionOverlay.appendTo(this.$el);
+                this.$el.addClass('exploded');
+            }
+            else {
+                if (this.$explosionOverlay)
+                    this.$explosionOverlay.remove();
+                this.$el.removeClass('exploded');
+            } 
         }
 
     });

@@ -122,3 +122,58 @@
     }
 
 }
+
+.sim-view {
+    .transition(~'filter @explosion-animation-duration, -webkit-filter @explosion-animation-duration');
+}
+
+.sim-view.exploded {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+.explosion-overlay {
+    width: 100%;
+    height: @scene-height;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    .animation-name(overlay-animation);
+    .animation-duration(@explosion-animation-duration);
+    .animation-fill-mode(forwards);
+
+    @media screen and (max-height: @short-window) {
+        height: @short-scene-height;
+    }
+
+    .explosion-message {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 42px;
+        color: #fff;
+        font-family: monospace;
+    }
+}
+
+@-webkit-keyframes overlay-animation {
+      0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@-moz-keyframes overlay-animation {
+      0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@-o-keyframes overlay-animation {
+      0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes overlay-animation {
+      0% { opacity: 0; }
+    100% { opacity: 1; }
+}

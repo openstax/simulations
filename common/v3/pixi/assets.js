@@ -139,8 +139,8 @@ define(function (require) {
      */
     Assets.createIcon = function(filename, attrs, iconWidth, iconHeight) {
         if (!_.isObject(attrs)) {
+            iconHeight = iconWidth;
             iconWidth = attrs;
-            iconHeight = iconHeight;
         }
 
         var texture = this.Texture(filename);
