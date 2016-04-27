@@ -74,15 +74,22 @@ define(function(require) {
             this.arrowContainer3.rotation = -ContainmentVesselView.ARROW_ANGLE - Math.PI / 2;
             this.arrowContainer4.rotation =  ContainmentVesselView.ARROW_ANGLE + Math.PI / 2;
 
-            this.displayObject.addChild(this.containmentVesselGraphics);
-            this.displayObject.addChild(this.containmentVesselGraphicsMask);
-            this.displayObject.addChild(this.containmentVesselHoverGraphics);
-            this.displayObject.addChild(this.arrowContainer1);
-            this.displayObject.addChild(this.arrowContainer2);
-            this.displayObject.addChild(this.arrowContainer3);
-            this.displayObject.addChild(this.arrowContainer4);
+            this.defaultLayer = new PIXI.Container();
+            this.defaultLayer.addChild(this.containmentVesselGraphics);
+            this.defaultLayer.addChild(this.containmentVesselGraphicsMask);
+            this.defaultLayer.addChild(this.containmentVesselHoverGraphics);
+            this.defaultLayer.addChild(this.arrowContainer1);
+            this.defaultLayer.addChild(this.arrowContainer2);
+            this.defaultLayer.addChild(this.arrowContainer3);
+            this.defaultLayer.addChild(this.arrowContainer4);
+
+            this.explosionLayer = new PIXI.Container();
+            this.explosionLayer.visible = false;
 
             this.debugGraphics = new PIXI.Graphics();
+
+            this.displayObject.addChild(this.defaultLayer);
+            this.displayObject.addChild(this.explosionLayer);
             this.displayObject.addChild(this.debugGraphics);
 
             this.updateMVT(this.mvt);
@@ -147,36 +154,57 @@ define(function(require) {
         },
 
         draw: function() {
-            var radius = this.mvt.modelToViewDeltaX(this.model.get('radius'));
-            var thickness = ContainmentVesselView.CONTAINMENT_VESSEL_THICKNESS;
-            var halfThickness = thickness / 2;
-            var apertureHeight = this.mvt.modelToViewDeltaX(this.model.getApertureHeight());
-            var halfApertureHeight = apertureHeight / 2;
+            var radius = this.getRadius();
+            var thickness = this.getThickness();
 
-            var graphics = this.containmentVesselGraphics;
-            graphics.clear();
-            graphics.lineStyle(thickness, CONTAINMENT_VESSEL_COLOR, 1);
-            graphics.drawCircle(0, 0, radius + halfThickness);
-            graphics.hitArea = this.getRingHitArea(radius, thickness);
+            this.drawVessel(this.containmentVesselGraphics, CONTAINMENT_VESSEL_COLOR);
+            this.drawVessel(this.containmentVesselHoverGraphics, CONTAINMENT_VESSEL_HOVER_COLOR);
 
-            var hoverGraphics = this.containmentVesselHoverGraphics;
-            hoverGraphics.clear();
-            hoverGraphics.lineStyle(thickness, CONTAINMENT_VESSEL_HOVER_COLOR, 1);
-            hoverGraphics.drawCircle(0, 0, radius + halfThickness);
+            this.containmentVesselGraphics.hitArea = this.getRingHitArea(radius, thickness);
 
-            var mask = this.containmentVesselGraphicsMask;
-            mask.clear();
-            mask.beginFill();
-            mask.drawRect(-radius - thickness, -radius - thickness, (radius + thickness) * 2, radius + thickness - halfApertureHeight);
-            mask.drawRect(-radius - thickness, halfApertureHeight,  (radius + thickness) * 2, radius + thickness - halfApertureHeight);
-            mask.drawRect(0, -halfApertureHeight, radius + thickness, apertureHeight);
-            mask.endFill();
+            this.drawMask(this.containmentVesselGraphicsMask);
 
             var x = radius + thickness + 6;
             this.arrowContainer1.setRadius(x);
             this.arrowContainer2.setRadius(x);
             this.arrowContainer3.setRadius(x);
             this.arrowContainer4.setRadius(x);
+        },
+
+        drawVessel: function(graphics, color) {
+            var radius = this.getRadius();
+            var thickness = this.getThickness();
+            var halfThickness = thickness / 2;
+
+            graphics.clear();
+            graphics.lineStyle(thickness, color, 1);
+            graphics.drawCircle(0, 0, radius + halfThickness);
+        },
+
+        drawMask: function(graphics) {
+            var radius = this.getRadius();
+            var thickness = this.getThickness();
+            var apertureHeight = this.getApertureHeight();
+            var halfApertureHeight = apertureHeight / 2;
+
+            graphics.clear();
+            graphics.beginFill();
+            graphics.drawRect(-radius - thickness, -radius - thickness, (radius + thickness) * 2, radius + thickness - halfApertureHeight);
+            graphics.drawRect(-radius - thickness, halfApertureHeight,  (radius + thickness) * 2, radius + thickness - halfApertureHeight);
+            graphics.drawRect(0, -halfApertureHeight, radius + thickness, apertureHeight);
+            graphics.endFill();
+        },
+
+        getRadius: function() {
+            return this.mvt.modelToViewDeltaX(this.model.get('radius'));
+        },
+
+        getThickness: function() {
+            return ContainmentVesselView.CONTAINMENT_VESSEL_THICKNESS;
+        },
+
+        getApertureHeight: function() {
+            return this.mvt.modelToViewDeltaX(this.model.getApertureHeight());
         },
 
         getRingHitArea: function(radius, thickness) {
@@ -264,6 +292,54 @@ define(function(require) {
             return new PIXI.Polygon(points);
         },
 
+        initExplosion: function() {
+            // Clear out what's already there if it had previously exploded
+            this.explosionLayer.removeChildren();
+
+            var sliceRadius = this.getRadius() * 2;
+            var minTheta = Math.PI / 6;
+            var maxTheta = Math.PI / 3;
+            var rotationalOffset = Math.PI;
+            var cumulativeRadians = 0;
+
+            while (cumulativeRadians < Math.PI * 2) {
+                var theta = Math.random() * (maxTheta - minTheta) + minTheta;
+
+                // Make sure we don't start going back around the circle
+                if (cumulativeRadians + theta > Math.PI * 2)
+                    theta = (Math.PI * 2) - cumulativeRadians + 0.05;
+
+                var apertureMask = new PIXI.Graphics();
+                this.drawMask(apertureMask);
+
+                var graphics = new PIXI.Graphics();
+                this.drawVessel(graphics, Math.random() * 0xFFFFFF);
+                graphics.mask = apertureMask;
+                
+                var sliceMask = new PIXI.Graphics();
+                sliceMask.beginFill();
+                sliceMask.moveTo(0, 0);
+                sliceMask.lineTo(
+                    Math.cos(cumulativeRadians + rotationalOffset) * sliceRadius, 
+                    Math.sin(cumulativeRadians + rotationalOffset) * sliceRadius
+                );
+                sliceMask.lineTo(
+                    Math.cos(cumulativeRadians + theta + rotationalOffset) * sliceRadius, 
+                    Math.sin(cumulativeRadians + theta + rotationalOffset) * sliceRadius
+                );
+
+                var container = new PIXI.Container();
+                container.addChild(graphics);
+                container.addChild(apertureMask);
+                container.addChild(sliceMask);
+                container.mask = sliceMask;
+
+                this.explosionLayer.addChild(container);
+
+                cumulativeRadians += theta;
+            }
+        },
+
         dragStart: function(event) {
             this.dragging = true;
 
@@ -347,7 +423,9 @@ define(function(require) {
         },
 
         explodedChanged: function(containmentVessel, exploded) {
-
+            this.defaultLayer.visible = false;
+            this.initExplosion();
+            this.explosionLayer.visible = true;
         }
 
     }, Constants.ContainmentVesselView);
