@@ -296,24 +296,23 @@ define(function(require) {
             // Clear out what's already there if it had previously exploded
             this.explosionLayer.removeChildren();
 
-            var sliceRadius = this.getRadius() * 2;
+            var radius = this.getRadius();
+            var sliceRadius = radius * 2;
             var minTheta = Math.PI / 6;
             var maxTheta = Math.PI / 3;
             var rotationalOffset = Math.PI;
             var cumulativeRadians = 0;
 
             while (cumulativeRadians < Math.PI * 2) {
-                var theta = Math.random() * (maxTheta - minTheta) + minTheta;
-
-                // Make sure we don't start going back around the circle
-                if (cumulativeRadians + theta > Math.PI * 2)
-                    theta = (Math.PI * 2) - cumulativeRadians + 0.05;
+                var theta = (cumulativeRadians > Math.PI * 1.7) ?
+                    (Math.PI * 2) - cumulativeRadians + 0.05 :
+                    Math.random() * (maxTheta - minTheta) + minTheta;
 
                 var apertureMask = new PIXI.Graphics();
                 this.drawMask(apertureMask);
 
                 var graphics = new PIXI.Graphics();
-                this.drawVessel(graphics, Math.random() * 0xFFFFFF);
+                this.drawVessel(graphics, CONTAINMENT_VESSEL_COLOR);
                 graphics.mask = apertureMask;
                 
                 var sliceMask = new PIXI.Graphics();
@@ -328,11 +327,30 @@ define(function(require) {
                     Math.sin(cumulativeRadians + theta + rotationalOffset) * sliceRadius
                 );
 
+                var offsetContainer = new PIXI.Container();
+                offsetContainer.addChild(graphics);
+                offsetContainer.addChild(apertureMask);
+                offsetContainer.addChild(sliceMask);
+                offsetContainer.mask = sliceMask;
+                offsetContainer.x = -Math.cos(cumulativeRadians + theta / 2 + rotationalOffset) * radius;
+                offsetContainer.y = -Math.sin(cumulativeRadians + theta / 2 + rotationalOffset) * radius;
+
                 var container = new PIXI.Container();
-                container.addChild(graphics);
-                container.addChild(apertureMask);
-                container.addChild(sliceMask);
-                container.mask = sliceMask;
+                container.addChild(offsetContainer);
+                container.x = -offsetContainer.x;
+                container.y = -offsetContainer.y;
+                container.vx = ContainmentVesselView.FRAGMENT_VELOCITY_RANGE.random();
+                container.vy = ContainmentVesselView.FRAGMENT_VELOCITY_RANGE.random();
+                container.spinRate = Math.random() * ContainmentVesselView.MAX_FRAGMENT_SPIN_RATE;
+
+                if (container.x < 0)
+                    container.vx *= -1;
+
+                if (container.y < 0)
+                    container.vy *= -1;
+
+                if (Math.random() < 0.5)
+                    container.spinRate *= -1;
 
                 this.explosionLayer.addChild(container);
 
@@ -403,7 +421,7 @@ define(function(require) {
             this.draw();
         },
 
-        update: function(time, deltaTime) {
+        update: function(time, deltaTime, paused) {
             if (this.cooldownTimer > 0) {
                 this.cooldownTimer -= deltaTime;
 
@@ -412,6 +430,19 @@ define(function(require) {
                     this.cooldownTimer = 0;
                     this.showUnpressedButtonTexture();
                 }
+            }
+
+            if (!paused && this.explosionLayer.children.length)
+                this.updateExplosion(time, deltaTime);
+        },
+
+        updateExplosion: function(time, deltaTime) {
+            var pieces = this.explosionLayer.children;
+
+            for (var i = 0; i < pieces.length; i++) {
+                pieces[i].x += pieces[i].vx * deltaTime;
+                pieces[i].y += pieces[i].vy * deltaTime;
+                pieces[i].rotation += pieces[i].spinRate * deltaTime;
             }
         },
 

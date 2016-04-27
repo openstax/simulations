@@ -121,8 +121,8 @@ define(function (require) {
     ContainmentVesselView.ARROW_COLOR = '#21366b';
     ContainmentVesselView.ARROW_ANGLE = Math.PI / 4;
 
-    ContainmentVesselView.MAX_FRAGMENT_VELOCITY = 5;
-    ContainmentVesselView.MAX_FRAGMENT_SPIN_RATE = 0.02;
+    ContainmentVesselView.FRAGMENT_VELOCITY_RANGE = range({ min: 200, max: 500 });
+    ContainmentVesselView.MAX_FRAGMENT_SPIN_RATE = Math.PI * 4;
 
     Constants.ContainmentVesselView = ContainmentVesselView;
 
