@@ -26,7 +26,7 @@ define(function(require) {
     /**
      *
      */
-    var ChainReactionSceneView = NuclearPhysicsSceneView.extend({
+    var NuclearReactorSceneView = NuclearPhysicsSceneView.extend({
 
         initialize: function(options) {
             this.showingLabels = true;
@@ -86,39 +86,12 @@ define(function(require) {
             this.stage.addChild(this.nucleusLayer);
 
             this.initMVT();
-            this.initNeutronSourceView();
-            this.initContainmentVesselView();
             this.initStartingNuclei();
         },
 
-        initNeutronSourceView: function() {
-            this.neutronSourceView = new NeutronSourceView({
-                model: this.simulation.neutronSource,
-                mvt: this.mvt,
-                modelWidth: 52,
-                rotationEnabled: true
-            });
-
-            this.stage.addChild(this.neutronSourceView.displayObject);
-        },
-
-        initContainmentVesselView: function() {
-            this.containmentVesselView = new ContainmentVesselView({
-                model: this.simulation.containmentVessel,
-                mvt: this.mvt
-            });
-
-            this.stage.addChild(this.containmentVesselView.displayObject);
-        },
-
         initStartingNuclei: function() {
-            var i;
-
-            for (i = 0; i < this.simulation.u235Nuclei.length; i++)
+            for (var i = 0; i < this.simulation.u235Nuclei.length; i++)
                 this.nucleusAdded(this.simulation.u235Nuclei.at(i));
-
-            for (i = 0; i < this.simulation.u238Nuclei.length; i++)
-                this.nucleusAdded(this.simulation.u238Nuclei.at(i));
         },
 
         createParticleView: function(particle) {
@@ -235,5 +208,5 @@ define(function(require) {
 
     });
 
-    return ChainReactionSceneView;
+    return NuclearReactorSceneView;
 });

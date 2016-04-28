@@ -81,6 +81,62 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                      NUCLEAR REACTOR SIMULATION                     **
+     **                                                                     **
+     *************************************************************************/
+
+    var NuclearReactorSimulation = {};
+
+    // Constants that control the overall size of the nuclear reactor.  Note
+    // that these dimensions are in femtometers in order to be consistent with
+    // the nuclei size in this and the other models, but of course a real
+    // nuclear reactor would have much larger dimensions.
+    NuclearReactorSimulation.OVERALL_REACTOR_WIDTH = 650;
+    NuclearReactorSimulation.OVERALL_REACTOR_HEIGHT = NuclearReactorSimulation.OVERALL_REACTOR_WIDTH * 0.42;
+    NuclearReactorSimulation.REACTOR_WALL_WIDTH = 20;
+    
+    // Constant that controls where in model space the reactor resides.  This
+    // assumes that the 'center of the world' is at (0,0).  It is shifted
+    // slightly to the left to account for the control rod handle on the right
+    // hand side.
+    NuclearReactorSimulation.REACTOR_POSITION = new Vector2(
+        -(NuclearReactorSimulation.OVERALL_REACTOR_WIDTH / 1.9),
+        -(NuclearReactorSimulation.OVERALL_REACTOR_HEIGHT / 2)
+    );
+    
+    // Constant that controls the number of chambers, between which are the
+    // control rods.  There will always be one less control rod than there are
+    // chambers.  It is assumed that the chambers are of equal size.
+    NuclearReactorSimulation.NUMBER_OF_REACTION_CHAMBERS = 6;
+    
+    // Constant that controls the size relationship between the chambers and
+    // the control rods.  This is a ratio, and can be though of as
+    // (chamber width)/(control rod width).
+    NuclearReactorSimulation.CHAMBER_TO_CONTROL_ROD_WIDTH_RATIO = 5;
+    
+    // Constants that control the initial placement of nuclei within the
+    // reaction chambers.
+    NuclearReactorSimulation.MIN_DISTANCE_FROM_NUCLEI_TO_WALLS  = 18;
+    NuclearReactorSimulation.MIN_INTER_NUCLEI_DISTANCE          = 15;
+    
+    // Constants that control the behavior of neutrons fired into reaction chambers.
+    NuclearReactorSimulation.NUMBER_OF_NEUTRONS_TO_FIRE = 2;
+    NuclearReactorSimulation.NEUTRON_VELOCITY = 2;
+    
+    // Constants that control the behavior of fission products.
+    NuclearReactorSimulation.FREED_NEUTRON_VELOCITY = 3;
+    NuclearReactorSimulation.DAUGHTER_NUCLEI_SPLIT_DISTANCE = 10;
+    
+    // Constants that control the monitoring of fission events, which
+    // allow us to determine the average energy released.
+    NuclearReactorSimulation.MAX_TEMP_CHANGE_PER_TICK = 1.0;
+    NuclearReactorSimulation.JOULES_PER_FISSION_EVENT = 3.2E-11;
+
+    Constants.NuclearReactorSimulation = NuclearReactorSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                          CONTAINMENT VESSEL                         **
      **                                                                     **
      *************************************************************************/
