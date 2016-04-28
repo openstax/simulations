@@ -206,6 +206,13 @@ define(function (require) {
     NuclearReactorView.THERMOMETER_WIDTH_PROPORTION = 0.05;
     NuclearReactorView.THERMOMETER_HEIGHT_PROPORTION = 0.40;
 
+    NuclearReactorView.BUTTON_PANEL_WIDTH = 200;
+    NuclearReactorView.BUTTON_PANEL_HEIGHT = 48;
+    NuclearReactorView.BUTTON_PANEL_BORDER_WIDTH = 4;
+    NuclearReactorView.BUTTON_WIDTH = 32;
+    NuclearReactorView.BUTTON_LABEL_FONT = '20px Helvetica Neue';
+    NuclearReactorView.BUTTON_LABEL_COLOR = '#000';
+
     Constants.NuclearReactorView = NuclearReactorView;
 
 

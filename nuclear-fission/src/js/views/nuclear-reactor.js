@@ -95,15 +95,39 @@ define(function(require) {
             this.pressedButtonTexture   = Assets.Texture(Assets.Images.FIRE_BUTTON_PRESSED);
             this.unpressedButtonTexture = Assets.Texture(Assets.Images.FIRE_BUTTON_UNPRESSED);
 
+            var targetWidth = NuclearReactorView.BUTTON_WIDTH;
+            var scale = targetWidth / this.pressedButtonTexture.width;
+            var paddingLeft = 14;
+            var paddingTop = 10;
+
             this.button = new PIXI.Sprite(this.unpressedButtonTexture);
             this.button.buttonMode = true;
             this.button.defaultCursor = 'pointer';
             this.button.anchor.x = 0.5;
             this.button.anchor.y = 0.5;
-            this.button.x = -104;
-            this.button.scale.x = this.button.scale.y = 0.4;
+            this.button.scale.x = this.button.scale.y = scale;
+            this.button.x = paddingLeft + this.button.width / 2;
+            this.button.y = paddingTop + this.button.height / 2;
 
-            this.displayObject.addChild(this.button);
+            var label = new PIXI.Text('Fire Neutrons', {
+                font: NuclearReactorView.BUTTON_LABEL_FONT,
+                fill: NuclearReactorView.BUTTON_LABEL_COLOR
+            });
+            label.x = NuclearReactorView.BUTTON_WIDTH + paddingLeft * 2;
+            label.y = NuclearReactorView.BUTTON_PANEL_HEIGHT / 2;
+            label.anchor.y = 0.5;
+            label.resolution = this.getResolution();
+
+            this.buttonPanel = new PIXI.Graphics();
+            this.buttonPanel.addChild(this.button);
+            this.buttonPanel.addChild(label);
+
+            this.buttonPanel.lineStyle(NuclearReactorView.BUTTON_PANEL_BORDER_WIDTH, REACTOR_WALL_COLOR, 1);
+            this.buttonPanel.beginFill(Colors.parseHex(NuclearReactorView.COOL_REACTOR_CHAMBER_COLOR), 1);
+            this.buttonPanel.drawRect(0, 0, NuclearReactorView.BUTTON_PANEL_WIDTH, NuclearReactorView.BUTTON_PANEL_HEIGHT);
+            this.buttonPanel.endFill();
+
+            this.displayObject.addChild(this.buttonPanel);
         },
 
         initStartingNuclei: function() {
@@ -177,6 +201,10 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            var outerRect = this.mvt.modelToView(this.simulation.getReactorRect());
+            this.buttonPanel.x = outerRect.left() + outerRect.w / 2 - NuclearReactorView.BUTTON_PANEL_WIDTH / 2
+            this.buttonPanel.y = outerRect.bottom() - NuclearReactorView.BUTTON_PANEL_HEIGHT + NuclearReactorView.BUTTON_PANEL_BORDER_WIDTH / 2;
 
             this.drawBackground();
             this.drawOutline();
