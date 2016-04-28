@@ -4,9 +4,10 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var PixiView = require('common/v3/pixi/view');
-    var Colors   = require('common/colors/colors');
-    var Vector2  = require('common/math/vector2');
+    var PixiView  = require('common/v3/pixi/view');
+    var Colors    = require('common/colors/colors');
+    var Vector2   = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
 
     var Nucleon = require('models/nucleon');
 
@@ -17,6 +18,10 @@ define(function(require) {
     var Constants = require('constants');
 
     var REACTOR_WALL_COLOR = Colors.parseHex(Constants.NuclearReactorView.REACTOR_WALL_COLOR);
+    var CHAMBER_WALL_COLOR = Colors.parseHex(Constants.NuclearReactorView.CHAMBER_WALL_COLOR);
+    var CONTROL_ROD_COLOR  = Colors.parseHex(Constants.NuclearReactorView.CONTROL_ROD_COLOR);
+    var CONTROL_ROD_ADJUSTOR_COLOR = Colors.parseHex(Constants.NuclearReactorView.CONTROL_ROD_ADJUSTOR_COLOR);
+    var CONTROL_ROD_ADJUSTOR_HANDLE_COLOR = Colors.parseHex(Constants.NuclearReactorView.CONTROL_ROD_ADJUSTOR_HANDLE_COLOR);
 
     /**
      * A view that represents a nuclear reactor
@@ -25,7 +30,16 @@ define(function(require) {
 
         events: {
             'touchstart .button': 'click',
-            'mousedown  .button': 'click'
+            'mousedown  .button': 'click',
+
+            'touchstart      .controlRodAdjustor': 'dragStart',
+            'mousedown       .controlRodAdjustor': 'dragStart',
+            'touchmove       .controlRodAdjustor': 'drag',
+            'mousemove       .controlRodAdjustor': 'drag',
+            'touchend        .controlRodAdjustor': 'dragEnd',
+            'mouseup         .controlRodAdjustor': 'dragEnd',
+            'touchendoutside .controlRodAdjustor': 'dragEnd',
+            'mouseupoutside  .controlRodAdjustor': 'dragEnd'
         },
 
         /**
@@ -41,10 +55,11 @@ define(function(require) {
             this.cooldownTime = options.cooldownTime;
             this.cooldownTimer = 0;
 
-            this.initGraphics();
-
             // Cached objects
             this._dragOffset = new PIXI.Point();
+            this._rect = new Rectangle();
+
+            this.initGraphics();
 
             this.listenTo(this.simulation.freeNeutrons, 'add',     this.neutronAdded);
             this.listenTo(this.simulation.freeNeutrons, 'destroy', this.neutronDestroyed);
@@ -65,6 +80,7 @@ define(function(require) {
             this.initParticles();
             this.initButton();
             this.initStartingNuclei();
+            this.initControlRods();
 
             this.updateMVT(this.mvt);
         },
@@ -136,6 +152,17 @@ define(function(require) {
                 this.nucleusAdded(this.simulation.u235Nuclei.at(i));
         },
 
+        initControlRods: function() {
+            this.controlRodAdjustor = new PIXI.Graphics();
+            this.controlRodAdjustor.buttonMode = true;
+            this.controlRodAdjustor.defaultCursor = 'ns-resize';
+
+            this.controlRods = new PIXI.Graphics();
+            this.controlRods.addChild(this.controlRodAdjustor);
+
+            this.displayObject.addChild(this.controlRods);
+        },
+
         createParticleView: function(particle) {
             if (particle instanceof Nucleon) {
                 // Add a visible representation of the nucleon to the canvas.
@@ -168,7 +195,7 @@ define(function(require) {
 
         drawOutline: function() {
             var wallWidth = this.mvt.modelToViewDeltaX(this.simulation.getReactorWallWidth());
-            var outerRect = this.mvt.modelToView(this.simulation.getReactorRect());
+            var outerRect = this._rect.set(this.mvt.modelToView(this.simulation.getReactorRect()));
             var graphics = this.outlineGraphics;
 
             graphics.clear();
@@ -177,6 +204,82 @@ define(function(require) {
                 outerRect.left() + wallWidth / 2, outerRect.bottom() + wallWidth / 2,
                 outerRect.w - wallWidth, outerRect.h - wallWidth
             );
+
+            graphics.lineStyle(1, CHAMBER_WALL_COLOR, 1);
+            var y1 = outerRect.bottom() + wallWidth;
+            var y2 = outerRect.top() - wallWidth;
+            var controlRods = this.simulation.controlRods;
+            for (var i = 0; i < controlRods.length; i++) {
+                var rect = this.mvt.modelToView(controlRods[i].getRectangle());
+
+                graphics.moveTo(Math.round(rect.left()), y1);
+                graphics.lineTo(Math.round(rect.left()), y2);
+
+                graphics.moveTo(Math.round(rect.right()), y1);
+                graphics.lineTo(Math.round(rect.right()), y2);
+            }
+        },
+
+        drawControlRods: function() {
+            var wallWidth = this.mvt.modelToViewDeltaX(this.simulation.getReactorWallWidth());
+            var outerRect = this._rect.set(this.mvt.modelToView(this.simulation.getReactorRect()));
+            var graphics = this.controlRods;
+            var minX = Number.POSITIVE_INFINITY;
+            var rodWidth;
+
+            graphics.clear();
+            graphics.beginFill(CONTROL_ROD_COLOR, 1);
+
+            var y1 = outerRect.bottom() + wallWidth;
+            var y2 = outerRect.top() + wallWidth;
+            var controlRods = this.simulation.controlRods;
+            for (var i = 0; i < controlRods.length; i++) {
+                var rect = this.mvt.modelToView(controlRods[i].getRectangle());
+                var left = Math.round(rect.left()) - 1;
+                var right = Math.round(rect.right()) + 1;
+                rodWidth = right - left;
+
+                graphics.drawRect(left, y1, rodWidth, (y2 - y1));
+
+                if (left < minX)
+                    minX = left;
+            }
+
+            graphics.endFill();
+
+            // Draw the adjustor
+            var adjustorRight = outerRect.right() + 10 + rodWidth;
+            var adjustor = this.controlRodAdjustor;
+            adjustor.clear();
+            adjustor.beginFill(CONTROL_ROD_ADJUSTOR_COLOR, 1);
+            adjustor.drawRect(minX, y2, (adjustorRight - minX), rodWidth);
+            adjustor.drawRect(adjustorRight - rodWidth, y1, rodWidth, (y2 - y1));
+            adjustor.endFill();
+
+            // Draw the handle
+            var handleHeight = 130;
+            var handleWidth = 20;
+            var handleThickness = 10;
+            var handleRadius = handleThickness / 2;
+            adjustor.beginFill(CONTROL_ROD_ADJUSTOR_HANDLE_COLOR, 1);
+            adjustor.drawRect(adjustorRight, y1, handleWidth - handleRadius, handleThickness);
+            adjustor.drawRect(adjustorRight, y1 + handleHeight - handleThickness, handleWidth - handleRadius, handleThickness);
+            adjustor.drawRoundedRect(adjustorRight + handleWidth - handleThickness, y1, handleThickness, handleHeight, handleRadius);
+            adjustor.endFill();
+
+            // Create the label
+            adjustor.removeChildren();
+            var label = new PIXI.Text('Control Rod Adjustor', {
+                font: NuclearReactorView.CONTROL_ROD_ADJUSTOR_LABEL_FONT,
+                fill: NuclearReactorView.CONTROL_ROD_ADJUSTOR_LABEL_COLOR
+            });
+            label.resolution = this.getResolution();
+            label.anchor.y = 0.5;
+            label.rotation = -Math.PI / 2;
+            label.x = adjustorRight - rodWidth / 2;
+            label.y = y2;
+
+            adjustor.addChild(label);
         },
 
         getInternalReactorColor: function() {
@@ -209,6 +312,7 @@ define(function(require) {
 
             this.drawBackground();
             this.drawOutline();
+            this.drawControlRods();
         },
 
         update: function(time, deltaTime, paused) {

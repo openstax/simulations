@@ -42,7 +42,7 @@ define(function(require) {
         },
 
         initMVT: function() {
-            this.viewOriginX = this.getLeftPadding() + this.getAvailableWidth() / 2;
+            this.viewOriginX = this.getLeftPadding() + this.getAvailableWidth() / 2 - 10;
             this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;
 
             var pixelsPerFemtometer = 1;
