@@ -150,7 +150,7 @@ define(function (require, exports, module) {
                 // Select the chamber into which this neutron will be fired.
                 var chamberIndex = null;
                 do {
-                    chamberIndex = Math.random() * NUMBER_OF_REACTION_CHAMBERS;
+                    chamberIndex = Math.floor(Math.random() * NUMBER_OF_REACTION_CHAMBERS);
                 } while (chamberIndicesUsed.indexOf(chamberIndex) !== -1);
                 chamberIndicesUsed.push(chamberIndex);
                 var chamberRect = this.reactionChamberRects[chamberIndex];
@@ -200,7 +200,7 @@ define(function (require, exports, module) {
                 
                 // Make sure we don't get stuck in this loop if we need to fire
                 // more neutrons than we have reaction chambers.
-                if ((NUMBER_OF_NEUTRONS_TO_FIRE > NUMBER_OF_REACTION_CHAMBERS) &&
+                if ((NuclearReactorSimulation.NUMBER_OF_NEUTRONS_TO_FIRE > NuclearReactorSimulation.NUMBER_OF_REACTION_CHAMBERS) &&
                     (chambersUsed.length === NUMBER_OF_REACTION_CHAMBERS)
                 ) {
                     // Clear the list of chambers used.
@@ -302,7 +302,7 @@ define(function (require, exports, module) {
                 // so, remove it.
                 var numControlRods = this.controlRods.length;
                 for (j = 0; (j < numControlRods) && (particleAbsorbed == false); j++) {
-                    var controlRod = this.controlRods.at(j);
+                    var controlRod = this.controlRods[j];
                     if (controlRod.particleAbsorbed(freeNucleon)) {
                         // The particle is absorbed by the control rod.
                         particleAbsorbed = true;
@@ -336,7 +336,7 @@ define(function (require, exports, module) {
                     // The particle has become part of a larger nucleus, so we
                     // need to take it off the list of free particles and let the
                     // view know that it has disappeared as a separate entity.
-                    this.freeNeutrons.remove(freeNucleon);
+                    freeNucleon.destroy();
                 }
             }
         },

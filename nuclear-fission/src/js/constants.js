@@ -193,7 +193,7 @@ define(function (require) {
 
     // Constants that control the look of the reactor.
     NuclearReactorView.REACTOR_WALL_COLOR = '#000';
-    NuclearReactorView.COOL_REACTOR_CHAMBER_COLOR = '#bbcccc';
+    NuclearReactorView.COOL_REACTOR_CHAMBER_COLOR = '#CAB3CA';
     NuclearReactorView.HOT_REACTOR_CHAMBER_COLOR = '#ffbb44';
     
     // Max temperature, with used when setting up the thermometer and in

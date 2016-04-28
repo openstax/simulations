@@ -73,6 +73,8 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
+
+            this.nuclearReactorView.update(time, deltaTime, paused);
         },
 
         resetNuclei: function() {

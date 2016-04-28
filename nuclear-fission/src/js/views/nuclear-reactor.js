@@ -24,7 +24,8 @@ define(function(require) {
     var NuclearReactorView = PixiView.extend({
 
         events: {
-            
+            'touchstart .button': 'click',
+            'mousedown  .button': 'click'
         },
 
         /**
@@ -210,7 +211,7 @@ define(function(require) {
             this.drawOutline();
         },
 
-        update: function(time, deltaTime) {
+        update: function(time, deltaTime, paused) {
             if (this.cooldownTimer > 0) {
                 this.cooldownTimer -= deltaTime;
 
