@@ -185,6 +185,32 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                         NUCLEAR REACTOR VIEW                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var NuclearReactorView = {};
+
+    // Constants that control the look of the reactor.
+    NuclearReactorView.REACTOR_WALL_COLOR = '#000';
+    NuclearReactorView.COOL_REACTOR_CHAMBER_COLOR = '#bbcccc';
+    NuclearReactorView.HOT_REACTOR_CHAMBER_COLOR = '#ffbb44';
+    
+    // Max temperature, with used when setting up the thermometer and in
+    // in controlling the internal color of the reactor.
+    NuclearReactorView.MAX_TEMPERATURE = 75;  // Unitless value.
+    
+    // Constants that control the position and size of the thermometer.
+    NuclearReactorView.THERMOMETER_PROPORTION_FROM_LEFT_SIDE = 0.88;
+    NuclearReactorView.THERMOMETER_PROPORTION_ABOVE = 0.18;
+    NuclearReactorView.THERMOMETER_WIDTH_PROPORTION = 0.05;
+    NuclearReactorView.THERMOMETER_HEIGHT_PROPORTION = 0.40;
+
+    Constants.NuclearReactorView = NuclearReactorView;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                      FISSION ENERGY CHART VIEW                      **
      **                                                                     **
      *************************************************************************/

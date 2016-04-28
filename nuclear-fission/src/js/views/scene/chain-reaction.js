@@ -29,7 +29,6 @@ define(function(require) {
     var ChainReactionSceneView = NuclearPhysicsSceneView.extend({
 
         initialize: function(options) {
-            this.showingLabels = true;
             this.particleViews = [];
             this.nucleusViews = [];
 

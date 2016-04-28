@@ -2,8 +2,11 @@ define(function (require) {
 
     'use strict';
 
+    var NuclearReactorSimulation = require('nuclear-fission/models/simulation/nuclear-reactor');
+
     var NuclearFissionSimView    = require('nuclear-fission/views/sim');
     var NuclearReactorLegendView = require('nuclear-fission/views/legend/nuclear-reactor');
+    var NuclearReactorSceneView  = require('nuclear-fission/views/scene/nuclear-reactor');
 
     var Constants = require('constants');
 
@@ -40,6 +43,22 @@ define(function (require) {
             NuclearFissionSimView.prototype.initialize.apply(this, [options]);
 
             this.initLegend();
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new NuclearReactorSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new NuclearReactorSceneView({
+                simulation: this.simulation
+            });
         },
 
         initLegend: function() {

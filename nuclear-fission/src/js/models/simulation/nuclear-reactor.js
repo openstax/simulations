@@ -21,11 +21,12 @@ define(function (require, exports, module) {
      */
     var Constants = require('constants');
 
-    var REACTOR_POSITION            = Constants.NuclearReactorSimulation.REACTOR_POSITION;
-    var OVERALL_REACTOR_WIDTH       = Constants.NuclearReactorSimulation.OVERALL_REACTOR_WIDTH;
-    var OVERALL_REACTOR_HEIGHT      = Constants.NuclearReactorSimulation.OVERALL_REACTOR_HEIGHT;
-    var REACTOR_WALL_WIDTH          = Constants.NuclearReactorSimulation.REACTOR_WALL_WIDTH;
-    var NUMBER_OF_REACTION_CHAMBERS = Constants.NuclearReactorSimulation.NUMBER_OF_REACTION_CHAMBERS;
+    var REACTOR_POSITION                   = Constants.NuclearReactorSimulation.REACTOR_POSITION;
+    var OVERALL_REACTOR_WIDTH              = Constants.NuclearReactorSimulation.OVERALL_REACTOR_WIDTH;
+    var OVERALL_REACTOR_HEIGHT             = Constants.NuclearReactorSimulation.OVERALL_REACTOR_HEIGHT;
+    var REACTOR_WALL_WIDTH                 = Constants.NuclearReactorSimulation.REACTOR_WALL_WIDTH;
+    var NUMBER_OF_REACTION_CHAMBERS        = Constants.NuclearReactorSimulation.NUMBER_OF_REACTION_CHAMBERS;
+    var CHAMBER_TO_CONTROL_ROD_WIDTH_RATIO = Constants.NuclearReactorSimulation.CHAMBER_TO_CONTROL_ROD_WIDTH_RATIO;
 
     /**
      * Base simulation model for multi-nucleus decay simulations
@@ -131,7 +132,7 @@ define(function (require, exports, module) {
          *   result.
          */
         getReactorRect: function() {
-            return this.outerReactorRect();
+            return this.outerReactorRect;
         },
 
         getReactorWallWidth: function() {
