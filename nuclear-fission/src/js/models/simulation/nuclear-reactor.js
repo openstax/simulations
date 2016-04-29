@@ -11,6 +11,7 @@ define(function (require, exports, module) {
 
     var NuclearPhysicsSimulation = require('models/simulation');
     var Uranium235Nucleus        = require('models/nucleus/uranium-235');
+    var Uranium238Nucleus        = require('models/nucleus/uranium-238');
     var Nucleon                  = require('models/nucleon');
     var AtomicNucleus            = require('models/atomic-nucleus');
 
@@ -27,6 +28,8 @@ define(function (require, exports, module) {
     var REACTOR_WALL_WIDTH                 = Constants.NuclearReactorSimulation.REACTOR_WALL_WIDTH;
     var NUMBER_OF_REACTION_CHAMBERS        = Constants.NuclearReactorSimulation.NUMBER_OF_REACTION_CHAMBERS;
     var CHAMBER_TO_CONTROL_ROD_WIDTH_RATIO = Constants.NuclearReactorSimulation.CHAMBER_TO_CONTROL_ROD_WIDTH_RATIO;
+    var MIN_DISTANCE_FROM_NUCLEI_TO_WALLS  = Constants.NuclearReactorSimulation.MIN_DISTANCE_FROM_NUCLEI_TO_WALLS;
+    var MIN_INTER_NUCLEI_DISTANCE          = Constants.NuclearReactorSimulation.MIN_INTER_NUCLEI_DISTANCE;
 
     /**
      * Base simulation model for multi-nucleus decay simulations
@@ -85,6 +88,8 @@ define(function (require, exports, module) {
                 OVERALL_REACTOR_WIDTH,
                 OVERALL_REACTOR_HEIGHT
             );
+
+            this.addNuclei();
         },
 
         initRodsAndReactionChambers: function() {
@@ -116,6 +121,63 @@ define(function (require, exports, module) {
         initFissionEventBins: function() {
             for (var i = 0; i < this.stepsPerSecond; i++)
                 this.fissionEventBins[i] = 0;
+        },
+
+        addNuclei: function() {
+            // Add the unfissioned nuclei to the model.  The first step is to see
+            //   how many nuclei can fit in each chamber and their relative
+            //   positions.
+            var reactionChamberWidth = this.reactionChamberRects[0].w;
+            var reactionChamberHeight = this.reactionChamberRects[0].h;
+            var numNucleiAcross = Math.floor(((reactionChamberWidth - (2 * MIN_DISTANCE_FROM_NUCLEI_TO_WALLS)) / MIN_INTER_NUCLEI_DISTANCE) + 1);
+            var numNucleiDown = Math.floor(((reactionChamberHeight - (2 * MIN_DISTANCE_FROM_NUCLEI_TO_WALLS)) / MIN_INTER_NUCLEI_DISTANCE) + 1);
+            
+            // Add the U235 and U238 nuclei to each chamber.  Note that the U238
+            //   nuclei are present to moderate the reaction, but the educators
+            //   have requested that they don't appear visually to the user since
+            //   this makes the reactor look too cluttered, so they are not added
+            //   to the view.
+            var nucleusPosition = new Vector2();
+            for (var i = 0; i < this.reactionChamberRects.length; i++) {
+                var reactionChamberRect = this.reactionChamberRects[i];
+                var xStartPos = reactionChamberRect.x + MIN_DISTANCE_FROM_NUCLEI_TO_WALLS;
+                var yStartPos = reactionChamberRect.y + MIN_DISTANCE_FROM_NUCLEI_TO_WALLS;
+                
+                for (var j = 0; j < numNucleiDown; j++) {
+                    for (var k = 0; k < numNucleiAcross; k++) {
+                        // Add the U235 nucleus.
+                        nucleusPosition.set(
+                            xStartPos + (k * MIN_INTER_NUCLEI_DISTANCE), 
+                            yStartPos + (j * MIN_INTER_NUCLEI_DISTANCE)
+                        );
+
+                        var u235Nucleus = Uranium235Nucleus.create({
+                            position: nucleusPosition,
+                            fissionInterval: 0,
+                            simulation: this
+                        });
+
+                        this.u235Nuclei.add(u235Nucleus);
+                        
+                        // Add the U238 nucleus.  We don't need to listen for
+                        // changes to atomic weight.  These exist primarily to
+                        // moderate the overall reaction.
+                        if (k < numNucleiAcross - 1) {
+                            nucleusPosition.set(
+                                xStartPos + ((k + 0.5) * MIN_INTER_NUCLEI_DISTANCE), 
+                                yStartPos + ((j + 0.5) * MIN_INTER_NUCLEI_DISTANCE)
+                            );
+
+                            var u238Nucleus = Uranium238Nucleus.create({
+                                position: nucleusPosition,
+                                simulation: this
+                            });
+
+                            this.u238Nuclei.add(u238Nucleus);
+                        }
+                    }
+                }
+            }
         },
 
         /**
@@ -246,42 +308,10 @@ define(function (require, exports, module) {
         _update: function(time, deltaTime) {
             // Move any free particles that exist and check them for absorption.
             this.updateFreeNeutrons(time, deltaTime);
-            
-            // Accumulate the total amount of energy release so far.
-            var totalEnergyReleased = this.get('totalEnergyReleased') + (this.u235FissionEventCount * NuclearReactorSimulation.JOULES_PER_FISSION_EVENT);
-            
-            // Update the bins used for calculating the energy produced per second.
-            var energyPerSecond = this.get('energyReleasedPerSecond') + ((this.u235FissionEventCount - this.fissionEventBins[this.currentBin]) * NuclearReactorSimulation.JOULES_PER_FISSION_EVENT);
-            this.fissionEventBins[this.currentBin] = this.u235FissionEventCount;
-            this.currentBin = (this.currentBin + 1) % this.stepsPerSecond;
-            
-            // Clear out any accumulated errors.
-            if (energyPerSecond < NuclearReactorSimulation.JOULES_PER_FISSION_EVENT)
-                energyPerSecond = 0;
-            
-            // Reset the fission event counter.
-            this.u235FissionEventCount = 0;
-            
-            // See if the internal temperature has changed and, if so, notify any
-            // listeners.
-            var temperature = energyPerSecond * (1 / NuclearReactorSimulation.JOULES_PER_FISSION_EVENT);
-            if (this.get('temperature') !== temperature) {
-                // Adjust the temperature, but not instantaneously.
-                if (Math.abs(this.get('temperature') - temperature) < NuclearReactorSimulation.MAX_TEMP_CHANGE_PER_TICK)
-                    this.set('temperature', temperature);
-                else if (this.get('temperature') < temperature)
-                    this.set('temperature', this.get('temperature') + NuclearReactorSimulation.MAX_TEMP_CHANGE_PER_TICK);
-                else
-                    this.set('temperature', this.get('temperature') - NuclearReactorSimulation.MAX_TEMP_CHANGE_PER_TICK);
-            }
-            
-            if ((energyPerSecond !== this.get('energyReleasedPerSecond')) || 
-                (totalEnergyReleased !== this.get('totalEnergyReleased'))
-            ) {
-                // Update our energy-related variables.
-                this.set('energyReleasedPerSecond', energyPerSecond);
-                this.set('totalEnergyReleased', totalEnergyReleased);
-            }
+            // Update nuclei
+            this.updateNuclei(time, deltaTime);
+            // Update energy properties
+            this.updateEnergy(time, deltaTime);
         },
 
         updateFreeNeutrons: function(time, deltaTime) {
@@ -324,7 +354,7 @@ define(function (require, exports, module) {
                     var nucleus = this.u238Nuclei.at(j);
                     if (freeNucleon.getPosition().distance(nucleus.getPosition()) <= nucleus.get('diameter') / 2) {
                         // The particle is within capture range - see if the nucleus can capture it.
-                        particleAbsorbed = nucleus.captureParticle(freeNucleon);
+                        particleAbsorbed = nucleus.captureParticle(freeNucleon, time);
                     }
                 }
 
@@ -336,7 +366,7 @@ define(function (require, exports, module) {
                     var nucleus = this.u235Nuclei.at(j);
                     if (freeNucleon.getPosition().distance(nucleus.getPosition()) <= nucleus.get('diameter') / 2) {
                         // The particle is within capture range - see if the nucleus can capture it.
-                        particleAbsorbed = nucleus.captureParticle(freeNucleon);
+                        particleAbsorbed = nucleus.captureParticle(freeNucleon, time);
                     }
                 }
                 
@@ -346,6 +376,54 @@ define(function (require, exports, module) {
                     // view know that it has disappeared as a separate entity.
                     freeNucleon.destroy();
                 }
+            }
+        },
+
+        updateNuclei: function(time, deltaTime) {
+            var i;
+
+            for (i = 0; i < this.u235Nuclei.length; i++)
+                this.u235Nuclei.at(i).update(time, deltaTime);
+            
+            for (i = 0; i < this.u238Nuclei.length; i++)
+                this.u238Nuclei.at(i).update(time, deltaTime);
+        },
+
+        updateEnergy: function(time, deltaTime) {
+            // Accumulate the total amount of energy release so far.
+            var totalEnergyReleased = this.get('totalEnergyReleased') + (this.u235FissionEventCount * NuclearReactorSimulation.JOULES_PER_FISSION_EVENT);
+            
+            // Update the bins used for calculating the energy produced per second.
+            var energyPerSecond = this.get('energyReleasedPerSecond') + ((this.u235FissionEventCount - this.fissionEventBins[this.currentBin]) * NuclearReactorSimulation.JOULES_PER_FISSION_EVENT);
+            this.fissionEventBins[this.currentBin] = this.u235FissionEventCount;
+            this.currentBin = (this.currentBin + 1) % this.stepsPerSecond;
+            
+            // Clear out any accumulated errors.
+            if (energyPerSecond < NuclearReactorSimulation.JOULES_PER_FISSION_EVENT)
+                energyPerSecond = 0;
+            
+            // Reset the fission event counter.
+            this.u235FissionEventCount = 0;
+            
+            // See if the internal temperature has changed and, if so, notify any
+            // listeners.
+            var temperature = energyPerSecond * (1 / NuclearReactorSimulation.JOULES_PER_FISSION_EVENT);
+            if (this.get('temperature') !== temperature) {
+                // Adjust the temperature, but not instantaneously.
+                if (Math.abs(this.get('temperature') - temperature) < NuclearReactorSimulation.MAX_TEMP_CHANGE_PER_TICK)
+                    this.set('temperature', temperature);
+                else if (this.get('temperature') < temperature)
+                    this.set('temperature', this.get('temperature') + NuclearReactorSimulation.MAX_TEMP_CHANGE_PER_TICK);
+                else
+                    this.set('temperature', this.get('temperature') - NuclearReactorSimulation.MAX_TEMP_CHANGE_PER_TICK);
+            }
+            
+            if ((energyPerSecond !== this.get('energyReleasedPerSecond')) || 
+                (totalEnergyReleased !== this.get('totalEnergyReleased'))
+            ) {
+                // Update our energy-related variables.
+                this.set('energyReleasedPerSecond', energyPerSecond);
+                this.set('totalEnergyReleased', totalEnergyReleased);
             }
         },
 
