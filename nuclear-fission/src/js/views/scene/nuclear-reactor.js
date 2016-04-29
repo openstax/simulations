@@ -93,8 +93,10 @@ define(function(require) {
         },
 
         hideResetButton: function() {
-            if (this.buttonTimeout)
+            if (this.buttonTimeout) {
                 window.clearTimeout(this.buttonTimeout);
+                this.buttonTimeout = null;
+            }
             this.$resetButton.hide();
         },
 

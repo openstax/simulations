@@ -4,10 +4,11 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var PixiView  = require('common/v3/pixi/view');
-    var Colors    = require('common/colors/colors');
-    var Vector2   = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
+    var PixiView        = require('common/v3/pixi/view');
+    var ThermometerView = require('common/v3/pixi/view/thermometer');
+    var Colors          = require('common/colors/colors');
+    var Vector2         = require('common/math/vector2');
+    var Rectangle       = require('common/math/rectangle');
 
     var Nucleon = require('models/nucleon');
 
@@ -83,6 +84,7 @@ define(function(require) {
             this.initButton();
             this.initStartingNuclei();
             this.initControlRods();
+            this.initThermometer();
 
             this.updateMVT(this.mvt);
         },
@@ -163,6 +165,16 @@ define(function(require) {
             this.controlRods.addChild(this.controlRodAdjustor);
 
             this.displayObject.addChild(this.controlRods);
+        },
+
+        initThermometer: function() {
+            this.thermometerView = new ThermometerView({
+                bulbDiameter: 28,
+                tubeWidth:    14,
+                tubeHeight:   72,
+                fillAlpha: 0.7
+            });
+            this.displayObject.addChild(this.thermometerView.displayObject);
         },
 
         createParticleView: function(particle) {
@@ -312,6 +324,9 @@ define(function(require) {
             this.buttonPanel.x = outerRect.left() + outerRect.w / 2 - NuclearReactorView.BUTTON_PANEL_WIDTH / 2
             this.buttonPanel.y = outerRect.bottom() - NuclearReactorView.BUTTON_PANEL_HEIGHT + NuclearReactorView.BUTTON_PANEL_BORDER_WIDTH / 2;
 
+            this.thermometerView.displayObject.x = outerRect.right() - (outerRect.w * 0.1);
+            this.thermometerView.displayObject.y = outerRect.bottom() + 48;
+
             this.drawBackground();
             this.drawOutline();
             this.drawControlRods();
@@ -446,6 +461,7 @@ define(function(require) {
 
         temperatureChanged: function() {
             this.drawBackground();
+            this.thermometerView.val(this.simulation.get('temperature') / NuclearReactorView.MAX_TEMPERATURE);
         }
 
     }, Constants.NuclearReactorView);
