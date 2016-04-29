@@ -139,6 +139,14 @@ define(function (require, exports, module) {
             return REACTOR_WALL_WIDTH;
         },
 
+        getControlRodsMinY: function() {
+            return this.innerReactorRect.bottom();
+        },
+
+        getControlRodsMaxY: function() {
+            return this.innerReactorRect.top();
+        },
+
         /**
          * Fires neutrons into the reaction chambers, which is how the reaction
          *   can be initiated.
@@ -217,14 +225,14 @@ define(function (require, exports, module) {
             var numControlRods = this.controlRods.length;
             
             // Make sure that we don't move the control rods where they can't go.
-            var topPosY = this.innerReactorRect.top();
-            var bottomPosY = this.innerReactorRect.bottom();
+            var minY = this.getControlRodsMinY();
+            var maxY = this.getControlRodsMaxY();
             if (numControlRods > 0) {
                 var controlRod = this.controlRods[0];
-                if (controlRod.getY() + yDelta < topPosY)
-                    yDelta = topPosY - controlRod.getY();
-                else if (controlRod.getY() + yDelta > bottomPosY)
-                    yDelta = bottomPosY - controlRod.getY();
+                if (controlRod.getY() + yDelta < minY)
+                    yDelta = minY - controlRod.getY();
+                else if (controlRod.getY() + yDelta > maxY)
+                    yDelta = maxY - controlRod.getY();
             }
             
             // Set the actual position.

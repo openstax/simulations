@@ -69,6 +69,8 @@ define(function(require) {
             this.listenTo(this.simulation, 'remove-all-particles', this.allParticlesRemoved);
 
             this.listenTo(this.simulation, 'change:temperature', this.temperatureChanged);
+
+            this.listenTo(this.simulation.controlRods[0], 'change:position', this.updateControlRodsPosition);
         },
 
         /**
@@ -335,15 +337,26 @@ define(function(require) {
                 this.nucleusViews[i].update(time, deltaTime, paused);
         },
 
+        updateControlRodsPosition: function() {
+            // Because we could potentially redraw the control rods,
+            //   we can't just make it all relative.  We need to absolutely base it off of the model positions I think
+            var minY = this.simulation.getControlRodsMinY();
+            var difference = this.simulation.controlRods[0].getY() - minY;
+            var viewY = this.mvt.modelToViewDeltaY(difference);
+            this.controlRods.y = viewY;
+        },
+
         dragStart: function(event) {
             this.dragging = true;
 
-            
+            this.lastY = event.data.global.y;
         },
 
         drag: function(event) {
             if (this.dragging) {
-                
+                var dy = event.data.global.y - this.lastY;
+                this.simulation.moveControlRods(this.mvt.viewToModelDeltaY(dy));
+                this.lastY = event.data.global.y;
             }
         },
 
