@@ -440,6 +440,8 @@ define(function(require) {
                 this.neutronViews[i].remove();
                 this.neutronViews.splice(i, 1);
             }
+
+            this.drawBackground();
         },
 
         temperatureChanged: function() {

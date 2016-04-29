@@ -21,9 +21,8 @@ define(function(require) {
         initialize: function(options) {
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
 
-            this.listenTo(this.simulation, 'nucleus-change',       this.nucleusChanged);
-            this.listenTo(this.simulation, 'change:numU235Nuclei', this.numReactiveNucleiChanged);
-            this.listenTo(this.simulation, 'change:numU238Nuclei', this.numReactiveNucleiChanged);
+            this.listenTo(this.simulation, 'nucleus-change', this.nucleusChanged);
+            this.listenTo(this.simulation, 'reset',          this.simulationReset);
         },
 
         renderContent: function() {
@@ -78,14 +77,14 @@ define(function(require) {
         },
 
         resetNuclei: function() {
-            this.simulation.resetNuclei();
+            this.simulation.reset();
             this.hideResetButton();
         },
 
         showResetButtonWithDelay: function() {
-            // Clear the currently running one if it exists so we start over
+            // Don't start it over again
             if (this.buttonTimeout)
-                window.clearTimeout(this.buttonTimeout);
+                return;
 
             this.buttonTimeout = window.setTimeout(_.bind(function() {
                 this.$resetButton.show();
@@ -97,6 +96,15 @@ define(function(require) {
             if (this.buttonTimeout)
                 window.clearTimeout(this.buttonTimeout);
             this.$resetButton.hide();
+        },
+
+        nucleusChanged: function() {
+            if (this.simulation.getChangedNucleiExist())
+                this.showResetButtonWithDelay();
+        },
+
+        simulationReset: function() {
+            this.hideResetButton();
         }
 
     });

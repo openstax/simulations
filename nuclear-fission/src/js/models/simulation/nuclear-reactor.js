@@ -158,6 +158,7 @@ define(function (require, exports, module) {
                         });
 
                         this.u235Nuclei.add(u235Nucleus);
+                        this.triggerNucleusAdded(u235Nucleus);
                         
                         // Add the U238 nucleus.  We don't need to listen for
                         // changes to atomic weight.  These exist primarily to
@@ -183,8 +184,40 @@ define(function (require, exports, module) {
         /**
          * Resets the model components
          */
-        reset: function() {
+        resetComponents: function() {
+            // Clear all the old particles out
+            this.removeAllParticles();
             
+            // Clear out the energy accumulators.
+            for (i = 0; i < this.stepsPerSecond; i++)
+                this.fissionEventBins[i] = 0;
+            this.currentBin = 0;
+            
+            // Re-add the starting nuclei
+            this.addNuclei();
+
+            this.trigger('reset');
+        },
+
+        /**
+         * Remove all nuclei and free neutrons from the model.
+         */
+        removeAllParticles: function(propagateChanges) {
+            var i;
+
+            for (i = this.u235Nuclei.length - 1; i >= 0; i--)
+                this.u235Nuclei.at(i).destroy();
+
+            for (i = this.u238Nuclei.length - 1; i >= 0; i--)
+                this.u238Nuclei.at(i).destroy();
+
+            for (i = this.daughterNuclei.length - 1; i >= 0; i--)
+                this.daughterNuclei.at(i).destroy();
+
+            for (i = this.freeNeutrons.length - 1; i >= 0; i--)
+                this.freeNeutrons.at(i).destroy();
+
+            this.trigger('remove-all-particles');
         },
 
         /**
@@ -207,6 +240,16 @@ define(function (require, exports, module) {
 
         getControlRodsMaxY: function() {
             return this.innerReactorRect.top();
+        },
+
+        /**
+         * Returns a boolean value that indicates whether any nuclei are present
+         *   in the model that have been changed by the chain reaction. This can
+         *   essentially be used as an indicator of whether or not the chain
+         *   reaction has started.
+         */
+        getChangedNucleiExist: function() {
+            return (this.daughterNuclei.length > 0);
         },
 
         /**
