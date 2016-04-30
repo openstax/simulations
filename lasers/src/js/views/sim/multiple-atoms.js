@@ -12,12 +12,14 @@ define(function (require) {
     //require('less!styles/sim');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml = require('text!templates/multiple-atoms-sim.html');
 
     /**
      * 
      */
     var MultipleAtomsSimView = LasersSimView.extend({
+
+        template: _.template(simHtml),
 
         /**
          * Dom event listeners

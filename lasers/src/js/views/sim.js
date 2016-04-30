@@ -24,7 +24,6 @@ define(function (require) {
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml              = require('text!templates/sim.html');
     var playbackControlsHtml = require('text!templates/playback-controls.html');
 
     /**
@@ -42,7 +41,7 @@ define(function (require) {
         /**
          * Template for rendering the basic scaffolding
          */
-        template: _.template(simHtml),
+        template: _.template(''),
 
         /**
          * Dom event listeners

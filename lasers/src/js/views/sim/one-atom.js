@@ -6,18 +6,20 @@ define(function (require) {
 
     var LasersSimView = require('views/sim');
 
-    var Constants = require('constants');
+    var OneAtomLaserSimulation = require('models/simulation/one-atom');
 
     // CSS
     //require('less!styles/sim');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml = require('text!templates/one-atom-sim.html');
 
     /**
      * 
      */
     var OneAtomSimView = LasersSimView.extend({
+
+        template: _.template(simHtml),
 
         /**
          * Dom event listeners
@@ -38,6 +40,13 @@ define(function (require) {
             }, options);
 
             LasersSimView.prototype.initialize.apply(this, [options]);
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new OneAtomLaserSimulation();
         },
 
         /**
