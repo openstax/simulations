@@ -33,7 +33,11 @@ define(function(require) {
             });
             this.$resetButton.hide();
 
+            var html = '<button class="btn btn-lg view-reactor-picture-btn"data-toggle="modal" data-target="#picture-dialog"><span class="fa fa-picture-o"></span> Picture of Reactor</button>'
+            this.$viewReactorPictureButton = $(html);
+
             this.$ui.append(this.$resetButton);
+            this.$ui.append(this.$viewReactorPictureButton);
         },
 
         reset: function() {

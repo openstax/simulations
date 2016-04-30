@@ -21,7 +21,8 @@
     height: 0;
 
     .reset-nucleus-btn,
-    .reset-nuclei-btn {
+    .reset-nuclei-btn,
+    .view-reactor-picture-btn {
         position: absolute;
         right: 50px;
         top: 250px;
@@ -33,7 +34,9 @@
         &:hover {
             opacity: 0.9;
         }
-
+    }
+        
+    .reset-nuclei-btn {
         #sim-chain-reaction & {
             top: 20px;
             left: 20px;
@@ -42,6 +45,20 @@
         #sim-nuclear-reactor & {
             top: 20px;
             left: 20px;
+        }
+    }
+
+    .view-reactor-picture-btn {
+        top: 20px;
+        right: (@nuclear-reactor-panel-width + 20px + @panel-margin);
+        width: auto;
+
+        @media screen and (max-height: @short-window) {
+            right: (@nuclear-reactor-panel-width + 20px + @short-screen-panel-margin);
+        }
+
+        .fa {
+            margin-right: 8px;
         }
     }
 }

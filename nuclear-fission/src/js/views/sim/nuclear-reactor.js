@@ -13,6 +13,10 @@ define(function (require) {
     // HTML
     var simHtml              = require('text!nuclear-fission/templates/nuclear-reactor-sim.html');
     var playbackControlsHtml = require('text!nuclear-fission/templates/simple-playback-controls.html');
+    var pictureDialogHtml    = require('text!nuclear-fission/templates/nuclear-reactor-picture-dialog.html');
+
+    // CSS
+    require('less!nuclear-fission/styles/picture-dialog');
 
     /**
      * Nuclear Reactor tab
@@ -72,6 +76,8 @@ define(function (require) {
             NuclearFissionSimView.prototype.render.apply(this, arguments);
 
             this.renderPlaybackControls();
+
+            this.$el.append(pictureDialogHtml);
 
             return this;
         },
