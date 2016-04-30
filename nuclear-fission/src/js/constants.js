@@ -132,6 +132,12 @@ define(function (require) {
     NuclearReactorSimulation.MAX_TEMP_CHANGE_PER_TICK = 1.0;
     NuclearReactorSimulation.JOULES_PER_FISSION_EVENT = 3.2E-11;
 
+    // Constants that control the ranges for the graph.  These were set up by
+    //   trial and error, but it may make sense to coordinate them with the
+    //   nuclear reactor model eventually.
+    NuclearReactorSimulation.TOTAL_ENERGY_GRAPH_RANGE = 1.1E-8;
+    NuclearReactorSimulation.ENERGY_PER_SECOND_GRAPH_RANGE = 2.5E-9;
+
     Constants.NuclearReactorSimulation = NuclearReactorSimulation;
 
 
@@ -246,7 +252,7 @@ define(function (require) {
 
     FissionEnergyChartView.LINE_WIDTH = 2;
     FissionEnergyChartView.LINE_ALPHA = 1;
-    FissionEnergyChartView.POTENTIAL_LINE_COLOR    = '#00f';
+    FissionEnergyChartView.POTENTIAL_LINE_COLOR    = '#583B9C';
     FissionEnergyChartView.TOTAL_ENERGY_LINE_COLOR = '#ff0';
 
     FissionEnergyChartView.LEGEND_WIDTH = 160;

@@ -47,6 +47,9 @@ define(function (require) {
             NuclearFissionSimView.prototype.initialize.apply(this, [options]);
 
             this.initLegend();
+
+            this.listenTo(this.simulation, 'change:energyReleasedPerSecond', this.updatePowerBar);
+            this.listenTo(this.simulation, 'change:totalEnergyReleased',     this.updateEnergyBar);
         },
 
         /**
@@ -94,6 +97,9 @@ define(function (require) {
             this.$el.html(this.template(data));
 
             this.$('select').selectpicker();
+
+            this.$powerBar = this.$('#power-bar');
+            this.$energyBar = this.$('#energy-bar');
         },
 
         /**
@@ -119,6 +125,16 @@ define(function (require) {
             this.renderLegend();
 
             return this;
+        },
+
+        updatePowerBar: function(simulation, energyReleasedPerSecond) {
+            var percent = (energyReleasedPerSecond / NuclearReactorSimulation.ENERGY_PER_SECOND_GRAPH_RANGE) * 100;
+            this.$powerBar.css('height', Math.min(percent, 100) + '%');
+        },
+
+        updateEnergyBar: function(simulation, totalEnergyReleased) {
+            var percent = (totalEnergyReleased / NuclearReactorSimulation.TOTAL_ENERGY_GRAPH_RANGE) * 100;
+            this.$energyBar.css('height', Math.min(percent, 100) + '%');
         }
 
     });

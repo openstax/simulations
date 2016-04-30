@@ -184,3 +184,58 @@
       0% { opacity: 0; }
     100% { opacity: 1; }
 }
+
+
+@graph-width: 40px;
+@graph-height: 200px;
+@graph-wrapper-width: ((@nuclear-reactor-panel-width - 15px * 2) / 2);
+
+.graph-wrapper {
+    float: left;
+    width: @graph-wrapper-width;
+    position: relative;
+
+    .graph-background {
+        position: relative;
+        width: @graph-width;
+        height: @graph-height;
+        background: fadeout(#fff, 70%);
+        border: 1px solid fadeout(#fff, 85%);
+        margin: 0 auto;
+
+        .graph-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+
+            &#power-bar {
+                background-color: #ffbb44;
+            }
+
+            &#energy-bar {
+                background-color: #78b04a;
+            }
+        }
+    }
+
+    .graph-axis-label {
+        position: absolute;
+        .transform(~"rotate(-90deg) translateY(-175px)");
+        .transform-origin(center center);
+        text-align: center;
+        top: 100px;
+        left: 150px;
+    }
+
+    .graph-title {
+        text-align: center;
+    }
+
+    &#energy-graph {
+        .graph-axis-label {
+            left: 164px;
+        }
+    }
+}

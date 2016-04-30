@@ -181,6 +181,13 @@ define(function (require, exports, module) {
             }
         },
 
+        reset: function() {
+            this.time = 0;
+            this.set(this.startingAttributes);
+            this.applyOptions(this.startingOptions);
+            this.resetComponents();
+        },
+
         /**
          * Resets the model components
          */
