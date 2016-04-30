@@ -324,7 +324,7 @@ define(function(require) {
             this.buttonPanel.x = outerRect.left() + outerRect.w / 2 - NuclearReactorView.BUTTON_PANEL_WIDTH / 2
             this.buttonPanel.y = outerRect.bottom() - NuclearReactorView.BUTTON_PANEL_HEIGHT + NuclearReactorView.BUTTON_PANEL_BORDER_WIDTH / 2;
 
-            this.thermometerView.displayObject.x = outerRect.right() - (outerRect.w * 0.1);
+            this.thermometerView.displayObject.x = outerRect.right() - (outerRect.w * 0.258);
             this.thermometerView.displayObject.y = outerRect.bottom() + 48;
 
             this.drawBackground();
