@@ -36,6 +36,9 @@ define(function(require) {
 
             this.listenTo(this.simulation.neutronSource, 'neutron-generated', this.neutronGenerated);
             this.listenTo(this.simulation.freeNucleons, 'destroy', this.nucleonDestroyed);
+
+            this.listenTo(this.simulation, 'nucleus-change', this.nucleusChanged);
+            this.listenTo(this.simulation, 'reset',          this.simulationReset);
         },
 
         renderContent: function() {
@@ -44,6 +47,7 @@ define(function(require) {
             this.$resetButton.on('click', function() {
                 self.resetNucleus();
             });
+            this.$resetButton.hide();
 
             this.$ui.append(this.$resetButton);
         },
@@ -172,6 +176,7 @@ define(function(require) {
 
         resetNucleus: function() {
             this.simulation.reset();
+            this.hideResetButton();
         },
 
         neutronGenerated: function(neutron) {
@@ -188,6 +193,26 @@ define(function(require) {
                     return;
                 }
             }
+        },
+
+        showResetButtonWithDelay: function() {
+            this.buttonTimeout = window.setTimeout(_.bind(function() {
+                this.$resetButton.show();
+                this.buttonTimeout = null;
+            }, this), 1750);
+        },
+
+        hideResetButton: function() {
+            this.$resetButton.hide();
+        },
+
+        nucleusChanged: function() {
+            if (this.simulation.primaryNucleus.hasFissioned())
+                this.showResetButtonWithDelay();
+        },
+
+        simulationReset: function() {
+            this.hideResetButton();
         }
 
     });

@@ -277,6 +277,10 @@ define(function (require) {
             }
         },
 
+        hasFissioned: function() {
+            return (this.get('numNeutrons') < this.originalNumNeutrons);
+        }
+
     }, Constants.Uranium235CompositeNucleus);
 
     return Uranium235CompositeNucleus;
