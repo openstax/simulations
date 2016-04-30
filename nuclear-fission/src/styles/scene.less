@@ -37,7 +37,16 @@
     }
         
     .reset-nuclei-btn {
-        #sim-chain-reaction &,
+        #sim-chain-reaction & {
+            top: @short-screen-panel-margin;
+            left: @short-screen-panel-margin;
+
+            @media screen and (max-height: @short-window) {
+                top: @short-screen-panel-margin;
+                left: (@short-screen-panel-margin + @panel-width + @short-screen-panel-margin);
+            }
+        }
+
         #sim-nuclear-reactor & {
             top: @short-screen-panel-margin;
             left: @short-screen-panel-margin;
