@@ -39,7 +39,8 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Nuclear Fission',
-                name: 'nuclear-fission'
+                name: 'nuclear-fission',
+                link: 'nuclear-fission'
             }, options);
 
             NuclearPhysicsSimView.prototype.initialize.apply(this, [options]);
