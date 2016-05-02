@@ -11,6 +11,7 @@ define(function (require, exports, module) {
     var NuclearPhysicsSimulation = require('models/simulation');
     var Uranium235Nucleus        = require('models/nucleus/uranium-235');
     var Uranium238Nucleus        = require('models/nucleus/uranium-238');
+    var DaughterNucleus          = require('models/nucleus/daughter');
     var Nucleon                  = require('models/nucleon');
     var AlphaParticle            = require('models/alpha-particle');
     var AtomicNucleus            = require('models/atomic-nucleus');
@@ -114,7 +115,6 @@ define(function (require, exports, module) {
             // Reset the U235 nuclei that have decayed by determining how many
             //   daughter nuclei exist and adding back half that many U235 nuclei.
             var numDecayedU235Nuclei = (this.daughterNuclei.length + this.ghostDaughterNuclei) / 2;
-            this.set('numU235Nuclei', this.get('numU235Nuclei') + numDecayedU235Nuclei);
 
             // Remove the daughter nuclei, since the original U235 nuclei that
             //   they came from have been reset.
@@ -125,9 +125,8 @@ define(function (require, exports, module) {
                 }
             }
 
-            if (this.ghostDaughterNuclei > 0) {
+            if (this.ghostDaughterNuclei > 0)
                 this.ghostDaughterNuclei = 0;
-            }
 
             // Get rid of any free neutrons that are flying around.
             this.destroyFreeNeutrons();
@@ -149,8 +148,14 @@ define(function (require, exports, module) {
             //   vessel.
             for (var i = this.containedElements.length - 1; i >= 0; i--) {
                 this.triggerNucleusRemoved(this.containedElements.at(i));
-                this.containedElements.at(i).destroy();
+                this.containedElements.remove(this.containedElements.at(i));
             }
+
+            // Reset the containment vessel
+            this.containmentVessel.resetImpactAccumulation();
+
+            console.log(this.get('numU235Nuclei') + numDecayedU235Nuclei)
+            this.set('numU235Nuclei', this.get('numU235Nuclei') + numDecayedU235Nuclei);
         },
 
         destroyFreeNeutrons: function() {
@@ -291,8 +296,10 @@ define(function (require, exports, module) {
             for (var i = numContainedElements - 1; i >= 0; i--) {
                 var modelElement = this.containedElements.at(i);
 
-                if (modelElement instanceof AtomicNucleus)
+                if (modelElement instanceof Uranium235Nucleus || modelElement instanceof DaughterNucleus) {
                     this.triggerNucleusRemoved(modelElement);
+                    this.ghostDaughterNuclei++;
+                }
 
                 this.containedElements.at(i).destroy();
             }
@@ -516,6 +523,8 @@ define(function (require, exports, module) {
                         //   the fission detection calculations.
                         this.u235Nuclei.remove(nucleus);
                         this.daughterNuclei.add(nucleus);
+
+                        this.set('numU235Nuclei', this.u235Nuclei.length);
                     }
                     else {
                         // We should never get here, debug it if it does.
@@ -530,6 +539,7 @@ define(function (require, exports, module) {
                 if (nucleus.get('numNeutrons') === Uranium238Nucleus.NEUTRONS + 1) {
                     this.u238Nuclei.remove(nucleus);
                     this.u239Nuclei.add(nucleus);
+                    this.set('numU238Nuclei', this.u238Nuclei.length);
                 }
             }
         },
