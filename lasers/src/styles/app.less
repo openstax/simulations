@@ -8,7 +8,8 @@
     top: 0;
     right: 30px;
 
-    > .settings-btn {
+    > .settings-btn,
+    > .help-btn {
         background: @gray-lightest;
         color: @link-color;
         outline: none;
@@ -18,14 +19,22 @@
         height: 28px;
         text-align: center;
 
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:active {
+        &:active, &:active:hover, &.active {
             background: @link-color;
             color: #fff;
         }
+
+        &.active:hover{
+            background: fade(@link-color, 75%);
+        }
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+
+    > .help-btn {
+        padding-left: 4px;
     }
 }
 

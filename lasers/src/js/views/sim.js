@@ -165,6 +165,14 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        showHelp: function() {
+
+        },
+
+        hideHelp: function() {
+            
         }
 
     });
