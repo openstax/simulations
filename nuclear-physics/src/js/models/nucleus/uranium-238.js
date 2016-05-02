@@ -97,7 +97,7 @@ define(function (require) {
             this.decayTime = 0;
         }
 
-    });
+    }, Constants.Uranium238Nucleus);
 
     return Uranium238Nucleus;
 });

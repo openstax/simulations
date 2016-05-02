@@ -6,6 +6,7 @@ define(function(require) {
 
     var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
+    var Vector2  = require('common/math/vector2');
     
     var Assets = require('assets');
     var Constants = require('constants');
@@ -17,7 +18,16 @@ define(function(require) {
 
         events: {
             'touchstart .button': 'click',
-            'mousedown  .button': 'click'
+            'mousedown  .button': 'click',
+
+            'touchstart      .dragHandle': 'dragStart',
+            'mousedown       .dragHandle': 'dragStart',
+            'touchmove       .dragHandle': 'drag',
+            'mousemove       .dragHandle': 'drag',
+            'touchend        .dragHandle': 'dragEnd',
+            'mouseup         .dragHandle': 'dragEnd',
+            'touchendoutside .dragHandle': 'dragEnd',
+            'mouseupoutside  .dragHandle': 'dragEnd'
         },
 
         /**
@@ -38,8 +48,15 @@ define(function(require) {
 
             this.initGraphics();
 
+            // Cached objects
+            this._dragOffset = new PIXI.Point();
+            this._vec2 = new Vector2();
+            this._pivotPoint = new Vector2();
+
             this.listenTo(this.model, 'change:firingAngle', this.updateRotation);
             this.listenTo(this.model, 'change:position',    this.updatePosition);
+
+            this.updateRotation(this.model, this.model.get('firingAngle'));
         },
 
         /**
@@ -54,14 +71,25 @@ define(function(require) {
             this.button.defaultCursor = 'pointer';
             this.button.anchor.x = 0.5;
             this.button.anchor.y = 0.5;
-            this.button.x = -30;
+            this.button.x = -104;
             this.button.scale.x = this.button.scale.y = 0.4;
 
-            this.gunSprite = Assets.createSprite(Assets.Images.NEUTRON_GUN);
-            this.gunSprite.anchor.x = (107 / 179);
-            this.gunSprite.anchor.y =  (30 / 104);
-            this.gunSprite.addChild(this.button);
+            this.pivotPointOffset = new Vector2(-70, 0);
 
+            this.dragHandle = new PIXI.Container();
+            this.dragHandle.hitArea = new PIXI.Rectangle(-42, -16, 42, 32);
+            this.dragHandle.buttonMode = true;
+            this.dragHandle.defaultCursor = 'row-resize';
+
+            if (!this.rotationEnabled)
+                this.dragHandle.visible = false;
+
+            this.gunSprite = Assets.createSprite(Assets.Images.NEUTRON_GUN);
+            this.gunSprite.anchor.x = 1;
+            this.gunSprite.anchor.y = (30 / 104);
+            this.gunSprite.addChild(this.button);
+            this.gunSprite.addChild(this.dragHandle);
+            
             this.displayObject.addChild(this.gunSprite);
 
             this.updateMVT(this.mvt);
@@ -97,13 +125,44 @@ define(function(require) {
         },
 
         updateRotation: function(model, firingAngle) {
-            this.displayObject.rotation = firingAngle;
+            this.gunSprite.rotation = firingAngle;
         },
 
         updatePosition: function(model, position) {
             var viewPosition = this.mvt.modelToView(position);
             this.displayObject.x = viewPosition.x;
             this.displayObject.y = viewPosition.y;
+        },
+
+        dragStart: function(event) {
+            this.dragging = true;
+
+            this._pivotPoint
+                .set(this.pivotPointOffset)
+                .rotate(this.model.get('firingAngle'))
+                .add(this.displayObject.x, this.displayObject.y);
+        },
+
+        drag: function(event) {
+            if (this.dragging) {
+                var offset = this._vec2
+                    .set(event.data.global.x, event.data.global.y)
+                    .sub(this._pivotPoint);
+
+                var angle = offset.angle();
+
+                var viewPosition = offset
+                    .normalize()
+                    .scale(this.pivotPointOffset.length())
+                    .add(this._pivotPoint);
+
+                this.model.set('firingAngle', angle);
+                this.model.setPosition(this.mvt.viewToModel(viewPosition));
+            }
+        },
+
+        dragEnd: function(event) {
+            this.dragging = false;
         },
 
         click: function() {

@@ -14,15 +14,11 @@ define(function(require) {
     var Electron      = require('models/electron');
     var Antineutrino  = require('models/antineutrino');
 
-    var NucleonView               = require('views/nucleon');
-    var AlphaParticleView         = require('views/alpha-particle');
-    var ElectronView              = require('views/electron');
-    var AntineutrinoView          = require('views/antineutrino');
-    var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
-    var SingleNucleusDecayChart   = require('views/nucleus-decay-chart/single');
-    var ExplodingNucleusView      = require('views/nucleus/exploding');
+    var NucleonView          = require('views/nucleon');
+    var AlphaParticleView    = require('views/alpha-particle');
+    var ExplodingNucleusView = require('views/nucleus/exploding');
 
-    var NeutronSourceView = require('nuclear-fission/views/neutron-source');
+    var NeutronSourceView      = require('nuclear-fission/views/neutron-source');
     var FissionEnergyChartView = require('nuclear-fission/views/fission-energy-chart');
 
     var NuclearPhysicsSceneView = require('views/scene');
@@ -38,8 +34,6 @@ define(function(require) {
 
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
 
-            // this.listenTo(this.simulation.freeNucleons, 'add',    this.nucleonEmitted);
-            // this.listenTo(this.simulation.freeNucleons, 'remove', this.nucleonRemoved);
             this.listenTo(this.simulation.neutronSource, 'neutron-generated', this.neutronGenerated);
             this.listenTo(this.simulation.freeNucleons, 'destroy', this.nucleonDestroyed);
         },
@@ -55,7 +49,7 @@ define(function(require) {
         },
 
         reset: function() {
-            this.showLabels();
+            
         },
 
         getTopPadding: function() {
@@ -66,7 +60,7 @@ define(function(require) {
             this.viewOriginX = this.width / 2;
             this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;
 
-            var pixelsPerFemtometer = 6;
+            var pixelsPerFemtometer = 7;
 
             // The center of the screen is actually (5, 5) in the original
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
