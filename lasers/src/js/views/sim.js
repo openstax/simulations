@@ -11,6 +11,7 @@ define(function (require) {
     var LasersSceneView  = require('views/scene');
 
     var Constants = require('constants');
+    var Assets = require('assets');
 
     require('nouislider');
     require('bootstrap');
@@ -104,7 +105,8 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                unique: this.cid
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();

@@ -7,7 +7,8 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        // THE_IMAGE: 'the-image.png'
+        SPHERE: 'sphere.png',
+        PHOTON: 'photon.png'
     };
 
     Assets.SpriteSheets = {};

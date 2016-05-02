@@ -5,12 +5,43 @@
     <div class="sim-controls-left">
         <div class="sim-controls legend-panel">
             <h2>Legend</h2>
+
+            <div class="legend">
+                <div class="legend-symbol">
+                    <div class="legend-img-wrapper">
+                        <img src="<%= Assets.Image(Assets.Images.SPHERE) %>" width="24" height="24">
+                    </div>
+                    <span>Atom</span>
+                </div>
+                <div class="legend-symbol">
+                    <div class="legend-img-wrapper">
+                        <img src="<%= Assets.Image(Assets.Images.SPHERE) %>" width="24" height="24">
+                    </div>
+                    <span>Photon</span>
+                </div>
+            </div>
         </div>
 
         <div class="sim-controls one-atom-options-panel">
-            <h2>Options</h2>
+            <h2>Energy Levels</h2>
+            <ul class="radios">
+                <li>
+                    <input type="radio" name="energy-levels" value="2" id="energy-levels-2-<%= unique %>" checked>
+                    <label for="energy-levels-2-<%= unique %>">Two</label>
+                </li>
+                <li>
+                    <input type="radio" name="energy-levels" value="3" id="energy-levels-3-<%= unique %>">
+                    <label for="energy-levels-3-<%= unique %>">Three</label>
+                </li>
+            </ul>
 
-            
+            <h2>Other Options</h2>
+            <ul class="checkboxes">
+                <li>
+                    <input type="checkbox" class="enable-mirrors-check" id="enable-mirrors-check-<%= unique %>">
+                    <label for="enable-mirrors-check-<%= unique %>">Enable mirrors</label>
+                </li>
+            </ul>
         </div>
     </div>
     <div class="sim-controls-right">

@@ -8,6 +8,9 @@ define(function (require) {
 
     var OneAtomLaserSimulation = require('models/simulation/one-atom');
 
+    var Constants = require('constants');
+    var Assets = require('assets');
+
     // CSS
     //require('less!styles/sim');
 
@@ -56,6 +59,20 @@ define(function (require) {
             LasersSimView.prototype.render.apply(this, arguments);
 
             return this;
+        },
+
+        /**
+         * Renders page content. Should be overriden by child classes
+         */
+        renderScaffolding: function() {
+            var data = {
+                Constants: Constants,
+                Assets: Assets,
+                simulation: this.simulation,
+                unique: this.cid
+            };
+            this.$el.html(this.template(data));
+            this.$('select').selectpicker();
         },
 
         /**
