@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var NuclearReactorSimulation = require('nuclear-fission/models/simulation/nuclear-reactor');
 
     var NuclearFissionSimView    = require('nuclear-fission/views/sim');

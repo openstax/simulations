@@ -2,10 +2,10 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var PixiView = require('common/v3/pixi/view');
-    var Colors   = require('common/colors/colors');
     var Vector2  = require('common/math/vector2');
     
     var Assets = require('assets');
@@ -100,7 +100,6 @@ define(function(require) {
          *   relies on it.
          */
         updateMVT: function(mvt) {
-            var center = this.model.get('center');
             this.mvt = mvt;
 
             var targetWidth = Math.round(this.mvt.modelToViewDeltaX(this.modelWidth));

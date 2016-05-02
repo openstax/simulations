@@ -4,7 +4,6 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var AppView           = require('common/v3/app/app');
     var VanillaCollection = require('common/collections/vanilla');
     var Vector2           = require('common/math/vector2');
     var Rectangle         = require('common/math/rectangle');
@@ -196,7 +195,7 @@ define(function (require, exports, module) {
             this.removeAllParticles();
             
             // Clear out the energy accumulators.
-            for (i = 0; i < this.stepsPerSecond; i++)
+            for (var i = 0; i < this.stepsPerSecond; i++)
                 this.fissionEventBins[i] = 0;
             this.currentBin = 0;
             
@@ -321,10 +320,10 @@ define(function (require, exports, module) {
                 // Make sure we don't get stuck in this loop if we need to fire
                 // more neutrons than we have reaction chambers.
                 if ((NuclearReactorSimulation.NUMBER_OF_NEUTRONS_TO_FIRE > NuclearReactorSimulation.NUMBER_OF_REACTION_CHAMBERS) &&
-                    (chambersUsed.length === NUMBER_OF_REACTION_CHAMBERS)
+                    (chamberIndicesUsed.length === NUMBER_OF_REACTION_CHAMBERS)
                 ) {
                     // Clear the list of chambers used.
-                    chambersUsed = [];
+                    chamberIndicesUsed = [];
                 }
             }
         },
@@ -367,6 +366,7 @@ define(function (require, exports, module) {
         updateFreeNeutrons: function(time, deltaTime) {
             var i;
             var j;
+            var nucleus;
 
             // We work from back to front to avoid any problems with removing
             // particles as we go along.
@@ -389,7 +389,7 @@ define(function (require, exports, module) {
                 // Check if the particle has been absorbed by a control rod and, if
                 // so, remove it.
                 var numControlRods = this.controlRods.length;
-                for (j = 0; (j < numControlRods) && (particleAbsorbed == false); j++) {
+                for (j = 0; (j < numControlRods) && (particleAbsorbed === false); j++) {
                     var controlRod = this.controlRods[j];
                     if (controlRod.particleAbsorbed(freeNucleon)) {
                         // The particle is absorbed by the control rod.
@@ -400,8 +400,8 @@ define(function (require, exports, module) {
                 // Check if any of the free particles have collided with a U238
                 // nucleus.
                 var numU238Nuclei = this.u238Nuclei.length;
-                for (j = 0; (j < numU238Nuclei) && (particleAbsorbed == false); j++) {
-                    var nucleus = this.u238Nuclei.at(j);
+                for (j = 0; (j < numU238Nuclei) && (particleAbsorbed === false); j++) {
+                    nucleus = this.u238Nuclei.at(j);
                     if (freeNucleon.getPosition().distance(nucleus.getPosition()) <= nucleus.get('diameter') / 2) {
                         // The particle is within capture range - see if the nucleus can capture it.
                         particleAbsorbed = nucleus.captureParticle(freeNucleon, time);
@@ -412,8 +412,8 @@ define(function (require, exports, module) {
                 // nucleus and, if so, give the nucleus the opportunity to absorb
                 // the neutron (and possibly fission as a result).
                 var numU235Nuclei = this.u235Nuclei.length;
-                for (j = 0; (j < numU235Nuclei) && (particleAbsorbed == false); j++) {
-                    var nucleus = this.u235Nuclei.at(j);
+                for (j = 0; (j < numU235Nuclei) && (particleAbsorbed === false); j++) {
+                    nucleus = this.u235Nuclei.at(j);
                     if (freeNucleon.getPosition().distance(nucleus.getPosition()) <= nucleus.get('diameter') / 2) {
                         // The particle is within capture range - see if the nucleus can capture it.
                         particleAbsorbed = nucleus.captureParticle(freeNucleon, time);
@@ -507,9 +507,9 @@ define(function (require, exports, module) {
                     var byProduct = byProducts[i];
                     if (byProduct instanceof Nucleon) {
                         // Set a direction and velocity for this neutron.
-                        var angle = (Math.random() * Math.PI * 2);
-                        var xVel = Math.sin(angle) * NuclearReactorSimulation.FREED_NEUTRON_VELOCITY;
-                        var yVel = Math.cos(angle) * NuclearReactorSimulation.FREED_NEUTRON_VELOCITY;
+                        var nucleonAngle = (Math.random() * Math.PI * 2);
+                        var xVel = Math.sin(nucleonAngle) * NuclearReactorSimulation.FREED_NEUTRON_VELOCITY;
+                        var yVel = Math.cos(nucleonAngle) * NuclearReactorSimulation.FREED_NEUTRON_VELOCITY;
                         byProduct.setVelocity(xVel, yVel);
                         
                         // Add this new particle to our list.

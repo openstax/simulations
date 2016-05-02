@@ -4,7 +4,6 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var AppView           = require('common/v3/app/app');
     var VanillaCollection = require('common/collections/vanilla');
     var Vector2           = require('common/math/vector2');
 
@@ -13,7 +12,6 @@ define(function (require, exports, module) {
     var Uranium238Nucleus        = require('models/nucleus/uranium-238');
     var DaughterNucleus          = require('models/nucleus/daughter');
     var Nucleon                  = require('models/nucleon');
-    var AlphaParticle            = require('models/alpha-particle');
     var AtomicNucleus            = require('models/atomic-nucleus');
 
     var ContainmentVessel = require('nuclear-fission/models/containment-vessel');
@@ -119,7 +117,7 @@ define(function (require, exports, module) {
             // Remove the daughter nuclei, since the original U235 nuclei that
             //   they came from have been reset.
             if (this.daughterNuclei.length > 0) {
-                for (var i = this.daughterNuclei.length - 1; i >= 0; i--) {
+                for (i = this.daughterNuclei.length - 1; i >= 0; i--) {
                     this.triggerNucleusRemoved(this.daughterNuclei.at(i));
                     this.daughterNuclei.at(i).destroy();
                 }
@@ -146,7 +144,7 @@ define(function (require, exports, module) {
 
             // Clear out any debris that had been captured by the containment
             //   vessel.
-            for (var i = this.containedElements.length - 1; i >= 0; i--) {
+            for (i = this.containedElements.length - 1; i >= 0; i--) {
                 this.triggerNucleusRemoved(this.containedElements.at(i));
                 this.containedElements.remove(this.containedElements.at(i));
             }
@@ -398,6 +396,7 @@ define(function (require, exports, module) {
         },
 
         updateFreeNeutrons: function(time, deltaTime) {
+            var nucleus;
             var numFreeNeutrons = this.freeNeutrons.length;
             for (var i = numFreeNeutrons - 1; i >= 0; i--) {
                 var freeNeutron = this.freeNeutrons.at(i);
@@ -412,7 +411,7 @@ define(function (require, exports, module) {
 
                 numNuclei = this.u235Nuclei.length;
                 for (j = 0; (j < numNuclei) && (particleAbsorbed === false); j++) {
-                    var nucleus = this.u235Nuclei.at(j);
+                    nucleus = this.u235Nuclei.at(j);
                     if (freeNeutron.get('position').distance(nucleus.get('position')) <= nucleus.get('diameter') / 2) {
                         // The particle is within capture range - see if the nucleus can capture it.
                         particleAbsorbed = nucleus.captureParticle(freeNeutron, time);
@@ -421,7 +420,7 @@ define(function (require, exports, module) {
 
                 numNuclei = this.u238Nuclei.length;
                 for (j = 0; (j < numNuclei) && (particleAbsorbed === false); j++) {
-                    var nucleus = this.u238Nuclei.at(j);
+                    nucleus = this.u238Nuclei.at(j);
                     if (freeNeutron.get('position').distance(nucleus.get('position')) <= nucleus.get('diameter') / 2) {
                         // The particle is within capture range - see if the nucleus can capture it.
                         particleAbsorbed = nucleus.captureParticle(freeNeutron, time);
@@ -481,15 +480,21 @@ define(function (require, exports, module) {
          */
         atomicWeightChanged: function(nucleus, byProducts) {
             if (byProducts) {
+                var angle;
+                var xVel;
+                var yVel;
+                var xAcc;
+                var yAcc;
+
                 // There are some byproducts of this event that need to be
                 //   managed by this object.
                 for (var i = 0; i < byProducts.length; i++) {
                     var byProduct = byProducts[i];
                     if (byProduct instanceof Nucleon) {
                         // Set a direction and velocity for this element.
-                        var angle = (Math.random() * Math.PI * 2);
-                        var xVel = Math.sin(angle) * ChainReactionSimulation.FREED_NEUTRON_VELOCITY;
-                        var yVel = Math.cos(angle) * ChainReactionSimulation.FREED_NEUTRON_VELOCITY;
+                        angle = (Math.random() * Math.PI * 2);
+                        xVel = Math.sin(angle) * ChainReactionSimulation.FREED_NEUTRON_VELOCITY;
+                        yVel = Math.cos(angle) * ChainReactionSimulation.FREED_NEUTRON_VELOCITY;
                         byProduct.setVelocity(xVel, yVel);
 
                         // Add this new particle to our list.
@@ -504,11 +509,11 @@ define(function (require, exports, module) {
 
                         // Set random but opposite directions for the produced
                         // nuclei.
-                        var angle = (Math.random() * Math.PI * 2);
-                        var xVel = Math.sin(angle) * ChainReactionSimulation.INITIAL_DAUGHTER_NUCLEUS_VELOCITY;
-                        var yVel = Math.cos(angle) * ChainReactionSimulation.INITIAL_DAUGHTER_NUCLEUS_VELOCITY;
-                        var xAcc = Math.sin(angle) * ChainReactionSimulation.DAUGHTER_NUCLEUS_ACCELERATION;
-                        var yAcc = Math.cos(angle) * ChainReactionSimulation.DAUGHTER_NUCLEUS_ACCELERATION;
+                        angle = (Math.random() * Math.PI * 2);
+                        xVel = Math.sin(angle) * ChainReactionSimulation.INITIAL_DAUGHTER_NUCLEUS_VELOCITY;
+                        yVel = Math.cos(angle) * ChainReactionSimulation.INITIAL_DAUGHTER_NUCLEUS_VELOCITY;
+                        xAcc = Math.sin(angle) * ChainReactionSimulation.DAUGHTER_NUCLEUS_ACCELERATION;
+                        yAcc = Math.cos(angle) * ChainReactionSimulation.DAUGHTER_NUCLEUS_ACCELERATION;
                         nucleus.setVelocity(xVel, yVel);
                         nucleus.setAcceleration(xAcc, yAcc);
                         daughterNucleus.setVelocity(-xVel, -yVel);
@@ -565,11 +570,12 @@ define(function (require, exports, module) {
          * Adds or removes nuclei from a collection depending on the requested count.
          */
         addOrRemoveNuclei: function(collection, disiredCount, nucleusCreationFunction) {
+            var i;
             var currentCount = collection.length;
             var difference = disiredCount - currentCount;
             if (difference > 0) {
                 // We need to add some new nuclei.
-                for (var i = 0; i < difference; i++) {
+                for (i = 0; i < difference; i++) {
                     var position;
 
                     if (this.u235Nuclei.length === 0 && this.u238Nuclei.length === 0 && i === 0) {
@@ -601,7 +607,7 @@ define(function (require, exports, module) {
                 // We need to remove some nuclei.  Take them from the back of the
                 //   list, since this leaves the nucleus at the origin for last.
                 var numNucleiToRemove = Math.abs(difference);
-                for (var i = 0; i < numNucleiToRemove; i++) {
+                for (i = 0; i < numNucleiToRemove; i++) {
                     if (collection.length > 0) {
                         this.triggerNucleusRemoved(collection.last());
                         collection.last().destroy();
@@ -615,7 +621,6 @@ define(function (require, exports, module) {
          */
         findOpenNucleusLocation: function() {
             var i;
-            var j;
 
             for (i = 0; i < 100; i++) {
                 // Randomly select an x & y position
