@@ -119,7 +119,7 @@ define(function (require, exports, module) {
             // Remove the daughter nuclei, since the original U235 nuclei that
             //   they came from have been reset.
             if (this.daughterNuclei.length > 0) {
-                for (i = 0; i < this.daughterNuclei.length; i++) {
+                for (var i = this.daughterNuclei.length - 1; i >= 0; i--) {
                     this.triggerNucleusRemoved(this.daughterNuclei.at(i));
                     this.daughterNuclei.at(i).destroy();
                 }
@@ -154,7 +154,6 @@ define(function (require, exports, module) {
             // Reset the containment vessel
             this.containmentVessel.resetImpactAccumulation();
 
-            console.log(this.get('numU235Nuclei') + numDecayedU235Nuclei)
             this.set('numU235Nuclei', this.get('numU235Nuclei') + numDecayedU235Nuclei);
         },
 
