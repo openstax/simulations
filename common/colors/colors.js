@@ -170,6 +170,23 @@ define(function (require) {
 
 		lightenHex: function(colorString, percent) {
 			return this.darkenHex(colorString, -percent);
+		},
+
+		interpolateRgba: function(rgba1, rgba2, t) {
+			var rgba = {};
+
+			rgba.r = Math.round((rgba1.r * t) + (rgba2.r * (1 - t)));
+			rgba.g = Math.round((rgba1.g * t) + (rgba2.g * (1 - t)));
+			rgba.b = Math.round((rgba1.b * t) + (rgba2.b * (1 - t)));
+			if (rgba1.a !== undefined && rgba2.a !== undefined)
+				rgba.a = Math.round((rgba1.a * t) + (rgba2.a * (1 - t)));
+
+			return rgba;
+		},
+
+		interpolateHex: function(hex1, hex2, t) {
+			var rgba = this.interpolateRgba(this.hexToRgb(hex1), this.hexToRgb(hex2), t);
+			return this.rgbToHex(rgba);
 		}
 	};
 

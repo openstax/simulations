@@ -81,6 +81,68 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                      NUCLEAR REACTOR SIMULATION                     **
+     **                                                                     **
+     *************************************************************************/
+
+    var NuclearReactorSimulation = {};
+
+    // Constants that control the overall size of the nuclear reactor.  Note
+    // that these dimensions are in femtometers in order to be consistent with
+    // the nuclei size in this and the other models, but of course a real
+    // nuclear reactor would have much larger dimensions.
+    NuclearReactorSimulation.OVERALL_REACTOR_WIDTH = 650;
+    NuclearReactorSimulation.OVERALL_REACTOR_HEIGHT = NuclearReactorSimulation.OVERALL_REACTOR_WIDTH * 0.42;
+    NuclearReactorSimulation.REACTOR_WALL_WIDTH = 20;
+    
+    // Constant that controls where in model space the reactor resides.  This
+    // assumes that the 'center of the world' is at (0,0).  It is shifted
+    // slightly to the left to account for the control rod handle on the right
+    // hand side.
+    NuclearReactorSimulation.REACTOR_POSITION = new Vector2(
+        -(NuclearReactorSimulation.OVERALL_REACTOR_WIDTH / 1.9),
+        -(NuclearReactorSimulation.OVERALL_REACTOR_HEIGHT / 2)
+    );
+    
+    // Constant that controls the number of chambers, between which are the
+    // control rods.  There will always be one less control rod than there are
+    // chambers.  It is assumed that the chambers are of equal size.
+    NuclearReactorSimulation.NUMBER_OF_REACTION_CHAMBERS = 6;
+    
+    // Constant that controls the size relationship between the chambers and
+    // the control rods.  This is a ratio, and can be though of as
+    // (chamber width)/(control rod width).
+    NuclearReactorSimulation.CHAMBER_TO_CONTROL_ROD_WIDTH_RATIO = 5;
+    
+    // Constants that control the initial placement of nuclei within the
+    // reaction chambers.
+    NuclearReactorSimulation.MIN_DISTANCE_FROM_NUCLEI_TO_WALLS  = 18;
+    NuclearReactorSimulation.MIN_INTER_NUCLEI_DISTANCE          = 15;
+    
+    // Constants that control the behavior of neutrons fired into reaction chambers.
+    NuclearReactorSimulation.NUMBER_OF_NEUTRONS_TO_FIRE = 2;
+    NuclearReactorSimulation.NEUTRON_VELOCITY = 2;
+    
+    // Constants that control the behavior of fission products.
+    NuclearReactorSimulation.FREED_NEUTRON_VELOCITY = 3;
+    NuclearReactorSimulation.DAUGHTER_NUCLEI_SPLIT_DISTANCE = 10;
+    
+    // Constants that control the monitoring of fission events, which
+    // allow us to determine the average energy released.
+    NuclearReactorSimulation.MAX_TEMP_CHANGE_PER_TICK = 1.0;
+    NuclearReactorSimulation.JOULES_PER_FISSION_EVENT = 3.2E-11;
+
+    // Constants that control the ranges for the graph.  These were set up by
+    //   trial and error, but it may make sense to coordinate them with the
+    //   nuclear reactor model eventually.
+    NuclearReactorSimulation.TOTAL_ENERGY_GRAPH_RANGE = 1.1E-8;
+    NuclearReactorSimulation.ENERGY_PER_SECOND_GRAPH_RANGE = 2.5E-9;
+
+    Constants.NuclearReactorSimulation = NuclearReactorSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                          CONTAINMENT VESSEL                         **
      **                                                                     **
      *************************************************************************/
@@ -129,6 +191,45 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                         NUCLEAR REACTOR VIEW                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var NuclearReactorView = {};
+
+    // Constants that control the look of the reactor.
+    NuclearReactorView.REACTOR_WALL_COLOR = '#000';
+    NuclearReactorView.CHAMBER_WALL_COLOR = '#796579';
+    NuclearReactorView.COOL_REACTOR_CHAMBER_COLOR = '#CAB3CA';
+    NuclearReactorView.HOT_REACTOR_CHAMBER_COLOR = '#ffbb44';
+    NuclearReactorView.CONTROL_ROD_COLOR = '#655D65';
+    NuclearReactorView.CONTROL_ROD_ADJUSTOR_COLOR = '#21366b';
+    NuclearReactorView.CONTROL_ROD_ADJUSTOR_HANDLE_COLOR = '#ccc';
+    NuclearReactorView.CONTROL_ROD_ADJUSTOR_LABEL_FONT = 'bold 12px Helvetica Neue';
+    NuclearReactorView.CONTROL_ROD_ADJUSTOR_LABEL_COLOR = '#fff';
+    
+    // Max temperature, with used when setting up the thermometer and in
+    // in controlling the internal color of the reactor.
+    NuclearReactorView.MAX_TEMPERATURE = 75;  // Unitless value.
+    
+    // Constants that control the position and size of the thermometer.
+    NuclearReactorView.THERMOMETER_PROPORTION_FROM_LEFT_SIDE = 0.88;
+    NuclearReactorView.THERMOMETER_PROPORTION_ABOVE = 0.18;
+    NuclearReactorView.THERMOMETER_WIDTH_PROPORTION = 0.05;
+    NuclearReactorView.THERMOMETER_HEIGHT_PROPORTION = 0.40;
+
+    NuclearReactorView.BUTTON_PANEL_WIDTH = 200;
+    NuclearReactorView.BUTTON_PANEL_HEIGHT = 48;
+    NuclearReactorView.BUTTON_PANEL_BORDER_WIDTH = 4;
+    NuclearReactorView.BUTTON_WIDTH = 32;
+    NuclearReactorView.BUTTON_LABEL_FONT = '20px Helvetica Neue';
+    NuclearReactorView.BUTTON_LABEL_COLOR = '#000';
+
+    Constants.NuclearReactorView = NuclearReactorView;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                      FISSION ENERGY CHART VIEW                      **
      **                                                                     **
      *************************************************************************/
@@ -151,7 +252,7 @@ define(function (require) {
 
     FissionEnergyChartView.LINE_WIDTH = 2;
     FissionEnergyChartView.LINE_ALPHA = 1;
-    FissionEnergyChartView.POTENTIAL_LINE_COLOR    = '#00f';
+    FissionEnergyChartView.POTENTIAL_LINE_COLOR    = '#583B9C';
     FissionEnergyChartView.TOTAL_ENERGY_LINE_COLOR = '#ff0';
 
     FissionEnergyChartView.LEGEND_WIDTH = 160;

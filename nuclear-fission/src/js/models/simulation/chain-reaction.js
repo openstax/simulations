@@ -435,7 +435,7 @@ define(function (require, exports, module) {
                     // This particle is contained by the containment vessel, so we
                     //   remove it from the model, since it is no longer significant.
                     this.containmentVessel.recordImpact(ChainReactionSimulation.NEUTRON_COLLISION_IMPACT);
-                    this.freeNeutrons.remove(freeNeutron);
+                    freeNeutron.destroy();
                 }
             }
         },

@@ -81,6 +81,8 @@ define(function (require, exports, module) {
             //   simply get rid of any neutrons that are left over after the
             //   primary nucleus has had a chance to reabsorb them.
             this.destroyFreeNucleons();
+
+            this.trigger('reset');
         },
 
         destroyFreeNucleons: function() {

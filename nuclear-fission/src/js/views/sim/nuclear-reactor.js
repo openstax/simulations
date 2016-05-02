@@ -2,14 +2,21 @@ define(function (require) {
 
     'use strict';
 
+    var NuclearReactorSimulation = require('nuclear-fission/models/simulation/nuclear-reactor');
+
     var NuclearFissionSimView    = require('nuclear-fission/views/sim');
     var NuclearReactorLegendView = require('nuclear-fission/views/legend/nuclear-reactor');
+    var NuclearReactorSceneView  = require('nuclear-fission/views/scene/nuclear-reactor');
 
     var Constants = require('constants');
 
     // HTML
     var simHtml              = require('text!nuclear-fission/templates/nuclear-reactor-sim.html');
     var playbackControlsHtml = require('text!nuclear-fission/templates/simple-playback-controls.html');
+    var pictureDialogHtml    = require('text!nuclear-fission/templates/nuclear-reactor-picture-dialog.html');
+
+    // CSS
+    require('less!nuclear-fission/styles/picture-dialog');
 
     /**
      * Nuclear Reactor tab
@@ -40,6 +47,25 @@ define(function (require) {
             NuclearFissionSimView.prototype.initialize.apply(this, [options]);
 
             this.initLegend();
+
+            this.listenTo(this.simulation, 'change:energyReleasedPerSecond', this.updatePowerBar);
+            this.listenTo(this.simulation, 'change:totalEnergyReleased',     this.updateEnergyBar);
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new NuclearReactorSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new NuclearReactorSceneView({
+                simulation: this.simulation
+            });
         },
 
         initLegend: function() {
@@ -53,6 +79,8 @@ define(function (require) {
             NuclearFissionSimView.prototype.render.apply(this, arguments);
 
             this.renderPlaybackControls();
+
+            this.$el.append(pictureDialogHtml);
 
             return this;
         },
@@ -69,6 +97,9 @@ define(function (require) {
             this.$el.html(this.template(data));
 
             this.$('select').selectpicker();
+
+            this.$powerBar = this.$('#power-bar');
+            this.$energyBar = this.$('#energy-bar');
         },
 
         /**
@@ -94,6 +125,16 @@ define(function (require) {
             this.renderLegend();
 
             return this;
+        },
+
+        updatePowerBar: function(simulation, energyReleasedPerSecond) {
+            var percent = (energyReleasedPerSecond / NuclearReactorSimulation.ENERGY_PER_SECOND_GRAPH_RANGE) * 100;
+            this.$powerBar.css('height', Math.min(percent, 100) + '%');
+        },
+
+        updateEnergyBar: function(simulation, totalEnergyReleased) {
+            var percent = (totalEnergyReleased / NuclearReactorSimulation.TOTAL_ENERGY_GRAPH_RANGE) * 100;
+            this.$energyBar.css('height', Math.min(percent, 100) + '%');
         }
 
     });

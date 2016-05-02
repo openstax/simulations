@@ -9,10 +9,7 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var Nucleon       = require('models/nucleon');
-    var AlphaParticle = require('models/alpha-particle');
-    var Electron      = require('models/electron');
-    var Antineutrino  = require('models/antineutrino');
+    var Nucleon = require('models/nucleon');
 
     var NucleonView          = require('views/nucleon');
     var ExplodingNucleusView = require('views/nucleus/exploding');
@@ -32,13 +29,12 @@ define(function(require) {
     var ChainReactionSceneView = NuclearPhysicsSceneView.extend({
 
         initialize: function(options) {
-            this.showingLabels = true;
             this.particleViews = [];
             this.nucleusViews = [];
 
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
 
-            this.listenTo(this.simulation.neutronSource, 'neutron-generated', this.neutronGenerated);
+            this.listenTo(this.simulation.freeNeutrons, 'add',     this.neutronAdded);
             this.listenTo(this.simulation.freeNeutrons, 'destroy', this.neutronDestroyed);
 
             this.listenTo(this.simulation, 'nucleus-added',        this.nucleusAdded);
@@ -69,7 +65,7 @@ define(function(require) {
             this.viewOriginX = this.getLeftPadding() + this.getAvailableWidth() / 2;
             this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;
 
-            var pixelsPerFemtometer = 3;
+            var pixelsPerFemtometer = AppView.windowIsShort() ? 2.2 : 3;
 
             // The center of the screen is actually (5, 5) in the original
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
@@ -132,13 +128,6 @@ define(function(require) {
                     mvt: this.mvt
                 });
             }
-            else if (particle instanceof AlphaParticle) {
-                // Add a visible representation of the alpha particle to the canvas.
-                return new AlphaParticleView({
-                    model: particle,
-                    mvt: this.mvt
-                });
-            }
             else {
                 // There is some unexpected object in the list of constituents
                 //   of the nucleus.  This should never happen and should be
@@ -165,7 +154,7 @@ define(function(require) {
             this.hideResetButton();
         },
 
-        neutronGenerated: function(neutron) {
+        neutronAdded: function(neutron) {
             var nucleonView = this.createParticleView(neutron);
             this.particleViews.push(nucleonView);
             this.particlesLayer.addChild(nucleonView.displayObject);
