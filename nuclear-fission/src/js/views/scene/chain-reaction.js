@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var _    = require('underscore');
+    var $    = require('jquery');
     var PIXI = require('pixi');
 
     var AppView            = require('common/v3/app/app');
@@ -18,10 +19,6 @@ define(function(require) {
     var ContainmentVesselView = require('nuclear-fission/views/containment-vessel');
 
     var NuclearPhysicsSceneView = require('views/scene');
-
-    var REACTION_STATE_NO_REACTION_PRODUCTS_PRESENT = 0;
-    var REACTION_STATE_REACTION_OR_ADJUSTMENT_IN_PROGRESS = 1;
-    var REACTION_STATE_REACTION_COMPLETE = 2;
 
     /**
      *
@@ -65,7 +62,7 @@ define(function(require) {
             this.viewOriginX = this.getLeftPadding() + this.getAvailableWidth() / 2;
             this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;
 
-            var pixelsPerFemtometer = 3;
+            var pixelsPerFemtometer = AppView.windowIsShort() ? 2.2 : 3;
 
             // The center of the screen is actually (5, 5) in the original
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
@@ -142,10 +139,11 @@ define(function(require) {
             this.neutronSourceView.update(time, deltaTime, paused);
             this.containmentVesselView.update(time, deltaTime, paused);
 
-            for (var i = 0; i < this.particleViews.length; i++)
+            var i;
+            for (i = 0; i < this.particleViews.length; i++)
                 this.particleViews[i].update(time, deltaTime, paused);
 
-            for (var i = 0; i < this.nucleusViews.length; i++)
+            for (i = 0; i < this.nucleusViews.length; i++)
                 this.nucleusViews[i].update(time, deltaTime, paused);
         },
 

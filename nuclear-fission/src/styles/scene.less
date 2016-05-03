@@ -38,23 +38,34 @@
         
     .reset-nuclei-btn {
         #sim-chain-reaction & {
-            top: 20px;
-            left: 20px;
+            top: @short-screen-panel-margin;
+            left: @short-screen-panel-margin;
+
+            @media screen and (max-height: @short-window) {
+                top: @short-screen-panel-margin;
+                left: (@short-screen-panel-margin + @panel-width + @short-screen-panel-margin);
+            }
         }
 
         #sim-nuclear-reactor & {
-            top: 20px;
-            left: 20px;
+            top: @short-screen-panel-margin;
+            left: @short-screen-panel-margin;
+
+            @media screen and (max-height: @short-window) {
+                top: @short-screen-panel-margin;
+                left: @short-screen-panel-margin;
+            }
         }
     }
 
     .view-reactor-picture-btn {
-        top: 20px;
-        right: (@nuclear-reactor-panel-width + 20px + @panel-margin);
+        top: @panel-margin;
+        right: (@nuclear-reactor-panel-width + @panel-margin + @panel-margin);
         width: auto;
 
         @media screen and (max-height: @short-window) {
-            right: (@nuclear-reactor-panel-width + 20px + @short-screen-panel-margin);
+            top: 12px;
+            right: (@nuclear-reactor-panel-width + @short-screen-panel-margin + @short-screen-panel-margin);
         }
 
         .fa {

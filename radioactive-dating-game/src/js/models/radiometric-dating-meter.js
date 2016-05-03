@@ -3,12 +3,9 @@ define(function (require) {
     'use strict';
 
     var PositionableObject = require('common/models/positionable-object');
-    var Vector2            = require('common/math/vector2');
 
-    var NucleusType       = require('models/nucleus-type');
-    var HalfLifeInfo      = require('models/half-life-info');
-    var Carbon14Nucleus   = require('models/nucleus/carbon-14');
-    var Uranium238Nucleus = require('models/nucleus/uranium-238');
+    var NucleusType  = require('models/nucleus-type');
+    var HalfLifeInfo = require('models/half-life-info');
 
     var DatableItem = require('radioactive-dating-game/models/datable-item');
 

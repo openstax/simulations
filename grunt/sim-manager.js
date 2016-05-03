@@ -1,4 +1,3 @@
-var fs     = require('fs');
 var _      = require('underscore');
 var touch  = require('touch');
 var wrench = require('wrench');
@@ -67,7 +66,7 @@ module.exports = function(grunt) {
 
 			// Check if there is even a build timestamp; if not, it's our first time running it,
 			//   and we need to build all of them anyway.
-			if (!fs.existsSync('.build_timestamp')) {
+			if (!grunt.file.exists('.build_timestamp')) {
 				this._updatedSimDirs = dirs;
 				return dirs;
 			}
@@ -81,7 +80,9 @@ module.exports = function(grunt) {
 					'-newer', '.build_timestamp', 
 					'-not', '-iwholename', '*node_modules*', 
 					'-not', '-iwholename', '*bower_components*', 
-					'-not', '-iwholename', '*dist*'
+					'-not', '-iwholename', '*dist*',
+					'-print',
+					'-quit'
 				]);
 
 				// If there was no output (no newer file found), remove it from the list
@@ -95,21 +96,26 @@ module.exports = function(grunt) {
 		},
 
 		/**
-		 * Return just the directory names of each updated sim.
+		 * Extracts the names of the directories from a list of paths
 		 */
-		getAllSimDirNames: function() {
-			return _.map(this.getAllSimDirs(), function(simDir) {
-				return simDir.substring(simDir.indexOf('/') + 1, simDir.lastIndexOf('/'));
+		getDirNames: function(dirs) {
+			return _.map(dirs, function(dir) {
+				return dir.substring(dir.indexOf('/') + 1, dir.lastIndexOf('/'));
 			});
 		},
 
 		/**
 		 * Return just the directory names of each updated sim.
 		 */
+		getAllSimDirNames: function() {
+			return this.getDirNames(this.getAllSimDirs());
+		},
+
+		/**
+		 * Return just the directory names of each updated sim.
+		 */
 		getUpdatedSimDirNames: function() {
-			return _.map(this.getUpdatedSimDirs(), function(simDir) {
-				return simDir.substring(simDir.indexOf('/') + 1, simDir.lastIndexOf('/'));
-			});
+			return this.getDirNames(this.getUpdatedSimDirs());
 		},
 
 		/**
@@ -133,6 +139,7 @@ module.exports = function(grunt) {
 			// Create a callback for when a dist finishes running
 			var numSimsToBuild = simDirs.length;
 			var totalNumSims = this.getAllSimDirs().length;
+			var dirNames = this.getDirNames(simDirs);
 			var gruntsRunning = numSimsToBuild;
 			var checkFinished = function() {
 				gruntsRunning--;
@@ -146,6 +153,11 @@ module.exports = function(grunt) {
 						grunt.log.writeln('>> 1 simulation built' + unchangedOutput);
 					else
 						grunt.log.writeln('>> ' + numSimsToBuild + ' simulations built' + unchangedOutput);
+
+					grunt.log.writeln('>> Changed simulation directories:');
+					grunt.log.writeln('----------------------------------');
+					for (var i = 0; i < dirNames.length; i++)
+						grunt.log.writeln('   ' + dirNames[i]);
 
 					// Update the build timestamp
 					touch('.build_timestamp');

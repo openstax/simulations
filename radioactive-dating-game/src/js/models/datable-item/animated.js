@@ -2,9 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    
-    var Rectangle = require('common/math/rectangle');
-    var Vector2   = require('common/math/vector2');
+    var _ = require('underscore');
 
     var DatableItem = require('radioactive-dating-game/models/datable-item');
 
@@ -36,7 +34,7 @@ define(function (require) {
                 //   speaking, that is our age.
 
                 if (this.age < this.closureAge)
-                    console.error('Age is less than closure age.');
+                    throw 'Age is less than closure age.';
                 
                 return this.age - this.closureAge;
             }

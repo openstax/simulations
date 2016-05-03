@@ -2,11 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var Uranium238Nucleus = require('models/nucleus/uranium-238');
-    var Nucleon           = require('models/nucleon');
-
-    var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
-
     var OneNucleusLegendView = require('nuclear-fission/views/legend/one-nucleus');
 
     /**

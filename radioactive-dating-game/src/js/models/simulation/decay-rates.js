@@ -4,16 +4,12 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Vector2           = require('common/math/vector2');
-    var Rectangle         = require('common/math/rectangle');
-    var VanillaCollection = require('common/collections/vanilla');
+    var Rectangle = require('common/math/rectangle');
 
     var MultiNucleusDecaySimulation    = require('models/simulation/multi-nucleus-decay');
     var NucleusType                    = require('models/nucleus-type');
     var Carbon14Nucleus                = require('models/nucleus/carbon-14');
     var Uranium238Nucleus              = require('models/nucleus/uranium-238');
-    var HeavyAdjustableHalfLifeNucleus = require('models/nucleus/heavy-adjustable-half-life');
-    var SubatomicParticle              = require('models/subatomic-particle');
 
     /**
      * Constants

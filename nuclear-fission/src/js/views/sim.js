@@ -2,15 +2,12 @@ define(function (require) {
 
     'use strict';
 
-    var $ = require('jquery');
     var _ = require('underscore');
 
     var NuclearPhysicsSimView = require('views/sim');
 
     var NuclearFissionSimulation = require('nuclear-fission/models/simulation');
     var NuclearFissionSceneView  = require('nuclear-fission/views/scene');
-
-    var Constants = require('constants');
 
     // CSS
     require('less!nuclear-fission/styles/sim');

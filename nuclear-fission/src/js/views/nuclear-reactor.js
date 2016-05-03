@@ -2,12 +2,12 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var PixiView        = require('common/v3/pixi/view');
     var ThermometerView = require('common/v3/pixi/view/thermometer');
     var Colors          = require('common/colors/colors');
-    var Vector2         = require('common/math/vector2');
     var Rectangle       = require('common/math/rectangle');
 
     var Nucleon = require('models/nucleon');
@@ -321,10 +321,10 @@ define(function(require) {
             this.mvt = mvt;
 
             var outerRect = this.mvt.modelToView(this.simulation.getReactorRect());
-            this.buttonPanel.x = outerRect.left() + outerRect.w / 2 - NuclearReactorView.BUTTON_PANEL_WIDTH / 2
+            this.buttonPanel.x = outerRect.left() + outerRect.w / 2 - NuclearReactorView.BUTTON_PANEL_WIDTH / 2;
             this.buttonPanel.y = outerRect.bottom() - NuclearReactorView.BUTTON_PANEL_HEIGHT + NuclearReactorView.BUTTON_PANEL_BORDER_WIDTH / 2;
 
-            this.thermometerView.displayObject.x = outerRect.right() - (outerRect.w * 0.1);
+            this.thermometerView.displayObject.x = outerRect.right() - (outerRect.w * 0.258);
             this.thermometerView.displayObject.y = outerRect.bottom() + 48;
 
             this.drawBackground();
