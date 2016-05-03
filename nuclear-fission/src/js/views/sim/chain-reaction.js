@@ -315,7 +315,10 @@ define(function (require) {
                     backgroundPosition: xOffset + 'px ' + yOffset + 'px'
                 });
 
-                this.$explosionOverlay.appendTo(this.$el);
+                this.$explosionOverlay
+                    .hide()
+                    .appendTo(this.$el)
+                    .fadeIn(3000);
                 this.$el.addClass('exploded');
             }
             else {
