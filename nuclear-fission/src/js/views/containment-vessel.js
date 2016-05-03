@@ -8,7 +8,6 @@ define(function(require) {
     var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
     
-    var Assets = require('assets');
     var Constants = require('constants');
 
     var CONTAINMENT_VESSEL_COLOR       = Colors.parseHex(Constants.ContainmentVesselView.CONTAINMENT_VESSEL_COLOR);
@@ -122,7 +121,7 @@ define(function(require) {
 
             container.setRadius = function(radius) {
                 arrowGraphicsContainer.x = radius;
-            }
+            };
 
             return container;
         },
@@ -233,8 +232,9 @@ define(function(require) {
             var i;
             var points = [];
 
+            var graphics;
             if (renderDebugGraphics) {
-                var graphics = this.debugGraphics;
+                graphics = this.debugGraphics;
                 graphics.clear();
                 graphics.lineStyle(1, 0x0000FF, 1);
                 graphics.moveTo(endingX, endingY);

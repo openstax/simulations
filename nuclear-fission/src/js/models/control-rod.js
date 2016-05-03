@@ -7,8 +7,6 @@ define(function (require) {
     var PositionableObject = require('common/models/positionable-object');
     var Rectangle          = require('common/math/rectangle');
 
-    var Nucleon = require('models/nucleon');
-
     /**
      * This class represents the position and behavior of the control rods within
      *   a model of a nuclear reactor.
@@ -26,7 +24,7 @@ define(function (require) {
             this.rect = new Rectangle();
 
             this.on('change:position', this.positionChanged);
-            this.positionChanged(this, this.get('position'))
+            this.positionChanged(this, this.get('position'));
         },
 
         getRectangle: function() {

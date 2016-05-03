@@ -2,6 +2,9 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
+    var PIXI = require('pixi');
+
     var ModelViewTransform = require('common/math/model-view-transform');
 
     var Uranium235Nucleus = require('models/nucleus/uranium-235');

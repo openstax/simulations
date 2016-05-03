@@ -6,9 +6,6 @@ define(function (require) {
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
 
-    var NucleusType  = require('models/nucleus-type');
-    var HalfLifeInfo = require('models/half-life-info');
-
     var Constants = require('nuclear-physics/constants'); 
 
     Constants.FRAME_RATE = 25;
@@ -246,9 +243,9 @@ define(function (require) {
     FissionEnergyChartView.SMALL_LABEL_FONT = Constants.NucleusDecayChart.SMALL_LABEL_FONT;
     FissionEnergyChartView.LARGE_LABEL_FONT = Constants.NucleusDecayChart.LARGE_LABEL_FONT;
 
-    FissionEnergyChartView.DECAY_LABEL_COLOR = Constants.NucleusDecayChart.DECAY_LABEL_COLOR
-    FissionEnergyChartView.DECAY_LABEL_FONT  = Constants.NucleusDecayChart.DECAY_LABEL_FONT
-    FissionEnergyChartView.DECAY_VALUE_FONT  = Constants.NucleusDecayChart.DECAY_VALUE_FONT
+    FissionEnergyChartView.DECAY_LABEL_COLOR = Constants.NucleusDecayChart.DECAY_LABEL_COLOR;
+    FissionEnergyChartView.DECAY_LABEL_FONT  = Constants.NucleusDecayChart.DECAY_LABEL_FONT;
+    FissionEnergyChartView.DECAY_VALUE_FONT  = Constants.NucleusDecayChart.DECAY_VALUE_FONT;
 
     FissionEnergyChartView.LINE_WIDTH = 2;
     FissionEnergyChartView.LINE_ALPHA = 1;

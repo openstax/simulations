@@ -2,6 +2,9 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+    var $ = require('jquery');
+
     var PixiToImage        = require('common/v3/pixi/pixi-to-image');
     var ModelViewTransform = require('common/math/model-view-transform');
 
@@ -11,7 +14,6 @@ define(function (require) {
     var ChainReactionSimulation = require('nuclear-fission/models/simulation/chain-reaction');
 
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
-    var IsotopeSymbolGenerator    = require('views/isotope-symbol-generator');
 
     var NuclearFissionSimView   = require('nuclear-fission/views/sim');
     var ChainReactionLegendView = require('nuclear-fission/views/legend/chain-reaction');

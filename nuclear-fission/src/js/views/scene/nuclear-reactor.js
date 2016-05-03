@@ -2,10 +2,9 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var PIXI = require('pixi');
+    var _ = require('underscore');
+    var $ = require('jquery');
 
-    var AppView            = require('common/v3/app/app');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
@@ -33,7 +32,7 @@ define(function(require) {
             });
             this.$resetButton.hide();
 
-            var html = '<button class="btn btn-lg view-reactor-picture-btn"data-toggle="modal" data-target="#picture-dialog"><span class="fa fa-picture-o"></span> Picture of Reactor</button>'
+            var html = '<button class="btn btn-lg view-reactor-picture-btn"data-toggle="modal" data-target="#picture-dialog"><span class="fa fa-picture-o"></span> Picture of Reactor</button>';
             this.$viewReactorPictureButton = $(html);
 
             this.$ui.append(this.$resetButton);

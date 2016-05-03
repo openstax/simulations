@@ -4,7 +4,6 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var AppView           = require('common/v3/app/app');
     var VanillaCollection = require('common/collections/vanilla');
     var Vector2           = require('common/math/vector2');
 
@@ -43,8 +42,6 @@ define(function (require, exports, module) {
                 fissionInterval: OneNucleusSimulation.FISSION_INTERVAL,
                 simulation: this
             });
-
-            this.daughterNucleus;
 
             // Add the neutron source to the side of the model.
             this.neutronSource = new NeutronSource({
@@ -158,18 +155,21 @@ define(function (require, exports, module) {
          */
         atomicWeightChanged: function(nucleus, byProducts) {
             if (byProducts) {
+                var angle;
+                var xVel;
+                var yVel;
                 // There are some byproducts of this event that need to be
                 //   managed by this object.
                 for (var i = 0; i < byProducts.length; i++) {
                     var byProduct = byProducts[i];
                     if (byProduct instanceof Nucleon) {
                         // Set a direction and velocity for this neutron.
-                        var angle = Math.random() * Math.PI / 3;
+                        angle = Math.random() * Math.PI / 3;
                         if (Math.random() < 0.5)
                             angle += Math.PI;
                         
-                        var xVel = Math.sin(angle) * OneNucleusSimulation.MOVING_NUCLEON_VELOCITY;
-                        var yVel = Math.cos(angle) * OneNucleusSimulation.MOVING_NUCLEON_VELOCITY;
+                        xVel = Math.sin(angle) * OneNucleusSimulation.MOVING_NUCLEON_VELOCITY;
+                        yVel = Math.cos(angle) * OneNucleusSimulation.MOVING_NUCLEON_VELOCITY;
                         byProduct.setVelocity(xVel, yVel);
 
                         // Add this new particle to our list.
@@ -185,12 +185,12 @@ define(function (require, exports, module) {
                         // Set random but opposite directions for the
                         // nuclei.  Limit them to be roughly horizontal so
                         // that they will be easier to see.
-                        var angle = (Math.random() * Math.PI / 3) + (Math.PI / 3);
+                        angle = (Math.random() * Math.PI / 3) + (Math.PI / 3);
                         if (Math.random() < 0.5)
                             angle += Math.PI;
                         
-                        var xVel = Math.sin(angle) * OneNucleusSimulation.INITIAL_NUCLEUS_VELOCITY;
-                        var yVel = Math.cos(angle) * OneNucleusSimulation.INITIAL_NUCLEUS_VELOCITY;
+                        xVel = Math.sin(angle) * OneNucleusSimulation.INITIAL_NUCLEUS_VELOCITY;
+                        yVel = Math.cos(angle) * OneNucleusSimulation.INITIAL_NUCLEUS_VELOCITY;
                         var xAcc = Math.sin(angle) * OneNucleusSimulation.INITIAL_NUCLEUS_ACCELERATION;
                         var yAcc = Math.cos(angle) * OneNucleusSimulation.INITIAL_NUCLEUS_ACCELERATION;
 

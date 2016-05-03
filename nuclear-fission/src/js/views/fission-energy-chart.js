@@ -8,7 +8,6 @@ define(function(require) {
                              require('common/v3/pixi/create-drop-shadow');
                              require('common/v3/pixi/draw-stick-arrow');
                              require('common/v3/pixi/dash-to');
-    var AppView            = require('common/v3/app/app');
     var PixiView           = require('common/v3/pixi/view');
     var Colors             = require('common/colors/colors');
     var ModelViewTransform = require('common/math/model-view-transform');
@@ -376,6 +375,7 @@ define(function(require) {
                 xScreenPos += 1;
                 
                 var xGraphPos = xScreenPos - centerX;
+                var wellWeightingFactor;
                     
                 if (xScreenPos < centerX - crossoverDistanceFromCenter - crossoverZoneWidth / 2) {
                     // Left side (tail) of the curve.
@@ -385,7 +385,7 @@ define(function(require) {
                 }
                 else if (xScreenPos < centerX - crossoverDistanceFromCenter + crossoverZoneWidth / 2) {
                     // Crossing into the well.
-                    var wellWeightingFactor = this.computeWellWeightingFactor(
+                    wellWeightingFactor = this.computeWellWeightingFactor(
                         centerX, xScreenPos, crossoverDistanceFromCenter, crossoverZoneWidth
                     );
                     yGraphPos = (
@@ -403,7 +403,7 @@ define(function(require) {
                 }
                 else if (xScreenPos < centerX + crossoverDistanceFromCenter + crossoverZoneWidth / 2) {
                     // Crossing out of the well.
-                    var wellWeightingFactor = this.computeWellWeightingFactor(centerX, xScreenPos, crossoverDistanceFromCenter, crossoverZoneWidth);
+                    wellWeightingFactor = this.computeWellWeightingFactor(centerX, xScreenPos, crossoverDistanceFromCenter, crossoverZoneWidth);
                     yGraphPos = (
                         (((1 / xGraphPos) * tailMultiplier) * (1 - wellWeightingFactor)) + 
                         (this.calculateWellValue(xGraphPos) * (wellWeightingFactor))
