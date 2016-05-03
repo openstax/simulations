@@ -11,8 +11,10 @@ define(function (require, exports, module) {
 
     // Local dependencies need to be referenced by relative paths
     //   so we can use this in other projects.
-    var LasersSimulation = require('../simulation');
-    var BandPass         = require('./band-pass');
+    var LasersSimulation           = require('../simulation');
+    var BandPassReflectionStrategy = require('./reflection-strategy/band-pass');
+    var LeftReflectionStrategy     = require('./reflection-strategy/left');
+    var RightReflectionStrategy    = require('./reflection-strategy/right');
 
     /**
      * Constants
@@ -31,13 +33,14 @@ define(function (require, exports, module) {
 
         defaults: _.extend(LasersSimulation.prototype.defaults, {
             lasingPhotonViewMode:  Constants.PHOTON_DISCRETE,
-            pumpingPhotonViewMode: Constants.PHOTON_CURTAIN
+            pumpingPhotonViewMode: Constants.PHOTON_CURTAIN,
+            mirrorsEnabled: false
         }),
         
         initialize: function(attributes, options) {
             LasersSimulation.prototype.initialize.apply(this, [attributes, options]);
 
-            
+            this.on('change:mirrorsEnabled', this.mirrorsEnabledChanged);
         },
 
         /**
@@ -47,6 +50,8 @@ define(function (require, exports, module) {
             LasersSimulation.prototype.initComponents.apply(this, arguments);
 
             this.laserOrigin = new Vector2(this.origin.x + this.laserOffsetX, this.origin.y);
+            this.seedBeamOrigin = new Vector2();
+            this.pumpingBeamOrigin = new Vector2();
 
             this.initTube();
             this.initBeams();
@@ -64,7 +69,7 @@ define(function (require, exports, module) {
         initBeams: function() {
             var seedBeam = new Beam({
                 wavelength:          Photon.RED,
-                position:            this.origin,
+                position:            this.getSeedBeamOrigin(),
                 length:              this.boxWidth + this.laserOffsetX * 2,
                 beamWidth:           this.boxHeight - Photon.RADIUS,           
                 maxPhotonsPerSecond: Constants.MAXIMUM_SEED_PHOTON_RATE,
@@ -77,7 +82,7 @@ define(function (require, exports, module) {
 
             var pumpingBeam = new Beam({
                 wavelength:          Photon.BLUE,
-                position:            new Vector2(this.origin.x + this.laserOffsetX, this.origin.y - this.laserOffsetX,
+                position:            this.getPumpingBeamOrigin(),
                 length:              1000,
                 beamWidth:           this.tube.get('width'),           
                 maxPhotonsPerSecond: Constants.MAXIMUM_SEED_PHOTON_RATE,
@@ -88,7 +93,7 @@ define(function (require, exports, module) {
                 direction: new Vector2(0, 1)
             });
 
-            this.setStimulatingBeam(seedBeam);
+            this.setSeedBeam(seedBeam);
             this.setPumpingBeam(pumpingBeam);
 
             this.listenTo(seedBeam,    'photon-emitted', this.photonEmitted);
@@ -109,11 +114,13 @@ define(function (require, exports, module) {
                 this.tube.getX() + this.tube.get('width'),
                 this.tube.getY() + this.tube.get('height')
             );
-            var bandPass = new BandPass(QuantumConfig.MIN_WAVELENGTH, QuantumConfig.MAX_WAVELENGTH);
-            rightMirror = new PartialMirror( p1, p2 );
-            rightMirror.addReflectionStrategy( bandPass );
-            rightMirror.addReflectionStrategy( new LeftReflecting() );
-            rightMirrorGraphic = new MirrorGraphic( getApparatusPanel(), rightMirror, MirrorGraphic.LEFT_FACING );
+            var bandPass = new BandPassReflectionStrategy(QuantumConfig.MIN_WAVELENGTH, QuantumConfig.MAX_WAVELENGTH);
+            this.rightMirror = new PartialMirror({}, {
+                start: p1, 
+                end:   p2
+            });
+            this.rightMirror.addReflectionStrategy(bandPass);
+            this.rightMirror.addReflectionStrategy(new LeftReflectionStrategy());
 
             // The left mirror is 100% reflecting
             var p3 = new Vector2(
@@ -124,24 +131,21 @@ define(function (require, exports, module) {
                 this.tube.getX(),
                 this.tube.getY() + this.tube.get('height')
             );
-            leftMirror = new PartialMirror( p3, p4 );
-            leftMirror.addReflectionStrategy( bandPass );
-            leftMirror.addReflectionStrategy( new RightReflecting() );
-            leftMirror.setReflectivity( 1.0 );
-            leftMirrorGraphic = new MirrorGraphic( getApparatusPanel(), leftMirror, MirrorGraphic.RIGHT_FACING );
+            this.leftMirror = new PartialMirror({}, {
+                start: p3, 
+                end:   p4
+            });
+            this.leftMirror.addReflectionStrategy(bandPass);
+            this.leftMirror.addReflectionStrategy(new RightReflectionStrategy());
+            this.leftMirror.setReflectivity(1);
+        },
 
-            // Put a reflectivity control on the panel
-            JPanel reflectivityControl = new RightMirrorReflectivityControlPanel( rightMirror );
-            reflectivityControlPanel = new JPanel();
-            Dimension dim = reflectivityControl.getPreferredSize();
-            reflectivityControlPanel.setBounds( (int) rightMirror.getPosition().getX() + 10,
-                                                (int) ( rightMirror.getPosition().getY() + rightMirror.getBounds().getHeight() ),
-                                                (int) dim.getWidth() + 10, (int) dim.getHeight() + 10 );
-            reflectivityControlPanel.add( reflectivityControl );
-            reflectivityControl.setBorder( new BevelBorder( BevelBorder.RAISED ) );
-            reflectivityControlPanel.setOpaque( false );
-            reflectivityControlPanel.setVisible( false );
-            getApparatusPanel().add( reflectivityControlPanel );
+        getSeedBeamOrigin: function() {
+            return this.seedBeamOrigin.set(this.origin);
+        },
+
+        getPumpingBeamOrigin: function() {
+            return this.pumpingBeamOrigin.set(this.origin.x + this.laserOffsetX, this.origin.y - this.laserOffsetX);
         },
 
         resetComponents: function() {
@@ -187,6 +191,21 @@ define(function (require, exports, module) {
 
             // Set whether the photon's view will be visible
             photon.set('visible', photonVisible);
+        },
+
+        mirrorsEnabledChanged: function(simulation, mirrorsEnabled) {
+            // Regardless of the value of mirrorsEnabled, we should remove the model
+            // elements.  If mirrorsEnabled is true, we want to try remove them
+            // first, so they don't get added twice if they were already there
+            this.removeModel(this.leftMirror);
+            this.removeModel(this.rightMirror);
+
+            if (mirrorsEnabled) {
+                this.addModel(this.leftMirror);
+                this.addModel(this.rightMirror);
+            }
+
+            this.seedBeam.set('enabled', !mirrorsEnabled);
         }
 
     }, Constants.BaseLasersSimulation);

@@ -11,14 +11,14 @@ define(function (require) {
      *   are between two cutoff points. Probably misnamed. It's really
      *   more of a notch.
      */
-    var BandPass = function(cutoffLow, cutoffHigh) {
+    var BandPassReflectionStrategy = function(cutoffLow, cutoffHigh) {
         ReflectionStrategy.apply(this, arguments);
 
         this.cutoffLow = cutoffLow;
         this.cutoffHigh = cutoffHigh;
     };
 
-    _.extend(BandPass.prototype, ReflectionStrategy.prototype, {
+    _.extend(BandPassReflectionStrategy.prototype, ReflectionStrategy.prototype, {
 
         reflects: function(photon) {
             return (
@@ -30,5 +30,5 @@ define(function (require) {
     });
 
 
-    return BandPass;
+    return BandPassReflectionStrategy;
 });

@@ -70,7 +70,7 @@ define(function (require, exports, module) {
 
             this.models = [];
 
-            this.stimulatingBeam = null;
+            this.seedBeam = null;
             this.pumpingBeam = null;
             this.tube = null;
 
@@ -246,15 +246,19 @@ define(function (require, exports, module) {
         },
 
         getSeedBeam: function() {
-            return this.stimulatingBeam;
+            return this.seedBeam;
         },
 
-        setStimulatingBeam: function(stimulatingBeam) {
-            if (this.stimulatingBeam)
-                this.removeModel(this.stimulatingBeam);
+        setSeedBeam: function(seedBeam) {
+            this.setStimulatingBeam(seedBeam);
+        },
+
+        setStimulatingBeam: function(seedBeam) {
+            if (this.seedBeam)
+                this.removeModel(this.seedBeam);
             
-            this.addModel(stimulatingBeam);
-            this.stimulatingBeam = stimulatingBeam;
+            this.addModel(seedBeam);
+            this.seedBeam = seedBeam;
         },
 
         getPumpingBeam: function() {
