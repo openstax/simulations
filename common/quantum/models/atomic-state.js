@@ -107,7 +107,7 @@ define(function (require) {
                 }
             }
             else {
-                stimulatedPhotonEnergy = this.getEnergyLevel() - this.getNextLowerEnergyState().getEnergyLevel();
+                stimulatedPhotonEnergy = this.get('energyLevel') - this.getNextLowerEnergyState().get('energyLevel');
                 result = (
                     Math.abs(photon.getEnergy() - stimulatedPhotonEnergy) <= QuantumConfig.ENERGY_TOLERANCE && 
                     Math.random() < AtomicState.STIMULATION_LIKELIHOOD
@@ -209,6 +209,10 @@ define(function (require) {
 
         getNextHigherEnergyState: function() {
             return this.get('nextHigherState');
+        },
+
+        getEnergyLevel: function() {
+            return this.get('energyLevel');
         }
 
     }, _.extend({}, constants, {

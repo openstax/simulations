@@ -1,0 +1,34 @@
+define(function (require) {
+
+    'use strict';
+
+    var _ = require('underscore');
+
+    var ReflectionStrategy = require('./reflection-strategy');
+
+    /**
+     * A ReflectionStrategy that reflects photons whose wavelengths
+     *   are between two cutoff points. Probably misnamed. It's really
+     *   more of a notch.
+     */
+    var BandPass = function(cutoffLow, cutoffHigh) {
+        ReflectionStrategy.apply(this, arguments);
+
+        this.cutoffLow = cutoffLow;
+        this.cutoffHigh = cutoffHigh;
+    };
+
+    _.extend(BandPass.prototype, ReflectionStrategy.prototype, {
+
+        reflects: function(photon) {
+            return (
+                photon.getWavelength() >= this.cutoffLow && 
+                photon.getWavelength() <= this.cutoffHigh
+            );
+        }
+
+    });
+
+
+    return BandPass;
+});

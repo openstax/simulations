@@ -166,6 +166,15 @@ define(function (require, exports, module) {
             var index = this.models.indexOf(model);
             if (index !== -1) {
                 this.models.splice(index, 1);
+
+                if (model instanceof Mirror) {
+                    index = this.mirrors.indexOf(models);
+                    this.mirrors.splice(index, 1);
+                }
+                
+                if (model instanceof Tube && this.tube === model)
+                    this.tube = null;
+
                 return true;
             }
             return false;
