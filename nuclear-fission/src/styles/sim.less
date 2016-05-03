@@ -146,9 +146,6 @@
     top: 0;
     left: 0;
     z-index: 9999;
-    .animation-name(overlay-animation);
-    .animation-duration(@explosion-animation-duration);
-    .animation-fill-mode(forwards);
 
     @media screen and (max-height: @short-window) {
         height: @short-scene-height;
@@ -164,27 +161,6 @@
         font-family: monospace;
     }
 }
-
-@-webkit-keyframes overlay-animation {
-      0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-@-moz-keyframes overlay-animation {
-      0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-@-o-keyframes overlay-animation {
-      0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-@keyframes overlay-animation {
-      0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
 
 @graph-width: 40px;
 @graph-height: 150px;
