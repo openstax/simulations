@@ -8,12 +8,12 @@ define(function (require, exports, module) {
 
     // Local dependencies need to be referenced by relative paths
     //   so we can use this in other projects.
-    var BaseLasersSimulation = require('./base');
+    var BaseLasersSimulation = require('models/simulation/base');
 
     /**
      * Constants
      */
-    var Constants = require('../../constants');
+    var Constants = require('constants');
 
     /**
      * The simulation model for the One Atom tab

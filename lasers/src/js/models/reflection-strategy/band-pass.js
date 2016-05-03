@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var ReflectionStrategy = require('./reflection-strategy');
+    var ReflectionStrategy = require('models/reflection-strategy');
 
     /**
      * A ReflectionStrategy that reflects photons whose wavelengths

@@ -24,10 +24,10 @@ define(function (require) {
         initialize: function(attributes, options) {
             if (options && options.start && options.end) {
                 this.set('bounds', new Rectangle(
-                    this.options.start.x, 
-                    this.options.start.y,
-                    this.options.end.x - this.options.start.x,
-                    this.options.end.y - this.options.start.y
+                    options.start.x, 
+                    options.start.y,
+                    options.end.x - options.start.x,
+                    options.end.y - options.start.y
                 ));
             }
 

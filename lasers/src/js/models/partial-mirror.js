@@ -2,10 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var Mirror    = require('common/mechanics/models/mirror');
     var Rectangle = require('common/math/rectangle');
 
-    var PartialReflectionStrategy = require('./reflection-strategy/partial');
+    var PartialReflectionStrategy = require('models/reflection-strategy/partial');
+    var Mirror                    = require('models/mirror');
 
     /**
      * This class represents partially reflecting mirror.
@@ -32,9 +32,9 @@ define(function (require) {
             // If the strategy being added is a reflecting strategy, remove the old one
             if (strategy instanceof PartialReflectionStrategy) {
                 this.partialStrategy = strategy;
-                for (var i = 0; i < reflectionStrategies.length; i++) {
+                for (var i = 0; i < this.reflectionStrategies.length; i++) {
                     if (this.reflectionStrategies[i] instanceof PartialReflectionStrategy) {
-                        reflectionStrategies.remove(this.reflectionStrategies[i]);
+                        this.reflectionStrategies.remove(this.reflectionStrategies[i]);
                         break;
                     }
                 }

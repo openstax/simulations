@@ -4,7 +4,8 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var LasersSimView = require('views/sim');
+    var LasersSimView    = require('views/sim');
+    var OneAtomSceneView = require('views/scene/one-atom');
 
     var OneAtomLaserSimulation = require('models/simulation/one-atom');
 
@@ -50,6 +51,15 @@ define(function (require) {
          */
         initSimulation: function() {
             this.simulation = new OneAtomLaserSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new OneAtomSceneView({
+                simulation: this.simulation
+            });
         },
 
         /**

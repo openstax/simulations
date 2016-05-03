@@ -7,19 +7,21 @@ define(function (require, exports, module) {
     var VanillaCollection = require('common/collections/vanilla');
     var Tube              = require('common/quantum/models/tube');
     var Photon            = require('common/quantum/models/photon');
+    var Atom              = require('common/quantum/models/atom');
+    var Beam              = require('common/quantum/models/beam');
     var QuantumConfig     = require('common/quantum/config');
+    var Vector2           = require('common/math/vector2');
 
-    // Local dependencies need to be referenced by relative paths
-    //   so we can use this in other projects.
-    var LasersSimulation           = require('../simulation');
-    var BandPassReflectionStrategy = require('./reflection-strategy/band-pass');
-    var LeftReflectionStrategy     = require('./reflection-strategy/left');
-    var RightReflectionStrategy    = require('./reflection-strategy/right');
+    var LasersSimulation           = require('models/simulation');
+    var BandPassReflectionStrategy = require('models/reflection-strategy/band-pass');
+    var LeftReflectionStrategy     = require('models/reflection-strategy/left');
+    var RightReflectionStrategy    = require('models/reflection-strategy/right');
+    var PartialMirror              = require('models/partial-mirror');
 
     /**
      * Constants
      */
-    var Constants = require('../../constants');
+    var Constants = require('constants');
 
     /**
      * 
@@ -160,7 +162,7 @@ define(function (require, exports, module) {
         },
 
         photonEmitted: function(source, photon) {
-            this.addModelElement(photon);
+            this.addModel(photon);
             var photonVisible = true;
 
             // Was the photon emitted by an atom?
