@@ -48,7 +48,9 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click .play-btn'  : 'play',
+            'click .pause-btn' : 'pause',
+            'click .step-btn'  : 'step'
         },
 
         /**

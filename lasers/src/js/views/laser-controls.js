@@ -51,15 +51,27 @@ define(function(require) {
          * Renders content and canvas for heatmap
          */
         render: function() {
-            var data = {
+            // Render the base template
+            this.$el.append(this.template({
                 unique: this.cid
-            };
+            }));
 
-            this.$el.append(this.template(data));
+            // Create the intensity slider
+            this.$('.intensity-slider').noUiSlider({
+                start: 0,
+                range: {
+                    min: 0,
+                    max: this.model.get('maxPhotonsPerSecond')
+                },
+                connect: 'lower'
+            });
             
+            // Create the wavelength slider
             this.wavelengthSliderView.render();
             this.$('.wavelength-slider-wrapper').prepend(this.wavelengthSliderView.el);
 
+            // Save the label elements for each slider header
+            this.$intensityValue = this.$('.intensity-value');
             this.$wavelengthValue = this.$('.wavelength-value');
 
             return this;
@@ -79,15 +91,8 @@ define(function(require) {
 
         changeIntensity: function(event) {
             this.inputLock(function() {
-                var value = parseInt(this.$('.intensity-slider').val());
-                var percent = Math.round((value / this.simulation.seedBeam.get('maxPhotonsPerSecond')) * 100);
-                var photonsPerSecond;
-                // If we're in intensity mode, then the photons/sec is proportional to
-                //   the energy of each photon
-                if (this.simulation.get('controlMode') === PEffectSimulation.INTENSITY)
-                    photonsPerSecond = this.simulation.intensityToPhotonRate(value, this.simulation.seedBeam.get('wavelength'));
-                else
-                    photonsPerSecond = value;
+                var photonsPerSecond = parseInt(this.$('.intensity-slider').val());
+                var percent = Math.round((photonsPerSecond / this.simulation.seedBeam.get('maxPhotonsPerSecond')) * 100);
 
                 this.$intensityValue.text(percent + '%');
                 this.simulation.seedBeam.set('photonsPerSecond', photonsPerSecond);
