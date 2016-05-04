@@ -4,8 +4,11 @@ define(function (require) {
 
     var _ = require('underscore');
 
+    var WavelengthSliderView = require('common/controls/wavelength-slider');
+
     var LasersSimView    = require('views/sim');
     var OneAtomSceneView = require('views/scene/one-atom');
+    var LaserControlsView = require('views/laser-controls');
 
     var OneAtomLaserSimulation = require('models/simulation/one-atom');
 
@@ -29,7 +32,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: _.extend({}, LasersSimView.prototype.events, {
-
+            
         }),
 
         /**
@@ -44,6 +47,8 @@ define(function (require) {
             }, options);
 
             LasersSimView.prototype.initialize.apply(this, [options]);
+
+            this.initLaserControlsView();
         },
 
         /**
@@ -62,11 +67,20 @@ define(function (require) {
             });
         },
 
+        initLaserControlsView: function() {
+            this.laserControlsView = new LaserControlsView({
+                simulation: this.simulation,
+                model: this.simulation.seedBeam
+            });
+        },
+
         /**
          * Renders everything
          */
         render: function() {
             LasersSimView.prototype.render.apply(this, arguments);
+
+            this.renderLaserControls();
 
             return this;
         },
@@ -86,10 +100,28 @@ define(function (require) {
         },
 
         /**
+         * Renders the laser controls view
+         */
+        renderLaserControls: function() {
+            this.laserControlsView.render();
+            this.$el.append(this.laserControlsView.el);
+        },
+
+        /**
+         * Called after every component on the page has rendered to make sure
+         *   things like widths and heights and offsets are correct.
+         */
+        postRender: function() {
+            LasersSimView.prototype.postRender.apply(this);
+            
+            this.laserControlsView.postRender();
+        },
+
+        /**
          * Resets all the components of the view.
          */
         resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
+            LasersSimView.prototype.resetComponents.apply(this);
             
         },
 

@@ -1,0 +1,23 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "mixins.less";
+
+.beam-controls {
+    width: auto;
+    position: absolute;
+    top: @panel-margin;
+    left: @panel-margin;
+
+    .intensity-slider-wrapper {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .wavelength-slider-wrapper {
+        position: relative;
+
+        .wavelength-slider {
+            width: 120px;
+        }
+    }
+}
