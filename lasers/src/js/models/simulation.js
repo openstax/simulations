@@ -85,8 +85,7 @@ define(function (require, exports, module) {
             this.collisionExperts.push(SphereBoxExpert);
             this.collisionExperts.push(PhotonMirrorCollisonExpert);
 
-            
-            this.angleWindow = LasersSimulation.PHOTON_CHEAT_ANGLE;
+            this.angleWindow = Constants.PHOTON_CHEAT_ANGLE;
 
             this.numPhotons = 0;
 

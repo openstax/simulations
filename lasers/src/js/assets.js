@@ -8,7 +8,8 @@ define(function (require) {
 
     Assets.Images = {   
         SPHERE: 'sphere.png',
-        PHOTON: 'photon.png'
+        PHOTON: 'photon.png',
+        FLASHLIGHT: 'flashlight.png'
     };
 
     Assets.SpriteSheets = {};

@@ -11,6 +11,8 @@ define(function(require) {
 
     var LasersSceneView      = require('views/scene');
     var PhotonCollectionView = require('views/photon-collection');
+    var TubeView             = require('views/tube');
+    var LampView             = require('views/lamp');
 
     // Constants
     var Constants = require('constants');
@@ -33,8 +35,10 @@ define(function(require) {
 
             this.initMVT();
             this.initLayers();
-            this.initBackground();
+            this.initTube();
+            this.initMirrors();
             this.initPhotons();
+            this.initLamp();
         },
 
         initMVT: function() {
@@ -43,12 +47,12 @@ define(function(require) {
             if (AppView.windowIsShort()) {
                 this.viewOriginX = 50;
                 this.viewOriginY = 0;
-                scale = 0.75;
+                scale = 0.98;
             }
             else {
-                this.viewOriginX = 4;
+                this.viewOriginX = 50;
                 this.viewOriginY = 30;
-                scale = 1; 
+                scale = 0.98; 
             }
 
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
@@ -68,26 +72,17 @@ define(function(require) {
             this.stage.addChild(this.foregroundLayer);
         },
 
-        initBackground: function() {
-            // this.beamView = new BeamView({
-            //     model: this.simulation.beam,
-            //     simulation: this.simulation,
-            //     mvt: this.mvt
-            // });
-            // this.backgroundLayer.addChild(this.beamView.displayObject);
+        initTube: function() {
+            this.tubeView = new TubeView({
+                model: this.simulation.tube,
+                mvt: this.mvt
+            });
 
-            // this.circuitView = new CircuitView({
-            //     model: this.simulation.circuit,
-            //     simulation: this.simulation,
-            //     mvt: this.mvt
-            // });
-            // this.backgroundLayer.addChild(this.circuitView.displayObject);
+            this.backgroundLayer.addChild(this.tubeView.displayObject);
+        },
 
-            // this.tubeView = new TubeView({
-            //     model: this.simulation.tube,
-            //     mvt: this.mvt
-            // });
-            // this.backgroundLayer.addChild(this.tubeView.displayObject);
+        initMirrors: function() {
+            // Put the left one in the foreground and the right one in the background
         },
 
         initPhotons: function() {
@@ -98,6 +93,15 @@ define(function(require) {
             });
 
             this.photonElectronLayer.addChild(this.photonsView.displayObject);
+        },
+
+        initLamp: function() {
+            this.lampView = new LampView({
+                model: this.simulation.seedBeam,
+                mvt: this.mvt
+            });
+
+            this.foregroundLayer.addChild(this.lampView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

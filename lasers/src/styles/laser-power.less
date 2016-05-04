@@ -1,0 +1,49 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "mixins.less";
+
+.sim-controls.laser-power-panel {
+    position: absolute;
+    left: 224px;
+    top: 370px;
+    width: 280px;
+
+    .power-meter-wrapper {
+
+        label {
+            display: inline-block;
+            width: 58px;
+            height: 42px;
+            margin: 0;
+            text-align: left;
+        }
+
+        .power-meter {
+            display: inline-block;
+            width: 184px;
+            height: 32px;
+            padding: 4px;
+            margin-top: 5px;
+            float: right;
+
+            .power-meter-segment {
+                float: left;
+                width: 3px;
+                height: 100%;
+                border-radius: 1.5px;
+                margin-right: 1px;
+                background: fadeout(#000, 92%);
+
+                &:last-child {
+                    margin-right: 0;
+                }
+
+                &.filled        { background: #FFE000; box-shadow: 0 0 3px #FFE000; }
+                &.filled-lasing { background: #4BA700; box-shadow: 0 0 3px #4BA700; }
+                &.filled-danger { background: #C2002F; box-shadow: 0 0 3px #C2002F; }
+            }
+        }
+    }
+
+    
+}
