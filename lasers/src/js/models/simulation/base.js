@@ -11,6 +11,7 @@ define(function (require, exports, module) {
     var Beam              = require('common/quantum/models/beam');
     var QuantumConfig     = require('common/quantum/config');
     var Vector2           = require('common/math/vector2');
+    var Rectangle         = require('common/math/rectangle');
 
     var LasersSimulation           = require('models/simulation');
     var BandPassReflectionStrategy = require('models/reflection-strategy/band-pass');
@@ -51,6 +52,8 @@ define(function (require, exports, module) {
         initComponents: function() {
             LasersSimulation.prototype.initComponents.apply(this, arguments);
 
+            this.setBounds(new Rectangle(0, 0, 800, 600));
+
             this.laserOrigin = new Vector2(this.origin.x + this.laserOffsetX, this.origin.y);
             this.seedBeamOrigin = new Vector2();
             this.pumpingBeamOrigin = new Vector2();
@@ -62,7 +65,7 @@ define(function (require, exports, module) {
 
         initTube: function() {
             this.addModel(new Tube({
-                position: this.laserOrigin,
+                origin: this.laserOrigin,
                 width: this.boxWidth,
                 height: this.boxHeight
             }));
@@ -162,7 +165,7 @@ define(function (require, exports, module) {
         },
 
         photonEmitted: function(source, photon) {
-            this.addModel(photon);
+            this.addPhoton(photon);
             var photonVisible = true;
 
             // Was the photon emitted by an atom?

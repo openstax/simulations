@@ -40,10 +40,7 @@ define(function (require, exports, module) {
         threeLevelProperties: new ThreeLevelElementProperties(),
 
         defaults: _.extend(QuantumSimulation.prototype.defaults, {
-            originX: 100, 
-            originY: 300,
-            width:   800,
-            height:  800
+
         }),
         
         initialize: function(attributes, options) {
@@ -54,10 +51,6 @@ define(function (require, exports, module) {
 
             QuantumSimulation.prototype.initialize.apply(this, [attributes, options]);
 
-            var minX = Math.floor(this.get('originX') - 50);
-            var minY = Math.floor(this.get('originY') - this.get('height') / 2);
-            this.boundingRectangle = new Rectangle(minX, minY, this.get('width'), this.get('height'));
-
             // Cached objects
             this._matchObject = {};
         },
@@ -67,6 +60,12 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             QuantumSimulation.prototype.initComponents.apply(this, arguments);
+
+            var width = 800;
+            var height = 800;
+            var minX = Math.floor(Constants.ORIGIN.x - 50);
+            var minY = Math.floor(Constants.ORIGIN.y - height / 2);
+            this.boundingRectangle = new Rectangle(minX, minY, width, height);
 
             this.models = [];
 
