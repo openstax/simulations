@@ -103,6 +103,7 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             LasersSceneView.prototype._update.apply(this, arguments);
 
+            this.photonsView.update(time, deltaTime, paused);
         },
 
     });
