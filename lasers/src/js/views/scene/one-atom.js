@@ -13,6 +13,7 @@ define(function(require) {
     var PhotonCollectionView = require('views/photon-collection');
     var TubeView             = require('views/tube');
     var LampView             = require('views/lamp');
+    var AtomView             = require('views/atom');
     var EnergyLevelPanelView = require('views/energy-level-panel');
 
     // Constants
@@ -38,6 +39,7 @@ define(function(require) {
             this.initLayers();
             this.initTube();
             this.initMirrors();
+            this.initAtom();
             this.initPhotons();
             this.initLamp();
             this.initEnergyLevelPanel();
@@ -85,6 +87,15 @@ define(function(require) {
 
         initMirrors: function() {
             // Put the left one in the foreground and the right one in the background
+        },
+
+        initAtom: function() {
+            this.atomView = new AtomView({
+                model: this.simulation.atoms.first(),
+                mvt: this.mvt
+            });
+
+            this.backgroundLayer.addChild(this.atomView.displayObject);
         },
 
         initPhotons: function() {

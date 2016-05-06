@@ -34,7 +34,6 @@ define(function (require) {
             this.highestEnergyState = null;
 
             this.states = [];
-            this.stateLifetimeManager = new StateLifetimeManager(this, true, this.simulation);
 
             this.on('change:currentState', this.currentStateChanged);
 
@@ -43,7 +42,11 @@ define(function (require) {
         },
 
         getCurrentState: function() {
-            return this.currentState;
+            return this.get('currentState');
+        },
+
+        setCurrentState: function(currentState) {
+            this.set('currentState', currentState);
         },
 
         getStates: function() {
@@ -52,6 +55,18 @@ define(function (require) {
 
         getModel: function() {
             return this.simulation;
+        },
+
+        /**
+         * Returns the number of the atom's current state. This is the index of the state in the
+         *   atom's array of state. The ground state is number 0
+         */
+        getCurrentStateNumber: function() {
+            for (var i = 0; i < this.states.length; i++) {
+                if (this.getCurrentState() == this.states[i])
+                    return i;
+            }
+            return 0;
         },
 
         /**
@@ -87,6 +102,10 @@ define(function (require) {
             this.highestEnergyState = this.states[this.states.length - 1];
         },
 
+        getGroundState: function() {
+            return this.groundState;
+        },
+
         /**
          * Returns the atom's state with the lowest energy
          */
@@ -103,6 +122,10 @@ define(function (require) {
             return lowestState;
         },
 
+        getHighestEnergyState: function() {
+            return this.highestEnergyState;
+        },
+
         /**
          * Returns the state the atom will be in if it emits a photon. By default,
          *   this is the next lower energy state
@@ -112,14 +135,16 @@ define(function (require) {
         },
 
         currentStateChanged: function(atom, currentState) {
+            if (this.stateLifetimeManager)
+                this.stateLifetimeManager.kill();
+
             if (this.previous('currentState'))
                 this.previous('currentState').leaveState(this);
             
             if (currentState)
                 currentState.enterState(this);
 
-            if (this.stateLifetimeManager)
-                this.stateLifetimeManager.reset();
+            this.stateLifetimeManager = new StateLifetimeManager(this, true, this.simulation);
         }
 
     });

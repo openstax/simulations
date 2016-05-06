@@ -6,9 +6,9 @@ define(function (require, exports, module) {
 
     var VanillaCollection = require('common/collections/vanilla');
 
-    // Local dependencies need to be referenced by relative paths
-    //   so we can use this in other projects.
-    var BaseLasersSimulation = require('models/simulation/base');
+    var BaseLasersSimulation      = require('models/simulation/base');
+    var TwoLevelElementProperties = require('models/element-properties/two-level');
+    var LaserAtom                 = require('models/atom');
 
     /**
      * Constants
@@ -36,7 +36,23 @@ define(function (require, exports, module) {
         initComponents: function() {
             BaseLasersSimulation.prototype.initComponents.apply(this, arguments);
 
-            
+            this.initAtom();
+        },
+
+        initAtom: function() {
+            // Add an atom
+            var atom = new LaserAtom({}, {
+                simulation: this,
+                elementProperties: new TwoLevelElementProperties()
+            });
+
+            atom.setPosition(
+                this.laserOrigin.x + this.boxWidth / 2,
+                this.laserOrigin.y + this.boxHeight / 2
+            );
+            atom.setVelocity(0, 0);
+
+            this.addAtom(atom);
         },
 
         initBeams: function() {
