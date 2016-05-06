@@ -37,6 +37,7 @@ define(function(require) {
             this.atomSprite = Assets.createSprite(Assets.Images.SPHERE);
             this.atomSprite.anchor.x = 0.5;
             this.atomSprite.anchor.y = 0.5;
+            this.atomSprite.tint = 0xBBBBBB;
 
             this.label = new PIXI.Text('1', {
                 font: 'bold 18px Helvetica Neue',
@@ -59,6 +60,11 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            var targetWidth = this.mvt.modelToViewDeltaX(this.model.get('radius') * 2);
+            var scale = targetWidth / this.atomSprite.texture.width;
+            this.atomSprite.scale.x = scale;
+            this.atomSprite.scale.y = scale;
 
             this.updatePosition(this.model, this.model.get('position'));
             this.updateAtomicState(this.model, this.model.get('currentState'));

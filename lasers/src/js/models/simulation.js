@@ -222,13 +222,13 @@ define(function (require, exports, module) {
             for (i = 0; i < this.atoms.length; i++) {
                 var atom = this.atoms.at(i);
 
-                if (atom.getCurrentState() == elementProperties.getGroundState())
+                if (atom.getCurrentState().equals(elementProperties.getGroundState()))
                     this.numGroundStateAtoms++;
 
-                if (atom.getCurrentState() == elementProperties.getMiddleEnergyState())
+                if (atom.getCurrentState().equals(elementProperties.getMiddleEnergyState()))
                     this.numMiddleStateAtoms++;
 
-                if (atom.getCurrentState() == elementProperties.getHighEnergyState())
+                if (atom.getCurrentState().equals(elementProperties.getHighEnergyState()))
                     this.numHighStateAtoms++;
             }
             
@@ -357,13 +357,13 @@ define(function (require, exports, module) {
         checkPhotonElectronCollisions: function() {
             // Test each photon against the atoms in the section the photon is in
             for (var i = 0; i < this.photons.length; i++) {
-                var photon = this.photons[i];
+                var photon = this.photons.at(i);
                 if (!(photon instanceof Photon) 
                     || (this.tube.getBounds().contains(photon.get('position'))) 
                     || (this.tube.getBounds().contains(photon.getPreviousPosition()))
                 ) {
                     for (var j = 0; j < this.atoms.length; j++) {
-                        var atom = this.atoms[j];
+                        var atom = this.atoms.at(j);
                         var s1 = atom.getCurrentState();
                         var s2 = atom.getCurrentState();
                         PhotonAtomCollisonExpert.detectAndDoCollision(photon, atom);

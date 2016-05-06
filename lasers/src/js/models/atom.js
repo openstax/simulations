@@ -22,7 +22,7 @@ define(function (require) {
         collideWithPhoton: function(photon) {
             var canCollide = false;
 
-            if (this.getCurrentState() != this.getGroundState())
+            if (!this.getCurrentState().equals(this.getGroundState()))
                 canCollide = true;
             else
                 canCollide = this.get('canCollideInGroundState');
@@ -34,7 +34,7 @@ define(function (require) {
         currentStateChanged: function(atom, currentState) {
             PropertiesBasedAtom.prototype.currentStateChanged.apply(this, arguments);
 
-            if (currentState === this.getGroundState()) {
+            if (currentState.equals(this.getGroundState())) {
                 this.set('canCollideInGroundState', false);
                 this.lifetimeTimer = Constants.MINIMUM_GROUND_STATE_LIFETIME;
             }

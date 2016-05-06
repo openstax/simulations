@@ -172,7 +172,7 @@ define(function (require, exports, module) {
             if (source instanceof Atom) {
                 // Don't show certain photons
                 if (source.getStates().length > 2 && 
-                    source.getCurrState() == source.getStates()[2] && 
+                    source.getCurrState().equals(source.getStates()[2]) && 
                     !displayHighLevelEmissions
                 ) {
                     photonVisible = false;

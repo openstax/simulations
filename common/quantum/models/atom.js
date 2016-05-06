@@ -134,6 +134,12 @@ define(function (require) {
             return this.get('currentState').getNextLowerEnergyState();
         },
 
+        update: function(time, deltaTime) {},
+
+        collideWithPhoton: function(photon) {
+            this.get('currentState').collideWithPhoton(this, photon);
+        },
+
         currentStateChanged: function(atom, currentState) {
             if (this.stateLifetimeManager)
                 this.stateLifetimeManager.kill();
