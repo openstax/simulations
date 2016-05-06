@@ -5,8 +5,10 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+                           require('common/v3/pixi/draw-arrow');
     var AppView          = require('common/v3/app/app');
     var PixiView         = require('common/v3/pixi/view');
+    var SliderView       = require('common/v3/pixi/view/slider');
     var Colors           = require('common/colors/colors');
     var WavelengthColors = require('common/colors/wavelength');
     var PhysicsUtil      = require('common/quantum/models/physics-util');
@@ -52,6 +54,7 @@ define(function(require) {
             this.levelNumber = options.levelNumber;
             this.wavelengthChangeEnabled = options.wavelengthChangeEnabled;
             this.lifetimeChangeEnabled = options.lifetimeChangeEnabled;
+            this.paddingLeft = 80;
             
             // Initialize the graphics
             this.initGraphics();
@@ -66,7 +69,7 @@ define(function(require) {
         initGraphics: function() {
             var handleThickness = 20;
             this.dragHandle = new PIXI.Container();
-            this.dragHandle.hitArea = new PIXI.Rectangle(0, -handleThickness / 2, this.width, handleThickness);
+            this.dragHandle.hitArea = new PIXI.Rectangle(0, -handleThickness / 2, this.width - this.paddingLeft, handleThickness);
             this.dragHandle.buttonMode = true;
 
             this.wavelengthColorGraphics = new PIXI.Graphics();
@@ -75,11 +78,62 @@ define(function(require) {
             this.atomSprite.anchor.x = 0.5;
             this.atomSprite.anchor.y = 0.5;
             this.atomSprite.scale.x = this.atomSprite.scale.y = ((this.atomRadius * 2) / this.atomSprite.texture.width);
-            this.atomSprite.x = this.width - 80;
+            this.atomSprite.x = this.width - this.paddingLeft;
 
+            var arrowX = Math.floor(this.atomSprite.x * 0.75);
+            this.arrowGraphics = new PIXI.Graphics();
+            this.arrowGraphics.beginFill(0xAAAAAA, 1);
+            this.arrowGraphics.drawArrow(arrowX, 0, arrowX, -12, 4, 9, 7);
+            this.arrowGraphics.drawArrow(arrowX, 0, arrowX,  12, 4, 9, 7);
+            this.arrowGraphics.endFill();
+
+            this.displayObject.addChild(this.arrowGraphics);
             this.displayObject.addChild(this.wavelengthColorGraphics);
             this.displayObject.addChild(this.atomSprite);
             this.displayObject.addChild(this.dragHandle);
+
+            this.initSlider();
+        },
+
+        initSlider: function() {
+            var width = 50;
+
+            // Create the slider view
+            this.sliderView = new SliderView({
+                start: 0,
+                range: {
+                    min: 0,
+                    max: 5
+                },
+
+                width: width,
+
+                backgroundHeight: 2,
+                backgroundColor: '#000',
+                backgroundAlpha: 0.12,
+
+                // handleSize: 14
+            });
+            this.sliderView.displayObject.x = this.width - width;
+            this.sliderView.displayObject.y = 0;
+            
+
+            // Bind events
+            this.listenTo(this.sliderView, 'slide', this.slideLifetime);
+
+            // Create the label
+            var text = new PIXI.Text('Lifetime', {
+                font: 'bold 12px Helvetica Neue',
+                fill: '#000'
+            });
+            text.resolution = this.getResolution();
+            text.anchor.x = 0.5;
+            text.anchor.y = 1;
+            text.x = this.sliderView.displayObject.x + width / 2;
+            text.y = -8;
+
+            this.displayObject.addChild(text);
+            this.displayObject.addChild(this.sliderView.displayObject);
         },
 
         drawWavelengthColor: function() {
@@ -146,6 +200,10 @@ define(function(require) {
 
         dragEnd: function(event) {
             this.dragging = false;
+        },
+
+        slideLifetime: function(value, prev) {
+            this.model.set('meanLifetime', value);
         },
 
         energyLevelChanged: function(model, energyLevel) {
