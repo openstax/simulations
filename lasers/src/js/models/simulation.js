@@ -39,7 +39,7 @@ define(function (require, exports, module) {
         twoLevelProperties:   new TwoLevelElementProperties(),
         threeLevelProperties: new ThreeLevelElementProperties(),
 
-        defaults: _.extend(QuantumSimulation.prototype.defaults, {
+        defaults: _.extend({}, QuantumSimulation.prototype.defaults, {
 
         }),
         

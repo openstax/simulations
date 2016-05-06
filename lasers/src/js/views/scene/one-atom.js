@@ -13,6 +13,7 @@ define(function(require) {
     var PhotonCollectionView = require('views/photon-collection');
     var TubeView             = require('views/tube');
     var LampView             = require('views/lamp');
+    var EnergyLevelPanelView = require('views/energy-level-panel');
 
     // Constants
     var Constants = require('constants');
@@ -39,6 +40,7 @@ define(function(require) {
             this.initMirrors();
             this.initPhotons();
             this.initLamp();
+            this.initEnergyLevelPanel();
         },
 
         initMVT: function() {
@@ -102,6 +104,17 @@ define(function(require) {
             });
 
             this.foregroundLayer.addChild(this.lampView.displayObject);
+        },
+
+        initEnergyLevelPanel: function() {
+            this.energyLevelPanelView = new EnergyLevelPanelView({
+                simulation: this.simulation
+            });
+
+            this.energyLevelPanelView.displayObject.x = 590;
+            this.energyLevelPanelView.displayObject.y = 350;
+
+            this.foregroundLayer.addChild(this.energyLevelPanelView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

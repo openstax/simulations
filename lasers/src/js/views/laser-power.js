@@ -45,8 +45,6 @@ define(function(require) {
         postRender: function() {
             this.renderBars(this.$internalPowerMeter);
             this.renderBars(this.$outputPowerMeter);
-
-            this.lasingPhotonCountChanged(null, this.simulation.lasingPhotons);
         },
 
         renderBars: function($container) {

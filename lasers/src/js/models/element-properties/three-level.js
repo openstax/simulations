@@ -29,7 +29,7 @@ define(function (require) {
      */
     var ThreeLevelElementProperties = LaserElementProperties.extend({
 
-        defaults: _.extend(LaserElementProperties.prototype.defaults, {
+        defaults: _.extend({}, LaserElementProperties.prototype.defaults, {
             name: 'Laser Atom',
             meanStateLifetime: (Constants.DT / Constants.FPS) * 100,
             energyLevels: [
