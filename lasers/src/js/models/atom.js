@@ -16,7 +16,7 @@ define(function (require) {
     var LaserAtom = PropertiesBasedAtom.extend({
 
         defaults: _.extend({}, PropertiesBasedAtom.prototype.defaults, {
-            canCollideInGroundState: false
+            canCollideInGroundState: true
         }),
 
         collideWithPhoton: function(photon) {

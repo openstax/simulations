@@ -43,7 +43,7 @@ define(function (require, exports, module) {
             // Add an atom
             var atom = new LaserAtom({}, {
                 simulation: this,
-                elementProperties: new TwoLevelElementProperties()
+                elementProperties: this.get('elementProperties')
             });
 
             atom.setPosition(
