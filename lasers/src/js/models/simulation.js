@@ -94,7 +94,7 @@ define(function (require, exports, module) {
             this.numMiddleStateAtoms = 0;
             this.numHighStateAtoms = 0;
 
-            this.set('currentElementProperties', this.twoLevelProperties);
+            this.set('elementProperties', this.twoLevelProperties);
         },
 
         resetComponents: function() {

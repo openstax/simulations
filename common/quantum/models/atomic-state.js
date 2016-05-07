@@ -126,7 +126,7 @@ define(function (require) {
             var newState = this.getElevatedState(atom, photon, this.get('energyLevel'));
             if (newState) {
                 photon.markForDestruction();
-                atom.setCurrState(newState);
+                atom.setCurrentState(newState);
                 return;
             }
 
@@ -139,8 +139,8 @@ define(function (require) {
                 var vHat = this._vHat.set(photon.get('velocity')).normalize();
                 vHat.scale(atom.get('radius'));
                 var position = this._photonPosition.set(
-                    atom.getX() + vHat.getX(),
-                    atom.getY() + vHat.getY()
+                    atom.getX() + vHat.x,
+                    atom.getY() + vHat.y
                 );
                 photon.setPosition(position);
 
@@ -148,7 +148,7 @@ define(function (require) {
                 atom.emitPhoton(emittedPhoton);
 
                 // Change state
-                atom.setCurrState(atom.getLowestEnergyState());
+                atom.setCurrentState(atom.getLowestEnergyState());
             }
         },
 

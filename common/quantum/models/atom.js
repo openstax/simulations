@@ -134,6 +134,10 @@ define(function (require) {
             return this.get('currentState').getNextLowerEnergyState();
         },
 
+        emitPhoton: function(emittedPhoton) {
+            this.trigger('photon-emitted', this, emittedPhoton);
+        },
+
         update: function(time, deltaTime) {},
 
         collideWithPhoton: function(photon) {
