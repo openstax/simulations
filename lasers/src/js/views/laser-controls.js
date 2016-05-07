@@ -58,7 +58,7 @@ define(function(require) {
 
             // Create the intensity slider
             this.$('.intensity-slider').noUiSlider({
-                start: 0,
+                start: this.simulation.seedBeam.get('photonsPerSecond'),
                 range: {
                     min: 0,
                     max: this.model.get('maxPhotonsPerSecond')
@@ -73,6 +73,8 @@ define(function(require) {
             // Save the label elements for each slider header
             this.$intensityValue = this.$('.intensity-value');
             this.$wavelengthValue = this.$('.wavelength-value');
+
+            this.updateIntensityLabel(this.simulation.seedBeam.get('photonsPerSecond'));
 
             return this;
         },
@@ -92,11 +94,14 @@ define(function(require) {
         changeIntensity: function(event) {
             this.inputLock(function() {
                 var photonsPerSecond = parseInt(this.$('.intensity-slider').val());
-                var percent = Math.round((photonsPerSecond / this.simulation.seedBeam.get('maxPhotonsPerSecond')) * 100);
-
-                this.$intensityValue.text(percent + '%');
+                this.updateIntensityLabel(photonsPerSecond);
                 this.simulation.seedBeam.set('photonsPerSecond', photonsPerSecond);
             });
+        },
+
+        updateIntensityLabel: function(photonsPerSecond) {
+            var percent = Math.round((photonsPerSecond / this.simulation.seedBeam.get('maxPhotonsPerSecond')) * 100);
+            this.$intensityValue.text(percent + '%');
         }
 
     });
