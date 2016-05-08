@@ -70,9 +70,16 @@ define(function (require) {
         },
 
         initLaserControlsView: function() {
-            this.laserControlsView = new LaserControlsView({
+            this.laser1ControlsView = new LaserControlsView({
                 simulation: this.simulation,
-                model: this.simulation.seedBeam
+                model: this.simulation.seedBeam,
+                number: 1
+            });
+
+            this.laser2ControlsView = new LaserControlsView({
+                simulation: this.simulation,
+                model: this.simulation.pumpingBeam,
+                number: 2
             });
         },
 
@@ -112,8 +119,10 @@ define(function (require) {
          * Renders the laser controls view
          */
         renderLaserControls: function() {
-            this.laserControlsView.render();
-            this.$el.append(this.laserControlsView.el);
+            this.laser1ControlsView.render();
+            this.laser2ControlsView.render();
+            this.$el.append(this.laser1ControlsView.el);
+            this.$el.append(this.laser2ControlsView.el);
         },
 
         /**
@@ -131,7 +140,8 @@ define(function (require) {
         postRender: function() {
             LasersSimView.prototype.postRender.apply(this);
             
-            this.laserControlsView.postRender();
+            this.laser1ControlsView.postRender();
+            this.laser2ControlsView.postRender();
             this.laserPowerView.postRender();
         },
 

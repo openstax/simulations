@@ -8,6 +8,12 @@
     top: 370px;
     width: 280px;
 
+    @media screen and (max-height: @short-window) {
+        left: @short-screen-panel-margin;
+        top: 224px;
+        width: 300px;
+    }
+
     .power-meter-wrapper {
 
         label {
@@ -25,6 +31,10 @@
             padding: 4px;
             margin-top: 5px;
             float: right;
+
+            @media screen and (max-height: @short-window) {
+                width: 200px;
+            }
 
             .power-meter-segment {
                 float: left;

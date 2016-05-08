@@ -113,7 +113,7 @@ define(function(require) {
         createEnergyLevels: function() {
             var x = this.axisOriginX + 10;
             var width = this.width - x - this.padding;
-            var minY = this.padding + 10;
+            var minY = this.padding + 16;
             var maxY = this.height - this.padding - 10;
 
             var groundStateEnergy = this.simulation.getGroundState().getEnergyLevel();

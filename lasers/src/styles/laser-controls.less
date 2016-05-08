@@ -8,6 +8,19 @@
     top: @panel-margin;
     left: @panel-margin;
 
+    @media screen and (max-height: @short-window) {
+        &.laser-1 {
+            left: 324px;
+            top: @short-screen-panel-margin;
+        }
+        
+        &.laser-2 {
+            left: inherit;
+            right: (@short-screen-panel-margin + @panel-width + @short-screen-panel-margin);
+            top: @short-screen-panel-margin;
+        }
+    }
+
     .intensity-slider-wrapper {
         padding-left: 8px;
         padding-right: 8px;

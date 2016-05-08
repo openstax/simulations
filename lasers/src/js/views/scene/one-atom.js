@@ -49,9 +49,9 @@ define(function(require) {
             var scale;
 
             if (AppView.windowIsShort()) {
-                this.viewOriginX = 50;
-                this.viewOriginY = 0;
-                scale = 0.98;
+                this.viewOriginX = 320;
+                this.viewOriginY = 120;
+                scale = 0.76;
             }
             else {
                 this.viewOriginX = 50;
@@ -122,8 +122,15 @@ define(function(require) {
                 simulation: this.simulation
             });
 
-            this.energyLevelPanelView.displayObject.x = 590;
-            this.energyLevelPanelView.displayObject.y = 350;
+            if (AppView.windowIsShort()) {
+                this.energyLevelPanelView.displayObject.x = 12;
+                this.energyLevelPanelView.displayObject.y = 12;
+            }
+            else {
+                this.energyLevelPanelView.displayObject.x = 590;
+                this.energyLevelPanelView.displayObject.y = 350;
+            }
+            
 
             this.foregroundLayer.addChild(this.energyLevelPanelView.displayObject);
         },

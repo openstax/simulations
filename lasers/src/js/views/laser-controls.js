@@ -31,8 +31,12 @@ define(function(require) {
         },
 
         initialize: function(options) {
+            options = _.extend({
+                number: ''
+            }, options);
             
             this.simulation = options.simulation;
+            this.number = options.number;
             
             this.wavelengthSliderView = new WavelengthSliderView({
                 defaultWavelength: this.model.get('wavelength'),
@@ -53,8 +57,13 @@ define(function(require) {
         render: function() {
             // Render the base template
             this.$el.append(this.template({
-                unique: this.cid
+                unique: this.cid,
+                number: this.number
             }));
+
+            // Add a class to help position it
+            if (this.number)
+                this.$el.addClass('laser-' + this.number);
 
             // Create the intensity slider
             this.$('.intensity-slider').noUiSlider({
