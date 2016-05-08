@@ -71,13 +71,11 @@ define(function (require) {
 
         initLaserControlsView: function() {
             this.laser1ControlsView = new LaserControlsView({
-                simulation: this.simulation,
                 model: this.simulation.seedBeam,
                 number: 1
             });
 
             this.laser2ControlsView = new LaserControlsView({
-                simulation: this.simulation,
                 model: this.simulation.pumpingBeam,
                 number: 2
             });

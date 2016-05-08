@@ -35,7 +35,6 @@ define(function(require) {
                 number: ''
             }, options);
             
-            this.simulation = options.simulation;
             this.number = options.number;
             
             this.wavelengthSliderView = new WavelengthSliderView({
@@ -67,7 +66,7 @@ define(function(require) {
 
             // Create the intensity slider
             this.$('.intensity-slider').noUiSlider({
-                start: this.simulation.seedBeam.get('photonsPerSecond'),
+                start: this.model.get('photonsPerSecond'),
                 range: {
                     min: 0,
                     max: this.model.get('maxPhotonsPerSecond')
@@ -83,7 +82,7 @@ define(function(require) {
             this.$intensityValue = this.$('.intensity-value');
             this.$wavelengthValue = this.$('.wavelength-value');
 
-            this.updateIntensityLabel(this.simulation.seedBeam.get('photonsPerSecond'));
+            this.updateIntensityLabel(this.model.get('photonsPerSecond'));
 
             return this;
         },
@@ -96,7 +95,7 @@ define(function(require) {
             this.inputLock(function() {
                 var wavelength = parseInt($(event.target).val());
                 this.$wavelengthValue.text(wavelength + 'nm');
-                this.simulation.seedBeam.set('wavelength', wavelength);
+                this.model.set('wavelength', wavelength);
             });
         },
 
@@ -104,12 +103,12 @@ define(function(require) {
             this.inputLock(function() {
                 var photonsPerSecond = parseInt(this.$('.intensity-slider').val());
                 this.updateIntensityLabel(photonsPerSecond);
-                this.simulation.seedBeam.set('photonsPerSecond', photonsPerSecond);
+                this.model.set('photonsPerSecond', photonsPerSecond);
             });
         },
 
         updateIntensityLabel: function(photonsPerSecond) {
-            var percent = Math.round((photonsPerSecond / this.simulation.seedBeam.get('maxPhotonsPerSecond')) * 100);
+            var percent = Math.round((photonsPerSecond / this.model.get('maxPhotonsPerSecond')) * 100);
             this.$intensityValue.text(percent + '%');
         }
 

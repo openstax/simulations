@@ -54,6 +54,8 @@ define(function(require) {
 
             // Initialize the graphics
             this.initGraphics();
+
+            this.listenTo(this.simulation, 'atomic-states-changed', this.energyLevelsChanged);
         },
 
         /**
@@ -111,6 +113,12 @@ define(function(require) {
         },
 
         createEnergyLevels: function() {
+            // Remove old ones
+            for (var j = this.energyLevelViews.length - 1; j >= 0; j--) {
+                this.energyLevelViews[j].remove();
+                this.energyLevelViews.splice(j, 1);
+            }
+
             var x = this.axisOriginX + 10;
             var width = this.width - x - this.padding;
             var minY = this.padding + 16;
@@ -140,9 +148,14 @@ define(function(require) {
                 });
                 energyLevelView.displayObject.x = x;
 
+                this.energyLevelViews.push(energyLevelView);
                 this.energyLevelsLayer.addChild(energyLevelView.displayObject);
             }
         },
+
+        energyLevelsChanged: function() {
+            this.createEnergyLevels();
+        }
 
     }, Constants.EnergyLevelPanelView);
 

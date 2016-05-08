@@ -41,7 +41,7 @@ define(function(require) {
             this.initMirrors();
             this.initAtom();
             this.initPhotons();
-            this.initLamp();
+            this.initLamps();
             this.initEnergyLevelPanel();
         },
 
@@ -108,13 +108,19 @@ define(function(require) {
             this.photonElectronLayer.addChild(this.photonsView.displayObject);
         },
 
-        initLamp: function() {
-            this.lampView = new LampView({
+        initLamps: function() {
+            this.lamp1View = new LampView({
                 model: this.simulation.seedBeam,
                 mvt: this.mvt
             });
 
-            this.foregroundLayer.addChild(this.lampView.displayObject);
+            this.lamp2View = new LampView({
+                model: this.simulation.pumpingBeam,
+                mvt: this.mvt
+            });
+
+            this.foregroundLayer.addChild(this.lamp1View.displayObject);
+            this.foregroundLayer.addChild(this.lamp2View.displayObject);
         },
 
         initEnergyLevelPanel: function() {

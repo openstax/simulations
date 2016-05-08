@@ -52,6 +52,7 @@ define(function (require) {
             'click .pause-btn' : 'pause',
             'click .step-btn'  : 'step',
 
+            'click .energy-levels' : 'changeEnergyLevels',
             'click .enable-mirrors-check' : 'toggleMirrors'
         },
 
@@ -175,6 +176,12 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+        },
+
+        changeEnergyLevels: function(event) {
+            var $radio = $(event.target).closest('input[type="radio"]');
+            var numLevels = parseInt($radio.val());
+            this.simulation.setNumEnergyLevels(numLevels);
         },
 
         toggleMirrors: function(event) {
