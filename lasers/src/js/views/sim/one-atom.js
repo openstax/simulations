@@ -100,21 +100,7 @@ define(function (require) {
 
             return this;
         },
-
-        /**
-         * Renders page content. Should be overriden by child classes
-         */
-        renderScaffolding: function() {
-            var data = {
-                Constants: Constants,
-                Assets: Assets,
-                simulation: this.simulation,
-                unique: this.cid
-            };
-            this.$el.html(this.template(data));
-            this.$('select').selectpicker();
-        },
-
+        
         /**
          * Renders the laser controls view
          */

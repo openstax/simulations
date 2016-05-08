@@ -50,7 +50,9 @@ define(function (require) {
         events: {
             'click .play-btn'  : 'play',
             'click .pause-btn' : 'pause',
-            'click .step-btn'  : 'step'
+            'click .step-btn'  : 'step',
+
+            'click .enable-mirrors-check' : 'toggleMirrors'
         },
 
         /**
@@ -68,7 +70,9 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.listenTo(this.simulation, 'change:paused',         this.pausedChanged);
+            this.listenTo(this.simulation, 'change:mirrorsEnabled', this.mirrorsEnabledChanged);
+
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
@@ -107,11 +111,23 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
+                Assets: Assets,
                 simulation: this.simulation,
                 unique: this.cid
             };
+
             this.$el.html(this.template(data));
+
             this.$('select').selectpicker();
+
+            this.$('.reflectivity-slider').noUiSlider({
+                start: 100,
+                range: {
+                    min: 0,
+                    max: 100
+                },
+                connect: 'lower'
+            });
         },
 
         /**
@@ -135,6 +151,7 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.mirrorsEnabledChanged(this.simulation, this.simulation.get('mirrorsEnabled'));
         },
 
         /**
@@ -158,6 +175,20 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+        },
+
+        toggleMirrors: function(event) {
+            if ($(event.target).is(':checked'))
+                this.simulation.set('mirrorsEnabled', true);
+            else
+                this.simulation.set('mirrorsEnabled', false);
+        },
+
+        mirrorsEnabledChanged: function(simulation, mirrorsEnabled) {
+            if (mirrorsEnabled)
+                this.$('.mirror-options').show();
+            else
+                this.$('.mirror-options').hide();
         },
 
         /**
