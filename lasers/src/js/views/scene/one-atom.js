@@ -49,7 +49,7 @@ define(function(require) {
             var scale;
 
             if (AppView.windowIsShort()) {
-                this.viewOriginX = 320;
+                this.viewOriginX = 294;
                 this.viewOriginY = 120;
                 scale = 0.76;
             }
