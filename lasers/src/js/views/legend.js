@@ -5,6 +5,7 @@ define(function(require) {
     var $        = require('jquery');
     var _        = require('underscore');
     var Backbone = require('backbone'); Backbone.$ = $;
+    var PIXI     = require('pixi');
 
     var PixiToImage        = require('common/v3/pixi/pixi-to-image');
     var ModelViewTransform = require('common/math/model-view-transform');
@@ -97,11 +98,19 @@ define(function(require) {
                 Math.ceil(widestItem.displayObject.width * widestItem.displayObject.scale.x);
 
             var items = _.map(this.items, function(item) {
+                var width  = item.width ? item.width : item.displayObject.width;
+                var height = item.height ? item.height : item.displayObject.height;
+
+                var container = new PIXI.Container();
+                container.addChild(item.displayObject);
+                container.scale.x = 2;
+                container.scale.y = 2;
+
                 return {
                     label: item.label,
-                    img: PixiToImage.displayObjectToDataURI(item.displayObject, 1),
-                    width: item.width ? item.width : item.displayObject.width,
-                    height: item.height ? item.height : item.displayObject.height,
+                    img: PixiToImage.displayObjectToDataURI(container, 1),
+                    width: width,
+                    height: height,
                     containerWidth: widestWidth
                 };
             });
