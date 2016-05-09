@@ -71,8 +71,9 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:paused',         this.pausedChanged);
-            this.listenTo(this.simulation, 'change:mirrorsEnabled', this.mirrorsEnabledChanged);
+            this.listenTo(this.simulation, 'change:paused',           this.pausedChanged);
+            this.listenTo(this.simulation, 'change:mirrorsEnabled',   this.mirrorsEnabledChanged);
+            this.listenTo(this.simulation, 'change:elementProperties', this.elementPropertiesChanged);
 
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
@@ -153,6 +154,7 @@ define(function (require) {
         postRender: function() {
             this.sceneView.postRender();
             this.mirrorsEnabledChanged(this.simulation, this.simulation.get('mirrorsEnabled'));
+            this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
         },
 
         /**
@@ -206,6 +208,13 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        elementPropertiesChanged: function(simulation, elementProperties) {
+            if (elementProperties === simulation.twoLevelProperties)
+                this.$('.three-level-options').hide();
+            else
+                this.$('.three-level-options').show();
         },
 
         showHelp: function() {

@@ -35,6 +35,30 @@
                 </li>
             </ul>
 
+            <h2 class="three-level-options">Lamp View</h2>
+            <ul class="radios three-level-options">
+                <li>
+                    <input type="radio" name="lamp-view-<%= unique %>" value="photons" id="lamp-view-photons-<%= unique %>" checked>
+                    <label for="lamp-view-photons-<%= unique %>">Photons</label>
+                </li>
+                <li>
+                    <input type="radio" name="lamp-view-<%= unique %>" value="beam" id="lamp-view-beam-<%= unique %>">
+                    <label for="lamp-view-beam-<%= unique %>">Beam</label>
+                </li>
+            </ul>
+
+            <h2 class="three-level-options">Lower Transition</h2>
+            <ul class="radios three-level-options">
+                <li>
+                    <input type="radio" name="lower-transition-<%= unique %>" value="photons" id="lower-transition-photons-<%= unique %>" checked>
+                    <label for="lower-transition-photons-<%= unique %>">Photons</label>
+                </li>
+                <li>
+                    <input type="radio" name="lower-transition-<%= unique %>" value="wave" id="lower-transition-wave-<%= unique %>">
+                    <label for="lower-transition-wave-<%= unique %>">Wave view</label>
+                </li>
+            </ul>
+
             <h2>Other Options</h2>
             <ul class="checkboxes">
                 <li>
@@ -49,6 +73,13 @@
                     <div class="slider reflectivity-slider"></div>
                 </div>
             </div>
+
+            <ul class="checkboxes three-level-options">
+                <li class="three-level-option">
+                    <input type="checkbox" class="display-emitted-photons-check" id="display-emitted-photons-check-<%= unique %>">
+                    <label for="display-emitted-photons-check-<%= unique %>">Display photons emitted from upper energy state</label>
+                </li>
+            </ul>
         </div>
     </div>
     <div class="sim-controls-right">
