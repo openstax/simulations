@@ -1,0 +1,19 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "mixins.less";
+
+.legend-view {
+    .legend-symbol {
+        margin-bottom: 4px;
+
+        @media screen and (max-height: @short-window) {
+            display: inline-block;
+        }
+
+        .legend-img-wrapper {
+            display: inline-block;
+            margin-right: 12px;
+            text-align: center;
+        }
+    }
+}

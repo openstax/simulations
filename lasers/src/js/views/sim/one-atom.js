@@ -12,6 +12,7 @@ define(function (require) {
     var OneAtomSceneView  = require('views/scene/one-atom');
     var LaserControlsView = require('views/laser-controls');
     var LaserPowerView    = require('views/laser-power');
+    var LegendView        = require('views/legend');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -51,6 +52,7 @@ define(function (require) {
 
             this.initLaserControlsView();
             this.initLaserPowerView();
+            this.initLegendView();
         },
 
         /**
@@ -87,6 +89,13 @@ define(function (require) {
             });
         },
 
+        initLegendView: function() {
+            this.legendView = new LegendView({ 
+                renderer: this.sceneView.renderer,
+                simulation: this.simulation
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -117,6 +126,11 @@ define(function (require) {
             this.$el.append(this.laserPowerView.el);
         },
 
+        renderLegend: function() {
+            this.legendView.render();
+            this.$('.legend-panel').append(this.legendView.el);
+        },
+
         /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
@@ -127,6 +141,7 @@ define(function (require) {
             this.laser1ControlsView.postRender();
             this.laser2ControlsView.postRender();
             this.laserPowerView.postRender();
+            this.renderLegend();
         },
 
         /**
