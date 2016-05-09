@@ -23,43 +23,26 @@
         </div>
 
         <div class="sim-controls one-atom-options-panel">
-            <h2>Energy Levels</h2>
-            <ul class="radios">
-                <li>
-                    <input type="radio" name="energy-levels-<%= unique %>" value="2" class="energy-levels" id="energy-levels-2-<%= unique %>" checked>
-                    <label for="energy-levels-2-<%= unique %>">Two</label>
-                </li>
-                <li>
-                    <input type="radio" name="energy-levels-<%= unique %>" value="3" class="energy-levels" id="energy-levels-3-<%= unique %>">
-                    <label for="energy-levels-3-<%= unique %>">Three</label>
-                </li>
-            </ul>
+            <h2>Options</h2>
 
-            <h2 class="three-level-options">Lamp View</h2>
-            <ul class="radios three-level-options">
-                <li>
-                    <input type="radio" name="lamp-view-<%= unique %>" value="photons" id="lamp-view-photons-<%= unique %>" checked>
-                    <label for="lamp-view-photons-<%= unique %>">Photons</label>
-                </li>
-                <li>
-                    <input type="radio" name="lamp-view-<%= unique %>" value="beam" id="lamp-view-beam-<%= unique %>">
-                    <label for="lamp-view-beam-<%= unique %>">Beam</label>
-                </li>
-            </ul>
+            <label>Energy Levels</label>
+            <select class="energy-levels">
+                <option value="2">Two Levels</option>
+                <option value="3">Three Levels</option>
+            </select>
 
-            <h2 class="three-level-options">Lower Transition</h2>
-            <ul class="radios three-level-options">
-                <li>
-                    <input type="radio" name="lower-transition-<%= unique %>" value="photons" id="lower-transition-photons-<%= unique %>" checked>
-                    <label for="lower-transition-photons-<%= unique %>">Photons</label>
-                </li>
-                <li>
-                    <input type="radio" name="lower-transition-<%= unique %>" value="wave" id="lower-transition-wave-<%= unique %>">
-                    <label for="lower-transition-wave-<%= unique %>">Wave view</label>
-                </li>
-            </ul>
+            <label class="three-level-options">Lamp View</label>
+            <select class="energy-levels three-level-options">
+                <option value="photons">Photons</option>
+                <option value="beam">Beam</option>
+            </select>
 
-            <h2>Other Options</h2>
+            <label class="three-level-options">Lower Transition</label>
+            <select class="lower-transition three-level-options">
+                <option value="photons">Photons</option>
+                <option value="wave">Wave View</option>
+            </select>
+
             <ul class="checkboxes">
                 <li>
                     <input type="checkbox" class="enable-mirrors-check" id="enable-mirrors-check-<%= unique %>">

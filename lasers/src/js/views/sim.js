@@ -52,7 +52,7 @@ define(function (require) {
             'click .pause-btn' : 'pause',
             'click .step-btn'  : 'step',
 
-            'click .energy-levels' : 'changeEnergyLevels',
+            'change .energy-levels' : 'changeEnergyLevels',
             'click .enable-mirrors-check' : 'toggleMirrors'
         },
 
@@ -181,8 +181,7 @@ define(function (require) {
         },
 
         changeEnergyLevels: function(event) {
-            var $radio = $(event.target).closest('input[type="radio"]');
-            var numLevels = parseInt($radio.val());
+            var numLevels = parseInt($(event.target).val());
             this.simulation.setNumEnergyLevels(numLevels);
         },
 

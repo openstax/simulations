@@ -79,6 +79,11 @@
         list-style: none;
         padding: 0;
         margin: 0;
+        margin-top: 4px;
+
+        &.three-level-options {
+            margin-top: 18px;
+        }
 
         li {
             text-align: left;
@@ -95,12 +100,6 @@
         }
     }
 
-    .lamp-view-label,
-    .lower-transition-label,
-    ul.checkboxes {
-        margin-top: 12px;
-    }
-
     .slider-header {
         display: block;
 
@@ -112,38 +111,84 @@
 
     .bootstrap-select {
         width: 100% !important;
+        background-color: transparent;
+        border-color: transparent;
+        margin-bottom: 8px;
 
-        .dropdown-toggle {
-            background: fadeout(#fff, 70%);
+        > .btn {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(0, 0, 0, 0.14);
+            text-transform: capitalize;
 
             &:focus {
-                outline: 0;
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
             }
         }
 
-        li > a {
-            outline: 0;
+        a {
+            text-transform: capitalize;
         }
+
+        a:focus {
+            outline: none;
+        }
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+
+            > .btn {
+                padding: 5px 12px;
+            }
+        }
+    }
+
+    .bootstrap-select.open > .btn {
+        .box-shadow(none);
     }
 
     .target-select-wrapper {
         margin-bottom: 16px;
     }
 
-    .legend {
-        .legend-symbol {
-            margin-bottom: 4px;
-
-            .legend-img-wrapper {
-                display: inline-block;
-                margin-right: 8px;
-                width: 50px;
-                text-align: center;
-            }
-        }
-    }
-
     .mirror-options {
         margin-top: 12px;
+    }
+
+    &.legend-panel {
+        .legend {
+            .legend-symbol {
+                margin-bottom: 4px;
+
+                .legend-img-wrapper {
+                    display: inline-block;
+                    margin-right: 8px;
+                    width: 50px;
+                    text-align: center;
+                }
+            }
+        }
+
+        @media screen and (max-height: @short-window) {
+            position: absolute;
+            right: 100%;
+            top: 335px;
+            width: 250px;
+            background: transparent;
+            box-shadow: none;
+
+            h2 {
+                display: none;
+            }
+
+            .legend {
+                .legend-symbol {
+                    display: inline-block;
+                }
+            }
+        }
     }
 }
