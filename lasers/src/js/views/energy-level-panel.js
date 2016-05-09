@@ -87,7 +87,7 @@ define(function(require) {
         },
 
         initAxis: function() {
-            var labelWidth = 20;
+            var labelWidth = 15;
             var x = this.padding + labelWidth;
             var y0 = this.height - this.padding;
             var y1 = this.padding;
@@ -103,7 +103,7 @@ define(function(require) {
             text.rotation = -Math.PI / 2;
             text.anchor.y = 0;
             text.anchor.x = 0.5;
-            text.x = this.padding;
+            text.x = this.padding - 5;
             text.y = this.height / 2;
 
             this.displayObject.addChild(graphics);

@@ -51,6 +51,8 @@ define(function (require) {
 
             this.initLaserControlsView();
             this.initLaserPowerView();
+
+            this.listenTo(this.simulation, 'change:elementProperties', this.elementPropertiesChanged);
         },
 
         /**
@@ -127,6 +129,8 @@ define(function (require) {
             this.laser1ControlsView.postRender();
             this.laser2ControlsView.postRender();
             this.laserPowerView.postRender();
+
+            this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
         },
 
         /**
@@ -136,6 +140,13 @@ define(function (require) {
             LasersSimView.prototype.resetComponents.apply(this);
             
         },
+
+        elementPropertiesChanged: function(simulation, elementProperties) {
+            if (elementProperties === simulation.twoLevelProperties)
+                this.laser2ControlsView.hide();
+            else
+                this.laser2ControlsView.show();
+        }
 
     });
 

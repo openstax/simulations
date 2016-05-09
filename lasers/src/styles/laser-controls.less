@@ -5,17 +5,24 @@
 .beam-controls {
     width: auto;
     position: absolute;
-    top: @panel-margin;
-    left: @panel-margin;
+
+    &.laser-1 {
+        top: 408px;
+        left: @panel-margin;
+    }
+    
+    &.laser-2 {
+        right: (12px + @panel-width + @panel-margin);
+        top: @panel-margin;
+    }
 
     @media screen and (max-height: @short-window) {
         &.laser-1 {
-            left: 324px;
+            left: @short-screen-panel-margin + @energy-levels-panel-width + @short-screen-panel-margin;;
             top: @short-screen-panel-margin;
         }
         
         &.laser-2 {
-            left: inherit;
             right: (@short-screen-panel-margin + @panel-width + @short-screen-panel-margin);
             top: @short-screen-panel-margin;
         }

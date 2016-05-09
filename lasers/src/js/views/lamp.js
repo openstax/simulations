@@ -19,9 +19,6 @@ define(function(require) {
 
             this.listenTo(this.model, 'change:wavelength',       this.drawLight);
             this.listenTo(this.model, 'change:photonsPerSecond', this.drawLight);
-            this.listenTo(this.model, 'change:enabled',          this.enabledChanged);
-
-            this.enabledChanged(this.model, this.model.get('enabled'));
         },
 
         initGraphics: function() {
@@ -85,10 +82,6 @@ define(function(require) {
 
         getLampRadiusA: function() {
             return this.flashlight.width * (6 / 161);
-        },
-
-        enabledChanged: function(model, enabled) {
-            this.displayObject.visible = enabled;
         }
 
     });

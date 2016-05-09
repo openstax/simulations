@@ -69,7 +69,7 @@ define(function(require) {
         initGraphics: function() {
             var handleThickness = 20;
             this.dragHandle = new PIXI.Container();
-            this.dragHandle.hitArea = new PIXI.Rectangle(0, -handleThickness / 2, this.width - this.paddingLeft, handleThickness);
+            this.dragHandle.hitArea = new PIXI.Rectangle(0, -handleThickness / 2, this.width - this.paddingLeft + 10, handleThickness);
             this.dragHandle.buttonMode = true;
 
             this.wavelengthColorGraphics = new PIXI.Graphics();
@@ -80,7 +80,7 @@ define(function(require) {
             this.atomSprite.scale.x = this.atomSprite.scale.y = ((this.atomRadius * 2) / this.atomSprite.texture.width);
             this.atomSprite.x = this.width - this.paddingLeft;
 
-            var arrowX = Math.floor(this.atomSprite.x * 0.8);
+            var arrowX = Math.floor(this.atomSprite.x * 0.85);
             this.arrowGraphics = new PIXI.Graphics();
             this.arrowGraphics.beginFill(0xAAAAAA, 1);
             this.arrowGraphics.drawArrow(arrowX, 0, arrowX, -12, 4, 9, 7);

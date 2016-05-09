@@ -42,8 +42,6 @@ define(function(require) {
                 minWavelength: QuantumConfig.MIN_WAVELENGTH,
                 maxWavelength: QuantumConfig.MAX_WAVELENGTH
             });
-
-            this.listenTo(this.model, 'change:enabled', this.enabledChanged);
         },
 
         reset: function() {
@@ -86,7 +84,6 @@ define(function(require) {
 
             // Set default values
             this.updateIntensityLabel(this.model.get('photonsPerSecond'));
-            this.enabledChanged(this.model, this.model.get('enabled'));
 
             return this;
         },
@@ -116,11 +113,12 @@ define(function(require) {
             this.$intensityValue.text(percent + '%');
         },
 
-        enabledChanged: function(model, enabled) {
-            if (enabled)
-                this.$el.show();
-            else
-                this.$el.hide();
+        show: function() {
+            this.$el.show();
+        },
+
+        hide: function() {
+            this.$el.hide();
         }
 
     });

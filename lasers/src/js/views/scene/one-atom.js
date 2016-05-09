@@ -26,6 +26,8 @@ define(function(require) {
 
         initialize: function(options) {
             LasersSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation, 'change:elementProperties', this.elementPropertiesChanged);
         },
 
         renderContent: function() {
@@ -43,6 +45,8 @@ define(function(require) {
             this.initPhotons();
             this.initLamps();
             this.initEnergyLevelPanel();
+
+            this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
         },
 
         initMVT: function() {
@@ -50,12 +54,12 @@ define(function(require) {
 
             if (AppView.windowIsShort()) {
                 this.viewOriginX = 294;
-                this.viewOriginY = 120;
+                this.viewOriginY = 90;
                 scale = 0.76;
             }
             else {
-                this.viewOriginX = 50;
-                this.viewOriginY = 30;
+                this.viewOriginX = 150;
+                this.viewOriginY = 80;
                 scale = 0.98; 
             }
 
@@ -133,8 +137,8 @@ define(function(require) {
                 this.energyLevelPanelView.displayObject.y = 12;
             }
             else {
-                this.energyLevelPanelView.displayObject.x = 590;
-                this.energyLevelPanelView.displayObject.y = 350;
+                this.energyLevelPanelView.displayObject.x = 20;
+                this.energyLevelPanelView.displayObject.y = 20;
             }
             
 
@@ -146,6 +150,13 @@ define(function(require) {
 
             this.photonsView.update(time, deltaTime, paused);
         },
+
+        elementPropertiesChanged: function(simulation, elementProperties) {
+            if (elementProperties === simulation.twoLevelProperties)
+                this.lamp2View.hide();
+            else
+                this.lamp2View.show();
+        }
 
     });
 
