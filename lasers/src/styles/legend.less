@@ -8,12 +8,17 @@
 
         @media screen and (max-height: @short-window) {
             display: inline-block;
+            margin-right: 14px;
         }
 
         .legend-img-wrapper {
             display: inline-block;
             margin-right: 12px;
             text-align: center;
+
+            @media screen and (max-height: @short-window) {
+                margin-right: 0;
+            }
         }
     }
 }
