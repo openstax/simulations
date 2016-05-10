@@ -73,6 +73,8 @@ define(function(require) {
             this.listenTo(this.simulation, 'atomic-states-changed', this.energyLevelsChanged);
             this.listenTo(this.simulation.seedBeam,    'change:wavelength change:photonsPerSecond', this.beamChanged);
             this.listenTo(this.simulation.pumpingBeam, 'change:wavelength change:photonsPerSecond', this.beamChanged);
+            this.listenTo(this.simulation.seedBeam,    'change:enabled', this.seedBeamEnabledChanged);
+            this.listenTo(this.simulation.pumpingBeam, 'change:enabled', this.pumpingBeamEnabledChanged);
         },
 
         /**
@@ -143,7 +145,10 @@ define(function(require) {
             this.pumpSquiggle.rotation = -Math.PI / 2;
 
             this.displayObject.addChild(this.seedSquiggle);
-            this.displayObject.addChild(this.seedSquiggle);
+            this.displayObject.addChild(this.pumpSquiggle);
+
+            this.seedBeamEnabledChanged(null, this.simulation.seedBeam.get('enabled'));
+            this.pumpingBeamEnabledChanged(null, this.simulation.pumpingBeam.get('enabled'));
         },
 
         drawSquiggles: function() {
@@ -240,6 +245,14 @@ define(function(require) {
                 this.drawSquiggle(this.seedSquiggle, model);
             else
                 this.drawSquiggle(this.pumpSquiggle, model);
+        },
+
+        seedBeamEnabledChanged: function(model, enabled) {
+            this.seedSquiggle.visible = enabled;
+        },
+
+        pumpingBeamEnabledChanged: function(model, enabled) {
+            this.pumpSquiggle.visible = enabled;
         }
 
     }, Constants.EnergyLevelPanelView);
