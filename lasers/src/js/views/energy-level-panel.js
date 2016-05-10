@@ -7,6 +7,7 @@ define(function(require) {
 
                            require('common/v3/pixi/create-drop-shadow');
                            require('common/v3/pixi/draw-stick-arrow');
+                           require('common/v3/pixi/draw-arrow');
     var AppView          = require('common/v3/app/app');
     var PixiView         = require('common/v3/pixi/view');
     var Colors           = require('common/colors/colors');
@@ -52,10 +53,26 @@ define(function(require) {
 
             this.energyLevelViews = [];
 
+            // Init graph parameters
+            this.minY = this.padding + 16;
+            this.maxY = this.height - this.padding - 10;
+            this.atomDiameter = 10;
+            this.squiggleAmplitude = this.atomDiameter; // Amplitude of the squiggle waves
+
+            var groundStateEnergy = this.simulation.getGroundState().getEnergyLevel();
+            this.energyToY = Functions.createLinearFunction(
+                groundStateEnergy + PhysicsUtil.wavelengthToEnergy(WavelengthColors.MIN_WAVELENGTH),
+                groundStateEnergy,
+                this.minY,
+                this.maxY
+            );
+
             // Initialize the graphics
             this.initGraphics();
 
             this.listenTo(this.simulation, 'atomic-states-changed', this.energyLevelsChanged);
+            this.listenTo(this.simulation.seedBeam,    'change:wavelength change:photonsPerSecond', this.beamChanged);
+            this.listenTo(this.simulation.pumpingBeam, 'change:wavelength change:photonsPerSecond', this.beamChanged);
         },
 
         /**
@@ -64,6 +81,8 @@ define(function(require) {
         initGraphics: function() {
             this.initPanel();
             this.initAxis();
+            this.initSquiggles();
+            this.drawSquiggles();
 
             this.energyLevelsLayer = new PIXI.Container();
             this.displayObject.addChild(this.energyLevelsLayer);
@@ -112,6 +131,74 @@ define(function(require) {
             this.axisOriginX = x;
         },
 
+        initSquiggles: function() {
+            this.seedSquiggle = new PIXI.Graphics();
+            this.pumpSquiggle = new PIXI.Graphics();
+
+            this.seedSquiggle.x = this.axisOriginX + this.squiggleAmplitude;
+            this.pumpSquiggle.x = this.axisOriginX + this.squiggleAmplitude * 3;
+            this.seedSquiggle.y = this.maxY;
+            this.pumpSquiggle.y = this.maxY;
+            this.seedSquiggle.rotation = -Math.PI / 2;
+            this.pumpSquiggle.rotation = -Math.PI / 2;
+
+            this.displayObject.addChild(this.seedSquiggle);
+            this.displayObject.addChild(this.seedSquiggle);
+        },
+
+        drawSquiggles: function() {
+            this.drawSquiggle(this.seedSquiggle, this.simulation.seedBeam);
+            this.drawSquiggle(this.pumpSquiggle, this.simulation.pumpingBeam);
+        },
+
+        drawSquiggle: function(graphics, beam) {
+            // Calculate all our rendering variables
+            var wavelength = beam.get('wavelength')
+            var color = Colors.parseHex(WavelengthColors.nmToHex(wavelength));
+            var beamEnergy = PhysicsUtil.wavelengthToEnergy(wavelength);
+            var groundStateEnergy = this.simulation.getGroundState().getEnergyLevel();
+            var y0 = this.energyToY(groundStateEnergy);
+            var y1 = this.energyToY(groundStateEnergy + beamEnergy);
+            var length = y0 - y1;
+            var amp = this.squiggleAmplitude;
+            var intensity = beam.get('photonsPerSecond') / beam.get('maxPhotonsPerSecond');
+            var alpha = Math.sqrt(intensity);
+            var arrowHeight = amp;
+            // So that the tip of the arrow will just touch an energy level line when it is supposed to
+            //   match the line, we need to subtract 1 from the length of the squiggle
+            var actualLength = length - 1;
+
+            graphics.clear();
+            graphics.lineStyle(1, color, alpha);
+
+            // Draw squiggle
+            var phaseAngle = 0;
+            var freqFactor = 15 * wavelength / 680;
+
+            for (var i = 0; i <= actualLength - arrowHeight * 2; i++) {
+                var k = Math.floor(Math.sin(phaseAngle + i * Math.PI * 2 / freqFactor) * amp / 2 + amp / 2);
+                for (var j = 0; j < amp; j++) {
+                    if (j === k) {
+                        if (i === 0)
+                            graphics.moveTo(i + arrowHeight, k);
+                        else
+                            graphics.lineTo(i + arrowHeight, k);
+                    }
+                }
+            }
+
+            // Draw arrows
+            graphics.lineStyle(0, 0, 0);
+            graphics.beginFill(color, alpha);
+
+            var tailWidth = 2;
+            var headWidth = amp * 1.2;
+            graphics.drawArrow(arrowHeight, amp / 2, 0, amp / 2, tailWidth, headWidth, arrowHeight);
+            graphics.drawArrow(actualLength - arrowHeight, amp / 2, actualLength, amp / 2, tailWidth, headWidth, arrowHeight);
+
+            graphics.endFill();
+        },
+
         createEnergyLevels: function() {
             // Remove old ones
             for (var j = this.energyLevelViews.length - 1; j >= 0; j--) {
@@ -121,25 +208,16 @@ define(function(require) {
 
             var x = this.axisOriginX + 10;
             var width = this.width - x - this.padding;
-            var minY = this.padding + 16;
-            var maxY = this.height - this.padding - 10;
-
             var groundStateEnergy = this.simulation.getGroundState().getEnergyLevel();
-            var energyToY = Functions.createLinearFunction(
-                groundStateEnergy + PhysicsUtil.wavelengthToEnergy(WavelengthColors.MIN_WAVELENGTH),
-                groundStateEnergy,
-                minY,
-                maxY
-            );
 
             var states = this.simulation.getStates();
             for (var i = 0; i < states.length; i++) {
                 var energyLevelView = new EnergyLevelView({
                     simulation: this.simulation,
                     model: states[i],
-                    energyToY: energyToY,
-                    minY: minY,
-                    maxY: maxY,
+                    energyToY: this.energyToY,
+                    minY: this.minY,
+                    maxY: this.maxY,
                     groundStateEnergy: groundStateEnergy,
                     width: width,
                     levelNumber: i + 1,
@@ -155,6 +233,13 @@ define(function(require) {
 
         energyLevelsChanged: function() {
             this.createEnergyLevels();
+        },
+
+        beamChanged: function(model, wavelength) {
+            if (model === this.simulation.seedBeam)
+                this.drawSquiggle(this.seedSquiggle, model);
+            else
+                this.drawSquiggle(this.pumpSquiggle, model);
         }
 
     }, Constants.EnergyLevelPanelView);

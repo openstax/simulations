@@ -52,8 +52,8 @@ define(function (require) {
             'click .pause-btn' : 'pause',
             'click .step-btn'  : 'step',
 
-            'change .energy-levels' : 'changeEnergyLevels',
-            'click .enable-mirrors-check' : 'toggleMirrors'
+            'change .energy-levels-select' : 'changeEnergyLevels',
+            'click .enable-mirrors-check'  : 'toggleMirrors'
         },
 
         /**
