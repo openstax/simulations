@@ -60,7 +60,7 @@ define(function (require) {
         },
 
         getReflectivity: function() {
-            this.get('reflectivity');
+            return this.get('reflectivity');
         },
 
         setReflectivity: function(reflectivity) {

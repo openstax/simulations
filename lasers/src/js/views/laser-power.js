@@ -66,6 +66,9 @@ define(function(require) {
         },
 
         updateBar: function($container, percent, simple) {
+            if (percent === 0)
+                return;
+            
             var segments = $container.segments;
             var lasingPercent = Constants.LASING_THRESHOLD / Constants.KABOOM_THRESHOLD;
             var dangerPercent = 0.75;
