@@ -217,6 +217,10 @@ define(function(require) {
 
             var states = this.simulation.getStates();
             for (var i = 0; i < states.length; i++) {
+                // Set the minimum lifetime to be two clock ticks, so we will always see an energy halo.
+                var minLifetime = Constants.DT * 2;
+                var maxLifetime = (i === 1) ? Constants.MAXIMUM_STATE_LIFETIME : Constants.MAXIMUM_STATE_LIFETIME / 4;
+
                 var energyLevelView = new EnergyLevelView({
                     simulation: this.simulation,
                     model: states[i],
@@ -227,7 +231,9 @@ define(function(require) {
                     width: width,
                     levelNumber: i + 1,
                     wavelengthChangeEnabled: (i > 0),
-                    lifetimeChangeEnabled: (i > 0)
+                    lifetimeChangeEnabled: (i > 0),
+                    minLifetime: minLifetime,
+                    maxLifetime: maxLifetime
                 });
                 energyLevelView.displayObject.x = x;
 

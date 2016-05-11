@@ -33,6 +33,8 @@ define(function (require, exports, module) {
         boxHeight: 120,
         boxWidth: 300,
         laserOffsetX: 50,
+        defaultMiddleStateMeanLifetime: Constants.MAXIMUM_STATE_LIFETIME,
+        defaultHighStateMeanLifetime: Constants.MAXIMUM_STATE_LIFETIME / 4,
 
         defaults: _.extend(LasersSimulation.prototype.defaults, {
             lasingPhotonViewMode:  Constants.PHOTON_DISCRETE,
@@ -44,6 +46,7 @@ define(function (require, exports, module) {
             LasersSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:mirrorsEnabled', this.mirrorsEnabledChanged);
+            this.on('change:elementProperties', this.elementPropertiesChanged);
         },
 
         /**
@@ -61,6 +64,8 @@ define(function (require, exports, module) {
             this.initTube();
             this.initBeams();
             this.initMirrors();
+
+            this.elementPropertiesChanged(this, this.get('elementProperties'));
         },
 
         initTube: function() {
@@ -211,6 +216,11 @@ define(function (require, exports, module) {
             }
 
             this.seedBeam.set('enabled', !mirrorsEnabled);
+        },
+
+        elementPropertiesChanged: function(simulation, elementProperties) {
+            this.getMiddleEnergyState().set('meanLifetime', this.defaultMiddleStateMeanLifetime);
+            this.getHighEnergyState().set('meanLifetime', this.defaultHighStateMeanLifetime);
         }
 
     }, Constants.BaseLasersSimulation);

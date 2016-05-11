@@ -55,6 +55,8 @@ define(function(require) {
             this.wavelengthChangeEnabled = options.wavelengthChangeEnabled;
             this.lifetimeChangeEnabled = options.lifetimeChangeEnabled;
             this.paddingLeft = 80;
+            this.minLifetime = options.minLifetime;
+            this.maxLifetime = options.maxLifetime;
             
             // Initialize the graphics
             this.initGraphics();
@@ -92,18 +94,21 @@ define(function(require) {
             this.displayObject.addChild(this.atomSprite);
             this.displayObject.addChild(this.dragHandle);
 
-            this.initSlider();
+            if (this.lifetimeChangeEnabled)
+                this.initSlider();
         },
 
         initSlider: function() {
-            var width = 50;
+            var minWidth = 30;
+            var maxWidth = 50;
+            var width = minWidth + Math.floor((maxWidth - minWidth) * (this.maxLifetime / Constants.MAXIMUM_STATE_LIFETIME));
 
             // Create the slider view
             this.sliderView = new SliderView({
-                start: 0,
+                start: this.model.get('meanLifetime'),
                 range: {
-                    min: 0,
-                    max: 5
+                    min: this.minLifetime,
+                    max: this.maxLifetime
                 },
 
                 width: width,
@@ -114,7 +119,7 @@ define(function(require) {
 
                 // handleSize: 14
             });
-            this.sliderView.displayObject.x = this.width - width;
+            this.sliderView.displayObject.x = this.width - maxWidth;
             this.sliderView.displayObject.y = 0;
             
 
