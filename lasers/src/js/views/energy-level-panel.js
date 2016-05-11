@@ -150,8 +150,10 @@ define(function(require) {
             
             for (var i = 0; i < this.simulation.atoms.length; i++) {
                 var sprite = AtomView.createSprite();
+                sprite.anchor.x = 0;
                 sprite.anchor.y = 1;
-                sprite.scale.x = sprite.scale.y = scale;
+                sprite.scale.x = scale;
+                sprite.scale.y = scale;
 
                 this.atomSprites.push(sprite);
                 this.displayObject.addChild(sprite);
@@ -162,8 +164,8 @@ define(function(require) {
             this.seedSquiggle = new PIXI.Graphics();
             this.pumpSquiggle = new PIXI.Graphics();
 
-            this.seedSquiggle.x = this.axisOriginX + this.squiggleAmplitude;
-            this.pumpSquiggle.x = this.axisOriginX + this.squiggleAmplitude * 3;
+            this.seedSquiggle.x = this.axisOriginX + this.squiggleAmplitude * 2;
+            this.pumpSquiggle.x = this.axisOriginX + this.squiggleAmplitude;
             this.seedSquiggle.y = this.maxY;
             this.pumpSquiggle.y = this.maxY;
             this.seedSquiggle.rotation = -Math.PI / 2;
@@ -291,7 +293,7 @@ define(function(require) {
                 // Move atoms
                 var currentLevelCount;
                 var currentLevel = 0;
-                var offsetX = this.squiggleAmplitude * 2;
+                var offsetX = this.squiggleAmplitude * 2 + 4;
                 var width = this.atomDiameter / 2;
                 var i = 0;
 
@@ -308,8 +310,6 @@ define(function(require) {
                     }
                     currentLevel++;
                 }
-
-                // console.log(this.numAtomsInLevel[0], this.numAtomsInLevel[1], this.numAtomsInLevel[2])
             }
         },
 
