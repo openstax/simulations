@@ -89,11 +89,6 @@ define(function (require, exports, module) {
 
             this.numPhotons = 0;
 
-            // Counters for the number of atoms in each state
-            this.numGroundStateAtoms = 0;
-            this.numMiddleStateAtoms = 0;
-            this.numHighStateAtoms = 0;
-
             this.set('elementProperties', this.twoLevelProperties);
         },
 
@@ -214,25 +209,6 @@ define(function (require, exports, module) {
                 this.atoms.at(i).setStates(this.getCurrentElementProperties().getStates());
             }
 
-            // Initialize the number of atoms in each level
-            this.numGroundStateAtoms = 0;
-            this.numMiddleStateAtoms = 0;
-            this.numHighStateAtoms = 0;
-
-            var elementProperties = this.getCurrentElementProperties();
-            for (i = 0; i < this.atoms.length; i++) {
-                var atom = this.atoms.at(i);
-
-                if (atom.getCurrentState().equals(elementProperties.getGroundState()))
-                    this.numGroundStateAtoms++;
-
-                if (atom.getCurrentState().equals(elementProperties.getMiddleEnergyState()))
-                    this.numMiddleStateAtoms++;
-
-                if (atom.getCurrentState().equals(elementProperties.getHighEnergyState()))
-                    this.numHighStateAtoms++;
-            }
-            
             this.trigger('atomic-states-changed', this);
         },
 
@@ -281,15 +257,26 @@ define(function (require, exports, module) {
         },
 
         getNumGroundStateAtoms: function() {
-            return this.numGroundStateAtoms;
+            return this.getNumAtomsWithState(this.getCurrentElementProperties().getGroundState());
         },
 
         getNumMiddleStateAtoms: function() {
-            return this.numMiddleStateAtoms;
+            return this.getNumAtomsWithState(this.getCurrentElementProperties().getMiddleEnergyState());
         },
 
         getNumHighStateAtoms: function() {
-            return this.numHighStateAtoms;
+            return this.getNumAtomsWithState(this.getCurrentElementProperties().getHighEnergyState());
+        },
+
+        getNumAtomsWithState: function(state) {
+            var count = 0
+            
+            for (i = 0; i < this.atoms.length; i++) {
+                if (this.atoms.at(i).getCurrentState().equals(state))
+                    count++;
+            }
+
+            return count;
         },
 
         setBounds: function(bounds) {

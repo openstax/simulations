@@ -13,6 +13,8 @@ define(function(require) {
     var WavelengthColors = require('common/colors/wavelength');
     var PhysicsUtil      = require('common/quantum/models/physics-util');
 
+    var AtomView = require('views/atom');
+
     var Constants = require('constants');
     var Assets    = require('assets');
 
@@ -76,9 +78,7 @@ define(function(require) {
 
             this.wavelengthColorGraphics = new PIXI.Graphics();
 
-            this.atomSprite = Assets.createSprite(Assets.Images.SPHERE);
-            this.atomSprite.anchor.x = 0.5;
-            this.atomSprite.anchor.y = 0.5;
+            this.atomSprite = AtomView.createSprite();
             this.atomSprite.scale.x = this.atomSprite.scale.y = ((this.atomRadius * 2) / this.atomSprite.texture.width);
             this.atomSprite.x = this.width - this.paddingLeft;
 

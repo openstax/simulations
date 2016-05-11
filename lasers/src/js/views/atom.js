@@ -20,7 +20,12 @@ define(function(require) {
          * Initializes the new AtomView.
          */
         initialize: function(options) {
+            options = _.extend({
+                showEnergyLevel: true
+            }, options);
+
             this.mvt = options.mvt;
+            this.showEnergyLevel = options.showEnergyLevel;
             
             this.initGraphics();
 
@@ -33,11 +38,9 @@ define(function(require) {
          */
         initGraphics: function() {
             this.energyLevelGraphics = new PIXI.Graphics();
+            this.energyLevelGraphics.visible = this.showEnergyLevel;
 
-            this.atomSprite = Assets.createSprite(Assets.Images.SPHERE);
-            this.atomSprite.anchor.x = 0.5;
-            this.atomSprite.anchor.y = 0.5;
-            this.atomSprite.tint = 0xBBBBBB;
+            this.atomSprite = AtomView.createSprite();
 
             this.label = new PIXI.Text('1', {
                 font: 'bold 18px Helvetica Neue',
@@ -46,6 +49,7 @@ define(function(require) {
             this.label.resolution = this.getResolution();
             this.label.anchor.x = 0.5;
             this.label.anchor.y = 0.5;
+            this.label.visible = this.showEnergyLevel;
 
             this.displayObject.addChild(this.energyLevelGraphics);
             this.displayObject.addChild(this.atomSprite);
@@ -71,6 +75,9 @@ define(function(require) {
         },
 
         updateAtomicState: function(model, currentState) {
+            if (!this.showEnergyLevel)
+                return;
+
             var graphics = this.energyLevelGraphics;
 
             graphics.clear();
@@ -114,6 +121,24 @@ define(function(require) {
             var radius = maxRingThickness * de2 / de1 + groundStateRingThickness + baseAtomRadius;
 
             return radius;
+        }
+
+    }, {
+
+        createSprite: function() {
+            var sprite = new PIXI.Sprite(AtomView.getTexture());
+            sprite.anchor.x = 0.5;
+            sprite.anchor.y = 0.5;
+            sprite.tint = 0xBBBBBB;
+            return sprite;
+        },
+
+        getTexture: function() {
+            return Assets.Texture(Assets.Images.SPHERE);
+        },
+
+        getTextureWidth: function() {
+            return AtomView.getTexture().width;
         }
 
     });

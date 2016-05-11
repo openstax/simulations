@@ -129,7 +129,8 @@ define(function(require) {
 
         initEnergyLevelPanel: function() {
             this.energyLevelPanelView = new EnergyLevelPanelView({
-                simulation: this.simulation
+                simulation: this.simulation,
+                averagingPeriod: 0
             });
 
             if (AppView.windowIsShort()) {
@@ -140,7 +141,6 @@ define(function(require) {
                 this.energyLevelPanelView.displayObject.x = 20;
                 this.energyLevelPanelView.displayObject.y = 20;
             }
-            
 
             this.foregroundLayer.addChild(this.energyLevelPanelView.displayObject);
         },
@@ -149,6 +149,7 @@ define(function(require) {
             LasersSceneView.prototype._update.apply(this, arguments);
 
             this.photonsView.update(time, deltaTime, paused);
+            this.energyLevelPanelView.update(time, deltaTime, paused);
         },
 
         elementPropertiesChanged: function(simulation, elementProperties) {

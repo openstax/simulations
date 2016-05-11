@@ -5,18 +5,20 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-                           require('common/v3/pixi/create-drop-shadow');
-                           require('common/v3/pixi/draw-stick-arrow');
-                           require('common/v3/pixi/draw-arrow');
-    var AppView          = require('common/v3/app/app');
-    var PixiView         = require('common/v3/pixi/view');
-    var Colors           = require('common/colors/colors');
-    var WavelengthColors = require('common/colors/wavelength');
-    var Rectangle        = require('common/math/rectangle');
-    var Functions        = require('common/math/functions');
-    var PhysicsUtil      = require('common/quantum/models/physics-util');
+                             require('common/v3/pixi/create-drop-shadow');
+                             require('common/v3/pixi/draw-stick-arrow');
+                             require('common/v3/pixi/draw-arrow');
+    var AppView            = require('common/v3/app/app');
+    var PixiView           = require('common/v3/pixi/view');
+    var Colors             = require('common/colors/colors');
+    var WavelengthColors   = require('common/colors/wavelength');
+    var Rectangle          = require('common/math/rectangle');
+    var Functions          = require('common/math/functions');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var PhysicsUtil        = require('common/quantum/models/physics-util');
 
     var EnergyLevelView = require('views/energy-level');
+    var AtomView        = require('views/atom');
 
     var Constants = require('constants');
     var Assets    = require('assets');
@@ -38,7 +40,9 @@ define(function(require) {
                 bgColor: '#f5f5f5',
                 bgAlpha: 0.75,
                 axisLineColor: '#000',
-                axisLineAlpha: 1
+                axisLineAlpha: 1,
+
+                averagingPeriod: 0
             }, options);
 
             // Required options
@@ -50,6 +54,7 @@ define(function(require) {
             this.bgAlpha = options.bgAlpha;
             this.axisLineColor = Colors.parseHex(options.axisLineColor);
             this.axisLineAlpha = options.axisLineAlpha;
+            this.averagingPeriod = options.averagingPeriod;
 
             this.energyLevelViews = [];
 
@@ -67,6 +72,11 @@ define(function(require) {
                 this.maxY
             );
 
+            this.atomCounts = [0, 0, 0];
+            this.numAtomsInLevel = [0, 0, 0];
+            this.numUpdatesToAverage = 0;
+            this.lastAtomUpdateTime = 0;
+
             // Initialize the graphics
             this.initGraphics();
 
@@ -83,6 +93,7 @@ define(function(require) {
         initGraphics: function() {
             this.initPanel();
             this.initAxis();
+            this.initAtoms();
             this.initSquiggles();
             this.drawSquiggles();
 
@@ -131,6 +142,20 @@ define(function(require) {
             this.displayObject.addChild(text);
 
             this.axisOriginX = x;
+        },
+
+        initAtoms: function() {
+            this.atomSprites = [];
+            var scale = this.atomDiameter / AtomView.getTextureWidth();
+            
+            for (var i = 0; i < this.simulation.atoms.length; i++) {
+                var sprite = AtomView.createSprite();
+                sprite.anchor.y = 1;
+                sprite.scale.x = sprite.scale.y = scale;
+
+                this.atomSprites.push(sprite);
+                this.displayObject.addChild(sprite);
+            }
         },
 
         initSquiggles: function() {
@@ -239,6 +264,52 @@ define(function(require) {
 
                 this.energyLevelViews.push(energyLevelView);
                 this.energyLevelsLayer.addChild(energyLevelView.displayObject);
+            }
+        },
+
+        update: function(time, deltaTime, paused) {
+            this.updateAtomCounts(time, deltaTime, paused);
+        },
+
+        updateAtomCounts: function(time, deltaTime, paused) {
+            this.atomCounts[0] += this.simulation.getNumGroundStateAtoms();
+            this.atomCounts[1] += this.simulation.getNumMiddleStateAtoms();
+            this.atomCounts[2] += this.simulation.getNumHighStateAtoms();
+
+            this.numUpdatesToAverage++;
+            if (time - this.lastAtomUpdateTime >= this.averagingPeriod) {
+                // Compute the average number of atoms in each state. Take care to round off rather than truncate.
+                this.numAtomsInLevel[0] = Math.floor(0.5 + this.atomCounts[0] / this.numUpdatesToAverage);
+                this.numAtomsInLevel[1] = Math.floor(0.5 + this.atomCounts[1] / this.numUpdatesToAverage);
+                this.numAtomsInLevel[2] = Math.floor(0.5 + this.atomCounts[2] / this.numUpdatesToAverage);
+                this.atomCounts[0] = 0;
+                this.atomCounts[1] = 0;
+                this.atomCounts[2] = 0;
+                this.numUpdatesToAverage = 0;
+                this.lastAtomUpdateTime = time;
+                
+                // Move atoms
+                var currentLevelCount;
+                var currentLevel = 0;
+                var offsetX = this.squiggleAmplitude * 2;
+                var width = this.atomDiameter / 2;
+                var i = 0;
+
+                while (i < this.atomSprites.length && currentLevel < 3) {
+                    currentLevelCount = this.numAtomsInLevel[currentLevel];
+                    for (var j = 0; j < currentLevelCount; j++) {
+                        var energyLevelX = this.energyLevelViews[currentLevel].displayObject.x;
+                        var energyLevelY = this.energyLevelViews[currentLevel].displayObject.y;
+
+                        this.atomSprites[i].x = energyLevelX + offsetX + j * width;
+                        this.atomSprites[i].y = energyLevelY - 1;
+
+                        i++;
+                    }
+                    currentLevel++;
+                }
+
+                // console.log(this.numAtomsInLevel[0], this.numAtomsInLevel[1], this.numAtomsInLevel[2])
             }
         },
 
