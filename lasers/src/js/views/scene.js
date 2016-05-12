@@ -5,10 +5,13 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView = require('common/v3/pixi/view/scene');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
+    var PiecewiseCurve     = require('common/math/piecewise-curve');
+    var Rectangle          = require('common/math/rectangle');
 
-    var MirrorView = require('views/mirror');
+    var MirrorView       = require('views/mirror');
+    var LaserCurtainView = require('views/laser-curtain');
 
     var Assets = require('assets');
 
@@ -51,9 +54,11 @@ define(function(require) {
             this.photonElectronLayer = new PIXI.Container();
             this.backgroundLayer = new PIXI.Container();
             this.foregroundLayer = new PIXI.Container();
-
-            this.stage.addChild(this.photonElectronLayer);
+            this.tubeLayer = new PIXI.Container();
+            
             this.stage.addChild(this.backgroundLayer);
+            this.stage.addChild(this.tubeLayer);
+            this.stage.addChild(this.photonElectronLayer);
             this.stage.addChild(this.foregroundLayer);
         },
 
@@ -74,6 +79,46 @@ define(function(require) {
 
             this.backgroundLayer.addChild(this.rightMirrorView.displayObject);
             this.foregroundLayer.addChild(this.leftMirrorView.displayObject);
+        },
+
+        initLaserCurtainViews: function() {
+            var tubeBounds = this.simulation.tube.getBounds();
+            var lensRadius = Constants.MIRROR_THICKNESS / 2 + 3;
+            var internalShape = new PiecewiseCurve()
+                .moveTo(tubeBounds.right(), tubeBounds.top())
+                .lineTo(tubeBounds.left(),  tubeBounds.top())
+                .lineTo(tubeBounds.left(),  tubeBounds.bottom())
+                .lineTo(tubeBounds.right(), tubeBounds.bottom())
+                .curveTo(
+                    tubeBounds.right() + lensRadius, tubeBounds.bottom(),
+                    tubeBounds.right() + lensRadius, tubeBounds.top(),
+                    tubeBounds.right(),              tubeBounds.top()
+                );
+
+            this.internalLaserCurtainView = new LaserCurtainView({
+                mvt: this.mvt,
+                simulation: this.simulation,
+                modelShape: internalShape
+            });
+
+            var externalShape = new Rectangle(tubeBounds.right(), tubeBounds.y, 500, tubeBounds.h);
+
+            this.externalLaserCurtainView = new LaserCurtainView({
+                mvt: this.mvt,
+                simulation: this.simulation,
+                modelShape: externalShape
+            });
+
+            // // Create a listener that will adjust the maximum alpha of the external beam based on the reflectivity
+            // // of the right-hand mirror
+            // rightMirror.addListener( new PartialMirror.Listener() {
+            //     public void reflectivityChanged( PartialMirror.ReflectivityChangedEvent event ) {
+            //         externalLaserCurtainGraphic.setMaxAlpha( 1 - ( Math.pow( event.getReflectivity(), 1.5 ) ) );
+            //     }
+            // } );
+
+            this.foregroundLayer.addChildAt(this.internalLaserCurtainView.displayObject, 0);
+            this.backgroundLayer.addChildAt(this.externalLaserCurtainView.displayObject, 0);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

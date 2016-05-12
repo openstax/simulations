@@ -42,6 +42,7 @@ define(function(require) {
             this.initAtom();
             this.initPhotons();
             this.initLamps();
+            this.initLaserCurtainViews();
             this.initEnergyLevelPanel();
 
             this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
@@ -74,7 +75,7 @@ define(function(require) {
                 mvt: this.mvt
             });
 
-            this.backgroundLayer.addChild(this.tubeView.displayObject);
+            this.tubeLayer.addChild(this.tubeView.displayObject);
         },
 
         initAtom: function() {
