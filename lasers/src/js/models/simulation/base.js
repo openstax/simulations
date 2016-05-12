@@ -49,6 +49,7 @@ define(function (require, exports, module) {
             this.on('change:mirrorsEnabled', this.mirrorsEnabledChanged);
             this.on('change:elementProperties', this.elementPropertiesChanged);
             this.on('change:pumpingPhotonViewMode', this.pumpingPhotonViewModeChanged);
+            this.on('change:lasingPhotonViewMode', this.lasingPhotonViewModeChanged);
         },
 
         /**
@@ -173,6 +174,13 @@ define(function (require, exports, module) {
             
         },
 
+        setPhotonVisibility: function(visibility, wavelength) {
+            for (var i = 0; i < this.photons.length; i++) {
+                if (this.photons.at(i).get('wavelength') === wavelength)
+                    this.photons.at(i).set('visible', visibility);
+            }
+        },
+
         photonEmitted: function(source, photon) {
             this.addPhoton(photon);
             var photonVisible = true;
@@ -230,10 +238,18 @@ define(function (require, exports, module) {
         pumpingPhotonViewModeChanged: function(simulation, pumpingPhotonViewMode) {
             var visible = (pumpingPhotonViewMode === Constants.PHOTON_DISCRETE) ? true : false;
             var wavelength = this.pumpingBeam.get('wavelength');
-            for (var i = 0; i < this.photons.length; i++) {
-                if (this.photons.at(i).get('wavelength') === wavelength)
-                    this.photons.at(i).set('visible', visible);
-            }
+            
+            this.setPhotonVisibility(visible, wavelength);
+        },
+
+        lasingPhotonViewModeChanged: function(simulation, lasingPhotonViewMode) {
+            var deltaEnergy = this.getMiddleEnergyState().getEnergyLevel() - this.getGroundState().getEnergyLevel();
+            var wavelength = PhysicsUtil.energyToWavelength(deltaEnergy);
+
+            if (lasingPhotonViewMode === Constants.PHOTON_DISCRETE)
+                this.setPhotonVisibility(true, wavelength);
+            else if (lasingPhotonViewMode === Constants.PHOTON_WAVE)
+                this.setPhotonVisibility(false, wavelength);
         }
 
     }, Constants.BaseLasersSimulation);

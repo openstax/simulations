@@ -52,10 +52,11 @@ define(function (require) {
             'click .pause-btn' : 'pause',
             'click .step-btn'  : 'step',
 
-            'change .energy-levels-select' : 'changeEnergyLevels',
-            'change .lamp-view-select'     : 'changeLampViewMode',
-            'click .enable-mirrors-check'  : 'toggleMirrors',
-            'slide .reflectivity-slider'   : 'changeReflectivity',
+            'change .energy-levels-select'    : 'changeEnergyLevels',
+            'change .lamp-view-select'        : 'changeLampViewMode',
+            'change .lower-transition-select' : 'changeLowerTransitionViewMode',
+            'click .enable-mirrors-check'     : 'toggleMirrors',
+            'slide .reflectivity-slider'      : 'changeReflectivity',
             'click .display-high-level-emitted-photons-check' : 'toggleHighLevelEmittedPhotons'
         },
 
@@ -196,6 +197,13 @@ define(function (require) {
                 this.simulation.set('pumpingPhotonViewMode', Constants.PHOTON_CURTAIN);
             else
                 this.simulation.set('pumpingPhotonViewMode', Constants.PHOTON_DISCRETE);
+        },
+
+        changeLowerTransitionViewMode: function(event) {
+            if ($(event.target).val() === 'wave')
+                this.simulation.set('lasingPhotonViewMode', Constants.PHOTON_WAVE);
+            else
+                this.simulation.set('lasingPhotonViewMode', Constants.PHOTON_DISCRETE);
         },
 
         toggleMirrors: function(event) {
