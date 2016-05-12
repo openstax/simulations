@@ -55,11 +55,13 @@ define(function(require) {
             this.backgroundLayer = new PIXI.Container();
             this.foregroundLayer = new PIXI.Container();
             this.tubeLayer = new PIXI.Container();
+            this.controlsLayer = new PIXI.Container();
             
             this.stage.addChild(this.backgroundLayer);
             this.stage.addChild(this.tubeLayer);
             this.stage.addChild(this.photonElectronLayer);
             this.stage.addChild(this.foregroundLayer);
+            this.stage.addChild(this.controlsLayer);
         },
 
         initMirrors: function() {

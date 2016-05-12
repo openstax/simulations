@@ -15,6 +15,7 @@ define(function(require) {
     var LampView             = require('views/lamp');
     var AtomView             = require('views/atom');
     var EnergyLevelPanelView = require('views/energy-level-panel');
+    var BeamCurtainView      = require('views/beam-curtain');
 
     // Constants
     var Constants = require('constants');
@@ -43,6 +44,7 @@ define(function(require) {
             this.initPhotons();
             this.initLamps();
             this.initLaserCurtainViews();
+            this.initBeamCurtainView();
             this.initEnergyLevelPanel();
 
             this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
@@ -112,6 +114,15 @@ define(function(require) {
             this.foregroundLayer.addChild(this.lamp2View.displayObject);
         },
 
+        initBeamCurtainView: function() {
+            this.beamCurtainView = new BeamCurtainView({
+                mvt: this.mvt,
+                model: this.simulation.pumpingBeam
+            });
+
+            this.foregroundLayer.addChild(this.beamCurtainView.displayObject);
+        },
+
         initEnergyLevelPanel: function() {
             this.energyLevelPanelView = new EnergyLevelPanelView({
                 simulation: this.simulation,
@@ -127,7 +138,7 @@ define(function(require) {
                 this.energyLevelPanelView.displayObject.y = 20;
             }
 
-            this.foregroundLayer.addChild(this.energyLevelPanelView.displayObject);
+            this.controlsLayer.addChild(this.energyLevelPanelView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
