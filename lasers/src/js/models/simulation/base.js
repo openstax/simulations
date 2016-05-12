@@ -39,6 +39,7 @@ define(function (require, exports, module) {
         defaults: _.extend(LasersSimulation.prototype.defaults, {
             lasingPhotonViewMode:  Constants.PHOTON_DISCRETE,
             pumpingPhotonViewMode: Constants.PHOTON_CURTAIN,
+            displayHighLevelEmissions: false,
             mirrorsEnabled: false
         }),
         
@@ -64,6 +65,8 @@ define(function (require, exports, module) {
             this.initTube();
             this.initBeams();
             this.initMirrors();
+
+            this.listenTo(this.atoms, 'photon-emitted', this.photonEmitted)
 
             this.elementPropertiesChanged(this, this.get('elementProperties'));
         },
@@ -177,8 +180,8 @@ define(function (require, exports, module) {
             if (source instanceof Atom) {
                 // Don't show certain photons
                 if (source.getStates().length > 2 && 
-                    source.getCurrState().equals(source.getStates()[2]) && 
-                    !displayHighLevelEmissions
+                    source.getCurrentState().equals(source.getStates()[2]) && 
+                    !this.get('displayHighLevelEmissions')
                 ) {
                     photonVisible = false;
                 }

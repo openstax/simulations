@@ -54,7 +54,8 @@ define(function (require) {
 
             'change .energy-levels-select' : 'changeEnergyLevels',
             'click .enable-mirrors-check'  : 'toggleMirrors',
-            'slide .reflectivity-slider'   : 'changeReflectivity'
+            'slide .reflectivity-slider'   : 'changeReflectivity',
+            'click .display-high-level-emitted-photons-check' : 'toggleHighLevelEmittedPhotons'
         },
 
         /**
@@ -206,6 +207,13 @@ define(function (require) {
 
         updateReflectivityLabel: function(percent) {
             this.$reflectivityValue.text(Math.round(percent) + '%');
+        },
+
+        toggleHighLevelEmittedPhotons: function(event) {
+            if ($(event.target).is(':checked'))
+                this.simulation.set('displayHighLevelEmissions', true);
+            else
+                this.simulation.set('displayHighLevelEmissions', false);
         },
 
         mirrorsEnabledChanged: function(simulation, mirrorsEnabled) {
