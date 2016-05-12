@@ -111,9 +111,8 @@ define(function(require) {
 
             // Create a listener that will adjust the maximum alpha of the external beam based on
             //   the reflectivity of the right-hand mirror
-            this.listenTo(this.simulation.rightMirror, 'change:reflectivity', function(mirror, reflectivity) {
-                this.externalLaserCurtainView.setMaxAlpha(1 - (Math.pow(reflectivity, 1.5)));
-            });
+            this.listenTo(this.simulation.rightMirror, 'change:reflectivity', this.rightMirrorReflectivityChanged);
+            this.rightMirrorReflectivityChanged(this.simulation.rightMirror, this.simulation.rightMirror.get('reflectivity'));
 
             this.foregroundLayer.addChildAt(this.internalLaserCurtainView.displayObject, 0);
             this.backgroundLayer.addChildAt(this.externalLaserCurtainView.displayObject, 0);
@@ -122,6 +121,10 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             
         },
+
+        rightMirrorReflectivityChanged: function(mirror, reflectivity) {
+            this.externalLaserCurtainView.setMaxAlpha(1 - (Math.pow(reflectivity, 1.5)));
+        }
 
     });
 

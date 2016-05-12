@@ -63,6 +63,24 @@ define(function(require) {
             }
 
             $container.segments = segments;
+
+            var $lasing = $container.find('.lasing-label');
+            var $danger = $container.find('.danger-label');
+            if ($lasing.length) {
+                var lasingWidth = Math.round($container.width() * (this.getDangerPercent() - this.getLasingPercent()));
+                var lasingLeft = Math.round($container.width() * this.getLasingPercent()) + 4;
+                $lasing.css({
+                    width: lasingWidth + 'px',
+                    left: lasingLeft + 'px'
+                });
+
+                var dangerWidth = Math.round($container.width() * (1 - this.getDangerPercent()));
+                var dangerLeft = Math.round($container.width() * this.getDangerPercent()) + 4;
+                $danger.css({
+                    width: dangerWidth + 'px',
+                    left: dangerLeft + 'px'
+                });
+            }
         },
 
         updateBar: function($container, percent, simple) {
@@ -70,8 +88,8 @@ define(function(require) {
                 return;
             
             var segments = $container.segments;
-            var lasingPercent = Constants.LASING_THRESHOLD / Constants.KABOOM_THRESHOLD;
-            var dangerPercent = 0.75;
+            var lasingPercent = this.getLasingPercent();
+            var dangerPercent = this.getDangerPercent();
 
             for (var i = 0; i < segments.length; i++) {
                 var segmentPercent = (i / segments.length);
@@ -96,6 +114,14 @@ define(function(require) {
                     }
                 }
             }
+        },
+
+        getLasingPercent: function() {
+            return Constants.LASING_THRESHOLD / Constants.KABOOM_THRESHOLD;
+        },
+
+        getDangerPercent: function() {
+            return 0.75;
         },
 
         lasingPhotonCountChanged: function(photon, lasingPhotons) {

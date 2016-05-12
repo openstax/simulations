@@ -30,6 +30,7 @@
 
         .power-meter {
             display: inline-block;
+            position: relative;
             width: 184px;
             height: 32px;
             padding: 4px;
@@ -55,6 +56,28 @@
                 &.filled        { background: @filled-color; box-shadow: 0 0 3px #C4F7FF; }
                 &.filled-lasing { background: @lasing-color; box-shadow: 0 0 3px #61D3FF; }
                 &.filled-danger { background: @danger-color; box-shadow: 0 0 3px #FF6A6A; }
+            }
+
+            .lasing-label,
+            .danger-label {
+                position: absolute;
+                top: 29px;
+                display: block;
+                height: 12px;
+                font-size: 9px;
+                font-weight: 500;
+                text-align: center;
+                border-left: 2px solid;
+                border-right: 2px solid;
+            }
+
+            .lasing-label {
+                color: @lasing-color;
+                
+            }
+
+            .danger-label {
+                color: @danger-color;
             }
         }
     }
