@@ -14,6 +14,7 @@ define(function(require) {
     var MirrorView = PixiView.extend({
 
         initialize: function(options) {
+            this.simulation = options.simulation;
             this.leftFacing = options.leftFacing;
             this.modelThickness = Constants.MIRROR_THICKNESS;
             this.xOffset = (options.leftFacing) ? 0 : -this.modelThickness;
@@ -25,16 +26,28 @@ define(function(require) {
             this.updateMVT(options.mvt);
 
             this.listenTo(this.model, 'change:reflectivity', this.reflecivityChanged);
+            this.listenTo(this.simulation, 'change:mirrorsEnabled', this.mirrorsEnabledChanged);
+
+            this.mirrorsEnabledChanged(this.simulation, this.simulation.get('mirrorsEnabled'));
         },
 
         initGraphics: function() {
             this.graphics = new PIXI.Graphics();
-            this.shineGraphics = new PIXI.Graphics();
+            this.outlineGraphics = new PIXI.Graphics();
+
+            var blurFilter = new PIXI.filters.BlurFilter();
+            blurFilter.blur = 20;
+
             this.shineMask = new PIXI.Graphics();
+
+            this.shineGraphics = new PIXI.Graphics();
+            this.shineGraphics.mask = this.shineMask;
+            this.shineGraphics.filters = [ blurFilter ];
 
             this.displayObject.addChild(this.graphics);
             this.displayObject.addChild(this.shineGraphics);
             this.displayObject.addChild(this.shineMask);
+            this.displayObject.addChild(this.outlineGraphics);
         },
 
         draw: function() {
@@ -77,8 +90,22 @@ define(function(require) {
             graphics.lineTo(thickness * 1.5, 0);
             graphics.moveTo(thickness / 2, height);
             graphics.lineTo(thickness * 1.5, height);
-            graphics.drawEllipse(thickness / 2, height / 2, thickness / 2, height / 2);
 
+            var outlineGraphics = this.outlineGraphics;
+            outlineGraphics.lineStyle(lineWidth, lineColor, 1);
+            outlineGraphics.drawEllipse(thickness / 2, height / 2, thickness / 2, height / 2);
+
+            var mask = this.shineMask;
+            mask.clear();
+            mask.beginFill();
+            mask.drawEllipse(thickness / 2, height / 2, thickness / 2, height / 2);
+            mask.endFill();
+
+            var shineGraphics = this.shineGraphics;
+            shineGraphics.clear();
+            shineGraphics.lineStyle(2, 0xFFFFFF, 1);
+            shineGraphics.moveTo(0, height);
+            shineGraphics.lineTo(thickness, 0);
         },
 
         /**
@@ -92,6 +119,10 @@ define(function(require) {
 
         reflecivityChanged: function() {
             this.draw();
+        },
+
+        mirrorsEnabledChanged: function(simulation, mirrorsEnabled) {
+            this.displayObject.visible = mirrorsEnabled;
         }
 
     });

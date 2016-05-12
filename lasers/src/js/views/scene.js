@@ -61,12 +61,14 @@ define(function(require) {
             this.rightMirrorView = new MirrorView({
                 mvt: this.mvt,
                 model: this.simulation.rightMirror,
+                simulation: this.simulation,
                 leftFacing: true
             });
 
             this.leftMirrorView = new MirrorView({
                 mvt: this.mvt,
                 model: this.simulation.leftMirror,
+                simulation: this.simulation,
                 leftFacing: false
             });
 
