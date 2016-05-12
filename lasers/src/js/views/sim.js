@@ -53,6 +53,7 @@ define(function (require) {
             'click .step-btn'  : 'step',
 
             'change .energy-levels-select' : 'changeEnergyLevels',
+            'change .lamp-view-select'     : 'changeLampViewMode',
             'click .enable-mirrors-check'  : 'toggleMirrors',
             'slide .reflectivity-slider'   : 'changeReflectivity',
             'click .display-high-level-emitted-photons-check' : 'toggleHighLevelEmittedPhotons'
@@ -188,6 +189,13 @@ define(function (require) {
         changeEnergyLevels: function(event) {
             var numLevels = parseInt($(event.target).val());
             this.simulation.setNumEnergyLevels(numLevels);
+        },
+
+        changeLampViewMode: function(event) {
+            if ($(event.target).val() === 'beam')
+                this.simulation.set('pumpingPhotonViewMode', Constants.PHOTON_CURTAIN);
+            else
+                this.simulation.set('pumpingPhotonViewMode', Constants.PHOTON_DISCRETE);
         },
 
         toggleMirrors: function(event) {

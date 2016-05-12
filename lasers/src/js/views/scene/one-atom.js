@@ -29,6 +29,7 @@ define(function(require) {
             LasersSceneView.prototype.initialize.apply(this, arguments);
 
             this.listenTo(this.simulation, 'change:elementProperties', this.elementPropertiesChanged);
+            this.listenTo(this.simulation, 'change:pumpingPhotonViewMode', this.determineBeamCurtainViewVisibility);
         },
 
         renderContent: function() {
@@ -121,6 +122,8 @@ define(function(require) {
             });
 
             this.foregroundLayer.addChild(this.beamCurtainView.displayObject);
+
+            this.determineBeamCurtainViewVisibility();
         },
 
         initEnergyLevelPanel: function() {
@@ -153,6 +156,18 @@ define(function(require) {
                 this.lamp2View.hide();
             else
                 this.lamp2View.show();
+            this.determineBeamCurtainViewVisibility();
+        },
+
+        determineBeamCurtainViewVisibility: function() {
+            if (this.simulation.get('elementProperties') === this.simulation.threeLevelProperties &&
+                this.simulation.get('pumpingPhotonViewMode') === Constants.PHOTON_CURTAIN
+            ) {
+                this.beamCurtainView.show();
+            }
+            else {
+                this.beamCurtainView.hide();
+            }
         }
 
     });

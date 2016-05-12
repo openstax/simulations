@@ -42,8 +42,7 @@ define(function(require) {
             var alpha = rgba.a;
 
             // Determine the bounds in view space
-            this.modelShape = new PiecewiseCurve().moveTo(0, 0).lineTo(800, 800).lineTo(0, 800);
-            var shape = this.mvt.modelToView(this.modelShape);
+            var shape = this.mvt.modelToView(this.model.getBounds());
 
             // Draw it
             var graphics = this.displayObject;
@@ -72,7 +71,7 @@ define(function(require) {
             var valuePercent = ((waveRgb.r + waveRgb.g + waveRgb.b) / 3) / 255;
             
             var finalColor = Colors.interpolateRgba(levelRgba, waveRgb, valuePercent);
-            finalColor.a = valuePercent; // It's also our alpha value
+            finalColor.a = (255 - level) / 255;
 
             return finalColor;
         },

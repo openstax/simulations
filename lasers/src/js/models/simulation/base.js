@@ -48,6 +48,7 @@ define(function (require, exports, module) {
 
             this.on('change:mirrorsEnabled', this.mirrorsEnabledChanged);
             this.on('change:elementProperties', this.elementPropertiesChanged);
+            this.on('change:pumpingPhotonViewMode', this.pumpingPhotonViewModeChanged);
         },
 
         /**
@@ -224,6 +225,15 @@ define(function (require, exports, module) {
         elementPropertiesChanged: function(simulation, elementProperties) {
             this.getMiddleEnergyState().set('meanLifetime', this.defaultMiddleStateMeanLifetime);
             this.getHighEnergyState().set('meanLifetime', this.defaultHighStateMeanLifetime);
+        },
+
+        pumpingPhotonViewModeChanged: function(simulation, pumpingPhotonViewMode) {
+            var visible = (pumpingPhotonViewMode === Constants.PHOTON_DISCRETE) ? true : false;
+            var wavelength = this.pumpingBeam.get('wavelength');
+            for (var i = 0; i < this.photons.length; i++) {
+                if (this.photons.at(i).get('wavelength') === wavelength)
+                    this.photons.at(i).set('visible', visible);
+            }
         }
 
     }, Constants.BaseLasersSimulation);
