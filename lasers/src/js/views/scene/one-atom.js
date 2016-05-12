@@ -37,10 +37,8 @@ define(function(require) {
         initGraphics: function() {
             LasersSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.initMVT();
-            this.initLayers();
-            this.initTube();
             this.initMirrors();
+            this.initTube();
             this.initAtom();
             this.initPhotons();
             this.initLamps();
@@ -70,16 +68,6 @@ define(function(require) {
             );
         },
 
-        initLayers: function() {
-            this.photonElectronLayer = new PIXI.Container();
-            this.backgroundLayer = new PIXI.Container();
-            this.foregroundLayer = new PIXI.Container();
-
-            this.stage.addChild(this.photonElectronLayer);
-            this.stage.addChild(this.backgroundLayer);
-            this.stage.addChild(this.foregroundLayer);
-        },
-
         initTube: function() {
             this.tubeView = new TubeView({
                 model: this.simulation.tube,
@@ -87,10 +75,6 @@ define(function(require) {
             });
 
             this.backgroundLayer.addChild(this.tubeView.displayObject);
-        },
-
-        initMirrors: function() {
-            // Put the left one in the foreground and the right one in the background
         },
 
         initAtom: function() {

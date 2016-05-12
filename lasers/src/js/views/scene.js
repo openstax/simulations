@@ -6,6 +6,9 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiSceneView = require('common/v3/pixi/view/scene');
+    var ModelViewTransform = require('common/math/model-view-transform');
+
+    var MirrorView = require('views/mirror');
 
     var Assets = require('assets');
 
@@ -34,6 +37,41 @@ define(function(require) {
 
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
+
+            this.initMVT();
+            this.initLayers();
+        },
+
+        initMVT: function() {
+            // TODO: Remove this
+            this.mvt = ModelViewTransform.createScaleMapping(1);
+        },
+
+        initLayers: function() {
+            this.photonElectronLayer = new PIXI.Container();
+            this.backgroundLayer = new PIXI.Container();
+            this.foregroundLayer = new PIXI.Container();
+
+            this.stage.addChild(this.photonElectronLayer);
+            this.stage.addChild(this.backgroundLayer);
+            this.stage.addChild(this.foregroundLayer);
+        },
+
+        initMirrors: function() {
+            this.rightMirrorView = new MirrorView({
+                mvt: this.mvt,
+                model: this.simulation.rightMirror,
+                leftFacing: true
+            });
+
+            this.leftMirrorView = new MirrorView({
+                mvt: this.mvt,
+                model: this.simulation.leftMirror,
+                leftFacing: false
+            });
+
+            this.backgroundLayer.addChild(this.rightMirrorView.displayObject);
+            this.foregroundLayer.addChild(this.leftMirrorView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

@@ -53,7 +53,8 @@ define(function (require) {
             'click .step-btn'  : 'step',
 
             'change .energy-levels-select' : 'changeEnergyLevels',
-            'click .enable-mirrors-check'  : 'toggleMirrors'
+            'click .enable-mirrors-check'  : 'toggleMirrors',
+            'slide .reflectivity-slider'   : 'changeReflectivity'
         },
 
         /**
@@ -122,7 +123,8 @@ define(function (require) {
 
             this.$('select').selectpicker();
 
-            this.$('.reflectivity-slider').noUiSlider({
+            this.$reflectivitySlider = this.$('.reflectivity-slider');
+            this.$reflectivitySlider.noUiSlider({
                 start: 100,
                 range: {
                     min: 0,
@@ -130,6 +132,8 @@ define(function (require) {
                 },
                 connect: 'lower'
             });
+
+            this.$reflectivityValue = this.$('.reflectivity-value');
         },
 
         /**
@@ -190,6 +194,18 @@ define(function (require) {
                 this.simulation.set('mirrorsEnabled', true);
             else
                 this.simulation.set('mirrorsEnabled', false);
+        },
+
+        changeReflectivity: function(event) {
+            this.inputLock(function() {
+                var percent = parseFloat(this.$('.reflectivity-slider').val());
+                this.updateReflectivityLabel(percent);
+                this.simulation.rightMirror.set('reflectivity', percent / 100);
+            });
+        },
+
+        updateReflectivityLabel: function(percent) {
+            this.$reflectivityValue.text(Math.round(percent) + '%');
         },
 
         mirrorsEnabledChanged: function(simulation, mirrorsEnabled) {

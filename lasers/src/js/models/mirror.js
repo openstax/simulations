@@ -29,6 +29,8 @@ define(function (require) {
                     options.end.x - options.start.x,
                     options.end.y - options.start.y
                 ));
+
+                this.set('position', options.start);
             }
 
             Wall.prototype.initialize.apply(this, [attributes, options]);
