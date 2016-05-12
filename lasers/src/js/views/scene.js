@@ -109,13 +109,11 @@ define(function(require) {
                 modelShape: externalShape
             });
 
-            // // Create a listener that will adjust the maximum alpha of the external beam based on the reflectivity
-            // // of the right-hand mirror
-            // rightMirror.addListener( new PartialMirror.Listener() {
-            //     public void reflectivityChanged( PartialMirror.ReflectivityChangedEvent event ) {
-            //         externalLaserCurtainGraphic.setMaxAlpha( 1 - ( Math.pow( event.getReflectivity(), 1.5 ) ) );
-            //     }
-            // } );
+            // Create a listener that will adjust the maximum alpha of the external beam based on
+            //   the reflectivity of the right-hand mirror
+            this.listenTo(this.simulation.rightMirror, 'change:reflectivity', function(mirror, reflectivity) {
+                this.externalLaserCurtainView.setMaxAlpha(1 - (Math.pow(reflectivity, 1.5)));
+            });
 
             this.foregroundLayer.addChildAt(this.internalLaserCurtainView.displayObject, 0);
             this.backgroundLayer.addChildAt(this.externalLaserCurtainView.displayObject, 0);

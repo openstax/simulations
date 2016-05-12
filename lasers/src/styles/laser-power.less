@@ -8,6 +8,10 @@
     top: 416px;
     width: 280px;
 
+    @filled-color: #A7F3FF;
+    @lasing-color: #00B8FF;
+    @danger-color: #FF3838;
+
     @media screen and (max-height: @short-window) {
         left: @short-screen-panel-margin;
         top: 224px;
@@ -48,9 +52,9 @@
                     margin-right: 0;
                 }
 
-                &.filled        { background: #FFE000; box-shadow: 0 0 3px #FFE000; }
-                &.filled-lasing { background: #4BA700; box-shadow: 0 0 3px #4BA700; }
-                &.filled-danger { background: #C2002F; box-shadow: 0 0 3px #C2002F; }
+                &.filled        { background: @filled-color; box-shadow: 0 0 3px #C4F7FF; }
+                &.filled-lasing { background: @lasing-color; box-shadow: 0 0 3px #61D3FF; }
+                &.filled-danger { background: @danger-color; box-shadow: 0 0 3px #FF6A6A; }
             }
         }
     }

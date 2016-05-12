@@ -102,7 +102,7 @@ define(function(require) {
             var count = lasingPhotons.length;
             var internalPowerPercent = count / Constants.KABOOM_THRESHOLD;
             var outputPowerPercent = (count / Constants.KABOOM_THRESHOLD) * (1 - this.simulation.rightMirror.getReflectivity());
-
+            
             this.updateBar(this.$internalPowerMeter, internalPowerPercent, false);
             this.updateBar(this.$outputPowerMeter, outputPowerPercent, true);
         }

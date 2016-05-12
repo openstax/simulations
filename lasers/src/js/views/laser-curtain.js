@@ -37,6 +37,7 @@ define(function(require) {
             this.modelShape = options.modelShape;
             this.maxAlpha = options.maxAlpha;
 
+            this.listenTo(this.simulation.lasingPhotons, 'add remove', this.draw);
             this.listenTo(this.simulation, 'atomic-states-changed', this.energyLevelsChanged);
             this.energyLevelsChanged();
 
@@ -52,7 +53,6 @@ define(function(require) {
             var numLasingPhotons = this.simulation.lasingPhotons.length;
             var level = (numLasingPhotons > Constants.LASING_THRESHOLD) ? numLasingPhotons : 0;
             var alpha = (level / Constants.KABOOM_THRESHOLD) * this.maxAlpha;
-            alpha = 0.7;
 
             // Determine the proper color
             var deltaEnergy = this.middleState.getEnergyLevel() - this.groundState.getEnergyLevel();
