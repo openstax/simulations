@@ -12,7 +12,7 @@ define(function(require) {
     var LasersSceneView      = require('views/scene');
     var PhotonCollectionView = require('views/photon-collection');
     var TubeView             = require('views/tube');
-    var LampView             = require('views/lamp');
+    var LampArrayView        = require('views/lamp-array');
     var AtomView             = require('views/atom');
     var EnergyLevelPanelView = require('views/energy-level-panel');
     var BeamCurtainView      = require('views/beam-curtain');
@@ -80,18 +80,12 @@ define(function(require) {
         },
 
         initLamps: function() {
-            // this.lamp1View = new LampView({
-            //     model: this.simulation.seedBeam,
-            //     mvt: this.mvt
-            // });
+            this.lampArrayView = new LampArrayView({
+                model: this.simulation.pumpingBeam,
+                mvt: this.mvt
+            })
 
-            // this.lamp2View = new LampView({
-            //     model: this.simulation.pumpingBeam,
-            //     mvt: this.mvt
-            // });
-
-            // this.foregroundLayer.addChild(this.lamp1View.displayObject);
-            // this.foregroundLayer.addChild(this.lamp2View.displayObject);
+            this.foregroundLayer.addChild(this.lampArrayView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
