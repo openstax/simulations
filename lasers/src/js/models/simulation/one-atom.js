@@ -23,12 +23,6 @@ define(function (require, exports, module) {
         defaults: _.extend(BaseLasersSimulation.prototype.defaults, {
             pumpingPhotonViewMode: Constants.PHOTON_DISCRETE
         }),
-        
-        initialize: function(attributes, options) {
-            BaseLasersSimulation.prototype.initialize.apply(this, [attributes, options]);
-
-            
-        },
 
         /**
          * Initializes the models used in the simulation
@@ -88,15 +82,9 @@ define(function (require, exports, module) {
         resetComponents: function() {
             BaseLasersSimulation.prototype.resetComponents.apply(this, arguments);
 
-        },
-
-        _update: function(time, deltaTime) {
-            BaseLasersSimulation.prototype._update.apply(this, arguments);
-
-            
         }
 
-    }, Constants.OneAtomLasersSimulation);
+    });
 
     return OneAtomLasersSimulation;
 });

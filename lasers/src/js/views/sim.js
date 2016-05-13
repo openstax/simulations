@@ -8,7 +8,9 @@ define(function (require) {
     var SimView = require('common/v3/app/sim');
 
     var LasersSimulation = require('models/simulation');
-    var LasersSceneView  = require('views/scene');
+
+    var LasersSceneView = require('views/scene');
+    var LaserPowerView  = require('views/laser-power');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -80,6 +82,7 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initLaserPowerView();
 
             this.listenTo(this.simulation, 'change:paused',           this.pausedChanged);
             this.listenTo(this.simulation, 'change:mirrorsEnabled',   this.mirrorsEnabledChanged);
@@ -104,6 +107,12 @@ define(function (require) {
             });
         },
 
+        initLaserPowerView: function() {
+            this.laserPowerView = new LaserPowerView({
+                simulation: this.simulation
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -113,6 +122,7 @@ define(function (require) {
             this.renderScaffolding();
             this.renderSceneView();
             this.renderPlaybackControls();
+            this.renderLaserPower();
 
             return this;
         },
@@ -163,11 +173,21 @@ define(function (require) {
         },
 
         /**
+         * Renders the laser controls view
+         */
+        renderLaserPower: function() {
+            this.laserPowerView.render();
+            this.$el.append(this.laserPowerView.el);
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.laserPowerView.postRender();
+
             this.mirrorsEnabledChanged(this.simulation, this.simulation.get('mirrorsEnabled'));
             this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
         },

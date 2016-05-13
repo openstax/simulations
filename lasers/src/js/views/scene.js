@@ -5,14 +5,19 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var AppView            = require('common/v3/app/app');
     var PixiSceneView      = require('common/v3/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
     var PiecewiseCurve     = require('common/math/piecewise-curve');
     var Rectangle          = require('common/math/rectangle');
 
-    var MirrorView       = require('views/mirror');
-    var LaserCurtainView = require('views/laser-curtain');
-    var LaserWaveView    = require('views/laser-wave');
+    var MirrorView           = require('views/mirror');
+    var PhotonCollectionView = require('views/photon-collection');
+    var TubeView             = require('views/tube');
+    var LaserCurtainView     = require('views/laser-curtain');
+    var BeamCurtainView      = require('views/beam-curtain');
+    var LaserWaveView        = require('views/laser-wave');
+    var EnergyLevelPanelView = require('views/energy-level-panel');
 
     var Assets = require('assets');
 
@@ -44,6 +49,13 @@ define(function(require) {
 
             this.initMVT();
             this.initLayers();
+            this.initPhotons();
+            this.initTube();
+            this.initMirrors();
+            this.initLaserCurtainViews();
+            this.initBeamCurtainView();
+            this.initLaserWaveView();
+            this.initEnergyLevelPanel();
         },
 
         initMVT: function() {
@@ -65,6 +77,25 @@ define(function(require) {
             this.stage.addChild(this.controlsLayer);
         },
 
+        initPhotons: function() {
+            this.photonsView = new PhotonCollectionView({
+                collection: this.simulation.photons,
+                simulation: this.simulation,
+                mvt: this.mvt
+            });
+
+            this.photonElectronLayer.addChild(this.photonsView.displayObject);
+        },
+
+        initTube: function() {
+            this.tubeView = new TubeView({
+                model: this.simulation.tube,
+                mvt: this.mvt
+            });
+
+            this.tubeLayer.addChild(this.tubeView.displayObject);
+        },
+
         initMirrors: function() {
             this.rightMirrorView = new MirrorView({
                 mvt: this.mvt,
@@ -82,6 +113,17 @@ define(function(require) {
 
             this.backgroundLayer.addChild(this.rightMirrorView.displayObject);
             this.foregroundLayer.addChild(this.leftMirrorView.displayObject);
+        },
+
+        initBeamCurtainView: function() {
+            this.beamCurtainView = new BeamCurtainView({
+                mvt: this.mvt,
+                model: this.simulation.pumpingBeam
+            });
+
+            this.foregroundLayer.addChild(this.beamCurtainView.displayObject);
+
+            this.determineBeamCurtainViewVisibility();
         },
 
         initLaserCurtainViews: function() {
@@ -131,8 +173,28 @@ define(function(require) {
             this.backgroundLayer.addChildAt(this.laserWaveView.backgroundLayer, 0);
         },
 
+        initEnergyLevelPanel: function() {
+            this.energyLevelPanelView = new EnergyLevelPanelView({
+                simulation: this.simulation,
+                averagingPeriod: 0
+            });
+
+            if (AppView.windowIsShort()) {
+                this.energyLevelPanelView.displayObject.x = 12;
+                this.energyLevelPanelView.displayObject.y = 12;
+            }
+            else {
+                this.energyLevelPanelView.displayObject.x = 20;
+                this.energyLevelPanelView.displayObject.y = 20;
+            }
+
+            this.controlsLayer.addChild(this.energyLevelPanelView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            this.photonsView.update(time, deltaTime, paused);
+            this.energyLevelPanelView.update(time, deltaTime, paused);
+            this.laserWaveView.update(time, deltaTime, paused);
         },
 
         rightMirrorReflectivityChanged: function(mirror, reflectivity) {

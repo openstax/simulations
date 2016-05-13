@@ -11,14 +11,9 @@ define(function (require) {
     var LasersSimView     = require('views/sim');
     var OneAtomSceneView  = require('views/scene/one-atom');
     var LaserControlsView = require('views/laser-controls');
-    var LaserPowerView    = require('views/laser-power');
     var LegendView        = require('views/legend');
 
     var Constants = require('constants');
-    var Assets = require('assets');
-
-    // CSS
-    //require('less!styles/sim');
 
     // HTML
     var simHtml = require('text!templates/one-atom-sim.html');
@@ -51,7 +46,6 @@ define(function (require) {
             LasersSimView.prototype.initialize.apply(this, [options]);
 
             this.initLaserControlsView();
-            this.initLaserPowerView();
             this.initLegendView();
         },
 
@@ -83,12 +77,6 @@ define(function (require) {
             });
         },
 
-        initLaserPowerView: function() {
-            this.laserPowerView = new LaserPowerView({
-                simulation: this.simulation
-            });
-        },
-
         initLegendView: function() {
             this.legendView = new LegendView({ 
                 renderer: this.sceneView.renderer,
@@ -103,7 +91,6 @@ define(function (require) {
             LasersSimView.prototype.render.apply(this, arguments);
 
             this.renderLaserControls();
-            this.renderLaserPower();
 
             return this;
         },
@@ -116,14 +103,6 @@ define(function (require) {
             this.laser2ControlsView.render();
             this.$el.append(this.laser1ControlsView.el);
             this.$el.append(this.laser2ControlsView.el);
-        },
-
-        /**
-         * Renders the laser controls view
-         */
-        renderLaserPower: function() {
-            this.laserPowerView.render();
-            this.$el.append(this.laserPowerView.el);
         },
 
         renderLegend: function() {
@@ -140,7 +119,6 @@ define(function (require) {
             
             this.laser1ControlsView.postRender();
             this.laser2ControlsView.postRender();
-            this.laserPowerView.postRender();
             this.renderLegend();
         },
 
