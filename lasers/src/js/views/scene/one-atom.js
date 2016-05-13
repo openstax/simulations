@@ -28,8 +28,9 @@ define(function(require) {
         initialize: function(options) {
             LasersSceneView.prototype.initialize.apply(this, arguments);
 
-            this.listenTo(this.simulation, 'change:elementProperties', this.elementPropertiesChanged);
+            this.listenTo(this.simulation, 'change:elementProperties',     this.elementPropertiesChanged);
             this.listenTo(this.simulation, 'change:pumpingPhotonViewMode', this.determineBeamCurtainViewVisibility);
+            this.listenTo(this.simulation, 'change:lasingPhotonViewMode',  this.determineLaserWaveViewVisibility);
         },
 
         renderContent: function() {
@@ -46,7 +47,10 @@ define(function(require) {
             this.initLamps();
             this.initLaserCurtainViews();
             this.initBeamCurtainView();
+            this.initLaserWaveView();
             this.initEnergyLevelPanel();
+
+            this.determineLaserWaveViewVisibility();
 
             this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
         },
@@ -149,6 +153,7 @@ define(function(require) {
 
             this.photonsView.update(time, deltaTime, paused);
             this.energyLevelPanelView.update(time, deltaTime, paused);
+            this.laserWaveView.update(time, deltaTime, paused);
         },
 
         elementPropertiesChanged: function(simulation, elementProperties) {
@@ -157,6 +162,7 @@ define(function(require) {
             else
                 this.lamp2View.show();
             this.determineBeamCurtainViewVisibility();
+            this.determineLaserWaveViewVisibility();
         },
 
         determineBeamCurtainViewVisibility: function() {
@@ -167,6 +173,17 @@ define(function(require) {
             }
             else {
                 this.beamCurtainView.hide();
+            }
+        },
+
+        determineLaserWaveViewVisibility: function() {
+            if (this.simulation.get('elementProperties') === this.simulation.threeLevelProperties &&
+                this.simulation.get('lasingPhotonViewMode') === Constants.PHOTON_WAVE
+            ) {
+                this.laserWaveView.show();
+            }
+            else {
+                this.laserWaveView.hide();
             }
         }
 

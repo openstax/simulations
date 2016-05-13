@@ -9,6 +9,7 @@ define(function (require, exports, module) {
     var Photon            = require('common/quantum/models/photon');
     var Atom              = require('common/quantum/models/atom');
     var Beam              = require('common/quantum/models/beam');
+    var PhysicsUtil       = require('common/quantum/models/physics-util');
     var QuantumConfig     = require('common/quantum/config');
     var Vector2           = require('common/math/vector2');
     var Rectangle         = require('common/math/rectangle');
@@ -238,7 +239,7 @@ define(function (require, exports, module) {
         pumpingPhotonViewModeChanged: function(simulation, pumpingPhotonViewMode) {
             var visible = (pumpingPhotonViewMode === Constants.PHOTON_DISCRETE) ? true : false;
             var wavelength = this.pumpingBeam.get('wavelength');
-            
+
             this.setPhotonVisibility(visible, wavelength);
         },
 

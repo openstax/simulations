@@ -12,6 +12,7 @@ define(function(require) {
 
     var MirrorView       = require('views/mirror');
     var LaserCurtainView = require('views/laser-curtain');
+    var LaserWaveView    = require('views/laser-wave');
 
     var Assets = require('assets');
 
@@ -118,6 +119,16 @@ define(function(require) {
 
             this.foregroundLayer.addChildAt(this.internalLaserCurtainView.displayObject, 0);
             this.backgroundLayer.addChildAt(this.externalLaserCurtainView.displayObject, 0);
+        },
+
+        initLaserWaveView: function() {
+            this.laserWaveView = new LaserWaveView({
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+
+            this.tubeLayer.addChild(this.laserWaveView.foregroundLayer);
+            this.backgroundLayer.addChildAt(this.laserWaveView.backgroundLayer, 0);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
