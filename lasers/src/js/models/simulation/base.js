@@ -37,7 +37,7 @@ define(function (require, exports, module) {
         defaultMiddleStateMeanLifetime: Constants.MAXIMUM_STATE_LIFETIME,
         defaultHighStateMeanLifetime: Constants.MAXIMUM_STATE_LIFETIME / 4,
 
-        defaults: _.extend(LasersSimulation.prototype.defaults, {
+        defaults: _.extend({}, LasersSimulation.prototype.defaults, {
             lasingPhotonViewMode:  Constants.PHOTON_DISCRETE,
             pumpingPhotonViewMode: Constants.PHOTON_CURTAIN,
             displayHighLevelEmissions: false,

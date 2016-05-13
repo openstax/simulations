@@ -121,7 +121,7 @@ define(function(require) {
                 model: this.simulation.pumpingBeam
             });
 
-            this.foregroundLayer.addChild(this.beamCurtainView.displayObject);
+            this.backgroundLayer.addChild(this.beamCurtainView.displayObject);
 
             this.determineBeamCurtainViewVisibility();
         },

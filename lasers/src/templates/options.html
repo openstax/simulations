@@ -9,7 +9,7 @@
 
     <label class="<% if (!alwaysShowLampViewOptions) { %>three-level-options<% } %>">Lamp View</label>
     <select class="lamp-view-select <% if (!alwaysShowLampViewOptions) { %>three-level-options<% } %>">
-        <% var photonsSelected = (simulation.get('pumpingPhotonViewMode') === Constants.PHOTON_PHOTONS); %>
+        <% var photonsSelected = (simulation.get('pumpingPhotonViewMode') === Constants.PHOTON_DISCRETE); %>
         <option value="photons" <% if (photonsSelected) { %>selected<% } %>>Photons</option>
         <option value="beam" <% if (!photonsSelected) { %>selected<% } %>>Beam</option>
     </select>

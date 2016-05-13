@@ -20,7 +20,7 @@ define(function (require, exports, module) {
      */
     var MultipleAtomsLaserSimulation = BaseLasersSimulation.extend({
 
-        defaults: _.extend(BaseLasersSimulation.prototype.defaults, {
+        defaults: _.extend({}, BaseLasersSimulation.prototype.defaults, {
             pumpingPhotonViewMode: Constants.PHOTON_CURTAIN
         }),
         
