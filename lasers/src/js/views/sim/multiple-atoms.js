@@ -37,6 +37,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Multiple Atoms (Lasing)',
                 name: 'multiple-atoms',
+                alwaysShowLampViewOptions: true
             }, options);
 
             LasersSimView.prototype.initialize.apply(this, [options]);

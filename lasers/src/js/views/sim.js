@@ -26,6 +26,7 @@ define(function (require) {
 
     // HTML
     var playbackControlsHtml = require('text!templates/playback-controls.html');
+    var optionsHtml          = require('text!templates/options.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.  It
@@ -43,6 +44,7 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         template: _.template(''),
+        optionsTemplate: _.template(optionsHtml),
 
         /**
          * Dom event listeners
@@ -69,7 +71,11 @@ define(function (require) {
             options = _.extend({
                 title: 'Lasers',
                 name: 'lasers',
+                link: 'legacy/lasers',
+                alwaysShowLampViewOptions: false
             }, options);
+
+            this.alwaysShowLampViewOptions = options.alwaysShowLampViewOptions;
 
             SimView.prototype.initialize.apply(this, [options]);
 
@@ -119,10 +125,12 @@ define(function (require) {
                 Constants: Constants,
                 Assets: Assets,
                 simulation: this.simulation,
-                unique: this.cid
+                unique: this.cid,
+                alwaysShowLampViewOptions: this.alwaysShowLampViewOptions
             };
 
             this.$el.html(this.template(data));
+            this.$('.sim-controls-right').append(this.optionsTemplate(data));
 
             this.$('select').selectpicker();
 

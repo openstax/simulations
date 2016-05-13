@@ -45,7 +45,7 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'One Atom (Absorption and Emission)',
-                name: 'one-atom',
+                name: 'one-atom'
             }, options);
 
             LasersSimView.prototype.initialize.apply(this, [options]);
