@@ -332,7 +332,7 @@ define(function (require, exports, module) {
         },
 
         checkCollisions: function(deltaTime) {
-            this.checkPhotonElectronCollisions();
+            this.checkPhotonAtomCollisions();
             this.checkCollisionsBetweenTwoLists(this.photons.models, this.mirrors);
             this.checkCollisionsBetweenListAndBody(this.atoms.models, this.tube);
 
@@ -342,19 +342,18 @@ define(function (require, exports, module) {
             }
         },
 
-        checkPhotonElectronCollisions: function() {
+        checkPhotonAtomCollisions: function() {
             // Test each photon against the atoms in the section the photon is in
             for (var i = 0; i < this.photons.length; i++) {
                 var photon = this.photons.at(i);
-                if (!(photon instanceof Photon) 
-                    || (this.tube.getBounds().contains(photon.get('position'))) 
-                    || (this.tube.getBounds().contains(photon.getPreviousPosition()))
+                if (this.tube.getBounds().contains(photon.getPosition()) || 
+                    this.tube.getBounds().contains(photon.getPreviousPosition())
                 ) {
                     for (var j = 0; j < this.atoms.length; j++) {
                         var atom = this.atoms.at(j);
                         var s1 = atom.getCurrentState();
-                        var s2 = atom.getCurrentState();
                         PhotonAtomCollisonExpert.detectAndDoCollision(photon, atom);
+                        var s2 = atom.getCurrentState();
                         if (s1 != s2)
                             break;
                     }

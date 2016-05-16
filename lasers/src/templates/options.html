@@ -3,8 +3,9 @@
 
     <label>Energy Levels</label>
     <select class="energy-levels-select">
-        <option value="2">Two Levels</option>
-        <option value="3">Three Levels</option>
+        <% var twoSelected = (simulation.get('elementProperties') === simulation.twoLevelProperties); %>
+        <option value="2" <% if (twoSelected) { %>selected<% } %>>Two Levels</option>
+        <option value="3" <% if (!twoSelected) { %>selected<% } %>>Three Levels</option>
     </select>
 
     <label class="<% if (!alwaysShowLampViewOptions) { %>three-level-options<% } %>">Lamp View</label>

@@ -39,6 +39,8 @@ define(function (require, exports, module) {
             BaseLasersSimulation.prototype.initComponents.apply(this, arguments);
 
             this.initAtoms();
+
+            this.setNumEnergyLevels(3);
         },
 
         initAtoms: function() {
@@ -81,7 +83,7 @@ define(function (require, exports, module) {
 
             // Only the pump beam is enabled
             this.seedBeam.set('enabled', false);
-            this.pumpingBeam.set('enabled', false);
+            this.pumpingBeam.set('enabled', true);
         },
 
         getSeedBeamOrigin: function() {
