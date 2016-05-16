@@ -395,13 +395,12 @@ define(function (require, exports, module) {
          */
         checkCollisionsBetweenListAndBody: function(collidablesA, body) {
             for (var i = 0; i < collidablesA.length; i++) {
-                var collidable1 = collidablesA[i];
-                if (!(collidable1 instanceof Photon)
-                    || this.tube.getBounds().contains(collidable1.getPosition())
-                    || this.tube.getBounds().contains(collidable1.getPreviousPosition()) 
+                var collidable = collidablesA[i];
+                if (body.getBounds().contains(collidable.getPosition()) || 
+                    body.getBounds().contains(collidable.getPreviousPosition())
                 ) {
                     for (var k = 0; k < this.collisionExperts.length; k++) {
-                        this.collisionExperts[k].detectAndDoCollision(collidable1, body);
+                        this.collisionExperts[k].detectAndDoCollision(collidable, body);
                     }
                 }
             }
