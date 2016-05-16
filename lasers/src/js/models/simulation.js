@@ -35,10 +35,6 @@ define(function (require, exports, module) {
      */
     var LasersSimulation = QuantumSimulation.extend({
 
-        // Properties for two and three level atoms
-        twoLevelProperties:   new TwoLevelElementProperties(),
-        threeLevelProperties: new ThreeLevelElementProperties(),
-
         defaults: _.extend({}, QuantumSimulation.prototype.defaults, {
 
         }),
@@ -60,6 +56,10 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             QuantumSimulation.prototype.initComponents.apply(this, arguments);
+
+            // Properties for two and three level atoms
+            this.twoLevelProperties   = new TwoLevelElementProperties();
+            this.threeLevelProperties = new ThreeLevelElementProperties();
 
             var width = 800;
             var height = 800;
