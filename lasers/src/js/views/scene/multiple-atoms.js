@@ -71,12 +71,17 @@ define(function(require) {
         },
 
         initAtoms: function() {
-            // this.atomView = new AtomView({
-            //     model: this.simulation.atoms.first(),
-            //     mvt: this.mvt
-            // });
+            this.atomViews = [];
 
-            // this.backgroundLayer.addChild(this.atomView.displayObject);
+            for (var i = 0; i < this.simulation.atoms.length; i++) {
+                var atomView = new AtomView({
+                    model: this.simulation.atoms.at(i),
+                    mvt: this.mvt
+                });
+
+                this.atomViews.push(atomView);
+                this.atomLayer.addChild(atomView.displayObject);
+            }
         },
 
         initLamps: function() {
@@ -90,8 +95,6 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             LasersSceneView.prototype._update.apply(this, arguments);
-
-            
         },
 
         elementPropertiesChanged: function(simulation, elementProperties) {

@@ -138,8 +138,6 @@ define(function (require) {
             this.trigger('photon-emitted', this, emittedPhoton);
         },
 
-        update: function(time, deltaTime) {},
-
         collideWithPhoton: function(photon) {
             this.get('currentState').collideWithPhoton(this, photon);
         },

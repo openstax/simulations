@@ -5,6 +5,7 @@ define(function (require, exports, module) {
     var _ = require('underscore');
 
     var VanillaCollection = require('common/collections/vanilla');
+    var Vector2           = require('common/math/vector2');
 
     var BaseLasersSimulation      = require('models/simulation/base');
     var TwoLevelElementProperties = require('models/element-properties/two-level');
@@ -21,6 +22,7 @@ define(function (require, exports, module) {
     var MultipleAtomsLaserSimulation = BaseLasersSimulation.extend({
 
         defaults: _.extend({}, BaseLasersSimulation.prototype.defaults, {
+            photonSpeedScale: Constants.MULTI_ATOM_PHOTON_SPEED,
             pumpingPhotonViewMode: Constants.PHOTON_CURTAIN
         }),
         
@@ -40,7 +42,31 @@ define(function (require, exports, module) {
         },
 
         initAtoms: function() {
-            
+            var numAtoms = 30;
+            var maxSpeed = 0.1;
+            var position = new Vector2();
+            var tubeBounds = this.tube.getBounds();
+
+            for (var i = 0; i < numAtoms; i++) {
+                var atom = new LaserAtom({}, {
+                    simulation: this,
+                    elementProperties: this.get('elementProperties')
+                });
+
+                var diameter = atom.get('radius') * 2;
+                
+                atom.setPosition(
+                    tubeBounds.x + Math.random() * (tubeBounds.w - diameter * 2) + diameter,
+                    tubeBounds.y + Math.random() * (tubeBounds.h - diameter * 2) + diameter
+                );
+
+                atom.setVelocity(
+                    (Math.random() - 0.5) * maxSpeed,
+                    (Math.random() - 0.5) * maxSpeed
+                );
+
+                this.addAtom(atom);
+            }
         },
 
         initBeams: function() {

@@ -22,6 +22,10 @@ define(function (require) {
     // Physical configuration
     //----------------------------------------------------------------
 
+    // Photon speed
+    Constants.ONE_ATOM_PHOTON_SPEED = 0.5;
+    Constants.MULTI_ATOM_PHOTON_SPEED = 0.5;
+
     // Physical things
     Constants.ORIGIN = new Vector2(120, 200);
 

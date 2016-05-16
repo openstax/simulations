@@ -21,6 +21,7 @@ define(function (require, exports, module) {
     var OneAtomLasersSimulation = BaseLasersSimulation.extend({
 
         defaults: _.extend({}, BaseLasersSimulation.prototype.defaults, {
+            photonSpeedScale: Constants.ONE_ATOM_PHOTON_SPEED,
             pumpingPhotonViewMode: Constants.PHOTON_DISCRETE
         }),
 

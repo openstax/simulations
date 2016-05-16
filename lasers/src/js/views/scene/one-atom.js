@@ -39,7 +39,6 @@ define(function(require) {
             this.initAtom();
             this.initLamps();
             
-
             this.determineLaserWaveViewVisibility();
 
             this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
@@ -72,7 +71,7 @@ define(function(require) {
                 mvt: this.mvt
             });
 
-            this.backgroundLayer.addChild(this.atomView.displayObject);
+            this.atomLayer.addChild(this.atomView.displayObject);
         },
 
         initLamps: function() {

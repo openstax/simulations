@@ -65,12 +65,14 @@ define(function(require) {
 
         initLayers: function() {
             this.photonElectronLayer = new PIXI.Container();
+            this.atomLayer = new PIXI.Container();
             this.backgroundLayer = new PIXI.Container();
             this.foregroundLayer = new PIXI.Container();
             this.tubeLayer = new PIXI.Container();
             this.controlsLayer = new PIXI.Container();
             
             this.stage.addChild(this.backgroundLayer);
+            this.stage.addChild(this.atomLayer);
             this.stage.addChild(this.tubeLayer);
             this.stage.addChild(this.photonElectronLayer);
             this.stage.addChild(this.foregroundLayer);
