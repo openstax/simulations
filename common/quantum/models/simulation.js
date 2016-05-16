@@ -13,19 +13,19 @@ define(function (require, exports, module) {
 
         defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             photonSpeedScale: 1,
-            currentElementProperties: undefined
+            elementProperties: undefined
         }),
 
         getGroundState: function() {
-            return this.get('currentElementProperties').getGroundState();
+            return this.get('elementProperties').getGroundState();
         },
 
         getCurrentElementProperties: function() {
-            return this.get('currentElementProperties');
+            return this.get('elementProperties');
         },
 
         setCurrentElementProperties: function(elementProperties) {
-            this.set('currentElementProperties', elementProperties);
+            this.set('elementProperties', elementProperties);
         }
 
     });

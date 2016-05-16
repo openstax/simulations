@@ -39,11 +39,8 @@ define(function (require, exports, module) {
         twoLevelProperties:   new TwoLevelElementProperties(),
         threeLevelProperties: new ThreeLevelElementProperties(),
 
-        defaults: _.extend(QuantumSimulation.prototype.defaults, {
-            originX: 100, 
-            originY: 300,
-            width:   800,
-            height:  800
+        defaults: _.extend({}, QuantumSimulation.prototype.defaults, {
+
         }),
         
         initialize: function(attributes, options) {
@@ -53,10 +50,6 @@ define(function (require, exports, module) {
             }, options);
 
             QuantumSimulation.prototype.initialize.apply(this, [attributes, options]);
-
-            var minX = Math.floor(this.get('originX') - 50);
-            var minY = Math.floor(this.get('originY') - this.get('height') / 2);
-            this.boundingRectangle = new Rectangle(minX, minY, this.get('width'), this.get('height'));
 
             // Cached objects
             this._matchObject = {};
@@ -68,9 +61,15 @@ define(function (require, exports, module) {
         initComponents: function() {
             QuantumSimulation.prototype.initComponents.apply(this, arguments);
 
+            var width = 800;
+            var height = 800;
+            var minX = Math.floor(Constants.ORIGIN.x - 50);
+            var minY = Math.floor(Constants.ORIGIN.y - height / 2);
+            this.boundingRectangle = new Rectangle(minX, minY, width, height);
+
             this.models = [];
 
-            this.stimulatingBeam = null;
+            this.seedBeam = null;
             this.pumpingBeam = null;
             this.tube = null;
 
@@ -86,17 +85,11 @@ define(function (require, exports, module) {
             this.collisionExperts.push(SphereBoxExpert);
             this.collisionExperts.push(PhotonMirrorCollisonExpert);
 
-            
-            this.angleWindow = LasersSimulation.PHOTON_CHEAT_ANGLE;
+            this.angleWindow = Constants.PHOTON_CHEAT_ANGLE;
 
             this.numPhotons = 0;
 
-            // Counters for the number of atoms in each state
-            this.numGroundStateAtoms = 0;
-            this.numMiddleStateAtoms = 0;
-            this.numHighStateAtoms = 0;
-
-            this.set('currentElementProperties', this.twoLevelProperties);
+            this.set('elementProperties', this.twoLevelProperties);
         },
 
         resetComponents: function() {
@@ -166,6 +159,16 @@ define(function (require, exports, module) {
             var index = this.models.indexOf(model);
             if (index !== -1) {
                 this.models.splice(index, 1);
+
+                if (model instanceof Mirror) {
+                    index = this.mirrors.indexOf(model);
+                    if (index !== -1)
+                        this.mirrors.splice(index, 1);
+                }
+                
+                if (model instanceof Tube && this.tube === model)
+                    this.tube = null;
+
                 return true;
             }
             return false;
@@ -206,25 +209,6 @@ define(function (require, exports, module) {
                 this.atoms.at(i).setStates(this.getCurrentElementProperties().getStates());
             }
 
-            // Initialize the number of atoms in each level
-            this.numGroundStateAtoms = 0;
-            this.numMiddleStateAtoms = 0;
-            this.numHighStateAtoms = 0;
-
-            var elementProperties = this.getCurrentElementProperties();
-            for (i = 0; i < this.atoms.length; i++) {
-                var atom = this.atoms.at(i);
-
-                if (atom.getCurrentState() == elementProperties.getGroundState())
-                    this.numGroundStateAtoms++;
-
-                if (atom.getCurrentState() == elementProperties.getMiddleEnergyState())
-                    this.numMiddleStateAtoms++;
-
-                if (atom.getCurrentState() == elementProperties.getHighEnergyState())
-                    this.numHighStateAtoms++;
-            }
-            
             this.trigger('atomic-states-changed', this);
         },
 
@@ -237,15 +221,19 @@ define(function (require, exports, module) {
         },
 
         getSeedBeam: function() {
-            return this.stimulatingBeam;
+            return this.seedBeam;
         },
 
-        setStimulatingBeam: function(stimulatingBeam) {
-            if (this.stimulatingBeam)
-                this.removeModel(this.stimulatingBeam);
+        setSeedBeam: function(seedBeam) {
+            this.setStimulatingBeam(seedBeam);
+        },
+
+        setStimulatingBeam: function(seedBeam) {
+            if (this.seedBeam)
+                this.removeModel(this.seedBeam);
             
-            this.addModel(stimulatingBeam);
-            this.stimulatingBeam = stimulatingBeam;
+            this.addModel(seedBeam);
+            this.seedBeam = seedBeam;
         },
 
         getPumpingBeam: function() {
@@ -269,15 +257,26 @@ define(function (require, exports, module) {
         },
 
         getNumGroundStateAtoms: function() {
-            return this.numGroundStateAtoms;
+            return this.getNumAtomsWithState(this.getCurrentElementProperties().getGroundState());
         },
 
         getNumMiddleStateAtoms: function() {
-            return this.numMiddleStateAtoms;
+            return this.getNumAtomsWithState(this.getCurrentElementProperties().getMiddleEnergyState());
         },
 
         getNumHighStateAtoms: function() {
-            return this.numHighStateAtoms;
+            return this.getNumAtomsWithState(this.getCurrentElementProperties().getHighEnergyState());
+        },
+
+        getNumAtomsWithState: function(state) {
+            var count = 0
+            
+            for (i = 0; i < this.atoms.length; i++) {
+                if (this.atoms.at(i).getCurrentState().equals(state))
+                    count++;
+            }
+
+            return count;
         },
 
         setBounds: function(bounds) {
@@ -346,13 +345,13 @@ define(function (require, exports, module) {
         checkPhotonElectronCollisions: function() {
             // Test each photon against the atoms in the section the photon is in
             for (var i = 0; i < this.photons.length; i++) {
-                var photon = this.photons[i];
+                var photon = this.photons.at(i);
                 if (!(photon instanceof Photon) 
                     || (this.tube.getBounds().contains(photon.get('position'))) 
                     || (this.tube.getBounds().contains(photon.getPreviousPosition()))
                 ) {
                     for (var j = 0; j < this.atoms.length; j++) {
-                        var atom = this.atoms[j];
+                        var atom = this.atoms.at(j);
                         var s1 = atom.getCurrentState();
                         var s2 = atom.getCurrentState();
                         PhotonAtomCollisonExpert.detectAndDoCollision(photon, atom);

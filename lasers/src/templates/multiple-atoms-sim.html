@@ -1,0 +1,67 @@
+
+<span class="scene-view-placeholder"></span>
+
+<div class="sim-controls-wrapper">
+    <div class="sim-controls-right">
+        <div class="sim-controls one-atom-options-panel">
+            <h2>Energy Levels</h2>
+
+            <ul class="radios energy-level-radio-buttons">
+                <li>
+                    <input type="radio" name="energy-levels-<%= unique %>" value="2" id="energy-levels-2-<%= unique %>" checked>
+                    <label for="energy-levels-2-<%= unique %>">Two</label>
+                </li>
+                <li>
+                    <input type="radio" name="energy-levels-<%= unique %>" value="3" id="energy-levels-3-<%= unique %>">
+                    <label for="energy-levels-3-<%= unique %>">Three</label>
+                </li>
+            </ul>
+
+            <h2>Lamp View</h2>
+            <ul class="radios">
+                <li>
+                    <input type="radio" name="lamp-view-<%= unique %>" value="photons" id="lamp-view-photons-<%= unique %>" checked>
+                    <label for="lamp-view-photons-<%= unique %>">Photons</label>
+                </li>
+                <li>
+                    <input type="radio" name="lamp-view-<%= unique %>" value="beam" id="lamp-view-beam-<%= unique %>">
+                    <label for="lamp-view-beam-<%= unique %>">Beam</label>
+                </li>
+            </ul>
+
+            <h2>Lower Transition</h2>
+            <ul class="radios">
+                <li>
+                    <input type="radio" name="lower-transition-<%= unique %>" value="photons" id="lower-transition-photons-<%= unique %>" checked>
+                    <label for="lower-transition-photons-<%= unique %>">Photons</label>
+                </li>
+                <li>
+                    <input type="radio" name="lower-transition-<%= unique %>" value="wave" id="lower-transition-wave-<%= unique %>">
+                    <label for="lower-transition-wave-<%= unique %>">Wave view</label>
+                </li>
+            </ul>
+
+            <h2>Other Options</h2>
+            <ul class="checkboxes">
+                <li>
+                    <input type="checkbox" class="enable-mirrors-check" id="enable-mirrors-check-<%= unique %>">
+                    <label for="enable-mirrors-check-<%= unique %>">Enable mirrors</label>
+                </li>
+                <li class="three-level-option">
+                    <input type="checkbox" class="display-emitted-photons-check" id="display-emitted-photons-check-<%= unique %>">
+                    <label for="display-emitted-photons-check-<%= unique %>">Display photons emitted from upper energy state</label>
+                </li>
+            </ul>
+
+            <div class="mirror-options">
+                <label class="slider-header"><span class="reflectivity-title">Mirror Reflectivity</span> <span class="slider-value reflectivity-value">100%</span></label>
+                <div class="reflectivity-slider-wrapper">
+                    <div class="slider reflectivity-slider"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sim-controls-right">
+        
+    </div>
+</div>
