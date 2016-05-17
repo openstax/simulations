@@ -41,7 +41,8 @@ define(function (require, exports, module) {
             lasingPhotonViewMode:  Constants.PHOTON_DISCRETE,
             pumpingPhotonViewMode: Constants.PHOTON_CURTAIN,
             displayHighLevelEmissions: false,
-            mirrorsEnabled: false
+            mirrorsEnabled: false,
+            exploded: false
         }),
         
         initialize: function(attributes, options) {
@@ -51,6 +52,8 @@ define(function (require, exports, module) {
             this.on('change:elementProperties', this.elementPropertiesChanged);
             this.on('change:pumpingPhotonViewMode', this.pumpingPhotonViewModeChanged);
             this.on('change:lasingPhotonViewMode', this.lasingPhotonViewModeChanged);
+
+            this.listenTo(this.lasingPhotons, 'add remove', this.numLasingPhotonsChanged);
         },
 
         /**
@@ -251,6 +254,11 @@ define(function (require, exports, module) {
                 this.setPhotonVisibility(true, wavelength);
             else if (lasingPhotonViewMode === Constants.PHOTON_WAVE)
                 this.setPhotonVisibility(false, wavelength);
+        },
+
+        numLasingPhotonsChanged: function() {
+            if (this.lasingPhotons.length > Constants.KABOOM_THRESHOLD)
+                this.set('exploded', true);
         }
 
     }, Constants.BaseLasersSimulation);

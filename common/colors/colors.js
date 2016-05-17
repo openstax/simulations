@@ -187,6 +187,22 @@ define(function (require) {
 		interpolateHex: function(hex1, hex2, t) {
 			var rgba = this.interpolateRgba(this.hexToRgb(hex1), this.hexToRgb(hex2), t);
 			return this.rgbToHex(rgba);
+		},
+
+		interpolateHexInteger: function(int1, int2, t) {
+			var b1 =  int1 & 255;
+			var g1 = (int1 >> 8) & 255;
+			var r1 = (int1 >> 16) & 255;
+
+			var b2 =  int2 & 255;
+			var g2 = (int2 >> 8) & 255;
+			var r2 = (int2 >> 16) & 255;
+
+			var r = Math.round((r1 * t) + (r2 * (1 - t)));
+			var g = Math.round((g1 * t) + (g2 * (1 - t)));
+			var b = Math.round((b1 * t) + (b2 * (1 - t)));
+
+			return (1 << 24) + (r << 16) + (g << 8) + b;
 		}
 	};
 

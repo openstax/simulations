@@ -18,6 +18,7 @@ define(function(require) {
     var BeamCurtainView      = require('views/beam-curtain');
     var LaserWaveView        = require('views/laser-wave');
     var EnergyLevelPanelView = require('views/energy-level-panel');
+    var LaserExplosionView   = require('views/laser-explosion');
 
     var Assets = require('assets');
 
@@ -38,6 +39,8 @@ define(function(require) {
 
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation, 'change:exploded', this.explodedChanged);
         },
 
         renderContent: function() {
@@ -56,6 +59,7 @@ define(function(require) {
             this.initBeamCurtainView();
             this.initLaserWaveView();
             this.initEnergyLevelPanel();
+            this.initExplosion();
         },
 
         initMVT: function() {
@@ -69,6 +73,7 @@ define(function(require) {
             this.backgroundLayer = new PIXI.Container();
             this.foregroundLayer = new PIXI.Container();
             this.tubeLayer = new PIXI.Container();
+            this.effectsLayer = new PIXI.Container();
             this.controlsLayer = new PIXI.Container();
             
             this.stage.addChild(this.backgroundLayer);
@@ -76,6 +81,7 @@ define(function(require) {
             this.stage.addChild(this.tubeLayer);
             this.stage.addChild(this.photonElectronLayer);
             this.stage.addChild(this.foregroundLayer);
+            this.stage.addChild(this.effectsLayer);
             this.stage.addChild(this.controlsLayer);
         },
 
@@ -193,14 +199,51 @@ define(function(require) {
             this.controlsLayer.addChild(this.energyLevelPanelView.displayObject);
         },
 
+        initExplosion: function() {
+            this.explosionView = new LaserExplosionView({
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+
+            this.effectsLayer.addChild(this.explosionView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             this.photonsView.update(time, deltaTime, paused);
             this.energyLevelPanelView.update(time, deltaTime, paused);
             this.laserWaveView.update(time, deltaTime, paused);
+            this.explosionView.update(time, deltaTime, paused);
         },
 
         rightMirrorReflectivityChanged: function(mirror, reflectivity) {
             this.externalLaserCurtainView.setMaxAlpha(1 - (Math.pow(reflectivity, 1.5)));
+        },
+
+        explodedChanged: function(simulation, exploded) {
+            if (exploded) {
+                this.photonsView.hide();
+                this.tubeView.hide();
+                this.rightMirrorView.hide();
+                this.leftMirrorView.hide();
+                this.internalLaserCurtainView.hide();
+                this.externalLaserCurtainView.hide();
+                this.beamCurtainView.hide();
+                this.laserWaveView.hide();
+
+                this.atomLayer.visible = false;
+            }
+            else {
+                this.photonsView.show();
+                this.tubeView.show();
+                this.rightMirrorView.show();
+                this.leftMirrorView.show();
+                this.internalLaserCurtainView.show();
+                this.externalLaserCurtainView.show();
+                this.beamCurtainView.show();
+                this.laserWaveView.show();
+
+                this.atomLayer.visible = true;
+            }
         }
 
     });
