@@ -234,6 +234,7 @@ define(function(require) {
         createEnergyLevels: function() {
             // Remove old ones
             for (var j = this.energyLevelViews.length - 1; j >= 0; j--) {
+                this.stopListening(this.energyLevelViews[j].model);
                 this.energyLevelViews[j].remove();
                 this.energyLevelViews.splice(j, 1);
             }
@@ -266,9 +267,14 @@ define(function(require) {
                 });
                 energyLevelView.displayObject.x = x;
 
+                this.listenTo(states[i], 'change:energyLevel', this.energyLevelChanged);
+
                 this.energyLevelViews.push(energyLevelView);
                 this.energyLevelsLayer.addChild(energyLevelView.displayObject);
             }
+
+            for (var k = 0; k < states.length; k++)
+                this.energyLevelChanged(states[k], states[k].get('energyLevel'));
         },
 
         update: function(time, deltaTime, paused) {
@@ -332,6 +338,20 @@ define(function(require) {
 
         pumpingBeamEnabledChanged: function(model, enabled) {
             this.pumpSquiggle.visible = enabled;
+        },
+
+        energyLevelChanged: function(model, energyLevel) {
+            var margin = 20;
+            var energyLevelY = this.energyToY(energyLevel);
+
+            for (var i = 0; i < this.energyLevelViews.length; i++) {
+                if (this.energyLevelViews[i].model !== model) {
+                    if (this.energyLevelViews[i].displayObject.y > energyLevelY)
+                        this.energyLevelViews[i].setMinY(Math.max(this.minY, energyLevelY + margin));
+                    else
+                        this.energyLevelViews[i].setMaxY(Math.min(this.maxY, energyLevelY - margin));
+                }
+            }
         }
 
     }, Constants.EnergyLevelPanelView);
