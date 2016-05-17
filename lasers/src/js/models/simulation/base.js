@@ -257,8 +257,10 @@ define(function (require, exports, module) {
         },
 
         numLasingPhotonsChanged: function() {
-            if (this.lasingPhotons.length > Constants.KABOOM_THRESHOLD)
+            if (this.lasingPhotons.length > Constants.KABOOM_THRESHOLD) {
                 this.set('exploded', true);
+                this.pause();
+            }
         }
 
     }, Constants.BaseLasersSimulation);

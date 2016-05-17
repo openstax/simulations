@@ -20,10 +20,11 @@ define(function(require) {
     var PARTICLE_ALPHA = 1;
     var PARTICLE_INITIAL_VELOCITY_RANGE = range({ min: 200, max: 300 });
     var PARTICLE_INITIAL_VELOCITY_2_RANGE = range({ min: 300, max: 800});
-    var PARTICLE_MAX_ANGULAR_ACCELERATION = 1;
     var PARTICLE_LIFE_SPAN = range({ min: 1, max: 3 });
     var PARTICLE_EMISSION_FREQUENCY = 0.001;
     var PARTICLE_FADE_POINT = 0.6;
+
+    var TEXT_FADE_TIME = 1;
 
     /**
      * Animates a particle explosion for the laser
@@ -51,6 +52,18 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
+            this.text = new PIXI.Text('Your laser blew up!\nIt was producing more power\nthan it could handle.', {
+                fill: '#FF3838',
+                font: '22px Helvetica Neue',
+                align: 'center'
+            });
+            this.text.resolution = this.getResolution();
+            this.text.anchor.x = 0.5;
+            this.text.anchor.y = 0.5;
+            this.text.visible = false;
+
+            this.displayObject.addChild(this.text);
+
             var texture = Assets.Texture(Assets.Images.EXPLOSION_PARTICLE);
 
             this.activeParticles = [];
@@ -76,8 +89,8 @@ define(function(require) {
         },
 
         update: function(time, deltaTime, paused) {
-            if (!paused)
-                this.updateParticles(time, deltaTime);
+            this.updateParticles(time, deltaTime);
+            this.updateText(time, deltaTime);
         },
 
         /**
@@ -102,6 +115,18 @@ define(function(require) {
                     max: 45
                 });
             }
+
+            this.text.x = this.center.x;
+            this.text.y = this.center.y;
+        },
+
+        updateText: function(time, deltaTime) {
+            if (!this._emittingParticles) 
+                return;
+
+            this._textFadeTimer += deltaTime;
+            var alpha = Math.min(this._textFadeTimer / TEXT_FADE_TIME, 1);
+            this.text.alpha = alpha;
         },
 
         updateParticles: function(time, deltaTime) {
@@ -138,7 +163,6 @@ define(function(require) {
                 particle.y += particle.velocity.y * deltaTime;
 
                 // Change velocity to drift
-                particle.velocity.rotate(particle.angularAcceleration * deltaTime);
                 particle.velocity.add(this._vec.set(particle.acceleration).scale(deltaTime));
 
                 // To use in linear interpolation functions
@@ -149,7 +173,6 @@ define(function(require) {
                 radius = this.particleRadiusRange.lerp(1 - Math.min(percentLifeSpent, 1));
                 particle.scale.x = particle.scale.y = radius / (particle.texture.width / 2);
 
-                particle.rotation += -1 * deltaTime;
                 particle.tint = Colors.interpolateHexInteger(0x000000, this.startingColor, percentLifeSpent);
 
                 // Fade particles out when they reach the end of their lives
@@ -187,9 +210,6 @@ define(function(require) {
                 else
                     particle.velocity.set(PARTICLE_INITIAL_VELOCITY_2_RANGE.random(), 0).rotate(angle);
                 particle.acceleration.set(-particle.velocity.x, -particle.velocity.y).scale(0.6);
-                particle.rotation = Math.random() * Math.PI;
-                var direction = (particle.velocity.angle() > Math.PI * 1.5) ? 1 : -1;
-                particle.angularAcceleration = Math.random() * PARTICLE_MAX_ANGULAR_ACCELERATION * direction;
 
                 this.displayObject.removeChild(particle);
                 this.displayObject.addChildAt(particle, 0);
@@ -210,9 +230,11 @@ define(function(require) {
 
         start: function() {
             this.updateColor();
+            this.text.visible = true;
 
             this._emittingParticles = true;
             this._emissionTimer = 0;
+            this._textFadeTimer = 0;
         },
 
         stop: function() {
@@ -235,6 +257,8 @@ define(function(require) {
                 this.usedParticles.splice(i, 1);
                 this.dormantParticles.push(particle);
             }
+
+            this.text.visible = false;
         },
 
         explodedChanged: function(simulation, exploded) {
