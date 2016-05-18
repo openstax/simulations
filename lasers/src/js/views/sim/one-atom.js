@@ -128,6 +128,8 @@ define(function (require) {
         resetComponents: function() {
             LasersSimView.prototype.resetComponents.apply(this);
             
+            this.laser1ControlsView.reset();
+            this.laser2ControlsView.reset();
         },
 
         elementPropertiesChanged: function(simulation, elementProperties) {

@@ -97,6 +97,8 @@ define(function (require, exports, module) {
 
         resetComponents: function() {
             // QuantumSimulation.prototype.resetComponents.apply(this, arguments);
+            this.twoLevelProperties   = new TwoLevelElementProperties();
+            this.threeLevelProperties = new ThreeLevelElementProperties();
 
             this.getPumpingBeam().set('photonsPerSecond', 0);
             this.getSeedBeam().set('photonsPerSecond', 0);

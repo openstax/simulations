@@ -103,6 +103,7 @@ define(function (require) {
         resetComponents: function() {
             LasersSimView.prototype.resetComponents.apply(this);
             
+            this.laserControlsView.reset();
         },
 
     });
