@@ -8,13 +8,15 @@ define(function (require) {
 
     var StateLifetimeManager = require('./state-lifetime-manager');
 
+    var QuantumConfig = require('../config');
+
     /**
      * A spherical body with mass and momentum
      */
     var Atom = SphericalBody.extend({
 
         defaults: _.extend({}, SphericalBody.prototype.defaults, {
-            radius: 15,
+            radius: QuantumConfig.DEFAULT_ATOM_RADIUS,
             mass: 1000,
             currentState: null,
             isStateLifetimeFixed: false
@@ -154,6 +156,10 @@ define(function (require) {
 
             this.stateLifetimeManager = new StateLifetimeManager(this, true, this.simulation);
         }
+
+    }, {
+
+        DEFAULT_RADIUS: QuantumConfig.DEFAULT_ATOM_RADIUS
 
     });
 

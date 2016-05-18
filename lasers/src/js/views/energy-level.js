@@ -49,9 +49,10 @@ define(function(require) {
             this.width = options.width;
             this.energyToY = options.energyToY;
             this.yToEnergy = options.yToEnergy ? options.yToEnergy : options.energyToY.createInverse();
-            this.groundStateEnergy = options.groundStateEnergy;
             this.minY = options.minY;
             this.maxY = options.maxY;
+            this.groundState = options.groundState;
+            this.highestEnergyState = options.highestEnergyState;
             this.atomRadius = options.atomRadius;
             this.levelNumber = options.levelNumber;
             this.wavelengthChangeEnabled = options.wavelengthChangeEnabled;
@@ -164,18 +165,20 @@ define(function(require) {
 
         getColor: function() {
             var energy = this.model.getEnergyLevel();
-            if (energy === this.groundStateEnergy)
+            if (energy === this.groundState.getEnergyLevel())
                 return '#000';
 
-            var deltaEnergy = energy - this.groundStateEnergy;
+            var deltaEnergy = energy - this.groundState.getEnergyLevel();
             return WavelengthColors.nmToHex(PhysicsUtil.energyToWavelength(deltaEnergy));
         },
 
         getRadius: function() {
-            if (this.model.getEnergyLevel() === this.groundStateEnergy)
-                return this.atomRadius + 3;
-            else
-                return this.atomRadius + 10;
+            var highestState = this.highestEnergyState;
+            var groundState = this.groundState;
+            var currentState = this.model;
+            var baseAtomRadius = this.atomSprite.width / 2;
+
+            return AtomView.getEnergyLevelRadius(baseAtomRadius, groundState, currentState, highestState);
         },
 
         setMinY: function(minY) {

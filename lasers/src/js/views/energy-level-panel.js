@@ -241,7 +241,6 @@ define(function(require) {
 
             var x = this.axisOriginX + 10;
             var width = this.width - x - this.padding;
-            var groundStateEnergy = this.simulation.getGroundState().getEnergyLevel();
 
             var states = this.simulation.getStates();
             for (var i = 0; i < states.length; i++) {
@@ -254,10 +253,11 @@ define(function(require) {
                 var energyLevelView = new EnergyLevelView({
                     simulation: this.simulation,
                     model: states[i],
+                    groundState: states[0],
+                    highestEnergyState: states[states.length - 1],
                     energyToY: this.energyToY,
                     minY: this.minY,
                     maxY: this.maxY,
-                    groundStateEnergy: groundStateEnergy,
                     width: width,
                     levelNumber: i + 1,
                     wavelengthChangeEnabled: (i > 0),
