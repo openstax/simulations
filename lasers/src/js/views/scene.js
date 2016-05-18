@@ -43,7 +43,7 @@ define(function(require) {
             this.listenTo(this.simulation, 'change:exploded', this.explodedChanged);
         },
 
-        renderContent: function() {
+        reset: function() {
             
         },
 

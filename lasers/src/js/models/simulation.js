@@ -45,6 +45,13 @@ define(function (require, exports, module) {
                 deltaTimePerFrame: Constants.DT
             }, options);
 
+            // Properties for two and three level atoms
+            this.twoLevelProperties   = new TwoLevelElementProperties();
+            this.threeLevelProperties = new ThreeLevelElementProperties();
+
+            // We want this to make it into the startingAttributes object
+            this.set('elementProperties', this.twoLevelProperties);
+
             QuantumSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             // Cached objects
@@ -56,10 +63,6 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             QuantumSimulation.prototype.initComponents.apply(this, arguments);
-
-            // Properties for two and three level atoms
-            this.twoLevelProperties   = new TwoLevelElementProperties();
-            this.threeLevelProperties = new ThreeLevelElementProperties();
 
             var width = 800;
             var height = 800;
@@ -93,7 +96,7 @@ define(function (require, exports, module) {
         },
 
         resetComponents: function() {
-            QuantumSimulation.prototype.resetComponents.apply(this, arguments);
+            // QuantumSimulation.prototype.resetComponents.apply(this, arguments);
 
             this.getPumpingBeam().set('photonsPerSecond', 0);
             this.getSeedBeam().set('photonsPerSecond', 0);

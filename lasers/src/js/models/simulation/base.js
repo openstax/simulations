@@ -46,6 +46,10 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
+            options = _.extend({
+                silentReset: false
+            }, options);
+
             LasersSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:mirrorsEnabled', this.mirrorsEnabledChanged);
@@ -75,6 +79,17 @@ define(function (require, exports, module) {
             this.listenTo(this.atoms, 'photon-emitted', this.photonEmitted)
 
             this.elementPropertiesChanged(this, this.get('elementProperties'));
+        },
+
+        resetComponents: function() {
+            LasersSimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.seedBeam.set('wavelength', Photon.RED);
+            this.pumpingBeam.set('wavelength',Photon.BLUE);
+
+            this.rightMirror.setReflectivity(1);
+
+            this.setNumEnergyLevels(2);
         },
 
         initTube: function() {
@@ -167,17 +182,6 @@ define(function (require, exports, module) {
             return this.pumpingBeamOrigin.set(this.origin.x + this.laserOffsetX, this.origin.y - this.laserOffsetX);
         },
 
-        resetComponents: function() {
-            LasersSimulation.prototype.resetComponents.apply(this, arguments);
-
-        },
-
-        _update: function(time, deltaTime) {
-            LasersSimulation.prototype._update.apply(this, arguments);
-
-            
-        },
-
         setPhotonVisibility: function(visibility, wavelength) {
             for (var i = 0; i < this.photons.length; i++) {
                 if (this.photons.at(i).get('wavelength') === wavelength)
@@ -235,8 +239,10 @@ define(function (require, exports, module) {
         },
 
         elementPropertiesChanged: function(simulation, elementProperties) {
-            this.getMiddleEnergyState().set('meanLifetime', this.defaultMiddleStateMeanLifetime);
-            this.getHighEnergyState().set('meanLifetime', this.defaultHighStateMeanLifetime);
+            if (elementProperties) {
+                this.getMiddleEnergyState().set('meanLifetime', this.defaultMiddleStateMeanLifetime);
+                this.getHighEnergyState().set('meanLifetime', this.defaultHighStateMeanLifetime);    
+            }
         },
 
         pumpingPhotonViewModeChanged: function(simulation, pumpingPhotonViewMode) {

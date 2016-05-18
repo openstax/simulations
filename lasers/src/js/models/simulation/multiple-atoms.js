@@ -43,6 +43,18 @@ define(function (require, exports, module) {
             this.setNumEnergyLevels(3);
         },
 
+        resetComponents: function() {
+            BaseLasersSimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.seedBeam.set('photonsPerSecond', 1);
+            this.pumpingBeam.set('photonsPerSecond', 0);
+
+            this.seedBeam.set('enabled', false);
+            this.pumpingBeam.set('enabled', true);
+
+            this.setNumEnergyLevels(3);
+        },
+
         initAtoms: function() {
             var numAtoms = 30;
             var maxSpeed = 0.1;
@@ -95,11 +107,6 @@ define(function (require, exports, module) {
                 this.tube.getBounds().x + this.tube.getBounds().w / 2,
                 this.tube.getBounds().y - 100
             );
-        },
-
-        resetComponents: function() {
-            BaseLasersSimulation.prototype.resetComponents.apply(this, arguments);
-
         },
 
         _update: function(time, deltaTime) {

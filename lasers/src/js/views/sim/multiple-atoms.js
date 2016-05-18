@@ -101,7 +101,7 @@ define(function (require) {
          * Resets all the components of the view.
          */
         resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
+            LasersSimView.prototype.resetComponents.apply(this);
             
         },
 

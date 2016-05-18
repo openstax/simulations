@@ -55,6 +55,7 @@ define(function (require) {
             'click .play-btn'  : 'play',
             'click .pause-btn' : 'pause',
             'click .step-btn'  : 'step',
+            'click .reset-btn' : 'reset',
 
             'change .energy-levels-select'    : 'changeEnergyLevels',
             'change .lamp-view-select'        : 'changeLampViewMode',
@@ -192,12 +193,44 @@ define(function (require) {
             this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
         },
 
+        resetSimulation: function() {
+            // Save whether or not it was paused when we reset
+            var wasPaused = this.simulation.get('paused');
+
+            // Set pause the updater and reset everything
+            this.updater.pause();
+            this.updater.reset();
+            this.resetComponents();
+            this.resetControls();
+
+            // Resume normal function
+            this.updater.play();
+            this.play();
+            this.pausedChanged();
+        },
+
+        /**
+         * Resets all the controls back to their default state.
+         */
+        resetControls: function() {
+            this.$('select.energy-levels-select').val((this.simulation.get('elementProperties') === this.simulation.twoLevelProperties) ? 2 : 3);
+            this.$('.lamp-view-select').val((this.simulation.get('pumpingPhotonViewMode') === Constants.PHOTON_DISCRETE) ? 'photons' : 'beam');
+            this.$('.lower-transition-select').val('photons');
+            this.$('.enable-mirrors-check').prop('checked', false);
+            this.$reflectivitySlider.val(this.simulation.rightMirror.getReflectivity() * 100);
+            this.updateReflectivityLabel(this.simulation.rightMirror.getReflectivity() * 100);
+            this.$('.display-high-level-emitted-photons-check').prop('checked', false);
+
+            this.$('select').selectpicker('refresh');
+        },
+
         /**
          * Resets all the components of the view.
          */
         resetComponents: function() {
             SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+            
+            this.sceneView.reset();
         },
 
         /**

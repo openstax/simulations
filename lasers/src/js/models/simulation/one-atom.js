@@ -34,6 +34,16 @@ define(function (require, exports, module) {
             this.initAtom();
         },
 
+        resetComponents: function() {
+            BaseLasersSimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.seedBeam.set('photonsPerSecond', 1);
+            this.pumpingBeam.set('photonsPerSecond', 1);
+
+            this.seedBeam.set('enabled', true);
+            this.pumpingBeam.set('enabled', false);
+        },
+
         initAtom: function() {
             // Add an atom
             var atom = new LaserAtom({}, {
@@ -78,11 +88,6 @@ define(function (require, exports, module) {
                 this.tube.getBounds().x + this.tube.getBounds().w / 2,
                 this.tube.getBounds().y - 100
             );
-        },
-
-        resetComponents: function() {
-            BaseLasersSimulation.prototype.resetComponents.apply(this, arguments);
-
         }
 
     });
