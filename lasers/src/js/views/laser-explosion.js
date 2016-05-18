@@ -262,10 +262,13 @@ define(function(require) {
         },
 
         explodedChanged: function(simulation, exploded) {
-            if (exploded)
+            if (exploded) {
                 this.start();
-            else
+            }
+            else {
+                this.stop();
                 this.clear();
+            }
         }
 
     });
