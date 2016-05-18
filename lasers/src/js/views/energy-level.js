@@ -40,7 +40,7 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 levelNumber: 0,
-                atomRadius: 6,
+                atomRadius: 8,
                 wavelengthChangeEnabled: true,
                 lifetimeChangeEnabled: true
             }, options);
@@ -84,6 +84,15 @@ define(function(require) {
             this.atomSprite.scale.x = this.atomSprite.scale.y = ((this.atomRadius * 2) / this.atomSprite.texture.width);
             this.atomSprite.x = this.width - this.paddingLeft;
 
+            this.label = new PIXI.Text(this.levelNumber, {
+                font: '11px Helvetica Neue',
+                fill: '#fff'
+            });
+            this.label.resolution = this.getResolution();
+            this.label.anchor.x = 0.43;
+            this.label.anchor.y = 0.5;
+            this.label.x = this.atomSprite.x;
+
             if (this.wavelengthChangeEnabled) {
                 var arrowX = Math.floor(this.atomSprite.x * 0.85);
                 this.arrowGraphics = new PIXI.Graphics();
@@ -98,6 +107,7 @@ define(function(require) {
             this.displayObject.addChild(this.wavelengthColorGraphics);
             this.displayObject.addChild(this.atomSprite);
             this.displayObject.addChild(this.dragHandle);
+            this.displayObject.addChild(this.label);
 
             if (this.lifetimeChangeEnabled)
                 this.initSlider();
