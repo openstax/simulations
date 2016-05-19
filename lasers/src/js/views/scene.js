@@ -215,6 +215,14 @@ define(function(require) {
             this.explosionView.update(time, deltaTime, paused);
         },
 
+        showHelp: function() {
+            this.energyLevelPanelView.showHelp();
+        },
+
+        hideHelp: function() {
+            this.energyLevelPanelView.hideHelp();
+        },
+
         rightMirrorReflectivityChanged: function(mirror, reflectivity) {
             this.externalLaserCurtainView.setMaxAlpha(1 - (Math.pow(reflectivity, 1.5)));
         },

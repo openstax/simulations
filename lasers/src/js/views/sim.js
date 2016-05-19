@@ -326,11 +326,11 @@ define(function (require) {
         },
 
         showHelp: function() {
-
+            this.sceneView.showHelp();
         },
 
         hideHelp: function() {
-            
+            this.sceneView.hideHelp();
         }
 
     });

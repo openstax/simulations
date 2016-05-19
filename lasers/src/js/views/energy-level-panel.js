@@ -96,6 +96,7 @@ define(function(require) {
             this.initAtoms();
             this.initSquiggles();
             this.drawSquiggles();
+            this.initHelpLabels();
 
             this.energyLevelsLayer = new PIXI.Container();
             this.displayObject.addChild(this.energyLevelsLayer);
@@ -176,6 +177,31 @@ define(function(require) {
 
             this.seedBeamEnabledChanged(null, this.simulation.seedBeam.get('enabled'));
             this.pumpingBeamEnabledChanged(null, this.simulation.pumpingBeam.get('enabled'));
+        },
+
+        initHelpLabels: function() {
+            var settings = {
+                font: 'bold 12px Helvetica Neue',
+                fill: '#000'
+            };
+
+            var text1 = new PIXI.Text('Energy level can be\nadjusted up and\ndown by dragging', settings);
+            text1.resolution = this.getResolution();
+            text1.x = this.axisOriginX + 10;
+            text1.y = this.padding + 20;
+
+            var text2 = new PIXI.Text('Slider adjusts\nlifetime of\nenergy state', settings);
+            text2.resolution = this.getResolution();
+            text2.x = this.axisOriginX + 180;
+            text2.y = this.padding + 100;
+
+            this.helpLayer = new PIXI.Container();
+            this.helpLayer.addChild(text1);
+            this.helpLayer.addChild(text2);
+
+            this.displayObject.addChild(this.helpLayer);
+
+            this.hideHelp();
         },
 
         drawSquiggles: function() {
@@ -320,6 +346,14 @@ define(function(require) {
                     currentLevel++;
                 }
             }
+        },
+
+        showHelp: function() {
+            this.helpLayer.visible = true;
+        },
+
+        hideHelp: function() {
+            this.helpLayer.visible = false;
         },
 
         energyLevelsChanged: function() {
