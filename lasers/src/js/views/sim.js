@@ -22,6 +22,7 @@ define(function (require) {
     // CSS
     require('less!styles/sim');
     require('less!styles/playback-controls.less');
+    require('less!styles/laser-picture-dialog');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
@@ -29,6 +30,7 @@ define(function (require) {
     // HTML
     var playbackControlsHtml = require('text!templates/playback-controls.html');
     var optionsHtml          = require('text!templates/options.html');
+    var pictureDialogHtml    = require('text!templates/laser-picture-dialog.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.  It
@@ -124,6 +126,8 @@ define(function (require) {
             this.renderSceneView();
             this.renderPlaybackControls();
             this.renderLaserPower();
+
+            this.$el.append(pictureDialogHtml);
 
             return this;
         },

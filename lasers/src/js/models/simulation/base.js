@@ -66,7 +66,7 @@ define(function (require, exports, module) {
         initComponents: function() {
             LasersSimulation.prototype.initComponents.apply(this, arguments);
 
-            this.setBounds(new Rectangle(0, 0, 1000, 800));
+            this.setBounds(new Rectangle(-300, -100, 1300, 900));
 
             this.laserOrigin = new Vector2(this.origin.x + this.laserOffsetX, this.origin.y);
             this.seedBeamOrigin = new Vector2();
