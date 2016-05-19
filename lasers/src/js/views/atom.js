@@ -145,7 +145,9 @@ define(function(require) {
             var de1 = highestState.getEnergyLevel() - groundState.getEnergyLevel();
             var de2 = currentState.getEnergyLevel() - groundState.getEnergyLevel();
             var maxRingThickness = 6;
-            var radius = maxRingThickness * de2 / de1 + groundStateRingThickness + baseAtomRadius;
+            var radius = (de2 === 0) ? 
+                groundStateRingThickness + baseAtomRadius :
+                maxRingThickness * de2 / de1 + groundStateRingThickness + baseAtomRadius;
 
             return radius;
         }
