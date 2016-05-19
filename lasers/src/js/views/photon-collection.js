@@ -39,7 +39,7 @@ define(function(require) {
          * Calculates current scale for sprites.  Override in child classes.
          */
         getSpriteScale: function() {
-            var targetWidth = this.mvt.modelToViewDeltaX(22);
+            var targetWidth = this.mvt.modelToViewDeltaX(PhotonCollectionView.modelSize);
             var scale = targetWidth / this.texture.width;
             return scale;
         },
@@ -64,6 +64,10 @@ define(function(require) {
             else
                 this.hide();
         }
+
+    }, {
+
+        modelSize: 22
 
     });
 

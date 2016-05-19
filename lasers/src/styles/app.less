@@ -45,19 +45,20 @@
 
     .modal-body {
         background: @gray-lightest;
-        padding: 40px 60px;
+        padding: 40px 40px;
         .user-select(none);
 
-        label {
-            margin-bottom: 0;
+        .control-wrapper {
+            padding-bottom: 15px;
         }
 
-        .control-column {
-            text-align: right;
-        }
+        .slider-header {
+            display: block;
 
-        #temperature-celsius + label {
-            margin-left: 22px;
+            .slider-value {
+                float: right;
+                font-weight: normal;
+            }
         }
     }
 

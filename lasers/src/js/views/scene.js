@@ -244,6 +244,10 @@ define(function(require) {
 
                 this.atomLayer.visible = true;
             }
+        },
+
+        photonSizeChanged: function() {
+            this.photonsView.updateMVT(this.mvt);
         }
 
     });

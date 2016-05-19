@@ -317,6 +317,10 @@ define(function (require) {
                 this.$('.three-level-options').show();
         },
 
+        photonSizeChanged: function() {
+            this.sceneView.photonSizeChanged();
+        },
+
         showHelp: function() {
 
         },
