@@ -39,7 +39,8 @@ define(function(require) {
             'slide .stimulation-probability-slider' : 'changeStimulationProbability',
             'slide .pair-separation-slider' : 'changePairSeparation',
             'slide .photon-diameter-slider' : 'changePhotonDiameter',
-            'click .show-all-stimulated-emissions-check' : 'toggleShowAllStimulatedEmissions'
+            'click .show-all-stimulated-emissions-check' : 'toggleShowAllStimulatedEmissions',
+            'click .show-comets-check' : 'toggleShowComets'
         }),
 
         render: function() {
@@ -130,6 +131,13 @@ define(function(require) {
                 QuantumConfig.ENABLE_ALL_STIMULATED_EMISSIONS = true;
             else
                 QuantumConfig.ENABLE_ALL_STIMULATED_EMISSIONS = false;
+        },
+
+        toggleShowComets: function() {
+            if ($(event.target).is(':checked'))
+                PhotonCollectionView.displayAsComets = true;
+            else
+                PhotonCollectionView.displayAsComets = false;
         },
 
         toggleHelp: function() {

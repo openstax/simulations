@@ -20,6 +20,7 @@ define(function(require) {
         initialize: function(options) {
             // A map of wavelengths to colors for caching
             this.colors = {};
+            this.cometTexture = Assets.Texture(Assets.Images.PHOTON_COMET);
             
             SpriteCollectionView.prototype.initialize.apply(this, arguments);
 
@@ -36,11 +37,22 @@ define(function(require) {
         },
 
         /**
+         * Returns the texture to be used in a specific sprite instance.  Can
+         *   be overrided in child classes to add things like random textures.
+         */
+        getSpriteTexture: function() {
+            if (PhotonCollectionView.displayAsComets)
+                return this.cometTexture;
+            else
+                return this.texture;
+        },
+
+        /**
          * Calculates current scale for sprites.  Override in child classes.
          */
         getSpriteScale: function() {
-            var targetWidth = this.mvt.modelToViewDeltaX(PhotonCollectionView.modelSize);
-            var scale = targetWidth / this.texture.width;
+            var targetHeight = this.mvt.modelToViewDeltaX(PhotonCollectionView.modelSize);
+            var scale = targetHeight / this.texture.height;
             return scale;
         },
 
@@ -56,6 +68,8 @@ define(function(require) {
             
             sprite.tint = this.getColorFromWavelength(model.get('wavelength'));
             sprite.visible = model.get('visible');
+            sprite.texture = this.getSpriteTexture();
+            sprite.rotation = model.get('velocity').angle();
         },
 
         viewModeChanged: function(simulation, viewMode) {
@@ -67,7 +81,8 @@ define(function(require) {
 
     }, {
 
-        modelSize: 22
+        modelSize: 22,
+        displayAsComets: false
 
     });
 
