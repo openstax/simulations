@@ -75,7 +75,7 @@ define(function(require) {
             this.atomCounts = [0, 0, 0];
             this.numAtomsInLevel = [0, 0, 0];
             this.numUpdatesToAverage = 0;
-            this.lastAtomUpdateTime = 0;
+            this.timeSinceLastUpdate = 0;
 
             // Initialize the graphics
             this.initGraphics();
@@ -287,7 +287,8 @@ define(function(require) {
             this.atomCounts[2] += this.simulation.getNumHighStateAtoms();
 
             this.numUpdatesToAverage++;
-            if (time - this.lastAtomUpdateTime >= this.averagingPeriod) {
+            this.timeSinceLastUpdate += deltaTime;
+            if (this.timeSinceLastUpdate >= this.averagingPeriod) {
                 // Compute the average number of atoms in each state. Take care to round off rather than truncate.
                 this.numAtomsInLevel[0] = Math.floor(0.5 + this.atomCounts[0] / this.numUpdatesToAverage);
                 this.numAtomsInLevel[1] = Math.floor(0.5 + this.atomCounts[1] / this.numUpdatesToAverage);
@@ -296,7 +297,7 @@ define(function(require) {
                 this.atomCounts[1] = 0;
                 this.atomCounts[2] = 0;
                 this.numUpdatesToAverage = 0;
-                this.lastAtomUpdateTime = time;
+                this.timeSinceLastUpdate = 0;
                 
                 // Move atoms
                 var currentLevelCount;
