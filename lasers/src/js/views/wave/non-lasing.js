@@ -34,7 +34,7 @@ define(function(require) {
             var phase = Math.random() * Math.PI;
             var point = this._point;
 
-            for (var i = 0; i < this.numPoints; i++) {
+            for (var i = 0; i < this.numPoints; i += 3) {
                 point.x = this.dx * i;
                 point.y = this.amplitude * (Math.sin(phase + (point.x / this.lambda) * Math.PI));
                 point.rotate(this.angle);

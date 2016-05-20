@@ -188,7 +188,7 @@ define(function (require) {
         getElevatedState: function(atom, photon, energy) {
             var result = null;
             var states = atom.getStates();
-            for (var stateIdx = states.length - 1; stateIdx >= 0 && states[stateIdx] != this && result === null; stateIdx--) {
+            for (var stateIdx = states.length - 1; stateIdx >= 0 && !states[stateIdx].equals(this) && result === null; stateIdx--) {
                 var de = photon.getEnergy() - (states[stateIdx].get('energyLevel') - energy);
                 if (Math.abs(de) <= QuantumConfig.ENERGY_TOLERANCE)
                     result = states[stateIdx];
