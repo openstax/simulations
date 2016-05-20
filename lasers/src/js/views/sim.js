@@ -58,6 +58,7 @@ define(function (require) {
             'click .pause-btn' : 'pause',
             'click .step-btn'  : 'step',
             'click .reset-btn' : 'reset',
+            'click .view-laser-picture-btn' : 'viewLaserPictureDialog',
 
             'change .energy-levels-select'    : 'changeEnergyLevels',
             'change .lamp-view-select'        : 'changeLampViewMode',
@@ -250,6 +251,10 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+        },
+
+        viewLaserPictureDialog: function() {
+            this.$('.picture-dialog').modal('show');
         },
 
         changeEnergyLevels: function(event) {
