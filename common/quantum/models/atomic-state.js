@@ -95,7 +95,7 @@ define(function (require) {
             var stimulatedPhotonEnergy;
 
             if (QuantumConfig.ENABLE_ALL_STIMULATED_EMISSIONS) {
-                for (var i = 0; i < states.length && states[i] !== this && result === false; i++) {
+                for (var i = 0; i < states.length && !states[i].equals(this) && result === false; i++) {
                     var state = states[i];
                     if (state.get('energyLevel') < this.get('energyLevel') ) {
                         stimulatedPhotonEnergy = this.get('energyLevel') - state.get('energyLevel');
