@@ -90,7 +90,7 @@ define(function(require) {
                 mvt: this.mvt
             })
 
-            this.foregroundLayer.addChild(this.lampArrayView.displayObject);
+            this.lampLayer.addChild(this.lampArrayView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

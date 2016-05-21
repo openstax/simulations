@@ -85,8 +85,8 @@ define(function(require) {
                 mvt: this.mvt
             });
 
-            this.foregroundLayer.addChild(this.lamp1View.displayObject);
-            this.foregroundLayer.addChild(this.lamp2View.displayObject);
+            this.lampLayer.addChild(this.lamp1View.displayObject);
+            this.lampLayer.addChild(this.lamp2View.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

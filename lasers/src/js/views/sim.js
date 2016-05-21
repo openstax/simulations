@@ -221,7 +221,7 @@ define(function (require) {
             this.$('select.energy-levels-select').val((this.simulation.get('elementProperties') === this.simulation.twoLevelProperties) ? 2 : 3);
             this.$('.lamp-view-select').val((this.simulation.get('pumpingPhotonViewMode') === Constants.PHOTON_DISCRETE) ? 'photons' : 'beam');
             this.$('.lower-transition-select').val('photons');
-            this.$('.enable-mirrors-check').prop('checked', false);
+            this.$('.enable-mirrors-check').prop('checked', this.simulation.get('mirrorsEnabled'));
             this.$reflectivitySlider.val(this.simulation.rightMirror.getReflectivity() * 100);
             this.updateReflectivityLabel(this.simulation.rightMirror.getReflectivity() * 100);
             this.$('.display-high-level-emitted-photons-check').prop('checked', false);

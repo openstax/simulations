@@ -68,19 +68,21 @@ define(function(require) {
         },
 
         initLayers: function() {
+            this.backgroundLayer     = new PIXI.Container();
+            this.atomLayer           = new PIXI.Container();
+            this.tubeLayer           = new PIXI.Container();
             this.photonElectronLayer = new PIXI.Container();
-            this.atomLayer = new PIXI.Container();
-            this.backgroundLayer = new PIXI.Container();
-            this.foregroundLayer = new PIXI.Container();
-            this.tubeLayer = new PIXI.Container();
-            this.effectsLayer = new PIXI.Container();
-            this.controlsLayer = new PIXI.Container();
-            
+            this.foregroundLayer     = new PIXI.Container();
+            this.lampLayer           = new PIXI.Container();
+            this.effectsLayer        = new PIXI.Container();
+            this.controlsLayer       = new PIXI.Container();
+
             this.stage.addChild(this.backgroundLayer);
             this.stage.addChild(this.atomLayer);
             this.stage.addChild(this.tubeLayer);
             this.stage.addChild(this.photonElectronLayer);
             this.stage.addChild(this.foregroundLayer);
+            this.stage.addChild(this.lampLayer);
             this.stage.addChild(this.effectsLayer);
             this.stage.addChild(this.controlsLayer);
         },
@@ -229,28 +231,18 @@ define(function(require) {
 
         explodedChanged: function(simulation, exploded) {
             if (exploded) {
-                this.photonsView.hide();
-                this.tubeView.hide();
-                this.rightMirrorView.hide();
-                this.leftMirrorView.hide();
-                this.internalLaserCurtainView.hide();
-                this.externalLaserCurtainView.hide();
-                this.beamCurtainView.hide();
-                this.laserWaveView.hide();
-
+                this.backgroundLayer.visible = false;
                 this.atomLayer.visible = false;
+                this.tubeLayer.visible = false;
+                this.photonElectronLayer.visible = false;
+                this.foregroundLayer.visible = false;
             }
             else {
-                this.photonsView.show();
-                this.tubeView.show();
-                this.rightMirrorView.show();
-                this.leftMirrorView.show();
-                this.internalLaserCurtainView.show();
-                this.externalLaserCurtainView.show();
-                this.beamCurtainView.show();
-                this.laserWaveView.show();
-
+                this.backgroundLayer.visible = true;
                 this.atomLayer.visible = true;
+                this.tubeLayer.visible = true;
+                this.photonElectronLayer.visible = true;
+                this.foregroundLayer.visible = true;
             }
         },
 
