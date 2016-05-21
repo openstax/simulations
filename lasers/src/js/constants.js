@@ -39,7 +39,12 @@ define(function (require) {
 
     // Spontaneous emission times, in milliseconds
 	Constants.MAXIMUM_STATE_LIFETIME        = 400;
-	Constants.MINIMUM_GROUND_STATE_LIFETIME = 200;
+    // The value for MINIMUM_GROUND_STATE_LIFETIME in the original sim is 200ms, but this was
+    //   real milliseconds and not simulation milliseconds.  I'm converting here to simulation
+    //   milliseconds so it can occur within the simulation instead of going outside the sim
+    //   in a weird, hacky way.
+    var simSecondsPerRealSecond = (Constants.FPS * Constants.DT) / 1000;
+	Constants.MINIMUM_GROUND_STATE_LIFETIME = 200 * simSecondsPerRealSecond;
 
     // Angle within which a photon is considered to be moving horizontally. This 
     //   is used by the mirrors to "cheat" photons into lasing, and by the wave

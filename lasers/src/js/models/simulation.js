@@ -117,13 +117,10 @@ define(function (require, exports, module) {
 
         _update: function(time, deltaTime) {
             QuantumSimulation.prototype._update.apply(this, arguments);
-
-            // Handle collisions between bodies
-            this.checkCollisions(deltaTime);
-
+            
             // Update all the models in the system
             this.updateModels(time, deltaTime);
-
+            
             // Check to see if any photons need to be taken out of the system
             this.numPhotons = 0;
             for (var i = this.photons.length - 1; i >= 0; i--) {
@@ -136,6 +133,9 @@ define(function (require, exports, module) {
                     photon.destroy();
                 }
             }
+
+            // Handle collisions between bodies
+            this.checkCollisions(deltaTime);
         },
 
         updateModels: function(time, deltaTime) {
