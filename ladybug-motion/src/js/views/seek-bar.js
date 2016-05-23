@@ -117,7 +117,7 @@ define(function(require) {
 
             this.inputLock(function() {
                 var percent = x / this.barWidth;
-                this.model.setTime(percent * this.model.get('maxRecordingTime'));
+                this.model.setTime(percent * this.getMaxTime());
             });
 
             var percent = x / progressWidth;
@@ -127,13 +127,17 @@ define(function(require) {
             this.$overwritten.width(overwrittenWidth);
         },
 
+        getMaxTime: function() {
+            return Math.max(this.model.get('furthestRecordedTime'), this.model.get('maxRecordingTime'));
+        },
+
         timeChanged: function(simulation, time) {
             var percent = Math.min(1, (time / simulation.get('furthestRecordedTime')));
             this.$handle.css('left', (percent * 100) + '%');
         },
 
         furthestRecordedTimeChanged: function(simulation, furthestRecordedTime) {
-            var percent = Math.min(1, (furthestRecordedTime / simulation.get('maxRecordingTime')));
+            var percent = Math.min(1, (furthestRecordedTime / this.getMaxTime()));
             this.$progress.css('width', (percent * 100) + '%');
         },
 
