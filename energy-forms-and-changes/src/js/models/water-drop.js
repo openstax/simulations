@@ -2,16 +2,15 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('common/math/vector2');
-
-    var Positionable = require('models/positionable');
+    var Vector2            = require('common/math/vector2');
+    var PositionableObject = require('common/models/positionable-object');
 
     var Constants = require('constants');
 
     /**
      * Basic building block model for all the elements in the intro tab scene
      */
-    var WaterDrop = Positionable.extend({
+    var WaterDrop = PositionableObject.extend({
 
         defaults: {
             width: 1,
@@ -19,7 +18,7 @@ define(function (require) {
         },
         
         initialize: function(attributes, options) {
-            Positionable.prototype.initialize.apply(this, [attributes, options]);
+            PositionableObject.prototype.initialize.apply(this, [attributes, options]);
 
             this.velocity = new Vector2();
             this.acceleration = new Vector2();
