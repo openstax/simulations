@@ -4,17 +4,17 @@ define(function (require) {
 
     var _ = require('underscore');
     
-    var Vector2      = require('common/math/vector2');
-    var MotionObject = require('common/models/motion-object');
+    var Vector2             = require('common/math/vector2');
+    var VanillaMotionObject = require('common/models/motion-object-vanilla');
     
     var EnergyTypes = require('constants').EnergyTypes;
 
     /**
      * 
      */
-    var EnergyChunk = MotionObject.extend({
+    var EnergyChunk = VanillaMotionObject.extend({
         
-        defaults: _.extend({}, MotionObject.prototype.defaults, {
+        defaults: _.extend({}, VanillaMotionObject.prototype.defaults, {
             // Used for some simple 3D layering effects.
             zPosition: 0,
             // Property that controls visibility in view.
@@ -22,13 +22,6 @@ define(function (require) {
             // Energy type.  This can change during the life of the energy chunk.
             energyType: EnergyTypes.THERMAL
         }),
-
-        initialize: function(attributes, options) {
-            MotionObject.prototype.initialize.apply(this, [attributes, options]);
-
-            // For internal use to avoid creating and destroying objects
-            this._vec2 = new Vector2(0, 0);
-        },
 
         translateBasedOnVelocity: function(deltaTime, options) {
             this._vec2.set(this.get('velocity'));

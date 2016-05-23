@@ -178,7 +178,7 @@ define(function (require) {
 
             var initialVelocity = this._initialChunkVelocity.set(0, -Faucet.FALLING_ENERGY_CHUNK_VELOCITY);
 
-            return new EnergyChunk({
+            return EnergyChunk.create({
                 energyType: EnergyChunk.MECHANICAL, 
                 position:   initialPosition,
                 velocity:   initialVelocity

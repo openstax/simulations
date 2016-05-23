@@ -5,10 +5,11 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PiecewiseCurve   = require('common/math/piecewise-curve');
-    var SliderView       = require('common/pixi/view/slider');
-    var IntroElementView = require('views/intro-element');
-    var EnergyChunkView  = require('views/energy-chunk');
+    var PiecewiseCurve = require('common/math/piecewise-curve');
+    var SliderView     = require('common/pixi/view/slider');
+
+    var IntroElementView          = require('views/intro-element');
+    var EnergyChunkCollectionView = require('views/energy-chunk-collection');
     
 
     var Assets    = require('assets');
@@ -40,13 +41,9 @@ define(function(require) {
             this.heatingEnabled = options.heatingEnabled;
             this.coolingEnabled = options.coolingEnabled;
             this.sliderReturnsToCenter = options.sliderReturnsToCenter;
+            this.energyChunkCollection = options.energyChunkCollection;
 
             IntroElementView.prototype.initialize.apply(this, [options]);
-
-            this.energyChunkViews = [];
-
-            this.listenTo(options.energyChunkCollection, 'add',    this.chunkAdded);
-            this.listenTo(options.energyChunkCollection, 'remove', this.chunkRemoved);
 
             /* This view can be used with any model--not necessarily
              *   a Burner model--and therefore we want this view
@@ -263,6 +260,13 @@ define(function(require) {
 
         initEnergyChunks: function() {
             this.energyChunkLayer.visible = false;
+
+            this.energyChunkCollectionView = new EnergyChunkCollectionView({
+                collection: this.energyChunkCollection,
+                mvt: this.mvt
+            });
+
+            this.energyChunkLayer.addChild(this.energyChunkCollectionView.displayObject);
         },
 
         updatePosition: function(model, position) {
@@ -283,27 +287,8 @@ define(function(require) {
             this.energyChunkLayer.visible = false;
         },
 
-        chunkAdded: function(chunk) {
-            var energyChunkView = new EnergyChunkView({
-                model: chunk,
-                mvt: this.mvt
-            });
-            this.energyChunkLayer.addChild(energyChunkView.displayObject);
-            this.energyChunkViews.push(energyChunkView);
-        },
-
-        chunkRemoved: function(chunk) {
-            for (var i = this.energyChunkViews.length - 1; i >= 0; i--) {
-                if (this.energyChunkViews[i].model === chunk) {
-                    this.energyChunkViews[i].removeFrom(this.energyChunkLayer); // Unbinds listeners too
-                    this.energyChunkViews.splice(i, 1);
-                }
-            }
-        },
-
         update: function(time, deltaTime) {
-            for (var i = 0; i < this.energyChunkViews.length; i++)
-                this.energyChunkViews[i].update(time, deltaTime);
+            this.energyChunkCollectionView.update(time, deltaTime);
         }
 
     }, Constants.BurnerView);

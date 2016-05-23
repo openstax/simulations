@@ -11,6 +11,7 @@ define(function (require) {
     var Air                         = require('models/air');
     var IntroElement                = require('models/intro-element');
     var EnergyChunk                 = require('models/energy-chunk');
+    var EnergyChunkCollection       = require('models/energy-chunk-collection');
     var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');
     var HorizontalSurface           = require('models/horizontal-surface');
 
@@ -39,7 +40,7 @@ define(function (require) {
             this._centerPoint = new Vector2();
 
             // Energy chunks
-            this.energyChunkList = new Backbone.Collection([], { model: EnergyChunk });
+            this.energyChunkList = new EnergyChunkCollection();
             this.energyChunkWanderControllers = [];
 
             // Create and add the top surface.  Some compensation for perspective
@@ -202,7 +203,7 @@ define(function (require) {
 
             if (closestChunk === null && this.get('heatCoolLevel') > 0) {
                 // Create an energy chunk.
-                closestChunk = new EnergyChunk({
+                closestChunk = EnergyChunk.create({
                     energyType: EnergyChunk.THERMAL, 
                     position:   new Vector2(this.getEnergyChunkStartEndPoint())
                 });

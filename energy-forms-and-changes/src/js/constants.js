@@ -401,12 +401,12 @@ define(function (require) {
 
     Constants.ENERGY_PER_CHUNK = Constants.numChunksToEnergy(2) - Constants.numChunksToEnergy(1);
 
-    var EnergyChunkView = {};
+    var EnergyChunkCollectionView = {};
     
-    EnergyChunkView.Z_DISTANCE_WHERE_FULLY_FADED = 0.1; // In meters
-    EnergyChunkView.WIDTH = 0.012; // In meters
+    EnergyChunkCollectionView.Z_DISTANCE_WHERE_FULLY_FADED = 0.1; // In meters
+    EnergyChunkCollectionView.WIDTH = 0.012; // In meters
 
-    Constants.EnergyChunkView = EnergyChunkView;
+    Constants.EnergyChunkCollectionView = EnergyChunkCollectionView;
     
 
     /*************************************************************************
