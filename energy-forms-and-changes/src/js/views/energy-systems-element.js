@@ -42,6 +42,8 @@ define(function(require) {
                 mvt: this.mvt
             });
 
+            energyChunkCollectionView.hide();
+
             this.energyChunkCollectionViews.push(energyChunkCollectionView);
             this[layerName] = energyChunkCollectionView.displayObject;
         },
