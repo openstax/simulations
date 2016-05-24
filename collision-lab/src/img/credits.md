@@ -1,4 +1,4 @@
 Image Credits
 ===========
 
-**bg-pattern.png**: modified from contemporary_china from subtlepatterns.com
+**bg.png**: 'Pixel Waeave' pattern from subtlepatterns.com
