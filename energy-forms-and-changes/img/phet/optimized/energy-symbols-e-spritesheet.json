@@ -1,0 +1,66 @@
+{"frames": {
+
+"E_chem_blank_light.png":
+{
+	"frame": {"x":2,"y":2,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":30},
+	"sourceSize": {"w":31,"h":30},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"E_dashed_blank.png":
+{
+	"frame": {"x":34,"y":2,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":30},
+	"sourceSize": {"w":31,"h":30},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"E_electric_blank.png":
+{
+	"frame": {"x":66,"y":2,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":30},
+	"sourceSize": {"w":31,"h":30},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"E_light_blank.png":
+{
+	"frame": {"x":98,"y":2,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":30},
+	"sourceSize": {"w":30,"h":30},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"E_mech_blank.png":
+{
+	"frame": {"x":130,"y":2,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":1,"w":30,"h":30},
+	"sourceSize": {"w":31,"h":31},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"E_therm_blank_orange.png":
+{
+	"frame": {"x":162,"y":2,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":30},
+	"sourceSize": {"w":31,"h":30},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "energy-symbols-e-spritesheet.png",
+	"format": "RGBA8888",
+	"size": {"w":194,"h":34},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:472ee64ef92429493afd4033bf60102f:649c43fdefd46950d21623650496b3d6:027516360a34fbab951fcc57711c6983$"
+}
+}
