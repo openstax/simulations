@@ -90,7 +90,8 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                userCanAddRemoveBalls: true
+                userCanAddRemoveBalls: true,
+                link: 'collision-lab'
             }, options);
 
             this.userCanAddRemoveBalls = options.userCanAddRemoveBalls;
