@@ -6,8 +6,8 @@ define(function(require) {
     var PIXI = require('pixi');
     var Backbone = require('backbone');
 
-    var HybridView         = require('common/pixi/view/hybrid');
-    var GridView           = require('common/pixi/view/grid');
+    var HybridView         = require('common/v3/pixi/view/hybrid');
+    var GridView           = require('common/v3/pixi/view/grid');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
@@ -138,7 +138,7 @@ define(function(require) {
             this.displayObject.addChild(mask);
 
             // Arrows layer
-            this.arrowsLayer = new PIXI.DisplayObjectContainer();
+            this.arrowsLayer = new PIXI.Container();
             this.arrowsLayer.mask = mask;
             this.displayObject.addChild(this.arrowsLayer);
 
