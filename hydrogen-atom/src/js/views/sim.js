@@ -8,10 +8,11 @@ define(function (require) {
     var SimView              = require('common/v3/app/sim');
     var WavelengthSliderView = require('common/controls/wavelength-slider');
 
-    var HydrogenAtomSimulation   = require('hydrogen-atom/models/simulation');
-    var HydrogenAtomSceneView    = require('hydrogen-atom/views/scene');
-    var AtomicModels             = require('hydrogen-atom/models/atomic-models');
-    var RutherfordAtomSimulation = require('rutherford-scattering/models/simulation/rutherford-atom');
+    var HydrogenAtomSimulation         = require('hydrogen-atom/models/simulation');
+    var HydrogenAtomSceneView          = require('hydrogen-atom/views/scene');
+    var AtomicModels                   = require('hydrogen-atom/models/atomic-models');
+    var RutherfordScatteringLegendView = require('hydrogen-atom/views/legend');
+    var RutherfordAtomSimulation       = require('rutherford-scattering/models/simulation/rutherford-atom');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -78,6 +79,7 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initLegend();
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
@@ -97,6 +99,10 @@ define(function (require) {
             this.sceneView = new HydrogenAtomSceneView({
                 simulation: this.simulation
             });
+        },
+
+        initLegend: function() {
+            this.legendView = new RutherfordScatteringLegendView();
         },
 
         /**
@@ -146,6 +152,11 @@ define(function (require) {
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
         },
 
+        renderLegend: function() {
+            this.legendView.render();
+            this.$('.legend-panel').append(this.legendView.el);
+        },
+
         /**
          * Renders playback controls
          */
@@ -168,6 +179,7 @@ define(function (require) {
         postRender: function() {
             this.sceneView.postRender();
             this.wavelengthSliderView.postRender();
+            this.renderLegend();
         },
 
         /**
