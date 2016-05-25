@@ -60,18 +60,23 @@ define(function(require) {
             this.initItems();
 
             var widestItem = _.max(this.items, function(item) {
-                return item.displayObject.width;
+                if (item.width)
+                    return item.width;
+                else
+                    return item.displayObject.width * item.displayObject.scale.x;
             });
             // Need to grab value now because when the widest item gets mapped to and updates,
             // the width on widestItem updates as well.
-            var widestWidth = widestItem.displayObject.width;
+            var widestWidth = widestItem.width ?
+                widestItem.width :
+                Math.ceil(widestItem.displayObject.width * widestItem.displayObject.scale.x);
 
             var items = _.map(this.items, function(item) {
                 return {
                     label: item.label,
                     img: PixiToImage.displayObjectToDataURI(item.displayObject, 1),
-                    width: item.displayObject.width,
-                    height: item.displayObject.height,
+                    width: item.width ? item.width : item.displayObject.width,
+                    height: item.height ? item.height : item.displayObject.height,
                     containerWidth: widestWidth
                 };
             });

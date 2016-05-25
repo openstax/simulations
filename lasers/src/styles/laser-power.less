@@ -1,0 +1,86 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "mixins.less";
+
+.sim-controls.laser-power-panel {
+    position: absolute;
+    left: 324px;
+    top: 416px;
+    width: 280px;
+
+    @filled-color: #A7F3FF;
+    @lasing-color: #00B8FF;
+    @danger-color: #FF3838;
+
+    @media screen and (max-height: @short-window) {
+        left: @short-screen-panel-margin;
+        top: 224px;
+        width: 300px;
+    }
+
+    .power-meter-wrapper {
+
+        label {
+            display: inline-block;
+            width: 58px;
+            height: 42px;
+            margin: 0;
+            text-align: left;
+        }
+
+        .power-meter {
+            display: inline-block;
+            position: relative;
+            width: 184px;
+            height: 32px;
+            padding: 4px;
+            margin-top: 5px;
+            float: right;
+
+            @media screen and (max-height: @short-window) {
+                width: 200px;
+            }
+
+            .power-meter-segment {
+                float: left;
+                width: 3px;
+                height: 100%;
+                border-radius: 1.5px;
+                margin-right: 1px;
+                background: fadeout(#000, 92%);
+
+                &:last-child {
+                    margin-right: 0;
+                }
+
+                &.filled        { background: @filled-color; box-shadow: 0 0 3px #C4F7FF; }
+                &.filled-lasing { background: @lasing-color; box-shadow: 0 0 3px #61D3FF; }
+                &.filled-danger { background: @danger-color; box-shadow: 0 0 3px #FF6A6A; }
+            }
+
+            .lasing-label,
+            .danger-label {
+                position: absolute;
+                top: 29px;
+                display: block;
+                height: 12px;
+                font-size: 9px;
+                font-weight: 500;
+                text-align: center;
+                border-left: 2px solid;
+                border-right: 2px solid;
+            }
+
+            .lasing-label {
+                color: @lasing-color;
+                
+            }
+
+            .danger-label {
+                color: @danger-color;
+            }
+        }
+    }
+
+    
+}

@@ -25,6 +25,9 @@ define(function(require) {
             if (nucleusType instanceof AtomicNucleus)
                 nucleusType = NucleusType.identifyNucleus(nucleusType.get('numProtons'), nucleusType.get('numNeutrons'));
 
+            if (nucleusType === null)
+                return new PIXI.Sprite(PIXI.Texture.EMPTY);
+
             var chemicalSymbol = this.getChemicalSymbol(nucleusType);
             var isotopeNumber = this.getIsotopeNumber(nucleusType);
             var color = this.getColor(nucleusType);
@@ -49,7 +52,7 @@ define(function(require) {
             var resolution = PixiView.prototype.getResolution();
             var fontStart = 'bold ';
             var fontEnd = 'px Helvetica Neue';
-            var shadowColor = Colors.hexToValue(color) > Colors.hexToValue('#777') ? '#000' : '#fff';
+            var shadowColor = (Colors.hexToValue(color) > Colors.hexToValue('#777') || color == Constants.URANIUM_235_LABEL_COLOR) ? '#000' : '#fff';
             var shadowDistance = 1;
 
             var symbol = new PIXI.Text(chemicalSymbol, {
@@ -139,7 +142,7 @@ define(function(require) {
                 case NucleusType.LEAD_206:                return Constants.LEAD_LABEL_COLOR;
                 case NucleusType.LEAD_207:                return Constants.LEAD_LABEL_COLOR;
                 case NucleusType.POLONIUM_211:            return Constants.POLONIUM_LABEL_COLOR;
-                case NucleusType.URANIUM_235:             return Constants.URANIUM_COLOR;
+                case NucleusType.URANIUM_235:             return Constants.URANIUM_235_LABEL_COLOR;
                 case NucleusType.URANIUM_236:             return Constants.URANIUM_236_LABEL_COLOR;
                 case NucleusType.URANIUM_238:             return Constants.URANIUM_238_LABEL_COLOR;
                 case NucleusType.URANIUM_239:             return Constants.URANIUM_239_LABEL_COLOR;

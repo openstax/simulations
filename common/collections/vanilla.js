@@ -283,6 +283,7 @@ define(function (require) {
 
         alertDestroyed: function(model) {
             this.remove(model);
+            this.trigger('destroy', model);
         },
 
         // Underscore methods

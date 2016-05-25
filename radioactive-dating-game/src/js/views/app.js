@@ -2,11 +2,15 @@ define(function(require) {
     
     'use strict';
 
+    var _ = require('underscore');
+    var $ = require('jquery');
+
     var NuclearPhysicsAppView = require('views/app');
     
     var HalfLifeSimView    = require('radioactive-dating-game/views/sim/half-life');
     var DecayRatesSimView  = require('radioactive-dating-game/views/sim/decay-rates');
     var MeasurementSimView = require('radioactive-dating-game/views/sim/measurement');
+    var DatingGameSimView  = require('radioactive-dating-game/views/sim/dating-game');
 
     var Assets = require('assets');
 
@@ -21,7 +25,8 @@ define(function(require) {
         simViewConstructors: [
             HalfLifeSimView,
             DecayRatesSimView,
-            MeasurementSimView
+            MeasurementSimView,
+            DatingGameSimView
         ],
 
         events: _.extend({}, NuclearPhysicsAppView.prototype.events, {

@@ -66,7 +66,7 @@ define(function(require) {
                     explosionGraphics.alpha = alpha;
                     explosionGraphics.clear();
                     explosionGraphics.beginFill(EXPLOSION_FILL_COLOR, 1);
-                    explosionGraphics.drawCircle(0, 0, radius);
+                    explosionGraphics.drawCircle(0, 0, radius ? radius : 1);
                     explosionGraphics.endFill();
                     explosionGraphics.lineStyle(ringWidth, EXPLOSION_OUTLINE_COLOR, 1);
                     explosionGraphics.drawCircle(0, 0, ringRadius);

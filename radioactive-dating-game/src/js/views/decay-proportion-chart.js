@@ -143,9 +143,6 @@ define(function(require) {
             this.dataGraphics = new PIXI.Graphics();
 
             var mask = new PIXI.Graphics();
-            mask.beginFill();
-            mask.drawRect(this.graphOriginX, this.graphOriginY - this.graphHeight, this.graphWidth, this.graphHeight);
-            mask.endFill();
 
             this.dataGraphics.mask = mask;
 
@@ -382,6 +379,14 @@ define(function(require) {
             }
         },
 
+        drawDataMask: function() {
+            var mask = this.dataGraphics.mask;
+            
+            mask.beginFill();
+            mask.drawRect(this.graphOriginX, this.graphOriginY - this.graphHeight, this.graphWidth, this.graphHeight);
+            mask.endFill();
+        },
+
         drawDataPoint: function(time, percent, color) {
             var x = this.graphOriginX + time * this.msToPixelsFactor;
             if (x <= this.graphOriginX + this.graphWidth) {
@@ -431,6 +436,7 @@ define(function(require) {
             this.drawXAxisTicks();
             this.drawYAxisLabels();
             this.drawHalfLifeLines();
+            this.drawDataMask();
         },
 
         /**

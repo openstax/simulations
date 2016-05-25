@@ -331,6 +331,47 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                         URANIUM 235 NUCLEUS                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var Uranium235Nucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.
+    Uranium235Nucleus.PROTONS  = 92;
+    Uranium235Nucleus.NEUTRONS = 143;
+
+    // Number of neutrons and protons in the daughter nucleus that is produced
+    // if and when this nucleus fissions.  This nucleus represents Krypton-92.
+    Uranium235Nucleus.DAUGHTER_NUCLEUS_PROTONS = 36;
+    Uranium235Nucleus.DAUGHTER_NUCLEUS_NEUTRONS = 56;
+
+    Constants.Uranium235Nucleus = Uranium235Nucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                    URANIUM 235 COMPOSITE NUCLEUS                    **
+     **                                                                     **
+     *************************************************************************/
+
+    var Uranium235CompositeNucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.
+    Uranium235CompositeNucleus.PROTONS  = Uranium235Nucleus.PROTONS;
+    Uranium235CompositeNucleus.NEUTRONS = Uranium235Nucleus.NEUTRONS;
+
+    // The "agitation factor" for the various types of nucleus.  The amount of
+    //   agitation controls how dynamic the nucleus looks on the canvas. Values
+    //   must be in the range 0-9.
+    Uranium235CompositeNucleus.URANIUM_235_AGITATION_FACTOR = 4;
+    Uranium235CompositeNucleus.URANIUM_236_AGITATION_FACTOR = 8;
+
+    Constants.Uranium235CompositeNucleus = Uranium235CompositeNucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                         URANIUM 238 NUCLEUS                         **
      **                                                                     **
      *************************************************************************/
@@ -400,6 +441,27 @@ define(function (require) {
     Constants.LightAdjustableCompositeNucleus = LightAdjustableCompositeNucleus;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                     DAUGHTER COMPOSITE NUCLEUS                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var DaughterCompositeNucleus = {};
+
+    // The "agitation factor" for the various types of nucleus.  The amount of
+    //   agitation controls how dynamic the nucleus looks on the canvas. Values
+    //   must be in the range 0-9.
+    DaughterCompositeNucleus.KRYPTON_92_AGITATION_FACTOR = 6;
+
+    Constants.DaughterCompositeNucleus = DaughterCompositeNucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         NUCLEUS DECAY CHART                         **
+     **                                                                     **
+     *************************************************************************/
 
     var NucleusDecayChart = {};
 

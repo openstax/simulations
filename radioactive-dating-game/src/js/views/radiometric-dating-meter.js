@@ -12,7 +12,8 @@ define(function(require) {
     var Rectangle      = require('common/math/rectangle');
     var Vector2        = require('common/math/vector2');
 
-    var NucleusType = require('models/nucleus-type');
+    var NucleusType  = require('models/nucleus-type');
+    var HalfLifeInfo = require('models/half-life-info');
 
     var RadiometricDatingMeter = require('radioactive-dating-game/models/radiometric-dating-meter');
 
@@ -35,9 +36,12 @@ define(function(require) {
         htmlEvents: {
             'click .probe-type-carbon-14'   : 'selectCarbon14',
             'click .probe-type-uranium-238' : 'selectUranium238',
+            'click .probe-type-custom'      : 'selectCustom',
 
             'click .measuring-target-objects' : 'setTargetToObjects',
-            'click .measuring-target-air'     : 'setTargetToAir'
+            'click .measuring-target-air'     : 'setTargetToAir',
+
+            'change .half-life' : 'changeHalfLife'
         },
 
         events: {
@@ -59,8 +63,9 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 panelWidth: 190,
-                panelHeight: 216,
-                padding: 15
+                panelHeight: 176,
+                padding: 15,
+                includeCustom: false
             }, options);
 
             this.simulation = options.simulation;
@@ -68,6 +73,7 @@ define(function(require) {
             this.panelWidth = options.panelWidth;
             this.panelHeight = options.panelHeight;
             this.padding = options.padding;
+            this.includeCustom = options.includeCustom;
 
             this.tubeAnimationSpeed = 80;
             this.cordColor = 0x000000;
@@ -100,7 +106,8 @@ define(function(require) {
 
         initPanel: function() {
             this.$el.append(this.template({
-                unique: this.model.cid
+                unique: this.model.cid,
+                includeCustom: this.includeCustom
             }));
 
             this.$panel = this.$el.find('.meter-panel');
@@ -108,6 +115,8 @@ define(function(require) {
             this.$panel.height(this.panelHeight);
 
             this.$readoutValue = this.$el.find('.readout-value');
+
+            this.$el.find('select').selectpicker();
         },
 
         initTube: function() {
@@ -291,29 +300,61 @@ define(function(require) {
         },
 
         getPanelHeight: function() {
-            return this.panelHeight
+            return this.panelHeight;
         },
 
         setTargetToObjects: function() {
             this.model.set('measurementMode', RadiometricDatingMeter.OBJECTS);
             this.updateReadout();
+            this.$el.find('.measuring-target-objects').addClass('selected');
+            this.$el.find('.measuring-target-air').removeClass('selected');
         },
 
         setTargetToAir: function() {
             this.model.set('measurementMode', RadiometricDatingMeter.AIR);
             this.updateReadout();
+            this.$el.find('.measuring-target-air').addClass('selected');
+            this.$el.find('.measuring-target-objects').removeClass('selected');
         },
 
         selectCarbon14: function() {
             this.model.set('nucleusType', NucleusType.CARBON_14);
+            this.hideCustomOptions();
         },
 
         selectUranium238: function() {
             this.model.set('nucleusType', NucleusType.URANIUM_238);
+            this.hideCustomOptions();
+        },
+
+        selectCustom: function() {
+            this.model.set('nucleusType', NucleusType.HEAVY_CUSTOM);
+            this.showCustomOptions();
+        },
+
+        showCustomOptions: function() {
+            this.$el.find('.custom-options-wrapper').show();
+        },
+
+        hideCustomOptions: function() {
+            this.$el.find('.custom-options-wrapper').hide();
+        },
+
+        changeHalfLife: function(event) {
+            var years = parseInt($(event.target).val());
+            var ms = HalfLifeInfo.convertYearsToMs(years);
+            this.model.set('halfLifeOfCustomNucleus', ms);
         },
 
         nucleusTypeChanged: function(model, nucleusType) {
-            var text = (nucleusType === NucleusType.CARBON_14) ? 'Carbon-14' : 'Uranium-238';
+            var text;
+            if (nucleusType === NucleusType.CARBON_14)
+                text = 'Carbon-14';
+            else if (nucleusType === NucleusType.URANIUM_238)
+                text = 'Uranium-238';
+            else
+                text = 'Custom';
+            
             this.$el.find('.readout-label').html(text + ':');
             this.updateReadout();
         },

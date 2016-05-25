@@ -43,6 +43,10 @@ define(function(require) {
             return 230;
         },
 
+        getPanelHeight: function() {
+            return 176;
+        },
+
         initMVT: function() {
             this.mvt = LandscapeView.createMVT(this.width, this.height);
         },
@@ -80,7 +84,8 @@ define(function(require) {
             this.radiometricDatingMeterView = new RadiometricDatingMeterView({
                 model: this.simulation.meter,
                 simulation: this.simulation,
-                mvt: this.mvt
+                mvt: this.mvt,
+                panelHeight: this.getPanelHeight()
             });
 
             if (AppView.windowIsShort())
@@ -96,7 +101,7 @@ define(function(require) {
             var panelMargin = (AppView.windowIsShort()) ? 12 : 20;
             var probePanelWidth = this.radiometricDatingMeterView.getPanelWidth() + panelMargin;
             var width = this.getWidthBetweenPanels() - probePanelWidth;
-            var height = 216;
+            var height = this.getPanelHeight();
 
             this.decayRatesGraphView = new DatableItemDecayProportionChartView({
                 simulation: this.simulation,

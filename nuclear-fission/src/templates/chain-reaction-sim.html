@@ -1,0 +1,30 @@
+
+<span class="scene-view-placeholder"></span>
+
+<div class="sim-controls-wrapper">
+    <div class="sim-controls-left">
+        <div class="sim-controls legend-panel">
+            <h2>Legend</h2>
+        </div>
+    </div>
+    <div class="sim-controls-right">
+        <div class="sim-controls chain-reaction-controls-panel">
+            <h2>Controls</h2>
+
+            <input type="checkbox" class="containment-vessel-check" id="containment-vessel-check">
+            <label for="containment-vessel-check">Containment Vessel</label>
+
+            <div class="u-235-slider-wrapper">
+                <div class="slider-header"><div class="u-235-img-wrapper"><img src="<%= uranium235Img %>"></div>U-235 
+                <span class="slider-value" id="u-235">1 Nucleus</span></div>
+                <div class="slider u-235-slider"></div>
+            </div>
+
+            <div class="u-238-slider-wrapper">
+                <div class="slider-header"><div class="u-238-img-wrapper"><img src="<%= uranium238Img %>"></div>U-238 
+                <span class="slider-value" id="u-238">0 Nuclei</span></div>
+                <div class="slider u-238-slider"></div>
+            </div>
+        </div>
+    </div>
+</div>

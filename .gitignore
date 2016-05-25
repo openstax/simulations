@@ -2,5 +2,6 @@
 node_modules/
 dist/
 .grunt/
+.build_timestamp
 
 *.log

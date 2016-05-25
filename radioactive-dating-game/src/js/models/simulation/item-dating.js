@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
     var NuclearPhysicsSimulation = require('models/simulation');
 
-    var FlyingRock = require('radioactive-dating-game/models/datable-item');
+    var DatableItem = require('radioactive-dating-game/models/datable-item');
 
     /**
      * Base simulation model for simulations where items are radiometrically dated

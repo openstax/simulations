@@ -9,7 +9,16 @@
     #gradient.vertical(#81C8FF; #fff; 0%; 85%);
 
     @media screen and (max-height: @short-window) {
-        height: @short-scene-height;
+        height: (@short-scene-height - @short-screen-playback-controls-height);
+    }
+
+    #sim-dating-game & {
+        height: (@scene-height + @playback-controls-height);
+        #gradient.vertical(#81C8FF; #fff; 0%; 60%);
+
+        @media screen and (max-height: @short-window) {
+            height: (@short-scene-height);
+        }
     }
 }
 
@@ -20,8 +29,8 @@
     width: 100%;
     height: 0;
 
-    .reset-nucleus-btn,
-    .reset-nuclei-btn {
+    .reset-nuclei-btn,
+    .reset-game-btn {
         position: absolute;
         right: 268px;
         top: 190px;
@@ -35,11 +44,29 @@
 
         @media screen and (max-height: @short-window) {
             right: auto;
-            left: 33px;
+            left: 21px;
+            top: 162px;
         }
 
         #sim-decay-rates & {
             top: 270px;
+
+            @media screen and (max-height: @short-window) {
+                right: 32px;
+                left: auto;
+                top: 324px;
+            }
+        }
+
+        #sim-dating-game & {
+            top: (176px + @panel-margin * 2);
+            right: @panel-margin;
+
+            @media screen and (max-height: @short-window) {
+                top: (176px + @short-screen-panel-margin * 2);
+                right: @short-screen-panel-margin;
+                left: auto;
+            }
         }
     }
 
@@ -51,15 +78,15 @@
 
         .add-10-btn {
             position: absolute;
-            right: 100%;
-            margin-right: 6px;
+            left: 100%;
+            margin-left: 6px;
             .button-variant(#fff, @link-color, #fff, @link-color);
         }
 
         .remove-10-btn {
             position: absolute;
-            left: 100%;
-            margin-left: 6px;
+            right: 100%;
+            margin-right: 6px;
             .button-variant(@btn-fg, @btn-bg, @btn-fg, @btn-bg);
         }
     }
@@ -72,7 +99,7 @@
         left: 100%;
 
         @media screen and (max-height: @short-window) {
-            top: (@short-scene-height - @height);
+            top: (@short-scene-height - @short-screen-playback-controls-height - @height);
         }
 
         button {
@@ -92,4 +119,53 @@
             }
         }
     }
+
+    .win-display {
+        position: absolute;
+        width: 100%;
+        height: @scene-height;
+        background: fadeout(#fff, 30%);
+        display: none;
+        z-index: 5000;
+        .transition(~'opacity 200ms');
+
+        @media screen and (max-height: @short-window) {
+            height: @short-scene-height;
+        }
+
+        span {
+            position: absolute;
+            width: 100%;
+            height: 100px;
+            line-height: 100px;
+            top: 50%;
+            margin-top: -50px;
+            text-align: center;
+            color: #77af41;
+            font-size: 100px;
+            text-shadow: 4px 4px 0px #A3C383;
+
+            .animation-name(win);
+            .animation-duration(200ms);
+            .animation-timing-function(linear);
+            .animation-fill-mode(forwards);           
+        }
+
+        &.animate-out {
+            opacity: 0;
+
+            span {
+                display: none;
+            }
+        }
+        
+    }
+}
+
+@win-rotation: -15deg;
+
+@keyframes win {
+      0% { .transform(rotate(0deg)          scale(0.7, 0.7)); }
+     70% { .transform(rotate(@win-rotation) scale(1.4, 1.4)); }
+    100% { .transform(rotate(@win-rotation) scale(1,   1)); }
 }

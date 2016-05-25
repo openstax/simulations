@@ -57,6 +57,20 @@ define(function (require) {
 
     Constants.ENABLE_ALL_STIMULATED_EMISSIONS = true;
 
+    Constants.PHOTON_DISCRETE = 0;
+    Constants.PHOTON_WAVE = 1;
+    Constants.PHOTON_CURTAIN = 2;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                        BASE LASER SIMULATION                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var BaseLaserSimulation = {};
+
+    Constants.BaseLaserSimulation = BaseLaserSimulation;
 
     return Constants;
 });

@@ -81,7 +81,7 @@ define(function(require) {
             if (AppView.windowIsShort()) {
                 this.viewOriginX = Math.round((this.width - 78 - 230) / 2 + 78);
                 this.viewOriginY = Math.round(this.height / 2);
-                this.baseScale = 48;
+                this.baseScale = 50;
             }
             else {
                 this.viewOriginX = Math.round(this.width  / 2);

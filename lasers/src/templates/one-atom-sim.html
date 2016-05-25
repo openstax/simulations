@@ -1,0 +1,57 @@
+
+<span class="scene-view-placeholder"></span>
+
+<div class="sim-controls-wrapper">
+    <div class="sim-controls-right">
+        <div class="sim-controls legend-panel">
+            <h2>Legend</h2>
+        </div>
+
+        <div class="sim-controls one-atom-options-panel">
+            <h2>Options</h2>
+
+            <label>Energy Levels</label>
+            <select class="energy-levels-select">
+                <option value="2">Two Levels</option>
+                <option value="3">Three Levels</option>
+            </select>
+
+            <label class="three-level-options">Lamp View</label>
+            <select class="lamp-view-select three-level-options">
+                <option value="photons">Photons</option>
+                <option value="beam">Beam</option>
+            </select>
+
+            <label class="three-level-options">Lower Transition</label>
+            <select class="lower-transition-select three-level-options">
+                <option value="photons">Photons</option>
+                <option value="wave">Wave View</option>
+            </select>
+
+            <ul class="checkboxes">
+                <li>
+                    <input type="checkbox" class="enable-mirrors-check" id="enable-mirrors-check-<%= unique %>">
+                    <label for="enable-mirrors-check-<%= unique %>">Enable mirrors</label>
+                </li>
+            </ul>
+
+            <div class="mirror-options">
+                <label class="slider-header"><span class="reflectivity-title">Mirror Reflectivity</span> <span class="slider-value reflectivity-value">100%</span></label>
+                <div class="reflectivity-slider-wrapper">
+                    <div class="slider reflectivity-slider"></div>
+                </div>
+            </div>
+
+            <ul class="checkboxes three-level-options">
+                <li class="three-level-option">
+                    <input type="checkbox" class="display-high-level-emitted-photons-check" id="display-high-level-emitted-photons-check-<%= unique %>">
+                    <label for="display-high-level-emitted-photons-check-<%= unique %>">Display photons emitted from upper energy state</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="sim-controls-right">
+        
+    </div>
+</div>
+

@@ -95,7 +95,9 @@ define(function (require) {
             for (i = 0; i < energyLevels.length; i++)
                 energies[i] = energyLevels[i];
             
-            energies.sort();
+            energies.sort(function(a, b) {
+                return a - b;
+            });
 
             this.states[0].set('energyLevel', energies[0]);
             for (i = 1; i < this.states.length; i++) {

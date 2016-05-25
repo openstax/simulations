@@ -32,7 +32,8 @@ define(function(require) {
 
             this.initGraphics();
 
-            this._nucleusDecayed = this.model.hasDecayed();
+            this._numProtons = this.model.get('numProtons');
+            this._numNeutrons = this.model.get('numNeutrons');
         },
 
         /**
@@ -45,8 +46,9 @@ define(function(require) {
         update: function(time, deltaTime) {
             this.updatePosition();
 
-            if (this._nucleusDecayed !== this.model.hasDecayed()) {
-                this._nucleusDecayed = this.model.hasDecayed();
+            if (this._numProtons !== this.model.get('numProtons') || this._numNeutrons !== this.model.get('numNeutrons')) {
+                this._numProtons = this.model.get('numProtons');
+                this._numNeutrons = this.model.get('numNeutrons');
                 this.nucleusChanged();
             }
         },

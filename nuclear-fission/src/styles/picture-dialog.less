@@ -1,0 +1,22 @@
+@import "../../../nuclear-physics/node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "../../../nuclear-physics/src/styles/mixins.less";
+
+#picture-dialog {
+	@media (min-width: 768px) {
+		.modal-dialog {
+			width: 351px;
+		}	
+	}
+
+	.modal-body {
+		padding: 4px;
+		padding-right: 2px;
+	}
+
+	#reactor-core-picture {
+		background: url(../img/reactor_core.gif);
+		width: 343px;
+		height: 544px;
+	}
+}

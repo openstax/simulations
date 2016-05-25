@@ -57,7 +57,7 @@ define(function(require) {
             this.value = 0;
 
             this.padding = options.liquidPadding;
-            this.outlineFix = (this.padding <= 2) ? 0.5 : 0;
+            this.outlineFix = 0//(this.padding <= 2) ? 0.5 : 0;
 
             this.initGraphics();
         },
@@ -99,9 +99,10 @@ define(function(require) {
             outline.lineStyle(this.lineWidth, this.lineColor, this.lineAlpha);
             outline.moveTo(-halfWidth, tubeBulbIntersectionY);
             outline.lineTo(-halfWidth, -radius - height);
-            outline.arc(0, -radius - height, halfWidth, Math.PI, 0);
-            outline.lineTo(halfWidth, -radius - height);
+            outline.moveTo(halfWidth, -radius - height);
             outline.lineTo(halfWidth, tubeBulbIntersectionY);
+            outline.moveTo(-halfWidth, -radius - height);
+            outline.arc(0, -radius - height, halfWidth, Math.PI, 0);
             outline.arc(0, 0, radius, -theta, Math.PI + theta);
 
             this.displayObject.addChild(bgSprite);

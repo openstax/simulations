@@ -132,7 +132,7 @@ define(function (require, exports, module) {
 
         updateTreeMode: function(time, deltaTime) {
             // Update the models
-            for (i = 0; i < this.items.length; i++)
+            for (var i = 0; i < this.items.length; i++)
                 this.items.at(i).update(time, deltaTime);
         },
 

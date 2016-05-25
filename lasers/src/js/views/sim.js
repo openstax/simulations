@@ -11,6 +11,7 @@ define(function (require) {
     var LasersSceneView  = require('views/scene');
 
     var Constants = require('constants');
+    var Assets = require('assets');
 
     require('nouislider');
     require('bootstrap');
@@ -24,7 +25,6 @@ define(function (require) {
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml              = require('text!templates/sim.html');
     var playbackControlsHtml = require('text!templates/playback-controls.html');
 
     /**
@@ -42,13 +42,22 @@ define(function (require) {
         /**
          * Template for rendering the basic scaffolding
          */
-        template: _.template(simHtml),
+        template: _.template(''),
 
         /**
          * Dom event listeners
          */
         events: {
+            'click .play-btn'  : 'play',
+            'click .pause-btn' : 'pause',
+            'click .step-btn'  : 'step',
 
+            'change .energy-levels-select'    : 'changeEnergyLevels',
+            'change .lamp-view-select'        : 'changeLampViewMode',
+            'change .lower-transition-select' : 'changeLowerTransitionViewMode',
+            'click .enable-mirrors-check'     : 'toggleMirrors',
+            'slide .reflectivity-slider'      : 'changeReflectivity',
+            'click .display-high-level-emitted-photons-check' : 'toggleHighLevelEmittedPhotons'
         },
 
         /**
@@ -66,7 +75,10 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.listenTo(this.simulation, 'change:paused',           this.pausedChanged);
+            this.listenTo(this.simulation, 'change:mirrorsEnabled',   this.mirrorsEnabledChanged);
+            this.listenTo(this.simulation, 'change:elementProperties', this.elementPropertiesChanged);
+
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
@@ -105,10 +117,26 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                Assets: Assets,
+                simulation: this.simulation,
+                unique: this.cid
             };
+
             this.$el.html(this.template(data));
+
             this.$('select').selectpicker();
+
+            this.$reflectivitySlider = this.$('.reflectivity-slider');
+            this.$reflectivitySlider.noUiSlider({
+                start: 100,
+                range: {
+                    min: 0,
+                    max: 100
+                },
+                connect: 'lower'
+            });
+
+            this.$reflectivityValue = this.$('.reflectivity-value');
         },
 
         /**
@@ -132,6 +160,8 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.mirrorsEnabledChanged(this.simulation, this.simulation.get('mirrorsEnabled'));
+            this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
         },
 
         /**
@@ -157,6 +187,58 @@ define(function (require) {
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
+        changeEnergyLevels: function(event) {
+            var numLevels = parseInt($(event.target).val());
+            this.simulation.setNumEnergyLevels(numLevels);
+        },
+
+        changeLampViewMode: function(event) {
+            if ($(event.target).val() === 'beam')
+                this.simulation.set('pumpingPhotonViewMode', Constants.PHOTON_CURTAIN);
+            else
+                this.simulation.set('pumpingPhotonViewMode', Constants.PHOTON_DISCRETE);
+        },
+
+        changeLowerTransitionViewMode: function(event) {
+            if ($(event.target).val() === 'wave')
+                this.simulation.set('lasingPhotonViewMode', Constants.PHOTON_WAVE);
+            else
+                this.simulation.set('lasingPhotonViewMode', Constants.PHOTON_DISCRETE);
+        },
+
+        toggleMirrors: function(event) {
+            if ($(event.target).is(':checked'))
+                this.simulation.set('mirrorsEnabled', true);
+            else
+                this.simulation.set('mirrorsEnabled', false);
+        },
+
+        changeReflectivity: function(event) {
+            this.inputLock(function() {
+                var percent = parseFloat(this.$('.reflectivity-slider').val());
+                this.updateReflectivityLabel(percent);
+                this.simulation.rightMirror.set('reflectivity', percent / 100);
+            });
+        },
+
+        updateReflectivityLabel: function(percent) {
+            this.$reflectivityValue.text(Math.round(percent) + '%');
+        },
+
+        toggleHighLevelEmittedPhotons: function(event) {
+            if ($(event.target).is(':checked'))
+                this.simulation.set('displayHighLevelEmissions', true);
+            else
+                this.simulation.set('displayHighLevelEmissions', false);
+        },
+
+        mirrorsEnabledChanged: function(simulation, mirrorsEnabled) {
+            if (mirrorsEnabled)
+                this.$('.mirror-options').show();
+            else
+                this.$('.mirror-options').hide();
+        },
+
         /**
          * The simulation changed its paused state.
          */
@@ -165,6 +247,21 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        elementPropertiesChanged: function(simulation, elementProperties) {
+            if (elementProperties === simulation.twoLevelProperties)
+                this.$('.three-level-options').hide();
+            else
+                this.$('.three-level-options').show();
+        },
+
+        showHelp: function() {
+
+        },
+
+        hideHelp: function() {
+            
         }
 
     });

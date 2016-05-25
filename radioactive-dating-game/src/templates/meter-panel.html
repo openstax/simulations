@@ -1,33 +1,43 @@
 <div class="sim-controls meter-panel">
-    <h2>Radiometric Dater</h2>
-
-    <div class="readout-wrapper">
-        <label class="readout-label">Carbon-14:</label>
+    <h2 class="readout-wrapper">
+        <span class="readout-label">Carbon-14:</span>
         <span class="readout-value">100%</span>
-    </div>
+    </h2>
 
     <ul class="radio-buttons">
         <li>
-            <input type="radio" name="probe-type" value="carbon-14" class="probe-type-carbon-14" id="probe-type-carbon-14-<%= unique %>" checked>
+            <input type="radio" name="probe-type-<%= unique %>" value="carbon-14" class="probe-type-carbon-14" id="probe-type-carbon-14-<%= unique %>" checked>
             <label for="probe-type-carbon-14-<%= unique %>">Carbon-14</label>
         </li>
         <li>
-            <input type="radio" name="probe-type" value="uranium-238" class="probe-type-uranium-238" id="probe-type-uranium-238-<%= unique %>">
+            <input type="radio" name="probe-type-<%= unique %>" value="uranium-238" class="probe-type-uranium-238" id="probe-type-uranium-238-<%= unique %>">
             <label for="probe-type-uranium-238-<%= unique %>">Uranium-238</label>
         </li>
+    <% if (includeCustom) { %>
+        <li>
+            <input type="radio" name="probe-type-<%= unique %>" value="custom" class="probe-type-custom" id="probe-type-custom-<%= unique %>">
+            <label for="probe-type-custom-<%= unique %>">Custom</label>
+        </li>
+    <% } %>
     </ul>
 
-    <hr>
+    <% if (includeCustom) { %>
+    <div class="custom-options-wrapper">
+        <label>Half-life:</label>
+        <div class="half-life-wrapper">
+            <select class="half-life">
+                <option value="100000">100k yrs</option>
+                <option value="1000000">1m yrs</option>
+                <option value="10000000">10m yrs</option>
+                <option value="100000000">100m yrs</option>
+            </select>
+        </div>
+    </div>
+    <% } %>
 
-    <ul class="radio-buttons">
-        <li>
-            <input type="radio" name="measuring-target" class="measuring-target-objects" value="objects" id="measuring-target-objects-<%= unique %>" checked>
-            <label for="measuring-target-objects-<%= unique %>">Objects</label>
-        </li>
-        <li>
-            <input type="radio" name="measuring-target" class="measuring-target-air" value="air" id="measuring-target-air-<%= unique %>">
-            <label for="measuring-target-air-<%= unique %>">Air</label>
-        </li>
-    </ul>
+    <div class="probe-type-buttons">
+        <button class="btn measuring-target-objects selected">Objects</button>
+        <button class="btn measuring-target-air">Air</button>
+    </div>
 
 </div>

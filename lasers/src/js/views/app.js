@@ -31,7 +31,7 @@ define(function(require) {
         ],
 
         events: _.extend({}, PixiAppView.prototype.events, {
-            
+            'click .help-btn' : 'toggleHelp'
         }),
 
         render: function() {
@@ -44,6 +44,25 @@ define(function(require) {
             _.each(this.simViews, function(simView) {
                 
             });
+        },
+
+        toggleHelp: function() {
+            this.$('.help-btn').toggleClass('active');
+            
+            if (this.$('.help-btn').hasClass('active'))
+                this.showHelp();
+            else
+                this.hideHelp();
+        },
+
+        showHelp: function() {
+            for (var i = 0; i < this.simViews.length; i++)
+                this.simViews[i].showHelp();
+        },
+
+        hideHelp: function() {
+            for (var i = 0; i < this.simViews.length; i++)
+                this.simViews[i].hideHelp();
         }
 
     });

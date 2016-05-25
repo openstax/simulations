@@ -77,4 +77,10 @@
     position: absolute;
     top: @panel-margin;
     right: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        right: auto;
+        left: @panel-margin;
+        top: @panel-margin;
+    }
 }

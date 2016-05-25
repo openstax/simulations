@@ -72,7 +72,7 @@ define(function (require) {
                 var nextState = this.atom.getEnergyStateAfterEmission();
 
                 if (this.emitOnStateChange) {
-                    var speed = VanillaPhoton.DEFAULT_SPEED * this.get('photonSpeedScale');
+                    var speed = VanillaPhoton.DEFAULT_SPEED * this.simulation.get('photonSpeedScale');
                     var theta = this.getEmissionDirection();
                     var x = speed * Math.cos(theta);
                     var y = speed * Math.sin(theta);

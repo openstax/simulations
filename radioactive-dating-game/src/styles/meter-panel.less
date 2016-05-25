@@ -8,17 +8,16 @@
     position: absolute;
 
     .readout-wrapper {
-        font-size: 120%;
-        margin-bottom: 12px;
+        margin-bottom: 6px;
 
         .readout-label {
-            color: #3DA937;
-            font-weight: 500;
+            
         }
 
         .readout-value {
             float: right;
             text-align: right;
+            color: #000;
         }
     }
 
@@ -30,7 +29,81 @@
         li {
             text-align: left;
             list-style-image: none;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+        }
+    }
+
+    .probe-type-buttons {
+        position: absolute;
+        bottom: 0;
+        width: 160px;
+
+        .measuring-target-objects,
+        .measuring-target-air {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            width: 45%;
+            font-size: 90%;
+            .button-variant(@btn-fg, @btn-bg, #fff, @btn-fg);
+
+            &.selected {
+                background: @btn-fg;
+                color: #fff;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        .measuring-target-objects {
+            float: left;
+        }
+
+        .measuring-target-air {
+            float: right;
+        }
+    }
+
+    .custom-options-wrapper {
+        // margin-top: 6px;
+        display: none;
+
+        label {
+            margin-top: 6px;
+        }
+
+        .half-life-wrapper {
+            float: right;
+            width: 94px;
+
+            .bootstrap-select.half-life {
+                width: 100%;
+
+                > .btn {
+                    padding-left: 10px;
+                    padding-top: 4px;
+                    padding-bottom: 4px;
+                    background: fadeout(#fff, 60%);
+                    border-color: fadeout(#000, 85%);
+
+                    &:focus {
+                        outline: none !important;
+                    }
+
+                    &:active {
+                        .box-shadow(none);
+                    }
+                }
+
+                a {
+                    text-align: right;
+                }
+
+                a:focus {
+                    outline: none;
+                }
+            }
         }
     }
 }

@@ -34,7 +34,6 @@ define(function (require, exports, module) {
     var DischargeLampsSimulation = LasersSimulation.extend({
 
         defaults: _.extend(LasersSimulation.prototype.defaults, {
-            elementProperties: undefined,
             current: 0,
             maxCurrent: 0
         }),
