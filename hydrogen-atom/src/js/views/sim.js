@@ -5,7 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/v3/app/sim');
+    var SimView              = require('common/v3/app/sim');
+    var WavelengthSliderView = require('common/controls/wavelength-slider');
 
     var HydrogenAtomSimulation   = require('hydrogen-atom/models/simulation');
     var HydrogenAtomSceneView    = require('hydrogen-atom/views/scene');
@@ -52,8 +53,14 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
+
             'click input[name="model-mode"]'  : 'changeModelMode',
-            'click .prediction-model-wrapper' : 'selectModel'
+            'click .prediction-model-wrapper' : 'selectModel',
+            'click input[name="light-mode"]'  : 'changeLightMode',
+            'slide .wavelength-slider'        : 'changeWavelength'
         },
 
         /**
@@ -71,6 +78,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -114,6 +124,18 @@ define(function (require) {
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
+
+            this.wavelengthSliderView = new WavelengthSliderView({
+                defaultWavelength: Constants.MIN_WAVELENGTH,
+                minWavelength: Constants.MIN_WAVELENGTH,
+                maxWavelength: Constants.MAX_WAVELENGTH,
+                invisibleSpectrumAlpha: 1,
+                invisibleSpectrumColor: '#777'
+            });
+            this.wavelengthSliderView.render();
+            this.$('.wavelength-slider-wrapper').prepend(this.wavelengthSliderView.el);
+
+            this.$wavelengthValue = this.$('.wavelength-value');
         },
 
         /**
@@ -145,6 +167,7 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.wavelengthSliderView.postRender();
         },
 
         /**
@@ -170,6 +193,16 @@ define(function (require) {
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
         changeModelMode: function(event) {
             var mode = $(event.target).val();
             if (mode === 'prediction')
@@ -182,7 +215,23 @@ define(function (require) {
             var $wrapper = $(event.target).closest('.prediction-model-wrapper');
             $wrapper.siblings().removeClass('active');
             $wrapper.addClass('active');
-        }
+        },
+
+        changeLightMode: function(event) {
+            var mode = $(event.target).val();
+            if (mode === 'white')
+                this.$('.wavelength-slider-container').show();
+            else
+                this.$('.wavelength-slider-container').hide();
+        },
+
+        changeWavelength: function(event) {
+            this.inputLock(function() {
+                var wavelength = parseInt($(event.target).val());
+                this.$wavelengthValue.text(wavelength + 'nm');
+                // this.simulation.set('wavelength', wavelength / Constants.METERS_TO_NANOMETERS);
+            });
+        },
 
     });
 

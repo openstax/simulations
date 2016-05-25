@@ -75,6 +75,7 @@
 
 .sim-controls {
     .panel();
+    .user-select(none);
     padding: 15px;
     position: relative;
     margin-bottom: 12px;
@@ -138,7 +139,7 @@
         margin-top: 12px;
         margin-bottom: -4px;
         display: none;
-        
+
         .prediction-model-wrapper {
             display: inline-block;
             width: 81px;
@@ -177,6 +178,46 @@
                 width: 100%;
                 height: 24px;
                 font-size: 11px;
+            }
+        }
+    }
+
+    .slider-header {
+        display: block;
+
+        .slider-value {
+            float: right;
+            font-weight: normal;
+        }
+    }
+
+    &.light-controls {
+        position: absolute;
+        top: 398px;
+        // bottom: (@playback-controls-bar-height + @panel-margin - 5);
+        left: @panel-margin;
+        width: 250px;
+
+        .light-mode-radios {
+            margin-bottom: 12px;
+
+            li {
+                display: inline;
+                margin-right: 18px;
+            }
+        }
+
+        .wavelength-slider-wrapper {
+            position: relative;
+
+            .uv-label {
+                position: absolute;
+                top: -6px;
+                left: 19%;
+                .user-select(none);
+                pointer-events: none;
+                font-size: 10px;
+                color: #fff;
             }
         }
     }

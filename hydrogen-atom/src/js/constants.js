@@ -2,16 +2,15 @@ define(function (require) {
 
     'use strict';
 
+    var WavelengthColors = require('common/colors/wavelength');
 
     var Constants = require('nuclear-physics/constants'); 
 
-    /*************************************************************************
-     **                                                                     **
-     **                         UNIVERSAL CONSTANTS                         **
-     **                                                                     **
-     *************************************************************************/
+    var Dimension = function(width, height) {
+        this.width = width;
+        this.height = height;
+    };
 
-    // constants
     var RSConstants = {
         //----------------------------------------------------------------------------
         // Model
@@ -49,7 +48,7 @@ define(function (require) {
         SPACE_NODE_HEIGHT: 490,
 
         // Animation space size, must be square!
-        BOX_SIZE: 380,
+        BOX_SIZE: 360,
         BOX_SIZE_SMALL: 320,
 
         RUTHERFORD_ACTUAL: 150,
@@ -85,6 +84,70 @@ define(function (require) {
     };
 
     _.extend(Constants, RSConstants);
+
+    /*************************************************************************
+     **                                                                     **
+     **                         UNIVERSAL CONSTANTS                         **
+     **                                                                     **
+     *************************************************************************/
+    
+    //----------------------------------------------------------------------------
+    // Dimensions
+    //----------------------------------------------------------------------------
+    
+    Constants.CANVAS_RENDERING_SIZE = new Dimension(750, 750);
+    // Animation box size, must be square!
+    Constants.ANIMATION_BOX_SIZE = new Dimension(475, 475);
+    Constants.TINY_BOX_SIZE = new Dimension(10, 10);
+    Constants.BOX_OF_HYDROGEN_SIZE = new Dimension(70, 70);
+    Constants.BOX_OF_HYDROGEN_DEPTH = 10;
+    Constants.BEAM_SIZE = new Dimension((0.75 * Constants.BOX_OF_HYDROGEN_SIZE.width), 75);
+    
+    // Spectrometer
+    Constants.SPECTROMETER_SIZE = new Dimension(500, 210);
+    
+    //----------------------------------------------------------------------------
+    // Clock
+    //----------------------------------------------------------------------------
+    
+    Constants.CLOCK_FRAME_RATE = 25; // fps, frames per second (wall time)
+    
+    // The clock control area has a slider for choosing a clock "speed".
+    // These are the clock steps that correspond to each speed setting.
+    Constants.CLOCK_STEPS = [
+        0.5, 2, 6
+    ];
+    
+    // Color for photon used on controls & in legends
+    Constants.PHOTON_ICON_WAVELENGTH = 600; // nm
+    
+    //----------------------------------------------------------------------------
+    // Model
+    //----------------------------------------------------------------------------
+    
+    Constants.MIN_WAVELENGTH = 92;
+    Constants.MAX_WAVELENGTH = WavelengthColors.MAX_WAVELENGTH;
+    
+    Constants.PHOTON_INITIAL_SPEED = 5; // distance moved per dt
+    Constants.ALPHA_PARTICLE_INITIAL_SPEED = 5; // distance moved per dt
+    
+    //----------------------------------------------------------------------------
+    // Ranges
+    //----------------------------------------------------------------------------
+    
+    Constants.SPECTROMETER_MIN_WAVELENGTH = Constants.MIN_WAVELENGTH;
+    Constants.SPECTROMETER_MAX_WAVELENGTH = 7500; // nm
+    
+    //----------------------------------------------------------------------------
+    // Features
+    //----------------------------------------------------------------------------
+    
+    // Shows the atom's state variables in the lower right corner of the animation box
+    Constants.SHOW_STATE_DISPLAY = true;
+    
+    // deBroglie view control can be in either menu bar or play area
+    Constants.DEBROGLIE_VIEW_IN_MENUBAR = false;
+
 
     return Constants;
 });
