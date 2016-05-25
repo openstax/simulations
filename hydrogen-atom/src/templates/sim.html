@@ -13,7 +13,32 @@
         </div>
     </div>
     <div class="sim-controls-right">
-        <div class="sim-controls alpha-particle-properties-panel">
+        <div class="sim-controls atomic-model-panel">
+            <h2>Atomic Model</h2>
 
+            <ul class="radios">
+                <li>
+                    <input type="radio" name="model-mode" value="experiment" id="model-mode-experiment" checked>
+                    <label for="model-mode-experiment">Experiment<br>
+                        <span class="radio-subtitle">(what really happens)</span>
+                    </label>
+                </li>
+                <li>
+                    <input type="radio" name="model-mode" value="prediction" id="model-mode-prediction">
+                    <label for="model-mode-prediction">Prediction<br>
+                        <span class="radio-subtitle">(what the model predicts)</span>
+                    </label>
+                </li>
+            </ul>
+
+            <div class="prediction-models">
+            <% _.each(models, function(model, key) { %>
+                <div class="prediction-model-wrapper" data-model-key="<%= key %>">
+                    <%= Assets.createIcon(model.icon, 42) %>
+                    <label><%= model.label %></label>
+                </div>
+            <% }); %>
+            </div>
+        </div>
     </div>
 </div>

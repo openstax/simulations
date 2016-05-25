@@ -39,7 +39,7 @@ define(function(require) {
             }
             else {
                 this.viewOriginX = Math.round((this.width - 220) / 2);
-                this.viewOriginY = Math.round((this.height - 96) / 2);
+                this.viewOriginY = Math.round(this.height / 2) - 100;
                 this.spaceBoxSize = Constants.BOX_SIZE;
             }
 

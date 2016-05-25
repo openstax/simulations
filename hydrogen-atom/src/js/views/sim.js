@@ -7,11 +7,13 @@ define(function (require) {
 
     var SimView = require('common/v3/app/sim');
 
-    var HydrogenAtomSimulation = require('hydrogen-atom/models/simulation');
-    var HydrogenAtomSceneView  = require('hydrogen-atom/views/scene');
+    var HydrogenAtomSimulation   = require('hydrogen-atom/models/simulation');
+    var HydrogenAtomSceneView    = require('hydrogen-atom/views/scene');
+    var AtomicModels             = require('hydrogen-atom/models/atomic-models');
     var RutherfordAtomSimulation = require('rutherford-scattering/models/simulation/rutherford-atom');
 
     var Constants = require('constants');
+    var Assets = require('assets');
 
     require('nouislider');
     require('bootstrap');
@@ -19,12 +21,14 @@ define(function (require) {
 
     // CSS
     require('less!hydrogen-atom/styles/sim');
+    require('less!hydrogen-atom/styles/playback-controls');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!hydrogen-atom/templates/sim.html');
+    var simHtml              = require('text!hydrogen-atom/templates/sim.html');
+    var playbackControlsHtml = require('text!hydrogen-atom/templates/playback-controls.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -48,7 +52,8 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click input[name="model-mode"]'  : 'changeModelMode',
+            'click .prediction-model-wrapper' : 'selectModel'
         },
 
         /**
@@ -92,6 +97,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderPlaybackControls();
 
             return this;
         },
@@ -102,7 +108,9 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                Assets: Assets,
+                simulation: this.simulation,
+                models: AtomicModels
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
@@ -114,6 +122,21 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+        },
+
+        /**
+         * Renders playback controls
+         */
+        renderPlaybackControls: function() {
+            this.$el.append(playbackControlsHtml);
+
+            this.$('.playback-speed').noUiSlider({
+                start: 0.6,
+                range: {
+                    'min': 0.2,
+                    'max': 1
+                }
+            });
         },
 
         /**
@@ -146,6 +169,20 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        changeModelMode: function(event) {
+            var mode = $(event.target).val();
+            if (mode === 'prediction')
+                this.$('.prediction-models').show();
+            else
+                this.$('.prediction-models').hide();
+        },
+
+        selectModel: function(event) {
+            var $wrapper = $(event.target).closest('.prediction-model-wrapper');
+            $wrapper.siblings().removeClass('active');
+            $wrapper.addClass('active');
+        }
 
     });
 

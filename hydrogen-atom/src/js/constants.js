@@ -49,8 +49,8 @@ define(function (require) {
         SPACE_NODE_HEIGHT: 490,
 
         // Animation space size, must be square!
-        BOX_SIZE: 400,
-        BOX_SIZE_SMALL: 400,
+        BOX_SIZE: 380,
+        BOX_SIZE_SMALL: 320,
 
         RUTHERFORD_ACTUAL: 150,
         PUDDING_ACTUAL: 300,
