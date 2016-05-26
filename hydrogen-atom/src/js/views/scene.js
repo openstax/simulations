@@ -10,7 +10,8 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var RutherfordScatteringSceneView = require('rutherford-scattering/views/scene');
-    var AtomView = require('rutherford-scattering/views/atom');
+    var AtomView                      = require('rutherford-scattering/views/atom');
+    var RayGunView                    = require('rutherford-scattering/views/gun');
 
     // Constants
     var Constants = require('constants');
@@ -72,6 +73,18 @@ define(function(require) {
                 pixelsPerCentimeter
             );
         },
+
+        initRayGunView: function() {
+            this.simulation.rayGun.set('scale', this.scale);
+            this.rayGunView = new RayGunView({
+                mvt: this.rayGunMVT,
+                model: this.simulation.rayGun,
+                squareTarget: true
+            });
+
+            this.topLayer.addChild(this.rayGunView.displayObject);
+        },
+
     });
 
     return HydrogenAtomSceneView;
