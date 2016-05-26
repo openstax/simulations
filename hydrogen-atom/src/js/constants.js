@@ -3,8 +3,11 @@ define(function (require) {
     'use strict';
 
     var WavelengthColors = require('common/colors/wavelength');
+    var range            = require('common/math/range');
 
     var Constants = require('nuclear-physics/constants'); 
+
+    var DEG_TO_RAD = Math.PI / 180;
 
     var Dimension = function(width, height) {
         this.width = width;
@@ -127,6 +130,7 @@ define(function (require) {
     
     Constants.MIN_WAVELENGTH = 92;
     Constants.MAX_WAVELENGTH = WavelengthColors.MAX_WAVELENGTH;
+    Constants.WHITE_WAVELENGTH = 0;
     
     Constants.PHOTON_INITIAL_SPEED = 5; // distance moved per dt
     Constants.ALPHA_PARTICLE_INITIAL_SPEED = 5; // distance moved per dt
@@ -137,16 +141,66 @@ define(function (require) {
     
     Constants.SPECTROMETER_MIN_WAVELENGTH = Constants.MIN_WAVELENGTH;
     Constants.SPECTROMETER_MAX_WAVELENGTH = 7500; // nm
-    
+
     //----------------------------------------------------------------------------
-    // Features
+    // Colors
     //----------------------------------------------------------------------------
+
+    Constants.UV_COLOR = '#888';
+    Constants.IR_COLOR = Constants.UV_COLOR;
+
+    /*************************************************************************
+     **                                                                     **
+     **                   ABSTRACT HYDROGEN ATOMIC MODEL                    **
+     **                                                                     **
+     *************************************************************************/
+
+    var AbstractAtomicModel = {};
+
+    // AbstractAtomicModel.COLLISION_CLOSENESS = ( HAPhotonNode.DIAMETER / 2 ) + ( ElectronNode.DIAMETER / 2 );
+    AbstractAtomicModel.GROUND_STATE = 1;
     
-    // Shows the atom's state variables in the lower right corner of the animation box
-    Constants.SHOW_STATE_DISPLAY = true;
+    Constants.AbstractAtomicModel = AbstractAtomicModel;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         BILLIARD BALL MODEL                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var BilliardBallModel = {};
     
-    // deBroglie view control can be in either menu bar or play area
-    Constants.DEBROGLIE_VIEW_IN_MENUBAR = false;
+    BilliardBallModel.DEFAULT_RADIUS = 30;
+    BilliardBallModel.MIN_DEFLECTION_ANGLE = 120 * DEG_TO_RAD;
+    BilliardBallModel.MAX_DEFLECTION_ANGLE = 170 * DEG_TO_RAD;
+    BilliardBallModel.DEFLECTION_ANGLE_RANGE = range({ min: BilliardBallModel.MIN_DEFLECTION_ANGLE, max: BilliardBallModel.MAX_DEFLECTION_ANGLE });
+    
+    Constants.BilliardBallModel = BilliardBallModel;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         PLUM PUDDING MODEL                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var PlumPuddingModel = {};
+    
+    // default radius of the atom, tweaked to match PlumPuddingNode image
+    PlumPuddingModel.DEFAULT_RADIUS = 30;
+    // maximum number of photons that can be absorbed
+    PlumPuddingModel.MAX_PHOTONS_ABSORBED = 1; //WARNING: Untested with values != 1
+    // wavelength of emitted photons
+    PlumPuddingModel.PHOTON_EMISSION_WAVELENGTH = 150; // nm
+    // probability that photon will be emitted
+    PlumPuddingModel.PHOTON_EMISSION_PROBABILITY = 0.1; // 1.0 = 100%
+    // probability that photon will be absorbed
+    PlumPuddingModel.PHOTON_ABSORPTION_PROBABILITY = 0.5; // 1.0 = 100%
+    // number of discrete steps in the electron line
+    PlumPuddingModel.ELECTRON_LINE_SEGMENTS = 30;
+    
+    Constants.PlumPuddingModel = PlumPuddingModel;
 
 
     return Constants;
