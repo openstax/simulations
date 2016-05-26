@@ -203,5 +203,68 @@ define(function (require) {
     Constants.PlumPuddingModel = PlumPuddingModel;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                         SOLAR SYSTEM MODEL                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var SolarSystemModel = {};
+    
+    /*
+     * NOTE! Tweak these VERY carefully, and test often! 
+     * They must be set so that the atom is destroyed before 
+     * any photons or alpha particles reach it.
+     */
+    
+    // initial distance between electron and proton
+    SolarSystemModel.ELECTRON_DISTANCE = 150;
+    // amount the distance between the proton and electron is reduce per dt
+    SolarSystemModel.ELECTRON_DISTANCE_DELTA = 4;
+    // any distance smaller than this is effectively zero
+    SolarSystemModel.MIN_ELECTRON_DISTANCE = 5;
+    // change in electron's rotation angle per dt
+    SolarSystemModel.ELECTRON_ANGLE_DELTA = 16 * DEG_TO_RAD;
+    // scaling of electron's rotation delta
+    SolarSystemModel.ELECTRON_ACCELERATION = 1.008;
+    
+    Constants.SolarSystemModel = SolarSystemModel;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                              BOHR MODEL                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var BohrModel = {};
+
+    // used to turn off aspects of this model from the Developer Controls dialog
+    BohrModel.DEBUG_ABSORPTION_ENABLED = true;
+    BohrModel.DEBUG_SPONTANEOUS_EMISSION_ENABLED = true;
+    BohrModel.DEBUG_STIMULATED_EMISSION_ENABLED = true; 
+    // enabled debugging output
+    BohrModel.DEBUG_OUTPUT_ENABLED = false;
+
+    // minimum time (simulation clock time) that electron stays in a state before emission can occur
+    BohrModel.MIN_TIME_IN_STATE = 50;
+    // Radius of each orbit supported by this model, these are distorted to fit in the box!
+    BohrModel.ORBIT_RADII = [ 15, 44, 81, 124, 174, 233 ];
+    // probability that photon will be absorbed
+    BohrModel.PHOTON_ABSORPTION_PROBABILITY = 1.0; // 1.0 = 100%
+    // probability that photon will cause stimulated emission
+    BohrModel.PHOTON_STIMULATED_EMISSION_PROBABILITY = BohrModel.PHOTON_ABSORPTION_PROBABILITY;
+    // probability that photon will be emitted
+    BohrModel.PHOTON_SPONTANEOUS_EMISSION_PROBABILITY = 0.5; // 1.0 = 100%
+    // change in orbit angle per dt for ground state orbit
+    BohrModel.ELECTRON_ANGLE_DELTA = 10 * DEG_TO_RAD;
+    // wavelengths must be less than this close to be considered equal
+    BohrModel.WAVELENGTH_CLOSENESS_THRESHOLD = 0.5;
+    // How close an emitted photon is placed to the photon that causes stimulated emission
+    BohrModel.STIMULATED_EMISSION_X_OFFSET = 10;
+
+    Constants.BohrModel = BohrModel;
+
+
     return Constants;
 });
