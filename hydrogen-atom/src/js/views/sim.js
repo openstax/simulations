@@ -61,7 +61,10 @@ define(function (require) {
             'click input[name="model-mode"]'  : 'changeModelMode',
             'click .prediction-model-wrapper' : 'selectModel',
             'click input[name="light-mode"]'  : 'changeLightMode',
-            'slide .wavelength-slider'        : 'changeWavelength'
+            'slide .wavelength-slider'        : 'changeWavelength',
+
+            'click .energy-level-diagram-panel > h2' : 'toggleEnergyLevelDiagramPanel',
+            'click .spectrometer-panel         > h2' : 'toggleSpectrometerPanel'
         },
 
         /**
@@ -244,6 +247,14 @@ define(function (require) {
                 // this.simulation.set('wavelength', wavelength / Constants.METERS_TO_NANOMETERS);
             });
         },
+
+        toggleEnergyLevelDiagramPanel: function(event) {
+            this.$('.energy-level-diagram-panel').toggleClass('collapsed');
+        },
+
+        toggleSpectrometerPanel: function(event) {
+            this.$('.spectrometer-panel').toggleClass('collapsed');
+        }
 
     });
 

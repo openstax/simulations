@@ -14,6 +14,9 @@ define(function(require) {
 
     // Constants
     var Constants = require('constants');
+
+    require('less!hydrogen-atom/styles/scene');
+
     /**
      *
      */
@@ -38,8 +41,8 @@ define(function(require) {
                 this.spaceBoxSize = Constants.BOX_SIZE_SMALL;
             }
             else {
-                this.viewOriginX = Math.round((this.width) / 2);
-                this.viewOriginY = Math.round(this.height / 2) - 110;
+                this.viewOriginX = 540;
+                this.viewOriginY = 20 + Constants.BOX_SIZE / 2 + 0.5;
                 this.spaceBoxSize = Constants.BOX_SIZE;
             }
 

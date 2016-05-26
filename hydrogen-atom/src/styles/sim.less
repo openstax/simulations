@@ -196,7 +196,7 @@
         top: 398px;
         // bottom: (@playback-controls-bar-height + @panel-margin - 5);
         left: @panel-margin;
-        width: 250px;
+        width: 260px;
 
         .light-mode-radios {
             margin-bottom: 12px;
@@ -220,13 +220,43 @@
                 color: #fff;
             }
         }
+
+        .show-absorption-wavelengths-wrapper {
+            margin-top: 20px;
+            display: none;
+        }
+    }
+
+    &.energy-level-diagram-panel {
+        .collapsible-panel();
+        position: absolute;
+        left: @panel-margin;
+        top: @panel-margin;
+        width: 180px;
+
+        &:after {
+            content: '';
+            width: 150px;
+            height: 274px;
+            background: #fff;
+            display: block;
+            margin-top: 14px;
+        }
+    }
+
+    &.spectrometer-panel {
+        .collapsible-panel();
+        position: absolute;
+        top: 400px;
+        left: 360px;
+        width: 360px;
     }
 }
 
 .legend-panel {
     position: absolute;
     top: @panel-margin;
-    left: @panel-margin;
+    left: (@panel-margin + 200px);
     color: #fff;
 
     h2 {
@@ -237,4 +267,9 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.4);
         padding-bottom: 4px;
     }
+
+    .legend-symbol {
+        margin-bottom: 0;
+    }
 }
+

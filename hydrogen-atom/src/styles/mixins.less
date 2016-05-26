@@ -53,3 +53,68 @@
     background: fadeout(#fff, @background-fade-percent);
     box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
 }
+
+.collapsible-panel() {
+    .transition(~"height 300ms, margin 300ms");
+    overflow: hidden;
+
+    h2 {
+        cursor: pointer;
+
+        .expand-icon,
+        .collapse-icon {
+            float: right;
+
+            .fa {
+                font-size: 12px;
+            }
+        }
+
+        .expand-icon {
+            display: none;
+        }
+
+        .collapse-icon {
+            display: inline-block;
+        }
+
+        &:hover {
+            .expand-icon,
+            .collapse-icon {
+                color: #000;
+            }
+        }
+    }
+
+    &.collapsed h2 {
+        border: none;
+        margin-bottom: 8px; // Just enough to make sure nothing is visible that gets cut off
+
+        .expand-icon {
+            display: inline-block;
+        }
+
+        .collapse-icon {
+            display: none;
+        }
+    }
+
+    &.collapsed {
+        height: 46px;
+    }
+
+    &.collapsed.tall-title {
+        height: 62px;
+    }
+
+    &.tall-title {
+        h2 {
+            .expand-icon,
+            .collapse-icon {
+                position: absolute;
+                top: 22px;
+                right: 15px;
+            }
+        }
+    }
+}
