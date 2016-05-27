@@ -1,10 +1,93 @@
+<div class="sim-settings">
+    <div class="help-btn-wrapper">
+        <button class="help-btn" title="Help" data-toggle="modal" data-target="#help-dialog"><span class="fa fa-question"></span></button>
+    </div>
+</div>
 
 <span class="scene-view-placeholder"></span>
 
-<div class="sound-btn-wrapper">
-    <button class="sound-btn sound-btn-mute" title="Mute effect volume (click to raise)"><span class="fa fa-volume-off"></span></button>
-    <button class="sound-btn sound-btn-low"  title="Low effect volume (click to raise)"><span class="fa fa-volume-down"></span></button>
-    <button class="sound-btn sound-btn-high" title="High effect volume (click to mute)"><span class="fa fa-volume-up"></span></button>
+<div class="sim-controls-wrapper">
+    <div class="sim-controls-left">
+        
+    </div>
+    <div class="sim-controls-right">
+        <div class="sim-controls atomic-model-panel">
+            <h2>Atomic Model</h2>
+
+            <ul class="radios">
+                <li>
+                    <input type="radio" name="model-mode" value="experiment" id="model-mode-experiment" checked>
+                    <label for="model-mode-experiment">Experiment<br>
+                        <span class="radio-subtitle">(what really happens)</span>
+                    </label>
+                </li>
+                <li>
+                    <input type="radio" name="model-mode" value="prediction" id="model-mode-prediction">
+                    <label for="model-mode-prediction">Prediction<br>
+                        <span class="radio-subtitle">(what the model predicts)</span>
+                    </label>
+                </li>
+            </ul>
+
+            <div class="prediction-models">
+            <% _.each(models, function(model, key) { %>
+                <div class="prediction-model-wrapper" data-model-key="<%= key %>">
+                    <%= Assets.createIcon(model.icon, 42) %>
+                    <label><%= model.label %></label>
+                </div>
+            <% }); %>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="hello-world">Hello World.</div>
+<div class="sim-controls light-controls">
+    <h2>Light Controls</h2>
+
+    <ul class="radios light-mode-radios">
+        <li>
+            <input type="radio" name="light-mode" value="white" id="light-mode-white" checked>
+            <label for="light-mode-white">White</label>
+        </li>
+        <li>
+            <input type="radio" name="light-mode" value="monochrome" id="light-mode-monochrome">
+            <label for="light-mode-monochrome">Monochromatic</label>
+        </li>
+    </ul>
+
+    <div class="wavelength-slider-container">
+        <label class="slider-header">Wavelength <span class="slider-value wavelength-value">400nm</span></label>
+        <div class="wavelength-slider-wrapper">
+            <div class="uv-label">UV</div>
+        </div>
+    </div>
+
+    <div class="show-absorption-wavelengths-wrapper">
+        <input type="checkbox" class="show-absorption-wavelengths-check" id="show-absorption-wavelengths-check">
+        <label for="show-absorption-wavelengths-check">Show absorption wavelengths</label>
+    </div>
+</div>
+
+<div class="sim-controls energy-level-diagram-panel tall-title">
+    <h2>
+        Electron Energy Level Diagram
+        <span class="expand-icon"><span class="fa fa-chevron-down"></span></span>
+        <span class="collapse-icon"><span class="fa fa-chevron-up"></span></span>
+    </h2>
+
+    
+</div>
+
+<div class="legend-panel">
+    <h2>Legend</h2>
+</div>
+
+<div class="sim-controls spectrometer-panel">
+    <h2>
+        Spectrometer - Photons Emitted / Nm
+        <span class="expand-icon"><span class="fa fa-chevron-down"></span></span>
+        <span class="collapse-icon"><span class="fa fa-chevron-up"></span></span>
+    </h2>
+
+    
+</div>

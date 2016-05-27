@@ -5,42 +5,88 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
 
-    var Assets = require('assets');
+    var RutherfordScatteringSceneView = require('rutherford-scattering/views/scene');
+    var AtomView                      = require('rutherford-scattering/views/atom');
+    var RayGunView                    = require('rutherford-scattering/views/gun');
 
     // Constants
     var Constants = require('constants');
 
-    // CSS
-    require('less!styles/scene');
+    require('less!hydrogen-atom/styles/scene');
 
     /**
      *
      */
-    var HydrogenAtomSceneView = PixiSceneView.extend({
+    var HydrogenAtomSceneView = RutherfordScatteringSceneView.extend({
+        initAtomView: function() {
+            this.atomNodeView = new AtomView({
+                mvt: this.mvt,
+                particleMVT: this.particleMVT,
+                model: this.simulation.atomNode,
+                simulation: this.simulation,
+                scale: this.scale,
+                maskBox: this.spaceBoxView.maskBox
+            });
 
-        events: {
-            
+            this.bottomLayer.addChild(this.atomNodeView.displayObject);
         },
 
-        initialize: function(options) {
-            PixiSceneView.prototype.initialize.apply(this, arguments);
+        initBoxMVT: function(){
+            if (AppView.windowIsShort()) {
+                this.viewOriginX = Math.round((this.width - 220) / 2);
+                this.viewOriginY = Math.round((this.height - 50)/ 2);
+                this.spaceBoxSize = Constants.BOX_SIZE_SMALL;
+            }
+            else {
+                this.viewOriginX = 540;
+                this.viewOriginY = 20 + Constants.BOX_SIZE / 2 + 0.5;
+                this.spaceBoxSize = Constants.BOX_SIZE;
+            }
+
+            this.scale = this.spaceBoxSize/this.simulation.boundWidth;
+            this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+                new Vector2(0, 0),
+                new Vector2(this.viewOriginX, this.viewOriginY),
+                this.scale
+            );
         },
 
-        renderContent: function() {
-            
+        initRayGunMVT: function() {
+            if (AppView.windowIsShort()) {
+                this.rayGunOriginX = this.viewOriginX - Constants.BOX_SIZE_SMALL / 2 - 100;
+                this.rayGunOriginY = Math.round((this.height + 200) / 2);
+            }
+            else {
+                this.rayGunOriginX = this.viewOriginX - Constants.BOX_SIZE / 2 - 100;
+                this.rayGunOriginY = Math.round(this.height / 2);
+            }
+
+            var pixelsPerCentimeter = 5;
+
+            this.rayGunMVT = ModelViewTransform.createSinglePointScaleMapping(
+                new Vector2(0, 0),
+                new Vector2(this.rayGunOriginX, this.rayGunOriginY),
+                pixelsPerCentimeter
+            );
         },
 
-        initGraphics: function() {
-            PixiSceneView.prototype.initGraphics.apply(this, arguments);
-        },
+        initRayGunView: function() {
+            this.simulation.rayGun.set('scale', this.scale);
+            this.rayGunView = new RayGunView({
+                mvt: this.rayGunMVT,
+                model: this.simulation.rayGun,
+                squareTarget: true
+            });
 
-        _update: function(time, deltaTime, paused, timeScale) {
-            
+            this.topLayer.addChild(this.rayGunView.displayObject);
         },
 
     });
 
     return HydrogenAtomSceneView;
 });
+

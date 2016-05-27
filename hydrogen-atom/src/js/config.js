@@ -18,13 +18,27 @@
             'bootstrap-select':      '../../node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../node_modules/bootstrap-select/less/bootstrap-select',
 
-            views:      '../js/views',
-            models:     '../js/models',
             assets:     '../js/assets',
             constants:  '../js/constants',
-            templates:  '../templates',
-            styles:     '../styles',
-            common:     '../../../common'
+            common:     '../../../common',
+
+            'views':            '../../../nuclear-physics/src/js/views',
+            'models':           '../../../nuclear-physics/src/js/models',
+            'templates':        '../../../nuclear-physics/src/templates',
+            'styles':           '../../../nuclear-physics/src/styles',
+            'nuclear-physics':  '../../../nuclear-physics/src/js',
+
+            'rutherford-scattering/views':        '../../../rutherford-scattering/src/js/views',
+            'rutherford-scattering/models':       '../../../rutherford-scattering/src/js/models',
+            'rutherford-scattering/templates':    '../../../rutherford-scattering/src/templates',
+            'rutherford-scattering/styles':       '../../../rutherford-scattering/src/styles',
+            'rutherford-scattering':              '../../../rutherford-scattering/src/js',
+
+            'hydrogen-atom/views':        '../js/views',
+            'hydrogen-atom/models':       '../js/models',
+            'hydrogen-atom/templates':    '../templates',
+            'hydrogen-atom/styles':       '../styles',
+            'hydrogen-atom':              '.'
         },
 
         packages: [{

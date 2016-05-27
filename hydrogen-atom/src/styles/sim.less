@@ -5,12 +5,21 @@
     min-height: inherit;
 }
 
-.sound-btn-wrapper {
+/**
+ * Sim Settings, top right
+ */
+.sim-settings {
     position: absolute;
     top: -36px;
-    right: 30px;
+    right: 0;
+    z-index: 10;
 
-    > .sound-btn {
+    > div {
+        float: left;
+        margin: 0 4px;
+    }
+
+    button {
         background: @gray-lightest;
         color: @link-color;
         outline: none;
@@ -20,26 +29,247 @@
         height: 28px;
         text-align: center;
 
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:active {
+        &:hover, &:active, &.active {
             background: @link-color;
             color: #fff;
         }
 
-        &.sound-btn-mute,
-        &.sound-btn-low {
-            display: none;
+        &.active{
+            &:hover{
+                background: fade(@link-color, 75%);
+            }
         }
     }
 }
 
-.hello-world {
+.sim-controls-wrapper {
     position: absolute;
-    top: 44%;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
+    right: @panel-margin;
+    top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        right: (@short-screen-panel-margin + 1);
+        top: @short-screen-panel-margin;
+    }
 }
+
+@media screen and (max-height: @short-window) {
+    .sim-controls-wrapper {
+        position: inherit;
+        top: auto;
+        right: auto;
+    }
+
+    .sim-controls-left {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        left: (@short-screen-panel-margin + 1);
+    }
+
+    .sim-controls-right {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: (@short-screen-panel-margin + 1);
+    }
+}
+
+.sim-controls {
+    .panel();
+    .user-select(none);
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+    width: @sim-controls-panel-width;
+
+    h2 {
+        font-size: 16px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    ul.radios, ul.checkboxes {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        margin-bottom: -2px;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            margin-top: 4px;
+
+            @media screen and (max-height: @short-window) {
+                margin-top: 0;
+            }
+
+            label {
+                font-weight: bold;
+
+                .radio-subtitle {
+                    font-weight: normal;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+
+    label {
+        color: #222;
+        cursor: pointer;
+    }
+
+    .prediction-models {
+        margin-top: 12px;
+        margin-bottom: -4px;
+        display: none;
+
+        .prediction-model-wrapper {
+            display: inline-block;
+            width: 81px;
+            padding: 8px 4px 4px;
+            margin-bottom: 4px;
+            text-align: center;
+            vertical-align: top;
+            cursor: pointer;
+
+            &:nth-child(2n + 1) {
+                margin-right: 2px;
+            }
+
+            &:nth-child(2n) {
+                margin-left: 2px;
+            }
+
+            @media screen and (max-height: @short-window) {
+                padding-top: 4px;
+                padding-bottom: 4px;
+            }
+
+            &:hover {
+                background: fadeout(#fff, 70%);
+            }
+
+            &.active {
+                background: fadeout(#fff, 50%);
+            }
+
+            > div {
+                margin: 0 auto;
+            }
+
+            > label {
+                width: 100%;
+                height: 24px;
+                font-size: 11px;
+            }
+        }
+    }
+
+    .slider-header {
+        display: block;
+
+        .slider-value {
+            float: right;
+            font-weight: normal;
+        }
+    }
+
+    &.light-controls {
+        position: absolute;
+        top: 398px;
+        // bottom: (@playback-controls-bar-height + @panel-margin - 5);
+        left: @panel-margin;
+        width: 260px;
+
+        .light-mode-radios {
+            margin-bottom: 12px;
+
+            li {
+                display: inline;
+                margin-right: 18px;
+            }
+        }
+
+        .wavelength-slider-wrapper {
+            position: relative;
+
+            .uv-label {
+                position: absolute;
+                top: -6px;
+                left: 19%;
+                .user-select(none);
+                pointer-events: none;
+                font-size: 10px;
+                color: #fff;
+            }
+        }
+
+        .show-absorption-wavelengths-wrapper {
+            margin-top: 20px;
+            display: none;
+        }
+    }
+
+    &.energy-level-diagram-panel {
+        .collapsible-panel();
+        position: absolute;
+        left: @panel-margin;
+        top: @panel-margin;
+        width: 180px;
+
+        &:after {
+            content: '';
+            width: 150px;
+            height: 274px;
+            background: #fff;
+            display: block;
+            margin-top: 14px;
+        }
+    }
+
+    &.spectrometer-panel {
+        .collapsible-panel();
+        position: absolute;
+        top: 400px;
+        left: 360px;
+        width: 360px;
+    }
+}
+
+.legend-panel {
+    position: absolute;
+    top: @panel-margin;
+    left: (@panel-margin + 200px);
+    color: #fff;
+
+    h2 {
+        margin-top: 0;
+        font-size: 16px;
+        font-weight: 400;
+        color: #fff;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        padding-bottom: 4px;
+    }
+
+    .legend-symbol {
+        margin-bottom: 0;
+    }
+}
+

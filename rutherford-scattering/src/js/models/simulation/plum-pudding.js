@@ -20,7 +20,7 @@ define(function (require, exports, module) {
             RutherfordScatteringSimulation.prototype.initialize.apply(this, arguments);
         },
 
-        initAlphaParticles: function() {
+        initParticles: function() {
             this.alphaParticles = new AlphaParticles(null, {bounds: this.bounds});
         }
 

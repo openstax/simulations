@@ -4,11 +4,11 @@ define(function(require) {
 
     var PixiAppView = require('common/v3/pixi/view/app');
 
-    var HydrogenAtomSimView = require('views/sim');
+    var HydrogenAtomSimView  = require('hydrogen-atom/views/sim');
 
     var Assets = require('assets');
 
-    require('less!styles/font-awesome');
+    require('less!hydrogen-atom/styles/font-awesome');
 
     var HydrogenAtomAppView = PixiAppView.extend({
 

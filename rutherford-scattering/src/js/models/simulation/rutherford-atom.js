@@ -29,7 +29,7 @@ define(function (require, exports, module) {
             this.atomNode = new Atom(null, {simulation: this});
         },
 
-        initAlphaParticles: function() {
+        initParticles: function() {
             this.alphaParticles = new RutherfordParticles(null, {bounds: this.bounds});
         },
 

@@ -39,7 +39,7 @@ define(function(require) {
             
         },
 
-        initMVT: function(){
+        initBoxMVT: function(){
             if (AppView.windowIsShort()) {
                 this.viewOriginX = Math.round(this.width / 2);
                 this.viewOriginY = Math.round((this.height - 50)/ 2);
@@ -57,7 +57,9 @@ define(function(require) {
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 this.scale
             );
+        },
 
+        initParticleMVT: function() {
             this.particleMVT = ModelViewTransform.createScaleMapping(Constants.PARTICLE_SCALE);
         },
 
@@ -89,7 +91,8 @@ define(function(require) {
             this.stage.addChild(this.bottomLayer);
             this.stage.addChild(this.topLayer);
 
-            this.initMVT();
+            this.initBoxMVT();
+            this.initParticleMVT();
             this.initRayGunMVT();
 
             this.initRayGunView();
@@ -125,37 +128,25 @@ define(function(require) {
         },
 
         drawProjectionLines: function() {
-            var rayViewCorners = this.getLeftCorners(this.rayGunView.rayView);
-            var spaceBoxCorners = this.getLeftCorners(this.spaceBoxView.box);
+            var rayViewTop    = this.rayGunView.getRayViewTop();
+            var rayViewBottom = this.rayGunView.getRayViewBottom();
+            var rayViewLeft   = this.rayGunView.getRayViewLeft();
+
+            var spaceBoxTop    = this.spaceBoxView.getTop();
+            var spaceBoxBottom = this.spaceBoxView.getBottom();
+            var spaceBoxLeft   = this.spaceBoxView.getLeft();
 
             var projectionLines = new PIXI.Graphics();
             var dashStyle = [3, 3];
 
             projectionLines.lineStyle(0.75, 0xFFFFFF, 1);
-            projectionLines.moveTo(rayViewCorners.top.x, rayViewCorners.top.y);
-            projectionLines.dashTo(spaceBoxCorners.top.x, spaceBoxCorners.top.y, dashStyle);
+            projectionLines.moveTo(rayViewLeft, rayViewTop);
+            projectionLines.dashTo(spaceBoxLeft, spaceBoxTop, dashStyle);
 
-            projectionLines.moveTo(rayViewCorners.bottom.x, rayViewCorners.bottom.y);
-            projectionLines.dashTo(spaceBoxCorners.bottom.x, spaceBoxCorners.bottom.y, dashStyle);
+            projectionLines.moveTo(rayViewLeft, rayViewBottom);
+            projectionLines.dashTo(spaceBoxLeft, spaceBoxBottom, dashStyle);
 
             this.topLayer.addChild(projectionLines);
-        },
-
-        getLeftCorners: function(box) {
-            var offset = box.toGlobal(box.graphicsData[0].shape);
-            var rectangle = box.graphicsData[0].shape;
-
-            var top = {
-                x: offset.x + box.parent.position.x + box.parent.parent.position.x,
-                y: offset.y + box.parent.position.y + box.parent.parent.position.y
-            };
-
-            var bottom = {
-                x: offset.x + box.parent.position.x + box.parent.parent.position.x,
-                y: offset.y + box.parent.position.y + box.parent.parent.position.y + rectangle.height
-            };
-
-            return {top: top, bottom: bottom};
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

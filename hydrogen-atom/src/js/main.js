@@ -3,7 +3,7 @@
 
     // Load the config
     require(['config'], function () {
-        require(['jquery', 'views/app'], function($, HydrogenAtomAppView) {
+        require(['jquery', 'hydrogen-atom/views/app'], function($, HydrogenAtomAppView) {
 
             $(function(){
                 var appView = new HydrogenAtomAppView();

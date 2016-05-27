@@ -80,7 +80,22 @@ define(function(require) {
                 y: boxWidth/2
             }).clone();
 
+            this.boxCorner = boxCorner;
+            this.boxHeight = boxWidth * this.scale;
+
             box.drawRect(boxCorner.x, boxCorner.y, boxWidth * this.scale, boxWidth * this.scale);
+        },
+
+        getLeft: function() {
+            return this.boxCorner.x;
+        },
+
+        getTop: function() {
+            return this.boxCorner.y;
+        },
+
+        getBottom: function() {
+            return this.boxCorner.y + this.boxHeight;
         },
 
         updatePosition: function(particle){
