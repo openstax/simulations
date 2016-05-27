@@ -144,7 +144,7 @@ define(function (require) {
          * @param alphaParticle
          * @return
          */
-        getX0: function(atom, alphaParticle, plumPudding) {
+        getX0: function(atom, alphaParticle) {
             var x0 = Math.abs(alphaParticle.getInitialPosition().x - atom.getX());
             if (x0 === 0)
                 x0 = this.X_MIN;
@@ -162,7 +162,7 @@ define(function (require) {
             var L = Constants.ANIMATION_BOX_SIZE.height;
             var DB = L / 16;
             if (plumPudding) {
-                var x0 = this.getX0(atom, alphaParticle, plumPudding);
+                var x0 = this.getX0(atom, alphaParticle);
                 var R = atom.get('radius');
                 D = (x0 <= R) ? ((DB * x0 * x0) / (R * R)) : DB;
             }

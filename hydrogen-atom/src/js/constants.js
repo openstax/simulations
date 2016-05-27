@@ -113,13 +113,14 @@ define(function (require) {
     // Clock
     //----------------------------------------------------------------------------
     
-    Constants.CLOCK_FRAME_RATE = 25; // fps, frames per second (wall time)
+    Constants.FRAME_RATE = 25; // fps, frames per second (wall time)
     
     // The clock control area has a slider for choosing a clock "speed".
     // These are the clock steps that correspond to each speed setting.
-    Constants.CLOCK_STEPS = [
+    Constants.DELTA_TIMES_PER_FRAME = [
         0.5, 2, 6
     ];
+    Constants.DEFAULT_DELTA_TIME_PER_FRAME = Constants.DELTA_TIMES_PER_FRAME[1];
     
     // Color for photon used on controls & in legends
     Constants.PHOTON_ICON_WAVELENGTH = 600; // nm
