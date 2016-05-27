@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var PlumPuddingModel = require('models/atomic-model/plum-pudding');
-
     var Constants = require('constants');
 
     var DEBUG_OUTPUT_ENABLED = false;
@@ -16,7 +14,7 @@ define(function (require) {
      * This algorithm was specified by Sam McKagan.
      *   See the file data/Rutherford_Scattering.pdf ("Trajectories for Rutherford Scattering"). 
      */
-    RutherfordScattering = {
+    var RutherfordScattering = {
 
         // Value of x used when x==0 (this algorithm fails when x==0)
         X_MIN: 0.01,
@@ -45,14 +43,14 @@ define(function (require) {
          * @param deltaTime the time step
          * @param D the constant D
          */
-        moveParticle: function(atom, alphaParticle, deltaTime) {
+        moveParticle: function(atom, alphaParticle, deltaTime, plumPudding) {
             if (!(deltaTime > 0))
                 throw 'deltaTime must be greater than 0';
 
-            var D = this.getD(atom, alphaParticle);
+            var D = this.getD(atom, alphaParticle, plumPudding);
             
             // Alpha particle's initial position, relative to the atom's center.
-            var x0 = this.getX0(atom, alphaParticle);
+            var x0 = this.getX0(atom, alphaParticle, plumPudding);
             if (!(x0 > 0));
                 throw 'x0 must be greater than 0';
 
@@ -146,10 +144,10 @@ define(function (require) {
          * @param alphaParticle
          * @return
          */
-        getX0: function(atom, alphaParticle) {
+        getX0: function(atom, alphaParticle, plumPudding) {
             var x0 = Math.abs(alphaParticle.getInitialPosition().x - atom.getX());
             if (x0 === 0)
-                x0 = RutherfordScattering.X_MIN;
+                x0 = this.X_MIN;
             return x0;
         },
         
@@ -159,13 +157,13 @@ define(function (require) {
          * @param alphaParticle
          * @return double
          */
-        getD: function( AbstractHydrogenAtom atom, AlphaParticle alphaParticle ) {
+        getD: function(atom, alphaParticle, plumPudding) {
             var D = 0;
             var L = Constants.ANIMATION_BOX_SIZE.height;
             var DB = L / 16;
-            if (atom instanceof PlumPuddingModel) {
-                var x0 = RutherfordScattering.getX0(atom, alphaParticle);
-                var R = ((PlumPuddingModel)atom).get('radius');
+            if (plumPudding) {
+                var x0 = this.getX0(atom, alphaParticle, plumPudding);
+                var R = atom.get('radius');
                 D = (x0 <= R) ? ((DB * x0 * x0) / (R * R)) : DB;
             }
             else {

@@ -181,7 +181,7 @@ define(function (require) {
                 this.m = 0;
                 DeBroglieModel.prototype.setElectronState.apply(this, [1])
             }
-        }
+        },
         
         /**
          * Our Schrodinger model emits photons from a random point on the first Bohr orbit.

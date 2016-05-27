@@ -361,13 +361,13 @@ define(function (require) {
                         
                         // Create and emit a photon
                         success = true;
-                        this.firePhotonEmitted(Photon.create(
+                        this.firePhotonEmitted(Photon.create({
                             wavelength: wavelength, 
                             position: position, 
                             orientation: orientation, 
                             speed: speed, 
                             emitted: true
-                        ));
+                        }));
                         
                         if (BohrModel.DEBUG_OUTPUT_ENABLED)
                             console.log('BohrModel: stimulated emission of photon, wavelength=' + wavelength);
@@ -428,13 +428,13 @@ define(function (require) {
                     
                     // Create and emit a photon
                     success = true;
-                    this.firePhotonEmitted(Photon.create(
+                    this.firePhotonEmitted(Photon.create({
                         wavelength: wavelength, 
                         position: position, 
                         orientation: orientation, 
                         speed: speed, 
                         emitted: true
-                    ));
+                    }));
                     
                     if (BohrModel.DEBUG_OUTPUT_ENABLED)
                         console.log('BohrModel: spontaneous emission of photon, wavelength=' + wavelength);

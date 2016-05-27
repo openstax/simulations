@@ -197,13 +197,13 @@ define(function (require) {
                 var speed = Constants.PHOTON_INITIAL_SPEED;
                 
                 // Create and emit a photon
-                this.firePhotonEmitted(Photon.create(
+                this.firePhotonEmitted(Photon.create({
                     wavelength: AbstractAtomicModel.PHOTON_EMISSION_WAVELENGTH, 
                     position: position, 
                     orientation: orientation, 
                     speed: speed, 
                     emitted: true
-                ));
+                }));
             }
         },
 
@@ -232,10 +232,10 @@ define(function (require) {
          */
         moveAlphaParticle: function(alphaParticle, deltaTime) {
             var closeness = 10;
-            if (Math.abs(alphaParticle.getX() - this.getX()) < closeness) {
+            if (Math.abs(alphaParticle.getX() - this.getX()) < closeness)
                 AbstractAtomicModel.prototype.moveAlphaParticle.apply(this, arguments);
             else
-                RutherfordScattering.moveParticle(this, alphaParticle, deltaTime);
+                RutherfordScattering.moveParticle(this, alphaParticle, deltaTime, true);
         },
 
     }, Constants.PlumPuddingModel);
