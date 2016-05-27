@@ -266,5 +266,63 @@ define(function (require) {
     Constants.BohrModel = BohrModel;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                           DeBROGLIE MODEL                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var DeBroglieModel = {};
+
+    DeBroglieModel.ORBIT_Y_SCALE = 0.35;
+
+    Constants.DeBroglieModel = DeBroglieModel;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                           DeBROGLIE MODEL                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var SchroedingerModel = {};
+
+    SchroedingerModel.DEBUG_STATE_TRANSITIONS = false;
+    SchroedingerModel.DEBUG_REJECTED_TRANSITIONS = false;
+    /*
+     * This table defines the transition strengths for the primary state component (n).
+     * Some of the entries in this table are non-sensical, but their strengths are 
+     * zero and it helps to have a symmetrical table.  This table was taken from
+     * the simulation design document.
+     * 
+     * Here's an example that shows how the table is indexed:
+     * TRANSITION_STRENGTH[5][0] is the transition strength from n=6 to n=1
+     */
+    SchroedingerModel.TRANSITION_STRENGTH = [
+        [  0,    0,    0,    0,    0 ],
+        [ 12.53, 0,    0,    0,    0 ],
+        [  3.34, 0.87, 0,    0,    0 ],
+        [  1.36, 0.24, 0.07, 0,    0 ],
+        [  0.69, 0.11, 0,    0.04, 0 ],
+        [  0.39, 0.06, 0.02, 0,    0 ]
+    ];
+
+    Constants.SchroedingerModel = SchroedingerModel;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                      DeBROGLIE BRIGHTNESS VIEW                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var DeBroglieBrightnessView = {};
+
+    // Radial width of the ring representation
+    DeBroglieBrightnessView.RING_WIDTH = 5;
+
+    Constants.DeBroglieBrightnessView = DeBroglieBrightnessView;
+
+
     return Constants;
 });

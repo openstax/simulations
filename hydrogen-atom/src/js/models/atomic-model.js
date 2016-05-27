@@ -24,34 +24,6 @@ define(function (require) {
         },
 
         /**
-         * Gets the ground state.
-         * The notion of "ground state" does not apply to all
-         *   hydrogen atom models, but it is convenient to have it here.
-         */
-        getGroundState: function() {
-            return AbstractAtomicModel.GROUND_STATE;
-        },
-
-        /**
-         * Gets the number of electron states that the model supports.
-         * The default is zero, since some models have no notion of "state".
-         * @return int
-         */
-        getNumberOfStates: function() {
-            return 0;
-        },
-        
-        /**
-         * Gets the transition wavelengths for a specified state.
-         * The default implementation returns null.
-         * The notion of "transition wavelength" does not apply to all
-         *   hydrogen atom models, but it is convenient to have it here.
-         */
-        getTransitionWavelengths: function(state) {
-            return null;
-        },
-
-        /**
          * Moves a photon.
          * In the default implementation, the atom has no influence on the photon's movement.
          */
@@ -80,15 +52,6 @@ define(function (require) {
             var y = alphaParticle.getY() + dy;
             alphaParticle.setPosition(x, y);
         },
-        
-        /**
-         * Determines if two points collide.
-         * Any distance between the points that is <= threshold
-         *   is considered a collision.
-         */
-        pointsCollide: function(p1, p2, threshold) {
-            return (p1.distance(p2) <= threshold);
-        },
 
         update: function(time, deltaTime) {},
 
@@ -100,7 +63,46 @@ define(function (require) {
             this.trigger('photon-emitted', this, photon);
         }
 
-    }, Constants.AbstractAtomicModel);
+    }, _.extend({}, Constants.AbstractAtomicModel, {
+
+        /**
+         * Gets the ground state.
+         * The notion of "ground state" does not apply to all
+         *   hydrogen atom models, but it is convenient to have it here.
+         */
+        getGroundState: function() {
+            return AbstractAtomicModel.GROUND_STATE;
+        },
+
+        /**
+         * Gets the number of electron states that the model supports.
+         * The default is zero, since some models have no notion of "state".
+         * @return int
+         */
+        getNumberOfStates: function() {
+            return 0;
+        },
+        
+        /**
+         * Gets the transition wavelengths for a specified state.
+         * The default implementation returns null.
+         * The notion of "transition wavelength" does not apply to all
+         *   hydrogen atom models, but it is convenient to have it here.
+         */
+        getTransitionWavelengths: function(state) {
+            return null;
+        },
+
+        /**
+         * Determines if two points collide.
+         * Any distance between the points that is <= threshold
+         *   is considered a collision.
+         */
+        pointsCollide: function(p1, p2, threshold) {
+            return (p1.distance(p2) <= threshold);
+        }
+
+    }));
 
     return AbstractAtomicModel;
 });

@@ -10,6 +10,13 @@ define(function (require) {
         randomInRange: function(min, max) {
             return min + (Math.random() * (max - min));
         },
+
+        /**
+         * Gets a random integer from 0 to a given max
+         */
+        randomInteger: function(max) {
+            return Math.floor(Math.random() * max);
+        },
         
         /**
          * Gets a random boolean.

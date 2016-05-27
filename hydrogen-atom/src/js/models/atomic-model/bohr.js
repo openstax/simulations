@@ -89,15 +89,6 @@ define(function (require) {
         moveAlphaParticle: function(alphaParticle, deltaTime) {
             RutherfordScattering.moveParticle(this, alphaParticle, deltaTime);
         },
-
-        /**
-         * Gets the number of electron states that the model supports.
-         * This is the same as the number of orbits.
-         * @return int
-         */
-        getNumberOfStates: function() {
-            return BohrModel.ORBIT_RADII.length;
-        },
         
         /**
          * Gets the transition wavelengths for a specified state.
@@ -219,74 +210,15 @@ define(function (require) {
         //----------------------------------------------------------------------------
         
         /**
-         * Gets the radius for a specified state.
-         */
-        getOrbitRadius: function(state) {
-            return BohrModel.ORBIT_RADII[state - BohrModel.GROUND_STATE];
-        },
-        
-        /**
          * Gets the radius of the electron's orbit.
          * The orbit radius and the electron's angle determine 
          * the electron's offset in Polar coordinates.
          */
         getElectronOrbitRadius: function() {
-            return this.getOrbitRadius(this.electronState);
+            return Bohr.getOrbitRadius(this.electronState);
         },
         
-        /**
-         * Creates radii for N orbits.
-         * This is the physically correct way to specify the orbits.
-         * In this sim, we use distorted orbits, so this method is not used.
-         * We keep it here for historical purposes.
-         */
-        createOrbitRadii: function(numberOfOrbits, groundOrbitRadius) {
-            var radii = [];
-            for (var n = 1; n <= numberOfOrbits; n++)
-                radii[n - 1] = n * n * groundOrbitRadius;
-            return radii;
-        },
         
-        /**
-         * Gets the wavelength that must be absorbed for the electron to transition
-         * from state nOld to state nNew, where nOld < nNew.
-         * This algorithm assumes that the ground state is 1.
-         */
-        getWavelengthAbsorbed: function(nOld, nNew) {
-            if (!(
-                (GROUND_STATE == 1) &&
-                (nOld < nNew) &&
-                (nOld > 0) &&
-                (nNew <= GROUND_STATE + getNumberOfStates() - 1)
-            )) {
-                throw 'Bad states for getWavelengthAbsorbed';
-            }
-
-            return 1240.0 / (
-                13.6 * ((1.0 / (nOld * nOld)) - (1.0 / (nNew * nNew)))
-            );
-        },
-        
-        /**
-         * Gets the wavelength that is emitted when the electron transitions
-         *   from state nOld to state nNew, where newNew < nOld.
-         */
-        getWavelengthEmitted: function(nOld, nNew) {
-            return this.getWavelengthAbsorbed(nNew, nOld);
-        },
-        
-        /**
-         * Gets the wavelength that causes a transition between 2 specified states.
-         */
-        getTransitionWavelength: function(nOld, nNew) {
-            if (nOld === nNew)
-                throw 'nOld cannot equal nNew';
-            
-            if (nNew < nOld)
-                return this.getWavelengthEmitted(nOld, nNew);
-            else
-                return this.getWavelengthAbsorbed(nOld, nNew);
-        },
         
         /*
          * Determines if two wavelengths are "close enough" 
@@ -294,26 +226,6 @@ define(function (require) {
          */
         closeEnough: function(w1, w2) {
             return (Math.abs(w1 - w2) < BohrModel.WAVELENGTH_CLOSENESS_THRESHOLD);
-        },
-        
-        /**
-         * Gets the set of wavelengths that cause a state transition.
-         * When firing white light, the gun prefers to firing these wavelengths
-         *   so that the probability of seeing a photon absorbed is higher.
-         */
-        getTransitionWavelengths: function(minWavelength, maxWavelength) {
-            // Create the set of wavelengths, include only those between min and max.
-            var wavelengths = [];
-            var n = getNumberOfStates();
-            var g = getGroundState();
-            for (var i = g; i < g + n - 1; i++) {
-                for (var j = i + 1; j < g + n; j++) {
-                    var wavelength = this.getWavelengthAbsorbed(i, j);
-                    if (wavelength >= minWavelength && wavelength <= maxWavelength)
-                        wavelengths.push(wavelength);
-                }
-            }
-            return wavelengths;
         },
         
         /**
@@ -565,7 +477,99 @@ define(function (require) {
             return this.electronPosition;
         }
 
-    }, Constants.BohrModel);
+    }, _.extend({}, Constants.BohrModel, {
+
+        /**
+         * Gets the number of electron states that the model supports.
+         * This is the same as the number of orbits.
+         * @return int
+         */
+        getNumberOfStates: function() {
+            return BohrModel.ORBIT_RADII.length;
+        },
+
+        /**
+         * Gets the radius for a specified state.
+         */
+        getOrbitRadius: function(state) {
+            return BohrModel.ORBIT_RADII[state - BohrModel.GROUND_STATE];
+        },
+
+        /**
+         * Creates radii for N orbits.
+         * This is the physically correct way to specify the orbits.
+         * In this sim, we use distorted orbits, so this method is not used.
+         * We keep it here for historical purposes.
+         */
+        createOrbitRadii: function(numberOfOrbits, groundOrbitRadius) {
+            var radii = [];
+            for (var n = 1; n <= numberOfOrbits; n++)
+                radii[n - 1] = n * n * groundOrbitRadius;
+            return radii;
+        },
+        
+        /**
+         * Gets the wavelength that must be absorbed for the electron to transition
+         * from state nOld to state nNew, where nOld < nNew.
+         * This algorithm assumes that the ground state is 1.
+         */
+        getWavelengthAbsorbed: function(nOld, nNew) {
+            if (!(
+                (GROUND_STATE == 1) &&
+                (nOld < nNew) &&
+                (nOld > 0) &&
+                (nNew <= GROUND_STATE + getNumberOfStates() - 1)
+            )) {
+                throw 'Bad states for getWavelengthAbsorbed';
+            }
+
+            return 1240.0 / (
+                13.6 * ((1.0 / (nOld * nOld)) - (1.0 / (nNew * nNew)))
+            );
+        },
+        
+        /**
+         * Gets the wavelength that is emitted when the electron transitions
+         *   from state nOld to state nNew, where newNew < nOld.
+         */
+        getWavelengthEmitted: function(nOld, nNew) {
+            return BohrModel.getWavelengthAbsorbed(nNew, nOld);
+        },
+        
+        /**
+         * Gets the wavelength that causes a transition between 2 specified states.
+         */
+        getTransitionWavelength: function(nOld, nNew) {
+            if (nOld === nNew)
+                throw 'nOld cannot equal nNew';
+            
+            if (nNew < nOld)
+                return BohrModel.getWavelengthEmitted(nOld, nNew);
+            else
+                return BohrModel.getWavelengthAbsorbed(nOld, nNew);
+        },
+
+        /**
+         * Gets the set of wavelengths that cause a state transition.
+         * When firing white light, the gun prefers to firing these wavelengths
+         *   so that the probability of seeing a photon absorbed is higher.
+         */
+        getTransitionWavelengths: function(minWavelength, maxWavelength) {
+            // Create the set of wavelengths, include only those between min and max.
+            var wavelengths = [];
+            var n = BohrModel.getNumberOfStates();
+            var g = BohrModel.getGroundState();
+            for (var i = g; i < g + n - 1; i++) {
+                for (var j = i + 1; j < g + n; j++) {
+                    var wavelength = this.getWavelengthAbsorbed(i, j);
+                    if (wavelength >= minWavelength && wavelength <= maxWavelength)
+                        wavelengths.push(wavelength);
+                }
+            }
+            return wavelengths;
+        }
+
+    }));
 
     return BohrModel;
 });
