@@ -117,11 +117,11 @@ define(function (require) {
                                 Constants.ENERGY_CHUNK_VELOCITY
                             ));
 
-                            var hiddenChunk = new EnergyChunk({
+                            var hiddenChunk = EnergyChunk.create({
                                 energyType: EnergyTypes.HIDDEN,
                                 position: chunk.get('position')
                             });
-                            hiddenChunk.set('zPosition', -Constants.EnergyChunkView.Z_DISTANCE_WHERE_FULLY_FADED / 2);
+                            hiddenChunk.set('zPosition', -Constants.EnergyChunkCollectionView.Z_DISTANCE_WHERE_FULLY_FADED / 2);
                             this.hiddenEnergyChunks.add(hiddenChunk);
                             this.energyChunkMovers.push(new EnergyChunkPathMover(
                                 hiddenChunk,
@@ -193,7 +193,7 @@ define(function (require) {
                         .set(this.get('position'))
                         .add(ElectricalGenerator.LEFT_SIDE_OF_WHEEL_OFFSET);
 
-                    var newChunk = new EnergyChunk({
+                    var newChunk = EnergyChunk.create({
                         energyType: EnergyTypes.MECHANICAL,
                         position: initialPosition
                     });

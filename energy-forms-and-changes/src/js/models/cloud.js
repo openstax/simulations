@@ -4,19 +4,18 @@ define(function (require) {
 
     var _ = require('underscore');
     
-    var Vector2        = require('common/math/vector2');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
-
-    var Positionable = require('models/positionable');
+    var Vector2            = require('common/math/vector2');
+    var PiecewiseCurve     = require('common/math/piecewise-curve');
+    var PositionableObject = require('common/models/positionable-object');
 
     var Constants = require('constants');
 
     /**
      * 
      */
-    var Cloud = Positionable.extend({
+    var Cloud = PositionableObject.extend({
         
-        defaults: _.extend({}, Positionable.prototype.defaults, {
+        defaults: _.extend({}, PositionableObject.prototype.defaults, {
             existenceStrength: 1,
             relativePosition: null,
             width:  Constants.Cloud.CLOUD_WIDTH,
@@ -24,7 +23,7 @@ define(function (require) {
         }),
 
         initialize: function(attributes, options) {
-            Positionable.prototype.initialize.apply(this, [attributes, options]);
+            PositionableObject.prototype.initialize.apply(this, [attributes, options]);
 
             if (!options.parentPosition || !this.get('relativePosition'))
                 throw 'Cloud model constructor requires a starting relativePosition as well as the parent position passed as an option.';
@@ -59,7 +58,7 @@ define(function (require) {
             else
                 this.shape.translate(x, y);
             
-            Positionable.prototype.translate.apply(this, [x, y]);
+            PositionableObject.prototype.translate.apply(this, [x, y]);
         }
 
     }, Constants.Cloud);

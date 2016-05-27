@@ -6,7 +6,8 @@ define(function (require) {
     var Backbone  = require('backbone');
     var Rectangle = require('common/math/rectangle');
 
-    var EnergyChunk = require('models/energy-chunk');
+    var EnergyChunk           = require('models/energy-chunk');
+    var EnergyChunkCollection = require('models/energy-chunk-collection');
 
     /**
      * The original 
@@ -14,9 +15,7 @@ define(function (require) {
     var EnergyChunkContainerSlice = function(shape, zPosition) {
         this.shape = shape;
         this.zPosition = zPosition;
-        this.energyChunkList = new Backbone.Collection({
-            model: EnergyChunk
-        });
+        this.energyChunkList = new EnergyChunkCollection();
     };
 
     _.extend(EnergyChunkContainerSlice.prototype, Backbone.Events, {

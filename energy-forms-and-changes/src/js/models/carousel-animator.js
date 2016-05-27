@@ -78,7 +78,7 @@ define(function (require) {
                 vectorPool.remove(this.targetPositionTranslation);
             this.targetPositionTranslation = this.translationToTargetPosition();
             this.animating = true;
-            //console.log(this.targetPositionTranslation.toString());
+            // console.log(this.targetPositionTranslation.toString());
         },
 
         stopAnimation: function() {

@@ -69,7 +69,7 @@ define(function (require) {
                     );
 
                     // Create and add a new chunk
-                    var newChunk = new EnergyChunk({
+                    var newChunk = EnergyChunk.create({
                         energyType: Math.random() > Teapot.MECHANICAL_ENERGY_CHUNK_RATE ? EnergyTypes.MECHANICAL : EnergyTypes.THERMAL,
                         position: initialPosition
                     });
@@ -140,7 +140,7 @@ define(function (require) {
                 this.get('position').y + Teapot.THERMAL_ENERGY_CHUNK_Y_ORIGIN
             );
 
-            var chunk = new EnergyChunk({
+            var chunk = EnergyChunk.create({
                 energyType: EnergyChunk.THERMAL, 
                 position:   initialPosition
             });

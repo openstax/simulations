@@ -144,7 +144,7 @@ define(function (require) {
                             .add(lowerLeftOfPanel);
                     }
 
-                    var newChunk = new EnergyChunk({
+                    var newChunk = EnergyChunk.create({
                         energyType: EnergyTypes.ELECTRICAL,
                         position: initialPosition
                     });

@@ -2,28 +2,38 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('common/math/vector2');
-
-    var Positionable = require('models/positionable');
+    var Vector2                   = require('common/math/vector2');
+    var VanillaPositionableObject = require('common/models/positionable-object-vanilla');
 
     var Constants = require('constants');
 
     /**
      * Basic building block model for all the elements in the intro tab scene
      */
-    var WaterDrop = Positionable.extend({
+    var WaterDrop = VanillaPositionableObject.extend({
 
         defaults: {
             width: 1,
             height: 1
         },
         
-        initialize: function(attributes, options) {
-            Positionable.prototype.initialize.apply(this, [attributes, options]);
+        init: function() {
+            VanillaPositionableObject.prototype.init.apply(this, arguments);
 
             this.velocity = new Vector2();
             this.acceleration = new Vector2();
             this.translation = new Vector2();
+        },
+
+        /**
+         * Called on the instance after 'create' is called to set initial values
+         */
+        onCreate: function(attributes, options) {
+            VanillaPositionableObject.prototype.onCreate.apply(this, [attributes, options]);
+
+            this.velocity.set(0, 0);
+            this.acceleration.set(0, 0);
+            this.translation.set(0, 0);
         },
 
         update: function(time, deltaTime) {
