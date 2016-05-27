@@ -38,7 +38,7 @@ define(function (require) {
 	Constants.SEED_BEAM_FANOUT            =  1 * DEG_TO_RAD;
 
     // Spontaneous emission times, in milliseconds
-	Constants.MAXIMUM_STATE_LIFETIME        = 400;
+	Constants.MAXIMUM_STATE_LIFETIME = 400;
     // The value for MINIMUM_GROUND_STATE_LIFETIME in the original sim is 200ms, but this was
     //   real milliseconds and not simulation milliseconds.  I'm converting here to simulation
     //   milliseconds so it can occur within the simulation instead of going outside the sim
