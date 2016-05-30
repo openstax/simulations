@@ -22,17 +22,35 @@ define(function(require) {
      *
      */
     var HydrogenAtomSceneView = RutherfordScatteringSceneView.extend({
-        initAtomView: function() {
-            this.atomNodeView = new AtomView({
-                mvt: this.mvt,
-                particleMVT: this.particleMVT,
-                model: this.simulation.atomNode,
-                simulation: this.simulation,
-                scale: this.scale,
-                maskBox: this.spaceBoxView.maskBox
-            });
 
-            this.bottomLayer.addChild(this.atomNodeView.displayObject);
+        initGraphics: function() {
+            this.bottomLayer = new PIXI.Container();
+            this.topLayer    = new PIXI.Container();
+
+            this.stage.addChild(this.bottomLayer);
+            this.stage.addChild(this.topLayer);
+
+            this.initBoxMVT();
+            this.initParticleMVT();
+            this.initRayGunMVT();
+
+            this.initRayGunView();
+            // this.initSpaceBoxView();
+            // this.initAtomView();
+            // this.drawProjectionLines();
+        },
+
+        initAtomView: function() {
+            // this.atomNodeView = new AtomView({
+            //     mvt: this.mvt,
+            //     particleMVT: this.particleMVT,
+            //     model: this.simulation.atomNode,
+            //     simulation: this.simulation,
+            //     scale: this.scale,
+            //     maskBox: this.spaceBoxView.maskBox
+            // });
+
+            // this.bottomLayer.addChild(this.atomNodeView.displayObject);
         },
 
         initBoxMVT: function(){
@@ -75,15 +93,19 @@ define(function(require) {
         },
 
         initRayGunView: function() {
-            this.simulation.rayGun.set('scale', this.scale);
+            this.simulation.gun.set('scale', this.scale);
             this.rayGunView = new RayGunView({
                 mvt: this.rayGunMVT,
-                model: this.simulation.rayGun,
+                model: this.simulation.gun,
                 squareTarget: true
             });
 
             this.topLayer.addChild(this.rayGunView.displayObject);
         },
+
+        _update: function(time, deltaTime, paused, timeScale) {
+            // this.spaceBoxView._update(time, deltaTime, paused, timeScale);
+        }
 
     });
 

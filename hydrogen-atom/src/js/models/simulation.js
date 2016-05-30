@@ -119,6 +119,8 @@ define(function (require, exports, module) {
             if (this.get('experimentSelected')) {
                 this.atom = new ExperimentModel({
                     position: position
+                }, {
+                    gun: this.gun
                 });
             }
             else {

@@ -338,6 +338,29 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                          METASTABLE HANDLER                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var MetastableHandler = {};
+
+    // metastable state is (n,l,m) = (2,0,0)
+    MetastableHandler.METASTABLE_N = 2;
+    MetastableHandler.METASTABLE_L = 0;
+    MetastableHandler.METASTABLE_M = 0;
+    /*
+     * When the atom has been in the metastable state for this amount of
+     * simulation time, we will fire an absorbable photon at its center.
+     * This is public and non-final because it can be adjusted using a developer control.
+     */
+    MetastableHandler.MAX_STUCK_TIME = 100; // dt
+
+    Constants.MetastableHandler = MetastableHandler;
+
+    
+
+    /*************************************************************************
+     **                                                                     **
      **                      DeBROGLIE BRIGHTNESS VIEW                      **
      **                                                                     **
      *************************************************************************/

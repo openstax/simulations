@@ -11,6 +11,7 @@ define(function (require) {
 
     var DeBroglieModel     = require('hydrogen-atom/models/atomic-model/debroglie');
     var DeBroglieViewModes = require('hydrogen-atom/models/debroglie-view-modes');
+    var MetastableHandler  = require('hydrogen-atom/models/metastable-handler');
     
     var Constants = require('constants');
 
@@ -68,7 +69,11 @@ define(function (require) {
             this.m = 0;
             
             this.spontaneousEmissionPoint = new Vector2();
-            this.metastableHandler = new MetastableHandler(options.gun, this);
+            this.metastableHandler = new MetastableHandler({
+                gun: options.gun, 
+                atom: this, 
+                SchroedingerModel: SchroedingerModel
+            });
 
             this.probabilisticChooser = new ProbabilisticChooser();
         },
@@ -81,7 +86,7 @@ define(function (require) {
             DeBroglieModel.prototype.update.apply(this, arguments);
 
             this.metastableHandler.update(time, deltaTime);
-        }
+        },
         
         /**
          * Gets the electron's secondary state (l).

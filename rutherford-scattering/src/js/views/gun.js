@@ -75,7 +75,7 @@ define(function(require) {
          *   relies on it.
          */
         updateMVT: function(mvt) {
-            var center = this.model.get('center');
+            var center = this.model.get('center') ? this.model.get('center') : this.model.get('position');
             this.mvt = mvt;
 
             var targetWidth = Math.round(this.mvt.modelToViewDeltaX(RayGunView.WIDTH));
