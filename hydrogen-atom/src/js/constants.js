@@ -313,6 +313,31 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                              GUN MODEL                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Gun = {};
+
+    Gun.MODE_PHOTONS = 2;
+    Gun.MODE_ALPHA_PARTICLES = 1;
+
+    Gun.LIGHT_WHITE = 0;
+    Gun.LIGHT_MONOCHROME = 1;
+
+    Gun.DEFAULT_WAVELENGTH = WavelengthColors.MIN_WAVELENGTH;
+    Gun.DEFAULT_LIGHT_INTENSITY = 0;
+    Gun.DEFAULT_ALPHA_PARTICLE_INTENSITY = 0;
+    // probability that a "white light" photon's wavelength will one that causes a state transition
+    Gun.TRANSITION_WAVELENGTHS_WEIGHT = 0.40; // 1.0 = 100%
+    // probability that the gun will fire from it's center
+    Gun.CENTER_FIRE_PROBABILITY = 0.10; // 1.0 = 100%
+
+    Constants.Gun = Gun;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                      DeBROGLIE BRIGHTNESS VIEW                      **
      **                                                                     **
      *************************************************************************/
@@ -323,6 +348,8 @@ define(function (require) {
     DeBroglieBrightnessView.RING_WIDTH = 5;
 
     Constants.DeBroglieBrightnessView = DeBroglieBrightnessView;
+
+
 
 
     return Constants;
