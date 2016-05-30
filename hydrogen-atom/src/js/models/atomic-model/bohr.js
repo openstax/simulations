@@ -515,10 +515,10 @@ define(function (require) {
          */
         getWavelengthAbsorbed: function(nOld, nNew) {
             if (!(
-                (GROUND_STATE == 1) &&
+                (BohrModel.GROUND_STATE == 1) &&
                 (nOld < nNew) &&
                 (nOld > 0) &&
-                (nNew <= GROUND_STATE + getNumberOfStates() - 1)
+                (nNew <= BohrModel.GROUND_STATE + BohrModel.getNumberOfStates() - 1)
             )) {
                 throw 'Bad states for getWavelengthAbsorbed';
             }

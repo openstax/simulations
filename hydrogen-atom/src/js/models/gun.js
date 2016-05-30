@@ -172,7 +172,7 @@ define(function (require) {
                 }
             }
             
-            if !((wavelength >= this.get('minWavelength') && wavelength <= this.get('maxWavelength')))
+            if (!(wavelength >= this.get('minWavelength') && wavelength <= this.get('maxWavelength')))
                 throw 'Random wavelength is not within the required range.';
 
             return wavelength;

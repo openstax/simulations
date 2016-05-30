@@ -68,7 +68,7 @@ define(function (require) {
             this.m = 0;
             
             this.spontaneousEmissionPoint = new Vector2();
-            this.metastableHandler = new MetastableHandler(gun, this);
+            this.metastableHandler = new MetastableHandler(options.gun, this);
 
             this.probabilisticChooser = new ProbabilisticChooser();
         },
@@ -76,10 +76,12 @@ define(function (require) {
         cleanup: function() {
             this.metastableHandler.cleanup();
         },
-        
-        //----------------------------------------------------------------------------
-        // Mutators and accessors
-        //----------------------------------------------------------------------------
+
+        update: function(time, deltaTime) {
+            DeBroglieModel.prototype.update.apply(this, arguments);
+
+            this.metastableHandler.update(time, deltaTime);
+        }
         
         /**
          * Gets the electron's secondary state (l).

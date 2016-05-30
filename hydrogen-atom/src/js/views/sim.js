@@ -8,11 +8,11 @@ define(function (require) {
     var SimView              = require('common/v3/app/sim');
     var WavelengthSliderView = require('common/controls/wavelength-slider');
 
-    var HydrogenAtomSimulation         = require('hydrogen-atom/models/simulation');
-    var HydrogenAtomSceneView          = require('hydrogen-atom/views/scene');
-    var AtomicModels                   = require('hydrogen-atom/models/atomic-models');
-    var RutherfordScatteringLegendView = require('hydrogen-atom/views/legend');
-    var RutherfordAtomSimulation       = require('rutherford-scattering/models/simulation/rutherford-atom');
+    var HydrogenAtomSimulation = require('hydrogen-atom/models/simulation');
+    var HydrogenAtomSceneView  = require('hydrogen-atom/views/scene');
+    var HydrogenAtomLegendView = require('hydrogen-atom/views/legend');
+    var AtomicModels           = require('hydrogen-atom/models/atomic-models');
+    
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -92,7 +92,7 @@ define(function (require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new RutherfordAtomSimulation();
+            this.simulation = new HydrogenAtomSimulation();
         },
 
         /**
@@ -105,7 +105,7 @@ define(function (require) {
         },
 
         initLegend: function() {
-            this.legendView = new RutherfordScatteringLegendView();
+            this.legendView = new HydrogenAtomLegendView();
         },
 
         /**
