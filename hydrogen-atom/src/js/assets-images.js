@@ -11,6 +11,7 @@ define(function (require) {
         ICON_SCHROEDINGER:  'button-schroedinger.png',
 
         PHOTON:    'photon.png',
-        PHOTON_UV: 'photon-uv.png'
+        PHOTON_UV: 'photon-uv.png',
+        SPHERE:    'sphere.png'
     };
 });

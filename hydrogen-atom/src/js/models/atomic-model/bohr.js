@@ -234,7 +234,7 @@ define(function (require) {
          *   and see if the points are close enough to cause a collision.
          */
         collides: function(photon) {
-            return this.pointsCollide(this.electronPosition, photon.getPosition(), BohrModel.COLLISION_CLOSENESS);
+            return BohrModel.pointsCollide(this.electronPosition, photon.getPosition(), BohrModel.COLLISION_CLOSENESS);
         },
         
         /**
