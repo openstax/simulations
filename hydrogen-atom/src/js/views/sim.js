@@ -129,7 +129,8 @@ define(function (require) {
                 Constants: Constants,
                 Assets: Assets,
                 simulation: this.simulation,
-                models: AtomicModels
+                atomicModels: AtomicModels,
+                selectedAtomicModel: AtomicModels.BILLIARD_BALL
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
@@ -220,16 +221,22 @@ define(function (require) {
 
         changeModelMode: function(event) {
             var mode = $(event.target).val();
-            if (mode === 'prediction')
+            if (mode === 'prediction') {
                 this.$('.prediction-models').show();
-            else
+                this.simulation.set('experimentSelected', false);
+            }
+            else {
                 this.$('.prediction-models').hide();
+                this.simulation.set('experimentSelected', true);
+            }
         },
 
         selectModel: function(event) {
             var $wrapper = $(event.target).closest('.prediction-model-wrapper');
             $wrapper.siblings().removeClass('active');
             $wrapper.addClass('active');
+            var key = $wrapper.data('model-key');
+            this.simulation.set('atomicModel', AtomicModels[key]);
         },
 
         changeLightMode: function(event) {

@@ -87,7 +87,7 @@ define(function (require) {
             this.electronLineStart.set(-x, -y);
             this.electronLineEnd.set(x, y);
             
-            if (this.electronLineStart.x >= this.electronLineEnd.y); // required by moveElectron()
+            if (this.electronLineStart.x >= this.electronLineEnd.x) // required by moveElectron()
                 throw 'Starting x must be greater than ending x';
             
             this.electronDirectionPositive = RandomUtils.randomBoolean();
