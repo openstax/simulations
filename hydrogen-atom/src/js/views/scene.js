@@ -13,6 +13,8 @@ define(function(require) {
     var AtomView                      = require('rutherford-scattering/views/atom');
     var RayGunView                    = require('rutherford-scattering/views/gun');
 
+    var SpaceBoxView = require('hydrogen-atom/views/space-box');
+
     // Constants
     var Constants = require('constants');
 
@@ -35,9 +37,9 @@ define(function(require) {
             this.initRayGunMVT();
 
             this.initRayGunView();
-            // this.initSpaceBoxView();
+            this.initSpaceBoxView();
             // this.initAtomView();
-            // this.drawProjectionLines();
+            this.drawProjectionLines();
         },
 
         initAtomView: function() {
@@ -65,7 +67,7 @@ define(function(require) {
                 this.spaceBoxSize = Constants.BOX_SIZE;
             }
 
-            this.scale = this.spaceBoxSize/this.simulation.boundWidth;
+            this.scale = this.spaceBoxSize / this.simulation.spaceRect.w;
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
@@ -103,8 +105,18 @@ define(function(require) {
             this.topLayer.addChild(this.rayGunView.displayObject);
         },
 
+        initSpaceBoxView: function() {
+            this.spaceBoxView = new SpaceBoxView({
+                mvt: this.mvt,
+                particleMVT: this.particleMVT,
+                simulation: this.simulation
+            });
+
+            this.topLayer.addChild(this.spaceBoxView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
-            // this.spaceBoxView._update(time, deltaTime, paused, timeScale);
+            // this.spaceBoxView.update(time, deltaTime, paused);
         }
 
     });
