@@ -10,6 +10,7 @@ define(function(require) {
     var Colors   = require('common/colors/colors');
     
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
+    var PhotonCollectionView = require('hydrogen-atom/views/photon-collection');
 
     var Assets = require('assets');
     var Constants = require('constants');
@@ -36,22 +37,36 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            this.box = new PIXI.Graphics();
-            this.box.lineStyle(1, 0xFFFFFF, 1);
-            this.drawBox(this.box);
-
-            this.maskBox = new PIXI.Graphics();
-            this.maskBox.beginFill(0x000000, 1);
-            this.drawBox(this.maskBox);
-            this.maskBox.endFill();
-
-            this.particlesLayer = new PIXI.Container();
-            this.particlesLayer.mask = this.maskBox;
-
-            this.displayObject.addChild(this.particlesLayer);
-            this.displayObject.addChild(this.box);
-
+            this.initMask();
+            this.initParticles();
+            this.initBox();
+            
             this.updateMVT(this.mvt);
+        },
+
+        initMask: function() {
+            this.boxMask = new PIXI.Graphics();
+            
+            this.displayObject.addChild(this.boxMask);
+        },
+
+        initParticles: function() {
+            this.particlesLayer = new PIXI.Container();
+            this.particlesLayer.mask = this.boxMask;
+
+            this.photonCollectionView = new PhotonCollectionView({
+                mvt: this.particleMVT,
+                collection: this.simulation.photons
+            });
+
+            this.particlesLayer.addChild(this.photonCollectionView.displayObject);
+            this.displayObject.addChild(this.particlesLayer);
+        },
+
+        initBox: function() {
+            this.box = new PIXI.Graphics();
+            
+            this.displayObject.addChild(this.box);
         },
 
         /**
@@ -61,7 +76,16 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.update();
+            // Update the mask
+            this.boxMask.clear();
+            this.boxMask.beginFill(0x000000, 1);
+            this.drawBox(this.boxMask);
+            this.boxMask.endFill();
+
+            // Update the box outline
+            this.box.clear();
+            this.box.lineStyle(1, 0xFFFFFF, 1);
+            this.drawBox(this.box);
         },
 
         drawBox: function(box) {
@@ -90,7 +114,7 @@ define(function(require) {
         },
 
         update: function(time, deltaTime, paused) {
-
+            this.photonCollectionView.update(time, deltaTime, paused);
         },
 
         reset: function() {

@@ -108,7 +108,7 @@ define(function (require) {
                 .sub(this.get('position'));
             
             // Distance of photon and electron from atom's center
-            var photonRadius = Math.sqrt((x * x) + (y * y));
+            var photonRadius = vec.length();
             var orbitRadius = this.getElectronOrbitRadius();
             
             // How close the photon's center must be to a point on the electron's orbit

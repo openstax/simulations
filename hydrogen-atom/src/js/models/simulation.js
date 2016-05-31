@@ -32,7 +32,7 @@ define(function (require, exports, module) {
         
         initialize: function(attributes, options) {
             options = _.extend({
-                framesPerSecond: Constants.DELTA_TIMES_PER_FRAME,
+                framesPerSecond: Constants.FRAME_RATE,
                 deltaTimePerFrame: Constants.DEFAULT_DELTA_TIME_PER_FRAME
             }, options);
             
@@ -75,6 +75,7 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
+            this.gun.update(time, deltaTime);
             this.atom.update(time, deltaTime);
             this.updateParticles(time, deltaTime);
         },

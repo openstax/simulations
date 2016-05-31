@@ -10,6 +10,7 @@ define(function (require) {
     var Vector2            = require('common/math/vector2');
 
     var BohrModel = require('hydrogen-atom/models/atomic-model/bohr');
+    var Photon    = require('hydrogen-atom/models/photon');
     
     var Constants = require('constants');
 
@@ -25,10 +26,10 @@ define(function (require) {
 
         defaults: _.extend({}, PositionableObject.prototype.defaults, {
             orientation: 0, // In radians
-            enabled: false, // is the gun on or off?
-            mode: Constants.Gun.MODE_PHOTONS, // is the gun firing photons or alpha particles?
+            on: false, // is the gun on or off?
+            mode: Constants.Gun.DEFAULT_MODE, // is the gun firing photons or alpha particles?
             nozzleWidth: 0, // width of the beam
-            lightType: Constants.Gun.LIGHT_WHITE, // type of light (white or monochromatic)
+            lightType: Constants.Gun.DEFAULT_LIGHT_TYPE, // type of light (white or monochromatic)
             lightIntensity: Constants.Gun.DEFAULT_LIGHT_INTENSITY, // intensity of the light, 0.0-1.0
             wavelength: Constants.Gun.DEFAULT_WAVELENGTH, // wavelength of the light
             minWavelength: 0, 
@@ -113,7 +114,7 @@ define(function (require) {
          * If the gun is shooting monochromatic light, a Color corresponding to the wavelength is returned.
          */
         getBeamColor: function() {
-            if (this.get('enabled')) {
+            if (this.get('on')) {
                 if (this.isPhotonsMode()) {
                     if (this.isWhiteLightType())
                         return '#fff';
@@ -203,7 +204,7 @@ define(function (require) {
          * If the gun is disabled, do nothing.
          */
         update: function(time, deltaTime) {
-            if (this.get('enabled')) {
+            if (this.get('on')) {
                 if (this.isPhotonsMode() && this.get('lightIntensity') > 0)
                     this.firePhoton(deltaTime);
                 else if (this.isAlphaParticlesMode() && this.get('alphaParticlesIntensity') > 0)
@@ -249,7 +250,7 @@ define(function (require) {
                 
                 // Photon properties
                 var position = this.getRandomNozzlePoint();
-                var orientation = this.getOrientation();
+                var orientation = this.get('orientation');
                 var speed = Constants.PHOTON_INITIAL_SPEED;
                 var wavelength = this.getRandomWavelength();
 
@@ -276,7 +277,7 @@ define(function (require) {
                 // Pick a randon location along the gun's nozzle width
                 var position = this.getRandomNozzlePoint();
                 // Direction of alpha particle is same as gun's orientation.
-                var orientation = this.getOrientation();
+                var orientation = this.get('orientation');
                 var speed = Constants.ALPHA_PARTICLE_INITIAL_SPEED;
 
                 // Fire a new alpha particle

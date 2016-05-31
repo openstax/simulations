@@ -116,7 +116,7 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            // this.spaceBoxView.update(time, deltaTime, paused);
+            this.spaceBoxView.update(time, deltaTime, paused);
         }
 
     });

@@ -27,12 +27,6 @@ define(function (require) {
             collided: false
         }),
 
-        initialize: function(attributes, options) {
-            MovingObject.prototype.initialize.apply(this, [attributes, options]);
-
-            
-        },
-
         /**
          * Gets the photon's wavelength.
          */
