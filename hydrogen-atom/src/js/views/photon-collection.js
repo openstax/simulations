@@ -18,6 +18,17 @@ define(function(require) {
         initialize: function(options) {
             // A map of wavelengths to colors for caching
             this.colors = {};
+
+            var colorMatrix = [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ];
+            var filter = new PIXI.filters.ColorMatrixFilter();
+            filter.matrix = colorMatrix;
+            filter.brightness(2.3, false);
+            this.displayObject.filters = [filter];
             
             SpriteCollectionView.prototype.initialize.apply(this, arguments);
         },
@@ -43,6 +54,12 @@ define(function(require) {
             if (this.colors[key] === undefined)
                 this.colors[key] = Colors.parseHex(WavelengthColors.nmToHex(wavelength));
             return this.colors[key];
+        },
+
+        createSprite: function() {
+            var sprite = SpriteCollectionView.prototype.createSprite.apply(this, arguments);
+            sprite.blendMode = PIXI.BLEND_MODES.ADD;
+            return sprite;
         },
 
         updateSprite: function(sprite, model) {

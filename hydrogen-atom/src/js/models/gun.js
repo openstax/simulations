@@ -81,7 +81,7 @@ define(function (require) {
          * Is the gun configured to fire monochromatic light?
          */
         isMonochromaticLightType: function() {
-            return (this.get('lightType') == Gun.LIGHT_MONOCHROMATIC);   
+            return (this.get('lightType') == Gun.LIGHT_MONOCHROME);   
         },
         
         /**

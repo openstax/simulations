@@ -47,12 +47,12 @@ define(function(require) {
         initMask: function() {
             this.boxMask = new PIXI.Graphics();
             
-            // this.displayObject.addChild(this.boxMask);
+            this.displayObject.addChild(this.boxMask);
         },
 
         initParticles: function() {
             this.particlesLayer = new PIXI.Container();
-            // this.particlesLayer.mask = this.boxMask;
+            this.particlesLayer.mask = this.boxMask;
 
             this.photonCollectionView = new PhotonCollectionView({
                 mvt: this.mvt,

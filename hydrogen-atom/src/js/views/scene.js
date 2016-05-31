@@ -81,8 +81,8 @@ define(function(require) {
                 this.rayGunOriginY = Math.round((this.height + 200) / 2);
             }
             else {
-                this.rayGunOriginX = this.viewOriginX - Constants.BOX_SIZE / 2 - 100;
-                this.rayGunOriginY = Math.round(this.height / 2);
+                this.rayGunOriginX = this.viewOriginX - Constants.BOX_SIZE / 2 - 81;
+                this.rayGunOriginY = Math.round(this.height / 2) + 20;
             }
 
             var pixelsPerCentimeter = 5;

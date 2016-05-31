@@ -262,7 +262,7 @@ define(function (require) {
             this.inputLock(function() {
                 var wavelength = parseInt($(event.target).val());
                 this.$wavelengthValue.text(wavelength + 'nm');
-                // this.simulation.set('wavelength', wavelength / Constants.METERS_TO_NANOMETERS);
+                this.simulation.gun.set('wavelength', wavelength);
             });
         },
 
