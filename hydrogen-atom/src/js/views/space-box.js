@@ -47,15 +47,15 @@ define(function(require) {
         initMask: function() {
             this.boxMask = new PIXI.Graphics();
             
-            this.displayObject.addChild(this.boxMask);
+            // this.displayObject.addChild(this.boxMask);
         },
 
         initParticles: function() {
             this.particlesLayer = new PIXI.Container();
-            this.particlesLayer.mask = this.boxMask;
+            // this.particlesLayer.mask = this.boxMask;
 
             this.photonCollectionView = new PhotonCollectionView({
-                mvt: this.particleMVT,
+                mvt: this.mvt,
                 collection: this.simulation.photons
             });
 
@@ -94,8 +94,8 @@ define(function(require) {
             this.boxHeight = Math.abs(this.mvt.modelToViewDeltaY(this.simulation.spaceRect.h));
 
             this.boxCorner = this.mvt.modelToView({
-                x: - spaceRect.w / 2,
-                y: spaceRect.h / 2
+                x: spaceRect.x,
+                y: spaceRect.y
             });
 
             box.drawRect(this.boxCorner.x, this.boxCorner.y, this.boxWidth, this.boxHeight);

@@ -63,12 +63,12 @@ define(function(require) {
             }
             else {
                 this.viewOriginX = 540;
-                this.viewOriginY = 20 + Constants.BOX_SIZE / 2 + 0.5;
+                this.viewOriginY = 20 + Constants.BOX_SIZE + 0.5;
                 this.spaceBoxSize = Constants.BOX_SIZE;
             }
 
             this.scale = this.spaceBoxSize / this.simulation.spaceRect.w;
-            this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 this.scale
