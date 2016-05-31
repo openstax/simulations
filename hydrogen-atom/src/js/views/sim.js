@@ -60,7 +60,7 @@ define(function (require) {
 
             'click input[name="model-mode"]'  : 'changeModelMode',
             'click .prediction-model-wrapper' : 'selectModel',
-            'click input[name="light-mode"]'  : 'changeLightMode',
+            'click input[name="light-mode"]'  : 'changeLightType',
             'slide .wavelength-slider'        : 'changeWavelength',
 
             'click .energy-level-diagram-panel > h2' : 'toggleEnergyLevelDiagramPanel',
@@ -86,6 +86,8 @@ define(function (require) {
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
+
+            this.listenTo(this.simulation.gun, 'change:lightType', this.lightTypeChanged);
         },
 
         /**
@@ -184,6 +186,8 @@ define(function (require) {
             this.sceneView.postRender();
             this.wavelengthSliderView.postRender();
             this.renderLegend();
+
+            this.lightTypeChanged();
         },
 
         /**
@@ -219,6 +223,13 @@ define(function (require) {
                 this.$el.addClass('playing');
         },
 
+        lightTypeChanged: function() {
+            if (this.simulation.gun.get('lightType') === Constants.Gun.LIGHT_WHITE)
+                this.$('.wavelength-slider-container').hide();
+            else
+                this.$('.wavelength-slider-container').show();
+        },
+
         changeModelMode: function(event) {
             var mode = $(event.target).val();
             if (mode === 'prediction') {
@@ -239,12 +250,12 @@ define(function (require) {
             this.simulation.set('atomicModel', AtomicModels[key]);
         },
 
-        changeLightMode: function(event) {
+        changeLightType: function(event) {
             var mode = $(event.target).val();
             if (mode === 'white')
-                this.$('.wavelength-slider-container').show();
+                this.simulation.gun.set('lightType', Constants.Gun.LIGHT_WHITE);
             else
-                this.$('.wavelength-slider-container').hide();
+                this.simulation.gun.set('lightType', Constants.Gun.LIGHT_MONOCHROME);
         },
 
         changeWavelength: function(event) {

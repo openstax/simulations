@@ -28,7 +28,7 @@ define(function (require) {
             enabled: false, // is the gun on or off?
             mode: Constants.Gun.MODE_PHOTONS, // is the gun firing photons or alpha particles?
             nozzleWidth: 0, // width of the beam
-            lightType: Constants.Gun.LIGHT_MONOCHROME, // type of light (white or monochromatic)
+            lightType: Constants.Gun.LIGHT_WHITE, // type of light (white or monochromatic)
             lightIntensity: Constants.Gun.DEFAULT_LIGHT_INTENSITY, // intensity of the light, 0.0-1.0
             wavelength: Constants.Gun.DEFAULT_WAVELENGTH, // wavelength of the light
             minWavelength: 0, 
