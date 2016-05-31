@@ -19,6 +19,8 @@ define(function(require) {
             // A map of wavelengths to colors for caching
             this.colors = {};
 
+            // Make all the photons brighter by putting a brightness
+            //   filter on the whole displayObject
             var colorMatrix = [
                 1, 0, 0, 0,
                 0, 1, 0, 0,
@@ -29,6 +31,9 @@ define(function(require) {
             filter.matrix = colorMatrix;
             filter.brightness(2.3, false);
             this.displayObject.filters = [filter];
+
+            // UV texture
+            this.uvTexture = Assets.Texture(Assets.Images.PHOTON_UV);
             
             SpriteCollectionView.prototype.initialize.apply(this, arguments);
         },
@@ -65,7 +70,14 @@ define(function(require) {
         updateSprite: function(sprite, model) {
             SpriteCollectionView.prototype.updateSprite.apply(this, arguments);
             
-            sprite.tint = this.getColorFromWavelength(model.get('wavelength'));
+            if (model.get('wavelength') < WavelengthColors.MIN_WAVELENGTH) {
+                sprite.texture = this.uvTexture;
+                sprite.tint = 0xFFFFFF;
+            }
+            else {
+                sprite.texture = this.texture;
+                sprite.tint = this.getColorFromWavelength(model.get('wavelength'));
+            }
         }
 
     });

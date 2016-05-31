@@ -10,6 +10,7 @@ define(function (require) {
         ICON_DEBROGLIE:     'button-debroglie.png',
         ICON_SCHROEDINGER:  'button-schroedinger.png',
 
-        PHOTON: 'photon.png'
+        PHOTON:    'photon.png',
+        PHOTON_UV: 'photon-uv.png'
     };
 });
