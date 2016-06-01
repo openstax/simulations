@@ -39,7 +39,7 @@ define(function(require) {
             var y = viewPosition.y;
             this.plumPudding.x = x;
             this.plumPudding.y = y;
-            var viewDiameter = this.getViewDiameter();
+            var viewDiameter = this.getViewDiameter() * 1.2;
             var scale = viewDiameter / this.plumPudding.texture.height;
             this.plumPudding.scale.x = scale;
             this.plumPudding.scale.y = scale;
