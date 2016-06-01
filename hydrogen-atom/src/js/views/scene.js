@@ -75,6 +75,10 @@ define(function(require) {
             );
         },
 
+        initParticleMVT: function() {
+            this.particleMVT = ModelViewTransform.createScaleMapping(Constants.PARTICLE_SCALE);
+        },
+
         initRayGunMVT: function() {
             if (AppView.windowIsShort()) {
                 this.rayGunOriginX = this.viewOriginX - Constants.BOX_SIZE_SMALL / 2 - 100;

@@ -57,6 +57,7 @@ define(function (require) {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
             'click .step-btn'   : 'step',
+            'slide .playback-speed' : 'changePlaybackSpeed',
 
             'click input[name="model-mode"]'  : 'changeModelMode',
             'click .prediction-model-wrapper' : 'selectModel',
@@ -170,10 +171,11 @@ define(function (require) {
             this.$el.append(playbackControlsHtml);
 
             this.$('.playback-speed').noUiSlider({
-                start: 0.6,
+                start: 1,
+                step: 1,
                 range: {
-                    'min': 0.2,
-                    'max': 1
+                    'min': 0,
+                    'max': 2
                 }
             });
         },
@@ -228,6 +230,12 @@ define(function (require) {
                 this.$('.wavelength-slider-container').hide();
             else
                 this.$('.wavelength-slider-container').show();
+        },
+
+        changePlaybackSpeed: function(event) {
+            var index = parseInt($(event.target).val());
+            var deltaTimePerFrame = Constants.DELTA_TIMES_PER_FRAME[index];
+            this.simulation.deltaTimePerFrame = deltaTimePerFrame;
         },
 
         changeModelMode: function(event) {
