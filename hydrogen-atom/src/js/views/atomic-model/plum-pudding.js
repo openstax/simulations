@@ -7,6 +7,7 @@ define(function(require) {
     var AtomicModelView = require('hydrogen-atom/views/atomic-model');
 
     var Constants = require('constants');
+    var Assets = require('assets');
     
     /**
      * Represents the scene for the PlumPuddingModel
@@ -14,14 +15,31 @@ define(function(require) {
     var PlumPuddingModelView = AtomicModelView.extend({
 
         /**
-         * Initializes the new PlumPuddingModelView.
+         * Initializes everything for rendering graphics
          */
-        initialize: function(options) {
-            AtomicModelView.prototype.initialize.apply(this, arguments);
+        initGraphics: function() {
+            AtomicModelView.prototype.initGraphics.apply(this, arguments);
+
+            this.plumPudding = Assets.createSprite(Assets.Images.PLUM_PUDDING);
+            this.plumPudding.anchor.x = 0.5;
+            this.plumPudding.anchor.y = 0.5;
+
+            this.displayObject.addChild(this.plumPudding);
         },
 
-        update: function(time, deltaTime, paused) {
-            AtomicModelView.prototype.update.apply(this, arguments);
+        /**
+         * Updates the model-view-transform and anything that relies on it.
+         */
+        updateMVT: function(mvt) {
+            AtomicModelView.prototype.updateMVT.apply(this, arguments);
+
+            var viewPosition = this.getViewPosition();
+            this.plumPudding.x = viewPosition.x;
+            this.plumPudding.y = viewPosition.y;
+            var viewDiameter = this.getViewDiameter();
+            var scale = viewDiameter / this.plumPudding.texture.height;
+            this.plumPudding.scale.x = scale;
+            this.plumPudding.scale.y = scale;
         }
 
     });

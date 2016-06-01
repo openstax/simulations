@@ -15,15 +15,6 @@ define(function(require) {
     var BilliardBallModelView = AtomicModelView.extend({
 
         /**
-         * Initializes the new BilliardBallModelView.
-         */
-        initialize: function(options) {
-            AtomicModelView.prototype.initialize.apply(this, arguments);
-
-            this.hide();
-        },
-
-        /**
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
@@ -43,17 +34,13 @@ define(function(require) {
         updateMVT: function(mvt) {
             AtomicModelView.prototype.updateMVT.apply(this, arguments);
 
-            var viewPosition = this.mvt.modelToView(this.simulation.atom.get('position'));
+            var viewPosition = this.getViewPosition();
             this.billiardBall.x = viewPosition.x;
             this.billiardBall.y = viewPosition.y;
-            var viewDiameter = this.mvt.modelToViewDeltaX(this.simulation.atom.get('radius') * 2);
+            var viewDiameter = this.getViewDiameter();
             var scale = viewDiameter / this.billiardBall.texture.width;
             this.billiardBall.scale.x = scale;
             this.billiardBall.scale.y = scale;
-        },
-
-        update: function(time, deltaTime, paused) {
-            AtomicModelView.prototype.update.apply(this, arguments);
         }
 
     });

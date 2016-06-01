@@ -96,9 +96,9 @@ define(function(require) {
 
             this.atomicModelViews[0]               = new ExperimentModelView(options);
             this.atomicModelViews['BILLIARD_BALL'] = new BilliardBallModelView(options);
-            this.atomicModelViews['PLUM_PUDDING']  = new BohrModelView(options);
+            this.atomicModelViews['PLUM_PUDDING']  = new PlumPuddingModelView(options);
             this.atomicModelViews['SOLAR_SYSTEM']  = new DeBroglieModelView(options);
-            this.atomicModelViews['BOHR']          = new PlumPuddingModelView(options);
+            this.atomicModelViews['BOHR']          = new BohrModelView(options);
             this.atomicModelViews['DEBROGLIE']     = new SchrodingerModelView(options);
             this.atomicModelViews['SCHROEDINGER']  = new SolarSystemModelView(options);
 

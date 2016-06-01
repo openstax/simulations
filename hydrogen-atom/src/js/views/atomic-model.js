@@ -23,6 +23,7 @@ define(function(require) {
 
             this.initGraphics();
             // this.updateMVT(this.mvt);
+            this.hide();
         },
 
         /**
@@ -41,6 +42,14 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+        },
+
+        getViewPosition: function() {
+            return this.mvt.modelToView(this.simulation.atom.get('position'));
+        },
+
+        getViewDiameter: function() {
+            return this.mvt.modelToViewDeltaX(this.simulation.atom.get('radius') * 2);
         },
 
         update: function(time, deltaTime, paused) {
