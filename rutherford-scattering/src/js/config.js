@@ -27,7 +27,7 @@
             'models':           '../../../nuclear-physics/src/js/models',
             'templates':        '../../../nuclear-physics/src/templates',
             'styles':           '../../../nuclear-physics/src/styles',
-            'nuclear-physics':  '../../../nuclear-physics/src/js/',
+            'nuclear-physics':  '../../../nuclear-physics/src/js',
 
             'rutherford-scattering/views':        '../js/views',
             'rutherford-scattering/models':       '../js/models',

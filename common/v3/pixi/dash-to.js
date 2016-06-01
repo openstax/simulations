@@ -37,11 +37,15 @@ define(function(require) {
 
         var lengthDrawn = 0;
         var i = 0;
+        var lengthToDraw;
         while (lengthDrawn < lineLength) {
-            x0 += unitX * dashStyle[i % dashStyle.length];
-            y0 += unitY * dashStyle[i % dashStyle.length];
+            lengthToDraw = dashStyle[i % dashStyle.length];
+            if (lengthToDraw + lengthDrawn > lineLength)
+                lengthToDraw = lineLength - lengthDrawn;
+            x0 += unitX * lengthToDraw;
+            y0 += unitY * lengthToDraw;
             this[i % dashStyle.length === 0 ? 'lineTo' : 'moveTo'](x0, y0);
-            lengthDrawn += dashStyle[i % dashStyle.length];
+            lengthDrawn += lengthToDraw;
             i++;
         }
         this[i % dashStyle.length === 0 ? 'lineTo' : 'moveTo'](x, y);

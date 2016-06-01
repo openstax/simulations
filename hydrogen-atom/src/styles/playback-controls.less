@@ -1,0 +1,111 @@
+@import "variables.less";
+@import "mixins.less";
+
+.playback-controls-wrapper {
+    position: relative;
+    bottom: 5px;
+    width: 100%;
+    height: @playback-controls-bar-height;
+    padding: 10px;
+    background: @panel-bg;
+    text-align: center;
+    .user-select(none);
+
+    @media screen and (max-height: @short-window) {
+        padding: 4px 10px;
+        height: @short-screen-playback-controls-bar-height;
+    }
+
+    .playback-center-buttons-wrapper {
+        width: 150px;
+        position: absolute;
+        left: 50%;
+        margin-left: -75px;
+        top: 0;
+        height: 100%;
+        padding: 10px;
+        text-align: center;
+
+        @media screen and (max-height: @short-window) {
+            padding: 4px 10px;
+        }
+
+        .playback-btn {
+            display: inline-block;
+            background: @panel-btn-bg;
+            color: @panel-btn-fg;
+            outline: none;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            text-align: center;
+
+            &:hover {
+                opacity: 0.9;
+            }
+
+            &:active {
+                background: @link-color;
+                color: #fff;
+            }
+
+            &.pause-btn {
+                display: none;
+            }
+            .sim-view.playing &.pause-btn {
+                display: inline-block;
+            }
+            .sim-view.playing &.play-btn {
+                display: none;
+            }
+
+            &.play-btn,
+            &.pause-btn {
+                width: 42px;
+                height: 42px;
+                font-size: 16px;
+            }
+
+            &.play-btn {
+                padding-left: 10px;
+            }
+        }
+    }
+
+    .btn-normal {
+        .button-variant(@btn-fg, @btn-bg, #fff, @btn-fg);
+        margin: 5px 5px 0;
+    }
+
+    .playback-speed-wrapper {
+        position: absolute;
+        left: 98px;
+        height: 100%;
+        top: 0;
+        padding-top: 18px;
+
+        @media screen and (max-height: @short-window) {
+            padding-top: 12px;
+        }
+
+        .playback-speed {
+            width: 140px;
+            display: inline-block;
+            vertical-align: middle;
+            background: @link-color;
+
+            &.slider .noUi-handle:after {
+                background: #fff;
+                border: 2px solid @link-color;
+            }
+        }
+
+        label {
+            vertical-align: middle;
+            margin: 0 8px;
+            color: fadeout(@link-color, 10%);
+        }
+    }
+
+}

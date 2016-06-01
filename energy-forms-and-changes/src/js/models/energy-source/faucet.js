@@ -3,14 +3,14 @@ define(function (require) {
     'use strict';
 
     var _ = require('underscore');
-    var Backbone = require('backbone');
 
-    var Vector2 = require('common/math/vector2');
+    var Vector2           = require('common/math/vector2');
+    var VanillaCollection = require('common/collections/vanilla');
 
-    var EnergyChunk  = require('models/energy-chunk');
-    var EnergySource = require('models/energy-source');
+    var EnergyChunk           = require('models/energy-chunk');
+    var EnergySource          = require('models/energy-source');
     var EnergyChunkCollection = require('models/energy-chunk-collection');
-    var WaterDrop = require('models/water-drop');
+    var WaterDrop             = require('models/water-drop');
 
     var Constants = require('constants');
     var EnergyTypes = Constants.EnergyTypes;
@@ -29,7 +29,7 @@ define(function (require) {
             EnergySource.prototype.initialize.apply(this, [attributes, options]);
 
             this.exemptFromTransferEnergyChunks = new EnergyChunkCollection();
-            this.waterDrops = new Backbone.Collection([], { model: WaterDrop });
+            this.waterDrops = new VanillaCollection;
 
             this.transferNextAvailableChunk = true;
             this.energySinceLastChunk = 0;
@@ -94,7 +94,7 @@ define(function (require) {
                     var initialWidth = this.get('flowProportion') * Faucet.MAX_WATER_WIDTH * (1 + (Math.random() - 0.5) * 0.2);
                     var initialPosition = this._initialWaterDropPosition.set(Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN).add(0, 0.01);
                     
-                    this.waterDrops.add(new WaterDrop({
+                    this.waterDrops.add(WaterDrop.create({
                         position: initialPosition,
                         width:    initialWidth,
                         height:   initialWidth
@@ -105,10 +105,8 @@ define(function (require) {
                 var drop;
                 for (var i = this.waterDrops.models.length - 1; i >= 0; i--) {
                     drop = this.waterDrops.models[i];
-                    if (drop.update(time, deltaTime)) {
-                        this.waterDrops.remove(drop);
+                    if (drop.update(time, deltaTime))
                         drop.destroy();
-                    }
                 }
                     
 
@@ -178,7 +176,7 @@ define(function (require) {
 
             var initialVelocity = this._initialChunkVelocity.set(0, -Faucet.FALLING_ENERGY_CHUNK_VELOCITY);
 
-            return new EnergyChunk({
+            return EnergyChunk.create({
                 energyType: EnergyChunk.MECHANICAL, 
                 position:   initialPosition,
                 velocity:   initialVelocity

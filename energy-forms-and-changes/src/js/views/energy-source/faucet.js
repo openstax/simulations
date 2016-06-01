@@ -4,10 +4,10 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var Colors           = require('common/colors/colors');
-    var SliderView       = require('common/pixi/view/slider');
-    var EnergySourceView = require('views/energy-source');
-    var WaterDropView    = require('views/water-drop');
+    var Colors                  = require('common/colors/colors');
+    var SliderView              = require('common/pixi/view/slider');
+    var EnergySourceView        = require('views/energy-source');
+    var WaterDropCollectionView = require('views/water-drop-collection');
 
     var Constants = require('constants');
 
@@ -109,37 +109,18 @@ define(function(require) {
             this.waterLayer = new PIXI.DisplayObjectContainer();
             this.displayObject.addChild(this.waterLayer);
 
-            this.waterDropViews = [];
-
-            this.listenTo(this.model.waterDrops, 'add',    this.waterDropAdded);
-            this.listenTo(this.model.waterDrops, 'remove', this.waterDropRemoved);
-            this.listenTo(this.model.waterDrops, 'reset',  this.waterDropsReset);
-        },
-
-        waterDropAdded: function(waterDrop) {
-            var waterDropView = new WaterDropView({
-                model: waterDrop,
+            this.waterDropCollectionView = new WaterDropCollectionView({
+                collection: this.model.waterDrops,
                 mvt: this.mvt
             });
-            this.waterLayer.addChild(waterDropView.displayObject);
-            this.waterDropViews.push(waterDropView);
+
+            this.waterLayer.addChild(this.waterDropCollectionView.displayObject);
         },
 
-        waterDropRemoved: function(waterDrop) {
-            for (var i = this.waterDropViews.length - 1; i >= 0; i--) {
-                if (this.waterDropViews[i].model === waterDrop) {
-                    this.waterDropViews[i].removeFrom(this.waterLayer);
-                    this.waterDropViews.splice(i, 1);
-                    break;
-                }
-            }
-        },
-
-        waterDropsReset: function() {
-            for (var i = this.waterDropViews.length - 1; i >= 0; i--) {
-                this.waterDropViews[i].removeFrom(this.waterLayer);
-                this.waterDropViews.splice(i, 1);
-            }
+        update: function(time, deltaTime, paused) {
+            EnergySourceView.prototype.update.apply(this, arguments);
+            
+            this.waterDropCollectionView.update(time, deltaTime, paused);
         }
 
     });

@@ -2,15 +2,18 @@ define(function (require) {
 
     'use strict';
 
-    var Assets = require('common/v3/pixi/assets');
+    var _      = require('underscore');
+    var Assets = require('rutherford-scattering/assets');
 
-    Assets.Path = 'img/';
+    // Prepend a path to the nuclear physics images before we add our local project images
+    _.each(Assets.Images, function(value, key) {
+      if(!/src\/img\//.test(value)){
+        Assets.Images[key] = '../../../rutherford-scattering/src/img/' + value;        
+      }
+    });
 
-    Assets.Images = {   
-        // THE_IMAGE: 'the-image.png'
-    };
-
-    Assets.SpriteSheets = {};
+    // Add our local project images
+    _.extend(Assets.Images, require('./assets-images'));
 
     return Assets;
 });

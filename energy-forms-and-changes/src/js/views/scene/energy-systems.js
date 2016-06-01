@@ -241,8 +241,6 @@ define(function(require) {
 
             this.backLayer.addChild(beakerHeaterView.thermometerView.displayObject);
 
-            this.beakerHeaterView.forceBeakerEnergyChunkPositionsUpdate();
-
             // Bind visibility
             this.views.push(incandescentLightBulbView);
             this.views.push(fluorescentLightBulbView);

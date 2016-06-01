@@ -29,8 +29,8 @@ define(function(require) {
             this.backLayer = new PIXI.DisplayObjectContainer();
             this.frontLayer = new PIXI.DisplayObjectContainer();
 
-            this.createEnergyChunkLayer('electricalEnergyChunkLayer', this.model.electricalEnergyChunks);
-            this.createEnergyChunkLayer('hiddenEnergyChunkLayer',     this.model.hiddenEnergyChunks);
+            this.createEnergyChunkCollectionView('electricalEnergyChunkLayer', this.model.electricalEnergyChunks);
+            this.createEnergyChunkCollectionView('hiddenEnergyChunkLayer',     this.model.hiddenEnergyChunks);
 
             var curvedWire = this.createSpriteWithOffset(Assets.Images.WIRE_BLACK_LEFT,         ElectricalGenerator.WIRE_OFFSET);
             var housing    = this.createSpriteWithOffset(Assets.Images.GENERATOR);

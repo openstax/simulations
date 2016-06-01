@@ -5,25 +5,32 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/v3/app/sim');
+    var SimView              = require('common/v3/app/sim');
+    var WavelengthSliderView = require('common/controls/wavelength-slider');
 
-    var HydrogenAtomSimulation = require('models/simulation');
-    var HydrogenAtomSceneView  = require('views/scene');
+    var HydrogenAtomSimulation         = require('hydrogen-atom/models/simulation');
+    var HydrogenAtomSceneView          = require('hydrogen-atom/views/scene');
+    var AtomicModels                   = require('hydrogen-atom/models/atomic-models');
+    var RutherfordScatteringLegendView = require('hydrogen-atom/views/legend');
+    var RutherfordAtomSimulation       = require('rutherford-scattering/models/simulation/rutherford-atom');
 
     var Constants = require('constants');
+    var Assets = require('assets');
 
     require('nouislider');
     require('bootstrap');
     require('bootstrap-select');
 
     // CSS
-    require('less!styles/sim');
+    require('less!hydrogen-atom/styles/sim');
+    require('less!hydrogen-atom/styles/playback-controls');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml              = require('text!hydrogen-atom/templates/sim.html');
+    var playbackControlsHtml = require('text!hydrogen-atom/templates/playback-controls.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -47,7 +54,17 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
 
+            'click input[name="model-mode"]'  : 'changeModelMode',
+            'click .prediction-model-wrapper' : 'selectModel',
+            'click input[name="light-mode"]'  : 'changeLightMode',
+            'slide .wavelength-slider'        : 'changeWavelength',
+
+            'click .energy-level-diagram-panel > h2' : 'toggleEnergyLevelDiagramPanel',
+            'click .spectrometer-panel         > h2' : 'toggleSpectrometerPanel'
         },
 
         /**
@@ -65,13 +82,17 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initLegend();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new HydrogenAtomSimulation();
+            this.simulation = new RutherfordAtomSimulation();
         },
 
         /**
@@ -83,6 +104,10 @@ define(function (require) {
             });
         },
 
+        initLegend: function() {
+            this.legendView = new RutherfordScatteringLegendView();
+        },
+
         /**
          * Renders everything
          */
@@ -91,6 +116,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderPlaybackControls();
 
             return this;
         },
@@ -101,10 +127,24 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                Assets: Assets,
+                simulation: this.simulation,
+                models: AtomicModels
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
+
+            this.wavelengthSliderView = new WavelengthSliderView({
+                defaultWavelength: Constants.MIN_WAVELENGTH,
+                minWavelength: Constants.MIN_WAVELENGTH,
+                maxWavelength: Constants.MAX_WAVELENGTH,
+                invisibleSpectrumAlpha: 1,
+                invisibleSpectrumColor: '#777'
+            });
+            this.wavelengthSliderView.render();
+            this.$('.wavelength-slider-wrapper').prepend(this.wavelengthSliderView.el);
+
+            this.$wavelengthValue = this.$('.wavelength-value');
         },
 
         /**
@@ -115,12 +155,34 @@ define(function (require) {
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
         },
 
+        renderLegend: function() {
+            this.legendView.render();
+            this.$('.legend-panel').append(this.legendView.el);
+        },
+
+        /**
+         * Renders playback controls
+         */
+        renderPlaybackControls: function() {
+            this.$el.append(playbackControlsHtml);
+
+            this.$('.playback-speed').noUiSlider({
+                start: 0.6,
+                range: {
+                    'min': 0.2,
+                    'max': 1
+                }
+            });
+        },
+
         /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.wavelengthSliderView.postRender();
+            this.renderLegend();
         },
 
         /**
@@ -145,6 +207,54 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
+        changeModelMode: function(event) {
+            var mode = $(event.target).val();
+            if (mode === 'prediction')
+                this.$('.prediction-models').show();
+            else
+                this.$('.prediction-models').hide();
+        },
+
+        selectModel: function(event) {
+            var $wrapper = $(event.target).closest('.prediction-model-wrapper');
+            $wrapper.siblings().removeClass('active');
+            $wrapper.addClass('active');
+        },
+
+        changeLightMode: function(event) {
+            var mode = $(event.target).val();
+            if (mode === 'white')
+                this.$('.wavelength-slider-container').show();
+            else
+                this.$('.wavelength-slider-container').hide();
+        },
+
+        changeWavelength: function(event) {
+            this.inputLock(function() {
+                var wavelength = parseInt($(event.target).val());
+                this.$wavelengthValue.text(wavelength + 'nm');
+                // this.simulation.set('wavelength', wavelength / Constants.METERS_TO_NANOMETERS);
+            });
+        },
+
+        toggleEnergyLevelDiagramPanel: function(event) {
+            this.$('.energy-level-diagram-panel').toggleClass('collapsed');
+        },
+
+        toggleSpectrometerPanel: function(event) {
+            this.$('.spectrometer-panel').toggleClass('collapsed');
+        }
 
     });
 

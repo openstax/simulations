@@ -1,13 +1,15 @@
 @import "mixins.less";
 @import "variables.less";
 
-.scene-view {
-    width: 100%;
-    height: @scene-height;
+#sim-hydrogen-atom {
+    .scene-view {
+        width: 100%;
+        height: @scene-height;
 
-    #gradient.vertical(#ccc; #fafafa; 0%; 85%);
+        #gradient.vertical(@link-color; #131D35; 0%; 30%);
 
-    @media screen and (max-height: @short-window) {
-        height: @short-scene-height;
+        @media screen and (max-height: @short-window) {
+            height: @short-scene-height;
+        }
     }
 }

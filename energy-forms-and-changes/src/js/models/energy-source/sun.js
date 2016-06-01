@@ -207,7 +207,7 @@ define(function (require) {
                 .set(Constants.ENERGY_CHUNK_VELOCITY, 0)
                 .angle(directionAngle);
 
-            var chunk = new EnergyChunk({
+            var chunk = EnergyChunk.create({
                 energyType: EnergyTypes.LIGHT,
                 position: initialPosition,
                 velocity: initialVelocity

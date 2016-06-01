@@ -14,33 +14,27 @@ define(function (require) {
     var AtomicModels = {
         BILLIARD_BALL: {
             label: 'Billiard Ball',
-            icon: Assets.Images.ICON_BILLIARD_BALL,
-            constructor: BilliardBallModel
+            icon: Assets.Images.ICON_BILLIARD_BALL
         }, 
         PLUM_PUDDING: {
             label: 'Plum Pudding',
-            icon: Assets.Images.ICON_PLUM_PUDDING,
-            constructor: BohrModel
+            icon: Assets.Images.ICON_PLUM_PUDDING
         }, 
         SOLAR_SYSTEM: {
             label: 'Classical Solar System',
-            icon: Assets.Images.ICON_SOLAR_SYSTEM,
-            constructor: DeBroglieModel
+            icon: Assets.Images.ICON_SOLAR_SYSTEM
         }, 
         BOHR: {
             label: 'Bohr',
-            icon: Assets.Images.ICON_BOHR,
-            constructor: PlumPuddingModel
+            icon: Assets.Images.ICON_BOHR
         }, 
         DEBROGLIE: {
             label: 'deBroglie',
-            icon: Assets.Images.ICON_DEBROGLIE,
-            constructor: SchroedingerModel
+            icon: Assets.Images.ICON_DEBROGLIE
         }, 
         SCHROEDINGER: {
             label: 'Schrödinger',
-            icon: Assets.Images.ICON_SCHROEDINGER,
-            constructor: SolarSystemModel
+            icon: Assets.Images.ICON_SCHROEDINGER
         }
     };
 

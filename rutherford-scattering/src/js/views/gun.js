@@ -17,15 +17,24 @@ define(function(require) {
     var RayGunView = PixiView.extend({
 
         events: {
-            'touchstart      .triggerButton': 'toggle',
-            'mousedown       .triggerButton': 'toggle'
+            'touchstart .triggerButton': 'toggle',
+            'mousedown  .triggerButton': 'toggle'
         },
 
         /**
          * Initializes the new RayGunView.
          */
         initialize: function(options) {
+            options = _.extend({
+                color: '#fff',
+                targetColor: '#3e5fff',
+                squareTarget: false
+            }, options);
+
             this.mvt = options.mvt;
+            this.color = Colors.parseHex(options.color);
+            this.targetColor = Colors.parseHex(options.targetColor);
+            this.squareTarget = options.squareTarget;
 
             this.initTriggers();
             this.initGraphics();
@@ -95,11 +104,15 @@ define(function(require) {
             this.updateTrigger();
         },
 
+        setColor: function(hexString) {
+            this.color = Colors.parseHex(hexString);
+        },
+
         drawRay: function() {
             this.rayWidth = RayGunView.RAY_WIDTH * this.rayGun.texture.width;
             this.rayHeight = RayGunView.RAY_HEIGHT * this.rayGun.texture.height;
 
-            this.ray.beginFill(Colors.parseHex('FFF'), 0.25);
+            this.ray.beginFill(this.color, 0.25);
             this.ray.drawRect(-0.5 * this.rayWidth, -1 * this.rayHeight - 0.5 * this.rayGun.texture.height, this.rayWidth, this.rayHeight);
             this.ray.endFill();
         },
@@ -110,19 +123,19 @@ define(function(require) {
             this.rayView = new PIXI.Graphics();
 
             this.rayTargetWidth = 1.4 * this.rayWidth;
-            this.rayTargetHeight = 18;
             this.rayTargetLeft = -0.5 * this.rayTargetWidth;
             this.rayTargetRight = 0.5 * this.rayTargetWidth;
+            this.rayTargetHeight = (this.squareTarget) ? this.rayTargetWidth : 18;
 
-            this.rayTarget.beginFill(Colors.parseHex('3E5FFF'), 1);
+            this.rayTarget.beginFill(this.targetColor, 1);
             this.rayTarget.drawRect(this.rayTargetLeft, 0, this.rayTargetWidth, this.rayTargetHeight);
             this.rayTarget.endFill();
 
-            this.rayTargetCapHeight = 12;
-            this.rayTargetCap.beginFill(Colors.parseHex('3E5FFF'), 0.5);
+            var rayTargetCapHeight = 12;
+            this.rayTargetCap.beginFill(this.targetColor, 0.5);
             this.rayTargetCap.moveTo(this.rayTargetLeft, 0);
-            this.rayTargetCap.lineTo(-0.4 * this.rayTargetWidth, -this.rayTargetCapHeight);
-            this.rayTargetCap.lineTo(0.4 * this.rayTargetWidth, -this.rayTargetCapHeight);
+            this.rayTargetCap.lineTo(-0.4 * this.rayTargetWidth, -rayTargetCapHeight);
+            this.rayTargetCap.lineTo( 0.4 * this.rayTargetWidth, -rayTargetCapHeight);
             this.rayTargetCap.lineTo(this.rayTargetRight, 0);
             this.rayTargetCap.endFill();
 
@@ -131,7 +144,8 @@ define(function(require) {
             this.rayViewLeft = this.rayTargetRight - 3 * this.rayViewWidth;
             this.rayViewTop = (this.rayTargetHeight - this.rayViewHeight) / 2;
 
-            this.rayView.beginFill(Colors.parseHex('000'), 1);
+            this.rayView.beginFill(Colors.parseHex('#131d35'), 1);
+            this.rayView.lineStyle(1, 0xFFFFFF, 1);
             this.rayView.drawRect(this.rayViewLeft, this.rayViewTop, this.rayViewWidth, this.rayViewHeight);
             this.rayView.endFill();
 
@@ -161,6 +175,18 @@ define(function(require) {
         updateTrigger: function() {
             this.triggerButton.texture = Assets.Texture(this.getTrigger());
             this.ray.visible = this.model.get('on');
+        },
+
+        getRayViewTop: function() {
+            return this.displayObject.y + this.rayCap.y + this.rayViewTop * this.rayCap.scale.y;
+        },
+
+        getRayViewBottom: function() {
+            return this.displayObject.y + this.rayCap.y + (this.rayViewTop + this.rayViewHeight) * this.rayCap.scale.y;
+        },
+
+        getRayViewLeft: function() {
+            return this.displayObject.x + this.rayCap.x + this.rayViewLeft * this.rayCap.scale.x;
         }
 
     }, Constants.RayGunView);

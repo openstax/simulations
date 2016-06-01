@@ -20,12 +20,11 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             Backbone.Model.prototype.initialize.apply(this, [attributes, options]);
-            this.alphaParticles = attributes.alphaParticles;
+            this.particles = attributes.particles;
         },
 
-        update: function(deltaTime, boundWidth, alphaParticleEnergy) {
+        update: function(deltaTime, boundWidth, initialSpeed) {
 
-            var initialSpeed = alphaParticleEnergy;
             var xMin = Constants.X0_MIN/this.get('scale');
             var dtPerGunFired = ( boundWidth / initialSpeed ) / Constants.MAX_PARTICLES;
             var previousDtSinceGunFired = this.get('dtSinceGunFired');
@@ -44,7 +43,7 @@ define(function (require) {
 
                 var initialPosition = new Vector2( particleX, particleY );
 
-                this.alphaParticles.add({
+                this.particles.add({
                     speed: initialSpeed,
                     defaultSpeed: initialSpeed,
                     position: initialPosition

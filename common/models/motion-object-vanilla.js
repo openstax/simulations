@@ -18,6 +18,7 @@ define(function (require) {
         init: function() {
             VanillaPositionableObject.prototype.init.apply(this, arguments);
 
+            // For internal use to avoid creating and destroying objects
             this._vec2 = new Vector2(0, 0);
         },
         
@@ -32,9 +33,6 @@ define(function (require) {
             // Create new vectors
             this.set('velocity',     this.createVector2().set(this.get('velocity')));
             this.set('acceleration', this.createVector2().set(this.get('acceleration')));
-
-            // For internal use to avoid creating and destroying objects
-            this._vec2 = new Vector2(0, 0);
         },
 
         /**

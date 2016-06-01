@@ -5,8 +5,8 @@ define(function(require) {
     var _       = require('underscore');
     var PIXI    = require('pixi');
 
-    var IntroElementView = require('views/intro-element');
-    var EnergyChunkView  = require('views/energy-chunk');
+    var IntroElementView              = require('views/intro-element');
+    var EnergyChunkCollectionView     = require('views/energy-chunk-collection');
     var EnergyChunkContainerSliceView = require('views/energy-chunk-container-slice');
 
     /**
@@ -35,45 +35,20 @@ define(function(require) {
                 this.sliceViews.push(view);
             }, this);
 
-            this.approachingEnergyChunkViews = [];
-            this.approachingEnergyChunkLayer = new PIXI.DisplayObjectContainer();
-            energyChunkLayer.addChild(this.approachingEnergyChunkLayer);
-
-            this.listenTo(this.model.approachingEnergyChunks, 'add',    this.approachingEnergyChunkAdded);
-            this.listenTo(this.model.approachingEnergyChunks, 'remove', this.approachingEnergyChunkRemoved);
-        },
-
-        approachingEnergyChunkAdded: function(chunk) {
-            var view = new EnergyChunkView({
-                model: chunk,
-                mvt: this.mvt,
-                parent: this.model
+            this.approachingEnergyChunkCollectionView = new EnergyChunkCollectionView({
+                collection: this.model.approachingEnergyChunks,
+                mvt: this.mvt
             });
-            this.approachingEnergyChunkLayer.addChild(view.displayObject);
-            this.approachingEnergyChunkViews.push(view);
-        },
 
-        approachingEnergyChunkRemoved: function(chunk) {
-            for (var i = 0; i < this.approachingEnergyChunkViews.length; i++) {
-                if (this.approachingEnergyChunkViews[i].model === chunk) {
-                    this.approachingEnergyChunkViews[i].removeFrom(this.approachingEnergyChunkLayer);
-                    this.approachingEnergyChunkViews.splice(i, 1);
-                    break;
-                }
-            }
-        },
-
-        forceEnergyChunkPositionsUpdate: function() {
-            for (var i = 0; i < this.sliceViews.length; i++)
-                this.sliceViews[i].forcePositionUpdate();
+            energyChunkLayer.addChild(this.approachingEnergyChunkCollectionView.displayObject);
         },
 
         update: function(time, deltaTime) {
             for (var i = 0; i < this.sliceViews.length; i++)
                 this.sliceViews[i].update(time, deltaTime);
-            for (var j = 0; j < this.approachingEnergyChunkViews.length; j++)
-                this.approachingEnergyChunkViews[j].update(time, deltaTime);
-        },
+
+            this.approachingEnergyChunkCollectionView.update(time, deltaTime);
+        }
 
     });
 

@@ -89,6 +89,10 @@ define(function (require) {
             return this.remove(model, options);
         },
 
+        slice: function() {
+            return Array.prototype.slice.apply(this.models, arguments);
+        },
+
         set: function(models, options) {
             if (models == null) return;
 
@@ -336,6 +340,9 @@ define(function (require) {
         indexBy:     Backbone.Collection.prototype.indexBy,
 
     });
+
+    // Make sure the collection can be extended by giving it Backbone's extend function
+    VanillaCollection.extend = Backbone.Collection.extend;
 
 
     return VanillaCollection;
