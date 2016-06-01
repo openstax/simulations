@@ -12,6 +12,7 @@ define(function (require) {
 
         PHOTON:    'photon.png',
         PHOTON_UV: 'photon-uv.png',
-        SPHERE:    'sphere.png'
+        SPHERE:    'sphere.png',
+        KABOOM:    'kaboom.png'
     };
 });

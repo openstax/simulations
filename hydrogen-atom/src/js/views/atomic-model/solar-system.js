@@ -8,6 +8,7 @@ define(function(require) {
     var AtomicModelView = require('hydrogen-atom/views/atomic-model');
 
     var Constants = require('constants');
+    var Assets = require('assets');
     
     /**
      * Represents the scene for the SolarSystemModel
@@ -19,6 +20,20 @@ define(function(require) {
          */
         initialize: function(options) {
             AtomicModelView.prototype.initialize.apply(this, arguments);
+        },
+
+        /**
+         * Initializes everything for rendering graphics
+         */
+        initGraphics: function() {
+            AtomicModelView.prototype.initGraphics.apply(this, arguments);
+
+            this.kaboom = Assets.createSprite(Assets.Images.KABOOM);
+            this.kaboom.anchor.x = 0.5;
+            this.kaboom.anchor.y = 0.5;
+            this.kaboom.visible = false;
+
+            this.displayObject.addChild(this.kaboom);
         },
 
         /**
@@ -41,6 +56,13 @@ define(function(require) {
             
             this.displayObject.addChild(this.electronSprite);
             this.displayObject.addChild(this.protonSprite);
+
+            this.kaboom.x = atomPosition.x;
+            this.kaboom.y = atomPosition.y;
+            var targetWidth = mvt.modelToViewDeltaX(240);
+            var scale = targetWidth / this.kaboom.texture.width;
+            this.kaboom.scale.x = scale;
+            this.kaboom.scale.y = scale;
         },
 
         update: function(time, deltaTime, paused) {
@@ -50,6 +72,17 @@ define(function(require) {
                 var viewOffset = this.mvt.modelToView(this.atom.electronPosition);
                 this.electronSprite.x = viewOffset.x;
                 this.electronSprite.y = viewOffset.y;
+
+                if (this.atom.isDestroyed()) {
+                    this.protonSprite.visible = false;
+                    this.electronSprite.visible = false;
+                    this.kaboom.visible = true;
+                }
+                else {
+                    this.protonSprite.visible = true;
+                    this.electronSprite.visible = true;
+                    this.kaboom.visible = false;
+                }
             }
         }
 
