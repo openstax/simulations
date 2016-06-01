@@ -4,6 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
+    var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
     var AtomicModelView = require('hydrogen-atom/views/atomic-model');
 
     var Constants = require('constants');
@@ -34,12 +35,22 @@ define(function(require) {
             AtomicModelView.prototype.updateMVT.apply(this, arguments);
 
             var viewPosition = this.getViewPosition();
-            this.plumPudding.x = viewPosition.x;
-            this.plumPudding.y = viewPosition.y;
+            var x = viewPosition.x;
+            var y = viewPosition.y;
+            this.plumPudding.x = x;
+            this.plumPudding.y = y;
             var viewDiameter = this.getViewDiameter();
             var scale = viewDiameter / this.plumPudding.texture.height;
             this.plumPudding.scale.x = scale;
             this.plumPudding.scale.y = scale;
+
+            if (this.electronSprite)
+                this.displayObject.removeChild(this.electronSprite);
+
+            this.electronSprite = ParticleGraphicsGenerator.generateElectron(this.particleMVT);
+            this.electronSprite.x = x;
+            this.electronSprite.y = y;
+            this.displayObject.addChild(this.electronSprite);
         }
 
     });

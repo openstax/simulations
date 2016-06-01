@@ -19,6 +19,7 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.particleMVT = options.particleMVT;
             this.simulation = options.simulation;
 
             this.initGraphics();

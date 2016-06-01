@@ -91,6 +91,7 @@ define(function(require) {
 
             var options = {
                 mvt: this.mvt,
+                particleMVT: this.particleMVT,
                 simulation: this.simulation
             };
 
