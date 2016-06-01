@@ -25,7 +25,7 @@ define(function (require) {
         SOLAR_SYSTEM: {
             label: 'Classical Solar System',
             icon: Assets.Images.ICON_SOLAR_SYSTEM,
-            constructor: DeBroglieModel
+            constructor: SolarSystemModel
         }, 
         BOHR: {
             label: 'Bohr',
@@ -35,12 +35,12 @@ define(function (require) {
         DEBROGLIE: {
             label: 'deBroglie',
             icon: Assets.Images.ICON_DEBROGLIE,
-            constructor: SchroedingerModel
+            constructor: DeBroglieModel
         }, 
         SCHROEDINGER: {
             label: 'Schrödinger',
             icon: Assets.Images.ICON_SCHROEDINGER,
-            constructor: SolarSystemModel
+            constructor: SchroedingerModel
         }
     };
 

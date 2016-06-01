@@ -95,7 +95,7 @@ define(function (require) {
          */
         getTransitionWavelengths: function(state) {
             var transitionWavelengths = null;
-            var maxState = this.getGroundState() + this.getNumberOfStates() - 1;
+            var maxState = this.getGroundState() + BohrModel.getNumberOfStates() - 1;
             var numWavelengths = maxState - state;
             if (state < maxState) {
                 transitionWavelengths = [];

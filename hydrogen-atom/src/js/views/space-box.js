@@ -98,10 +98,10 @@ define(function(require) {
             this.atomicModelViews[0]               = new ExperimentModelView(options);
             this.atomicModelViews['BILLIARD_BALL'] = new BilliardBallModelView(options);
             this.atomicModelViews['PLUM_PUDDING']  = new PlumPuddingModelView(options);
-            this.atomicModelViews['SOLAR_SYSTEM']  = new DeBroglieModelView(options);
+            this.atomicModelViews['SOLAR_SYSTEM']  = new SolarSystemModelView(options);
             this.atomicModelViews['BOHR']          = new BohrModelView(options);
-            this.atomicModelViews['DEBROGLIE']     = new SchrodingerModelView(options);
-            this.atomicModelViews['SCHROEDINGER']  = new SolarSystemModelView(options);
+            this.atomicModelViews['DEBROGLIE']     = new DeBroglieModelView(options);
+            this.atomicModelViews['SCHROEDINGER']  = new SchrodingerModelView(options);
 
             // "Experiment" atom is in front of particles
             this.topLayer.addChild(this.atomicModelViews[0].displayObject);
