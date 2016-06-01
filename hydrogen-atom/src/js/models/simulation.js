@@ -38,7 +38,8 @@ define(function (require, exports, module) {
             
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.on('change:atomicModel', this.atomicModelChanged);
+            this.on('change:atomicModel',        this.atomicModelChanged);
+            this.on('change:experimentSelected', this.experimentSelectedChanged);
         },
 
         /**
@@ -136,6 +137,8 @@ define(function (require, exports, module) {
 
             this.listenTo(this.atom, 'photon-absorbed', this.photonAbsorbed);
             this.listenTo(this.atom, 'photon-emitted',  this.photonEmitted);
+
+            this.trigger('atom-added', this.atom);
         },
 
         atomicModelChanged: function(simulation, atomicModel) {

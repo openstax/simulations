@@ -38,8 +38,7 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.simulation, 'change:atomicModel',        this.atomicModelChanged);
-            this.listenTo(this.simulation, 'change:experimentSelected', this.atomicModelChanged);
+            this.listenTo(this.simulation, 'atom-added', this.atomicModelChanged);
         },
 
         /**
@@ -173,7 +172,7 @@ define(function(require) {
 
         atomicModelChanged: function() {
             // Deactivate old view
-            this.atomicModelViews[this.currentAtomicModelViewIndex].hide();
+            this.atomicModelViews[this.currentAtomicModelViewIndex].deactivate();
             
             // Find current view
             if (this.simulation.get('experimentSelected')) {
@@ -187,7 +186,7 @@ define(function(require) {
             }
 
             // Activate current view
-            this.atomicModelViews[this.currentAtomicModelViewIndex].show();
+            this.atomicModelViews[this.currentAtomicModelViewIndex].activate();
         }
 
     });
