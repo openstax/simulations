@@ -56,11 +56,11 @@ define(function (require) {
         update: function(time, deltaTime) {},
 
         firePhotonAbsorbed: function(photon) {
-            this.trigger('photon-absorbed', this, photon);
+            this.trigger('photon-absorbed', photon);
         },
 
         firePhotonEmitted: function(photon) {
-            this.trigger('photon-emitted', this, photon);
+            this.trigger('photon-emitted', photon);
         }
 
     }, _.extend({}, Constants.AbstractAtomicModel, {

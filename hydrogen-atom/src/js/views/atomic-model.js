@@ -58,6 +58,7 @@ define(function(require) {
         },
 
         activate: function() {
+            this.atom = this.simulation.atom;
             this.updateMVT(this.mvt);
             this.show();
         },

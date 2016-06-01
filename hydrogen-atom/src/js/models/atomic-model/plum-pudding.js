@@ -97,6 +97,46 @@ define(function (require) {
         },
 
         /**
+         * Oscillates the electron inside the atom.
+         * Emits photon at random time.
+         * After emitting its last photon, the electron completes its oscillation
+         * and returns to (0,0).
+         */
+        update: function(time, deltaTime) {
+           if (this.numberOfPhotonsAbsorbed > 0) {
+                this.electronIsMoving = true;
+                
+                // Move the electron
+                var amplitude = this.getElectronAmplitude();
+                this.moveElectron(deltaTime, amplitude);
+                
+                // Randomly emit a photon after completing an oscillation cycle
+                if (this.getNumberOfElectronOscillations() !== 0) {
+                    if (Math.random() < PlumPuddingModel.PHOTON_EMISSION_PROBABILITY) {
+                        this.emitPhoton();
+                        if (this.numberOfPhotonsAbsorbed === 0) {
+                            // If we have not more photons, remember amplitude so we can complete oscillation.
+                            this.previousAmplitude = amplitude;
+                        }
+                    }
+                }
+            }
+            else if (this.electronIsMoving && this.numberOfPhotonsAbsorbed === 0) {
+                // Stop the electron when it completes its current oscillation
+                var before = this.getNumberOfElectronOscillations();
+                this.moveElectron(deltaTime, this.previousAmplitude);
+                var after = this.getNumberOfElectronOscillations();
+                if (before !== after) {
+                    this.electronIsMoving = false;
+                    this.numberOfZeroCrossings = 0;
+                    this.previousAmplitude = 0;
+                    this.updateElectronLine();
+                    this.setElectronOffset(0, 0);
+                }
+            }
+        },
+
+        /**
          * Sets the electron's offset (and position).
          */
         setElectronOffset: function(xOffset, yOffset) {
@@ -110,7 +150,7 @@ define(function (require) {
          *   the number of photons the electron is capable of absorbing.
          */
         getElectronAmplitude: function() {
-            return (this.numberOfPhotonsAbsorbed / AbstractAtomicModel.MAX_PHOTONS_ABSORBED);
+            return (this.numberOfPhotonsAbsorbed / PlumPuddingModel.MAX_PHOTONS_ABSORBED);
         },
         
         /**
@@ -156,7 +196,7 @@ define(function (require) {
          */
         canAbsorb: function(photon) {
             return !(photon.isEmitted() || 
-                this.numberOfPhotonsAbsorbed === AbstractAtomicModel.MAX_PHOTONS_ABSORBED || (
+                this.numberOfPhotonsAbsorbed === PlumPuddingModel.MAX_PHOTONS_ABSORBED || (
                     this.numberOfPhotonsAbsorbed === 0 && 
                     this.electronIsMoving
                 )
@@ -170,10 +210,10 @@ define(function (require) {
             var absorbed = false;
             if (this.canAbsorb(photon)) {
                 var photonPosition = photon.getPosition();
-                if (PlumPuddingModel.pointsCollide(this.electronPosition, photonPosition, AbstractAtomicModel.COLLISION_CLOSENESS)) {
-                    if (Math.random() < AbstractAtomicModel.PHOTON_ABSORPTION_PROBABILITY) {
+                if (PlumPuddingModel.pointsCollide(this.electronPosition, photonPosition, PlumPuddingModel.COLLISION_CLOSENESS)) {
+                    if (Math.random() < PlumPuddingModel.PHOTON_ABSORPTION_PROBABILITY) {
                         this.numberOfPhotonsAbsorbed++;
-                        if (this.numberOfPhotonsAbsorbed > AbstractAtomicModel.MAX_PHOTONS_ABSORBED)
+                        if (this.numberOfPhotonsAbsorbed > PlumPuddingModel.MAX_PHOTONS_ABSORBED)
                             throw 'Number of photons has exceeded the max allowed';
                         this.firePhotonAbsorbed(photon);
                         absorbed = true;
@@ -198,7 +238,7 @@ define(function (require) {
                 
                 // Create and emit a photon
                 this.firePhotonEmitted(Photon.create({
-                    wavelength: AbstractAtomicModel.PHOTON_EMISSION_WAVELENGTH, 
+                    wavelength: PlumPuddingModel.PHOTON_EMISSION_WAVELENGTH, 
                     position: position, 
                     orientation: orientation, 
                     speed: speed, 
@@ -237,6 +277,55 @@ define(function (require) {
             else
                 RutherfordScattering.moveParticle(this, alphaParticle, deltaTime, true);
         },
+
+        /**
+         * Moves the electron along its oscillation path with some amplitude.
+         */
+        moveElectron: function(deltaTime, amplitude) {
+            // Assumptions about the electron's oscillation line...
+            // assert( _electronLine.getX1() < _electronLine.getX2() );
+            // assert( Math.abs( _electronLine.getX1() ) == Math.abs( _electronLine.getX2() ) );
+            // assert( Math.abs( _electronLine.getY1() ) == Math.abs( _electronLine.getY2() ) );
+            
+            // Remember the old offset 
+            var xo = this.electronOffset.x;
+            var yo = this.electronOffset.y;
+
+            // Determine dx and dy
+            var distanceDelta = deltaTime * (amplitude * (2 * this.get('radius')) / PlumPuddingModel.ELECTRON_LINE_SEGMENTS);
+            var dx = Math.abs(this.electronLineStart.x) * (distanceDelta / this.get('radius'));
+            var dy = Math.abs(this.electronLineStart.y) * (distanceDelta / this.get('radius'));
+
+            // Adjust signs for electron's horizontal direction
+            var sign = this.getElectronDirectionSign();
+            dx *= sign;
+            dy *= sign;
+            if (this.electronLineStart.y > this.electronLineEnd.y)
+                dy *= -1;
+
+            // Electron's new offset
+            var x = this.electronOffset.x + dx;
+            var y = this.electronOffset.y + dy;
+
+            // Is the new offset past the ends of the oscillation line?
+            if (Math.abs(x) > Math.abs(this.electronLineStart.x) || Math.abs(y) > Math.abs(this.electronLineStart.y)) {
+                if (this.electronDirectionPositive) {
+                    x = this.electronLineEnd.x;
+                    y = this.electronLineEnd.y;
+                }
+                else {
+                    x = this.electronLineStart.x;
+                    y = this.electronLineStart.y;
+                }
+                this.changeElectronDirection();
+            }
+
+            // Did we cross the origin?
+            if ((x === 0 && y === 0) || this.signIsDifferent(x, xo) || this.signIsDifferent(y, yo))
+                this.numberOfZeroCrossings++;
+
+            this.setElectronOffset(x, y);
+        }
 
     }, Constants.PlumPuddingModel);
 

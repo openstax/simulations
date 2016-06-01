@@ -135,6 +135,8 @@ define(function (require) {
     
     Constants.PHOTON_INITIAL_SPEED = 5; // distance moved per dt
     Constants.ALPHA_PARTICLE_INITIAL_SPEED = 5; // distance moved per dt
+    Constants.PHOTON_DIAMETER = 24;
+    Constants.ELECTRON_HOLYWOOD_DIAMETER = 8;
     
     //----------------------------------------------------------------------------
     // Ranges
@@ -158,7 +160,7 @@ define(function (require) {
 
     var AbstractAtomicModel = {};
 
-    // AbstractAtomicModel.COLLISION_CLOSENESS = ( HAPhotonNode.DIAMETER / 2 ) + ( ElectronNode.DIAMETER / 2 );
+    AbstractAtomicModel.COLLISION_CLOSENESS = (Constants.PHOTON_DIAMETER / 2) + (Constants.ELECTRON_HOLYWOOD_DIAMETER / 2);
     AbstractAtomicModel.GROUND_STATE = 1;
     
     Constants.AbstractAtomicModel = AbstractAtomicModel;

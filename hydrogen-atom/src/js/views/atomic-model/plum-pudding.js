@@ -48,9 +48,17 @@ define(function(require) {
                 this.displayObject.removeChild(this.electronSprite);
 
             this.electronSprite = ParticleGraphicsGenerator.generateElectron(this.particleMVT);
-            this.electronSprite.x = x;
-            this.electronSprite.y = y;
             this.displayObject.addChild(this.electronSprite);
+        },
+
+        update: function(time, deltaTime, paused) {
+            AtomicModelView.prototype.update.apply(this, arguments);
+
+            if (this.electronSprite) {
+                var viewOffset = this.mvt.modelToView(this.atom.electronPosition);
+                this.electronSprite.x = viewOffset.x;
+                this.electronSprite.y = viewOffset.y;
+            }
         }
 
     });
