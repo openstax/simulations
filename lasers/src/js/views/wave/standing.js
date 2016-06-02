@@ -25,7 +25,7 @@ define(function(require) {
             
             graphics.moveTo(origin.x, origin.y);
 
-            for (var i = 0; i < this.numPoints; i++) {
+            for (var i = 0; i < this.numPoints; i += 3) {
                 var x = this.dx * i;
                 var y = this.amplitude * (a * Math.sin((x / this.lambda) * Math.PI));
                 

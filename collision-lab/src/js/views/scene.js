@@ -5,8 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var AppView            = require('common/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
@@ -149,7 +149,7 @@ define(function(require) {
         },
 
         initBallTraceLayer: function() {
-            this.ballTraceLayer = new PIXI.DisplayObjectContainer();
+            this.ballTraceLayer = new PIXI.Container();
             this.ballTraceLayer.visible = false;
             this.stage.addChild(this.ballTraceLayer);
         },
@@ -177,7 +177,7 @@ define(function(require) {
             this.ballViews = [];
             this.ballTraceViews = [];
 
-            this.balls = new PIXI.DisplayObjectContainer();
+            this.balls = new PIXI.Container();
             this.stage.addChild(this.balls);
 
             this.ballsReset(this.simulation.balls);

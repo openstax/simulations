@@ -3,11 +3,11 @@ define(function (require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
+    var VanillaCollection = require('common/collections/vanilla');
 
     var EnergyChunk = require('models/energy-chunk');
 
-    var EnergyChunkCollection = Backbone.Collection.extend({
+    var EnergyChunkCollection = VanillaCollection.extend({
     	model: EnergyChunk
     });
 

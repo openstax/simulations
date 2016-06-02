@@ -8,7 +8,9 @@ define(function (require) {
     var SimView = require('common/v3/app/sim');
 
     var LasersSimulation = require('models/simulation');
-    var LasersSceneView  = require('views/scene');
+
+    var LasersSceneView = require('views/scene');
+    var LaserPowerView  = require('views/laser-power');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -20,12 +22,15 @@ define(function (require) {
     // CSS
     require('less!styles/sim');
     require('less!styles/playback-controls.less');
+    require('less!styles/laser-picture-dialog');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
     var playbackControlsHtml = require('text!templates/playback-controls.html');
+    var optionsHtml          = require('text!templates/options.html');
+    var pictureDialogHtml    = require('text!templates/laser-picture-dialog.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.  It
@@ -43,6 +48,7 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         template: _.template(''),
+        optionsTemplate: _.template(optionsHtml),
 
         /**
          * Dom event listeners
@@ -51,6 +57,8 @@ define(function (require) {
             'click .play-btn'  : 'play',
             'click .pause-btn' : 'pause',
             'click .step-btn'  : 'step',
+            'click .reset-btn' : 'reset',
+            'click .view-laser-picture-btn' : 'viewLaserPictureDialog',
 
             'change .energy-levels-select'    : 'changeEnergyLevels',
             'change .lamp-view-select'        : 'changeLampViewMode',
@@ -69,11 +77,16 @@ define(function (require) {
             options = _.extend({
                 title: 'Lasers',
                 name: 'lasers',
+                link: 'legacy/lasers',
+                alwaysShowLampViewOptions: false
             }, options);
+
+            this.alwaysShowLampViewOptions = options.alwaysShowLampViewOptions;
 
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initLaserPowerView();
 
             this.listenTo(this.simulation, 'change:paused',           this.pausedChanged);
             this.listenTo(this.simulation, 'change:mirrorsEnabled',   this.mirrorsEnabledChanged);
@@ -98,6 +111,12 @@ define(function (require) {
             });
         },
 
+        initLaserPowerView: function() {
+            this.laserPowerView = new LaserPowerView({
+                simulation: this.simulation
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -107,6 +126,9 @@ define(function (require) {
             this.renderScaffolding();
             this.renderSceneView();
             this.renderPlaybackControls();
+            this.renderLaserPower();
+
+            this.$el.append(pictureDialogHtml);
 
             return this;
         },
@@ -119,10 +141,12 @@ define(function (require) {
                 Constants: Constants,
                 Assets: Assets,
                 simulation: this.simulation,
-                unique: this.cid
+                unique: this.cid,
+                alwaysShowLampViewOptions: this.alwaysShowLampViewOptions
             };
 
             this.$el.html(this.template(data));
+            this.$('.sim-controls-right').append(this.optionsTemplate(data));
 
             this.$('select').selectpicker();
 
@@ -155,13 +179,54 @@ define(function (require) {
         },
 
         /**
+         * Renders the laser controls view
+         */
+        renderLaserPower: function() {
+            this.laserPowerView.render();
+            this.$el.append(this.laserPowerView.el);
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.laserPowerView.postRender();
+
             this.mirrorsEnabledChanged(this.simulation, this.simulation.get('mirrorsEnabled'));
             this.elementPropertiesChanged(this.simulation, this.simulation.get('elementProperties'));
+        },
+
+        resetSimulation: function() {
+            // Save whether or not it was paused when we reset
+            var wasPaused = this.simulation.get('paused');
+
+            // Set pause the updater and reset everything
+            this.updater.pause();
+            this.updater.reset();
+            this.resetComponents();
+            this.resetControls();
+
+            // Resume normal function
+            this.updater.play();
+            this.play();
+            this.pausedChanged();
+        },
+
+        /**
+         * Resets all the controls back to their default state.
+         */
+        resetControls: function() {
+            this.$('select.energy-levels-select').val((this.simulation.get('elementProperties') === this.simulation.twoLevelProperties) ? 2 : 3);
+            this.$('.lamp-view-select').val((this.simulation.get('pumpingPhotonViewMode') === Constants.PHOTON_DISCRETE) ? 'photons' : 'beam');
+            this.$('.lower-transition-select').val('photons');
+            this.$('.enable-mirrors-check').prop('checked', this.simulation.get('mirrorsEnabled'));
+            this.$reflectivitySlider.val(this.simulation.rightMirror.getReflectivity() * 100);
+            this.updateReflectivityLabel(this.simulation.rightMirror.getReflectivity() * 100);
+            this.$('.display-high-level-emitted-photons-check').prop('checked', false);
+
+            this.$('select').selectpicker('refresh');
         },
 
         /**
@@ -169,7 +234,8 @@ define(function (require) {
          */
         resetComponents: function() {
             SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+            
+            this.sceneView.reset();
         },
 
         /**
@@ -185,6 +251,10 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+        },
+
+        viewLaserPictureDialog: function() {
+            this.$('.picture-dialog').modal('show');
         },
 
         changeEnergyLevels: function(event) {
@@ -256,12 +326,16 @@ define(function (require) {
                 this.$('.three-level-options').show();
         },
 
-        showHelp: function() {
+        photonSizeChanged: function() {
+            this.sceneView.photonSizeChanged();
+        },
 
+        showHelp: function() {
+            this.sceneView.showHelp();
         },
 
         hideHelp: function() {
-            
+            this.sceneView.hideHelp();
         }
 
     });

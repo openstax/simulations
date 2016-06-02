@@ -15,6 +15,8 @@ define(function (require) {
     QuantumConfig.MIN_WAVELENGTH = WavelengthColors.MIN_WAVELENGTH;
     QuantumConfig.MAX_WAVELENGTH = WavelengthColors.MAX_WAVELENGTH;
 
+    QuantumConfig.DEFAULT_ATOM_RADIUS = 15;
+
     QuantumConfig.PIXELS_PER_NM = 1E6;
 
     return QuantumConfig;

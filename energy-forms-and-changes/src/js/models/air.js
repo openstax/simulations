@@ -7,6 +7,7 @@ define(function (require) {
     var Vector2  = require('common/math/vector2');
 
     var EnergyChunk                 = require('models/energy-chunk');
+    var EnergyChunkCollection       = require('models/energy-chunk-collection');
     var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');
 
     /**
@@ -27,7 +28,7 @@ define(function (require) {
         },
         
         initialize: function(attributes, options) {
-            this.energyChunkList = new Backbone.Collection([], { model: EnergyChunk });
+            this.energyChunkList = new EnergyChunkCollection();
             this.energyChunkWanderControllers = [];
 
             this._centerPoint = new Vector2();
@@ -119,7 +120,7 @@ define(function (require) {
 
         requestEnergyChunk: function(point) {
             // Create a new chunk at the top of the air above the specified point.
-            return new EnergyChunk({
+            return EnergyChunk.create({
                 energyType: EnergyChunk.THERMAL, 
                 position:   new Vector2(point.x, Air.HEIGHT)
             });

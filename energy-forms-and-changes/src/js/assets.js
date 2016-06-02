@@ -136,7 +136,7 @@ define(function (require) {
             Assets.Images.SOLAR_PANEL_POST_2,
             Assets.Images.WIRE_BLACK_LEFT
         ],
-        'energy-symbols-spritesheet.json': [
+        'energy-symbols-e-spritesheet.json': [
             Assets.Images.E_CHEM_BLANK_LIGHT,
             Assets.Images.E_DASHED_BLANK,
             Assets.Images.E_ELECTRIC_BLANK,

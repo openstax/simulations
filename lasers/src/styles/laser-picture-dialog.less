@@ -1,0 +1,24 @@
+@import "../../../nuclear-physics/node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "../../../nuclear-physics/src/styles/mixins.less";
+
+.picture-dialog {
+	@media (min-width: 649px) {
+		.modal-dialog {
+			width: 649px;
+		}
+	}
+
+	.modal-body {
+		padding: 4px;
+		padding-right: 2px;
+
+		overflow: scroll;
+	}
+
+	#laser-picture {
+		background: url(../img/annotated-laser-2.jpg);
+		width: 641px;
+		height: 480px;
+	}
+}

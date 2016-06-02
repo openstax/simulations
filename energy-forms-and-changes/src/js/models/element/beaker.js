@@ -136,7 +136,7 @@ define(function (require) {
             var initialChunkBounds = this.getSliceBounds();
             while (this.getNumEnergyChunks() < targetNumChunks) {
                 // Add a chunk at a random location in the beaker.
-                var chunk = new EnergyChunk({
+                var chunk = EnergyChunk.create({
                     energyType: EnergyChunk.THERMAL, 
                     position:   EnergyChunkDistributor.generateRandomLocation(initialChunkBounds)
                 });

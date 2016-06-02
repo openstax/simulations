@@ -191,7 +191,7 @@ define(function (require) {
                         .set(this.get('position'))
                         .add(LightBulb.OFFSET_TO_LEFT_SIDE_OF_WIRE);
 
-                    var newChunk = new EnergyChunk({
+                    var newChunk = EnergyChunk.create({
                         energyType: EnergyTypes.ELECTRICAL,
                         position: initialPosition
                     });

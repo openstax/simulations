@@ -5,7 +5,7 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/app/sim');
+    var SimView = require('common/v3/app/sim');
 
     var CollisionLabSimulation = require('models/simulation');
 
@@ -90,7 +90,8 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                userCanAddRemoveBalls: true
+                userCanAddRemoveBalls: true,
+                link: 'collision-lab'
             }, options);
 
             this.userCanAddRemoveBalls = options.userCanAddRemoveBalls;

@@ -51,7 +51,7 @@ define(function (require) {
 
             // Make sure the collection knows we destroyed it
             if (this.collections) {
-                for (var i = 0; i < this.collections.length; i++)
+                for (var i = this.collections.length - 1; i >= 0; i--)
                     this.collections[i].alertDestroyed(this);
             }
         }
