@@ -59,9 +59,9 @@ define(function(require) {
             var graphics = this.ringGraphics;
             graphics.clear();
 
-            var numSegments = DeBroglieModelBrightnessSubView.NUMBER_OF_SEGMENTS;
-            var radiansPerSegment = (2 * Math.PI) / numSegments;
             var radius = this.mvt.modelToViewDeltaX(this.atom.getElectronOrbitRadius());
+            var circumference = Math.PI * 2 * radius;
+            var numSegments = Math.floor(circumference / DeBroglieModelBrightnessSubView.SEGMENT_LENGTH) + 1;
             var ringWidth = DeBroglieModelBrightnessSubView.RING_WIDTH;
             var atom = this.getAtom();
 

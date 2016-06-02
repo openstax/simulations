@@ -374,7 +374,7 @@ define(function (require) {
 
     // Radial width of the ring representation
     DeBroglieModelBrightnessSubView.RING_WIDTH = 5;
-    DeBroglieModelBrightnessSubView.NUMBER_OF_SEGMENTS = 128;
+    DeBroglieModelBrightnessSubView.SEGMENT_LENGTH = 2;
 
     // color used when amplitude = +1
     DeBroglieModelBrightnessSubView.PLUS_COLOR = Constants.ELECTRON_COLOR;
