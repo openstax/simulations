@@ -43,18 +43,6 @@ define(function (require) {
             this.reflectionStrategies.push(strategy);
         },
 
-        /**
-         * Tells if the mirror reflects a specified photon, based on the mirror's
-         *   ReflectionStrategies. All strategies must return true to their
-         *   reflects(photon) function for the mirror to return true.
-         */
-        reflects: function(photon) {
-            var result = true;
-            for (var i = 0; i < this.reflectionStrategies.length && result === true; i++)
-                result &= this.reflectionStrategies[i].reflects(photon);
-            return result;
-        },
-
         reflectivityChanged: function(model, reflectivity) {
             this.partialStrategy.setReflectivity(reflectivity);
         },

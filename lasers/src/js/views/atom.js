@@ -85,6 +85,9 @@ define(function(require) {
             graphics.drawCircle(0, 0, this.getEnergyLevelRadius());
             graphics.endFill();
 
+            var modelRadius = this.mvt.viewToModelDeltaX(this.getEnergyLevelRadius());
+            this.model.set('radius', modelRadius);
+
             var energyLevelNumber = this.model.getCurrentStateNumber() + 1;
             this.label.text = energyLevelNumber;
         },
@@ -110,17 +113,13 @@ define(function(require) {
 
         getEnergyLevelRadius: function() {
             var atom = this.model;
-            var state = atom.getCurrentState();
 
-            // Determine the thickness of the colored ring that represents the energy
-            var groundStateRingThickness = 2;
-            var de1 = atom.getHighestEnergyState().getEnergyLevel() - atom.getGroundState().getEnergyLevel();
-            var de2 = state.getEnergyLevel() - atom.getGroundState().getEnergyLevel();
-            var maxRingThickness = 6;
             var baseAtomRadius = this.atomSprite.width / 2;
-            var radius = maxRingThickness * de2 / de1 + groundStateRingThickness + baseAtomRadius;
+            var highestState = atom.getHighestEnergyState();
+            var groundState = atom.getGroundState();
+            var currentState = atom.getCurrentState();
 
-            return radius;
+            return AtomView.getEnergyLevelRadius(baseAtomRadius, groundState, currentState, highestState);
         }
 
     }, {
@@ -139,6 +138,18 @@ define(function(require) {
 
         getTextureWidth: function() {
             return AtomView.getTexture().width;
+        },
+
+        getEnergyLevelRadius: function(baseAtomRadius, groundState, currentState, highestState) {
+            var groundStateRingThickness = 2;
+            var de1 = highestState.getEnergyLevel() - groundState.getEnergyLevel();
+            var de2 = currentState.getEnergyLevel() - groundState.getEnergyLevel();
+            var maxRingThickness = 6;
+            var radius = (de2 === 0) ? 
+                groundStateRingThickness + baseAtomRadius :
+                maxRingThickness * de2 / de1 + groundStateRingThickness + baseAtomRadius;
+
+            return radius;
         }
 
     });

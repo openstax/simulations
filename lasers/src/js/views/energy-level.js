@@ -40,7 +40,7 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 levelNumber: 0,
-                atomRadius: 6,
+                atomRadius: 8,
                 wavelengthChangeEnabled: true,
                 lifetimeChangeEnabled: true
             }, options);
@@ -49,9 +49,10 @@ define(function(require) {
             this.width = options.width;
             this.energyToY = options.energyToY;
             this.yToEnergy = options.yToEnergy ? options.yToEnergy : options.energyToY.createInverse();
-            this.groundStateEnergy = options.groundStateEnergy;
             this.minY = options.minY;
             this.maxY = options.maxY;
+            this.groundState = options.groundState;
+            this.highestEnergyState = options.highestEnergyState;
             this.atomRadius = options.atomRadius;
             this.levelNumber = options.levelNumber;
             this.wavelengthChangeEnabled = options.wavelengthChangeEnabled;
@@ -74,7 +75,8 @@ define(function(require) {
             var handleThickness = 20;
             this.dragHandle = new PIXI.Container();
             this.dragHandle.hitArea = new PIXI.Rectangle(0, -handleThickness / 2, this.width - this.paddingLeft + 10, handleThickness);
-            this.dragHandle.buttonMode = true;
+            if (this.wavelengthChangeEnabled)
+                this.dragHandle.buttonMode = true;
 
             this.wavelengthColorGraphics = new PIXI.Graphics();
 
@@ -82,17 +84,30 @@ define(function(require) {
             this.atomSprite.scale.x = this.atomSprite.scale.y = ((this.atomRadius * 2) / this.atomSprite.texture.width);
             this.atomSprite.x = this.width - this.paddingLeft;
 
-            var arrowX = Math.floor(this.atomSprite.x * 0.85);
-            this.arrowGraphics = new PIXI.Graphics();
-            this.arrowGraphics.beginFill(0xAAAAAA, 1);
-            this.arrowGraphics.drawArrow(arrowX, 0, arrowX, -12, 4, 9, 7);
-            this.arrowGraphics.drawArrow(arrowX, 0, arrowX,  12, 4, 9, 7);
-            this.arrowGraphics.endFill();
+            this.label = new PIXI.Text(this.levelNumber, {
+                font: '11px Helvetica Neue',
+                fill: '#fff'
+            });
+            this.label.resolution = this.getResolution();
+            this.label.anchor.x = 0.43;
+            this.label.anchor.y = 0.5;
+            this.label.x = this.atomSprite.x;
 
-            this.displayObject.addChild(this.arrowGraphics);
+            if (this.wavelengthChangeEnabled) {
+                var arrowX = Math.floor(this.atomSprite.x * 0.85);
+                this.arrowGraphics = new PIXI.Graphics();
+                this.arrowGraphics.beginFill(0xAAAAAA, 1);
+                this.arrowGraphics.drawArrow(arrowX, 0, arrowX, -12, 4, 9, 7);
+                this.arrowGraphics.drawArrow(arrowX, 0, arrowX,  12, 4, 9, 7);
+                this.arrowGraphics.endFill();
+
+                this.displayObject.addChild(this.arrowGraphics);
+            }
+            
             this.displayObject.addChild(this.wavelengthColorGraphics);
             this.displayObject.addChild(this.atomSprite);
             this.displayObject.addChild(this.dragHandle);
+            this.displayObject.addChild(this.label);
 
             if (this.lifetimeChangeEnabled)
                 this.initSlider();
@@ -160,18 +175,20 @@ define(function(require) {
 
         getColor: function() {
             var energy = this.model.getEnergyLevel();
-            if (energy === this.groundStateEnergy)
+            if (energy === this.groundState.getEnergyLevel())
                 return '#000';
 
-            var deltaEnergy = energy - this.groundStateEnergy;
+            var deltaEnergy = energy - this.groundState.getEnergyLevel();
             return WavelengthColors.nmToHex(PhysicsUtil.energyToWavelength(deltaEnergy));
         },
 
         getRadius: function() {
-            if (this.model.getEnergyLevel() === this.groundStateEnergy)
-                return this.atomRadius + 3;
-            else
-                return this.atomRadius + 10;
+            var highestState = this.highestEnergyState;
+            var groundState = this.groundState;
+            var currentState = this.model;
+            var baseAtomRadius = this.atomSprite.width / 2;
+
+            return AtomView.getEnergyLevelRadius(baseAtomRadius, groundState, currentState, highestState);
         },
 
         setMinY: function(minY) {
@@ -183,6 +200,9 @@ define(function(require) {
         },
 
         dragStart: function(event) {
+            if (!this.wavelengthChangeEnabled)
+                return;
+
             this.dragging = true;
 
             this.lastDragY = event.data.global.y;

@@ -19,6 +19,15 @@ define(function (require) {
             canCollideInGroundState: true
         }),
 
+        /**
+         * Initializes the PartialMirror object
+         */
+        initialize: function(attributes, options) {
+            PropertiesBasedAtom.prototype.initialize.apply(this, [attributes, options]);
+
+            this.lifetimeTimer = 0;
+        },
+
         collideWithPhoton: function(photon) {
             var canCollide = false;
 
@@ -41,6 +50,8 @@ define(function (require) {
         },
 
         update: function(time, deltaTime) {
+            PropertiesBasedAtom.prototype.update.apply(this, arguments);
+            
             this.lifetimeTimer -= deltaTime;
             if (this.lifetimeTimer <= 0 && !this.get('canCollideInGroundState'))
                 this.set('canCollideInGroundState', true);

@@ -13,7 +13,12 @@ define(function(require) {
     var LampView = PixiView.extend({
 
         initialize: function(options) {
+            options = _.extend({
+                modelWidth: 100
+            }, options);
+
             this.mvt = options.mvt;
+            this.modelWidth = options.modelWidth;
 
             this.initGraphics();
 
@@ -48,8 +53,8 @@ define(function(require) {
             this.updateRotation();
 
             // Update the flashlight position and scale relative to the flashlight layer
-            var targetWidth = this.mvt.modelToViewDeltaX(100);
-            var scale = targetWidth / this.flashlight.width;
+            var targetWidth = this.mvt.modelToViewDeltaX(this.modelWidth);
+            var scale = targetWidth / this.flashlight.texture.width;
             this.flashlight.scale.x = scale;
             this.flashlight.scale.y = scale;
             this.flashlight.x = this.getLampRadiusA();

@@ -1,5 +1,5 @@
 <div class="settings-btn-wrapper">
-    <button class="settings-btn" title="Options" data-toggle="modal" data-target="#settings-dialog"><span class="fa fa-cogs"></span></button>
+    <button class="settings-btn" title="Additional Options" data-toggle="modal" data-target="#settings-dialog"><span class="fa fa-cogs"></span></button>
     <button class="help-btn" title="Toggle Help"><span class="fa fa-question"></span></button>
 </div>
 
@@ -8,43 +8,44 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Options</h4>
+                <h4 class="modal-title">Additional Options</h4>
             </div>
             <div class="modal-body">
-                
                 <div class="row">
-                    <div class="col-xs-6">
-                        <label>Measure temperature in</label>
+                    <div class="col-md-5">
+                        <div class="control-wrapper">
+                            <label class="slider-header"><span class="stimulation-probability-title">Stimulation Probability</span> <span class="slider-value stimulation-probability-value">1</span></label>
+                            <div class="stimulation-probability-slider-wrapper">
+                                <div class="slider stimulation-probability-slider"></div>
+                            </div>
+                        </div>
+
+                        <div class="control-wrapper">
+                            <label class="slider-header"><span class="pair-separation-title">Pair Separation</span> <span class="slider-value pair-separation-value">18</span></label>
+                            <div class="pair-separation-slider-wrapper">
+                                <div class="slider pair-separation-slider"></div>
+                            </div>
+                        </div>
+
+                        <div class="control-wrapper">
+                            <label class="slider-header"><span class="photon-diameter-title">Photon Diameter</span> <span class="slider-value photon-diameter-value">18</span></label>
+                            <div class="photon-diameter-slider-wrapper">
+                                <div class="slider photon-diameter-slider"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-xs-6 control-column">
-                        <input type="radio" name="temperature-setting" id="temperature-kelvin" checked>
-                        <label for="temperature-kelvin">Kelvin</label>
+                    <div class="col-md-6 col-md-offset-1">
+                        <div class="control-wrapper">
+                            <input type="checkbox" class="show-all-stimulated-emissions-check" id="show-all-stimulated-emissions-check-<%= unique %>" checked>
+                            <label for="show-all-stimulated-emissions-check-<%= unique %>">Show all simulated emissions</label>
+                        </div>
 
-                        <input type="radio" name="temperature-setting" id="temperature-celsius">
-                        <label for="temperature-celsius">Celsius</label>
+                        <div class="control-wrapper">
+                            <input type="checkbox" class="show-comets-check" id="show-comets-check-<%= unique %>">
+                            <label for="show-comets-check-<%= unique %>">Show photons as comets</label>
+                        </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    Show all simulated emissions
-                </div>
-
-                <div class="row">
-                    Adjust simulated likelyhood
-                </div>
-
-                <div class="row">
-                    Photon diameter
-                </div>
-
-                <div class="row">
-                    Pair separation
-                </div>
-
-                <div class="row">
-                    Show photons as comets
-                </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

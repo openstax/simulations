@@ -46,7 +46,10 @@ define(function(require) {
 
         reset: function() {
             this.updateLock(function() {
-                
+                this.wavelengthSliderView.val(this.model.get('wavelength'));
+                this.$wavelengthValue.text(this.model.get('wavelength') + 'nm');
+                this.$('.intensity-slider').val(this.model.get('photonsPerSecond'));
+                this.updateIntensityLabel(this.model.get('photonsPerSecond'));
             });
         },
 

@@ -22,8 +22,8 @@ define(function (require) {
 
         reflects: function(photon) {
             return (
-                photon.getWavelength() >= this.cutoffLow && 
-                photon.getWavelength() <= this.cutoffHigh
+                photon.get('wavelength') >= this.cutoffLow && 
+                photon.get('wavelength') <= this.cutoffHigh
             );
         }
 

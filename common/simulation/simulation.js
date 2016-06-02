@@ -18,6 +18,10 @@ define(function (require) {
          * Initialization code for new Simulation model objects.
          */
         initialize: function(attributes, options) {
+            options = _.extend({
+                silentReset: true
+            }, options);
+
             this.time = 0;
 
             this.applyOptions(options);
@@ -32,7 +36,9 @@ define(function (require) {
          *   so that we can reset the object and its starting values without
          *   re-initializing it.
          */
-        applyOptions: function(options) {},
+        applyOptions: function(options) {
+            this.silentReset = options.silentReset;
+        },
 
         /**
          * Initializes all the components for the simulation like models.
@@ -72,7 +78,7 @@ define(function (require) {
 
         reset: function() {
             this.time = 0;
-            this.set(this.startingAttributes, { silent: true });
+            this.set(this.startingAttributes, { silent: this.silentReset });
             this.set('timeScale', 1);
             this.applyOptions(this.startingOptions);
             this.resetComponents();

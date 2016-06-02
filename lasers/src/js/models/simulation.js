@@ -35,10 +35,6 @@ define(function (require, exports, module) {
      */
     var LasersSimulation = QuantumSimulation.extend({
 
-        // Properties for two and three level atoms
-        twoLevelProperties:   new TwoLevelElementProperties(),
-        threeLevelProperties: new ThreeLevelElementProperties(),
-
         defaults: _.extend({}, QuantumSimulation.prototype.defaults, {
 
         }),
@@ -48,6 +44,13 @@ define(function (require, exports, module) {
                 framesPerSecond: Constants.FPS,
                 deltaTimePerFrame: Constants.DT
             }, options);
+
+            // Properties for two and three level atoms
+            this.twoLevelProperties   = new TwoLevelElementProperties();
+            this.threeLevelProperties = new ThreeLevelElementProperties();
+
+            // We want this to make it into the startingAttributes object
+            this.set('elementProperties', this.twoLevelProperties);
 
             QuantumSimulation.prototype.initialize.apply(this, [attributes, options]);
 
@@ -93,7 +96,9 @@ define(function (require, exports, module) {
         },
 
         resetComponents: function() {
-            QuantumSimulation.prototype.resetComponents.apply(this, arguments);
+            // QuantumSimulation.prototype.resetComponents.apply(this, arguments);
+            this.twoLevelProperties   = new TwoLevelElementProperties();
+            this.threeLevelProperties = new ThreeLevelElementProperties();
 
             this.getPumpingBeam().set('photonsPerSecond', 0);
             this.getSeedBeam().set('photonsPerSecond', 0);
@@ -112,13 +117,10 @@ define(function (require, exports, module) {
 
         _update: function(time, deltaTime) {
             QuantumSimulation.prototype._update.apply(this, arguments);
-
-            // Handle collisions between bodies
-            this.checkCollisions(deltaTime);
-
+            
             // Update all the models in the system
             this.updateModels(time, deltaTime);
-
+            
             // Check to see if any photons need to be taken out of the system
             this.numPhotons = 0;
             for (var i = this.photons.length - 1; i >= 0; i--) {
@@ -131,6 +133,9 @@ define(function (require, exports, module) {
                     photon.destroy();
                 }
             }
+
+            // Handle collisions between bodies
+            this.checkCollisions(deltaTime);
         },
 
         updateModels: function(time, deltaTime) {
@@ -332,7 +337,7 @@ define(function (require, exports, module) {
         },
 
         checkCollisions: function(deltaTime) {
-            this.checkPhotonElectronCollisions();
+            this.checkPhotonAtomCollisions();
             this.checkCollisionsBetweenTwoLists(this.photons.models, this.mirrors);
             this.checkCollisionsBetweenListAndBody(this.atoms.models, this.tube);
 
@@ -342,19 +347,18 @@ define(function (require, exports, module) {
             }
         },
 
-        checkPhotonElectronCollisions: function() {
+        checkPhotonAtomCollisions: function() {
             // Test each photon against the atoms in the section the photon is in
             for (var i = 0; i < this.photons.length; i++) {
                 var photon = this.photons.at(i);
-                if (!(photon instanceof Photon) 
-                    || (this.tube.getBounds().contains(photon.get('position'))) 
-                    || (this.tube.getBounds().contains(photon.getPreviousPosition()))
+                if (this.tube.getBounds().contains(photon.getPosition()) || 
+                    this.tube.getBounds().contains(photon.getPreviousPosition())
                 ) {
                     for (var j = 0; j < this.atoms.length; j++) {
                         var atom = this.atoms.at(j);
                         var s1 = atom.getCurrentState();
-                        var s2 = atom.getCurrentState();
                         PhotonAtomCollisonExpert.detectAndDoCollision(photon, atom);
+                        var s2 = atom.getCurrentState();
                         if (s1 != s2)
                             break;
                     }
@@ -395,13 +399,12 @@ define(function (require, exports, module) {
          */
         checkCollisionsBetweenListAndBody: function(collidablesA, body) {
             for (var i = 0; i < collidablesA.length; i++) {
-                var collidable1 = collidablesA[i];
-                if (!(collidable1 instanceof Photon)
-                    || this.tube.getBounds().contains(collidable1.getPosition())
-                    || this.tube.getBounds().contains(collidable1.getPreviousPosition()) 
+                var collidable = collidablesA[i];
+                if (body.getBounds().contains(collidable.getPosition()) || 
+                    body.getBounds().contains(collidable.getPreviousPosition())
                 ) {
                     for (var k = 0; k < this.collisionExperts.length; k++) {
-                        this.collisionExperts[k].detectAndDoCollision(collidable1, body);
+                        this.collisionExperts[k].detectAndDoCollision(collidable, body);
                     }
                 }
             }

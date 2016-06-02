@@ -2,6 +2,13 @@ define(function (require) {
 
     'use strict';
 
+    var BilliardBallModel = require('hydrogen-atom/models/atomic-model/billiard-ball');
+    var BohrModel         = require('hydrogen-atom/models/atomic-model/bohr');
+    var DeBroglieModel    = require('hydrogen-atom/models/atomic-model/debroglie');
+    var PlumPuddingModel  = require('hydrogen-atom/models/atomic-model/plum-pudding');
+    var SchroedingerModel = require('hydrogen-atom/models/atomic-model/schroedinger');
+    var SolarSystemModel  = require('hydrogen-atom/models/atomic-model/solar-system');
+
     var Assets = require('assets');
     
     var AtomicModels = {
