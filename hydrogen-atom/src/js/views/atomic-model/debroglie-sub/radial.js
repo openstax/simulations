@@ -65,6 +65,8 @@ define(function(require) {
             var atom = this.getAtom();
             var radius = this.mvt.modelToViewDeltaX(atom.getElectronOrbitRadius());
             var groundRadius = this.mvt.modelToViewDeltaX(DeBroglieModel.getOrbitRadius(DeBroglieModel.getGroundState()));
+            var startX;
+            var startY;
 
             for (var i = 0; i < DeBroglieModelRadialSubView.NUMBER_OF_SEGMENTS; i++) {
                 var angle = (2 * Math.PI) * (i / DeBroglieModelRadialSubView.NUMBER_OF_SEGMENTS);
@@ -74,11 +76,16 @@ define(function(require) {
                 var radialOffset = maxRadialOffset * amplitude;
                 var x = ((radius + radialOffset) * Math.cos(angle));
                 var y = ((radius + radialOffset) * Math.sin(angle));
-                if (i === 0)
+                if (i === 0) {
                     graphics.moveTo(x, y);
+                    startX = x;
+                    startY = y;
+                }
                 else
                     graphics.lineTo(x, y);
             }
+
+            graphics.lineTo(startX, startY);
         }
 
     }, Constants.DeBroglieModelRadialSubView);

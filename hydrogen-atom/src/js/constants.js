@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var WavelengthColors = require('common/colors/wavelength');
+    var Colors           = require('common/colors/colors');
     var range            = require('common/math/range');
 
     var Constants = require('nuclear-physics/constants'); 
@@ -373,6 +374,18 @@ define(function (require) {
 
     // Radial width of the ring representation
     DeBroglieModelBrightnessSubView.RING_WIDTH = 5;
+    DeBroglieModelBrightnessSubView.NUMBER_OF_SEGMENTS = 128;
+
+    // color used when amplitude = +1
+    DeBroglieModelBrightnessSubView.PLUS_COLOR = Constants.ELECTRON_COLOR;
+    // color used when amplitude = -1
+    DeBroglieModelBrightnessSubView.MINUS_COLOR = '#000';
+    // color used when amplitude = 0
+    DeBroglieModelBrightnessSubView.ZERO_COLOR = Colors.interpolateHex(
+        DeBroglieModelBrightnessSubView.MINUS_COLOR, 
+        DeBroglieModelBrightnessSubView.PLUS_COLOR, 
+        0.5
+    );
 
     Constants.DeBroglieModelBrightnessSubView = DeBroglieModelBrightnessSubView;
 
@@ -388,7 +401,7 @@ define(function (require) {
     // Multiply the ground state orbit radius by this number to determine max amplitude
     DeBroglieModelRadialSubView.RADIAL_OFFSET_FACTOR = 0.45;
     // Number of line segments used to approximate the ring
-    DeBroglieModelRadialSubView.NUMBER_OF_SEGMENTS = 200;
+    DeBroglieModelRadialSubView.NUMBER_OF_SEGMENTS = 128;
 
     Constants.DeBroglieModelRadialSubView = DeBroglieModelRadialSubView;
 

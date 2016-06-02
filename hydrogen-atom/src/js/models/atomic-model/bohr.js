@@ -386,7 +386,7 @@ define(function (require) {
          * Probabilistically determines whether the atom will emit a photon via stimulated emission.
          */
         stimulatedEmissionIsCertain: function() {
-            return _randomStimulatedEmission.nextDouble() < BohrModel.PHOTON_STIMULATED_EMISSION_PROBABILITY;
+            return Math.random() < BohrModel.PHOTON_STIMULATED_EMISSION_PROBABILITY;
         },
         
         /**

@@ -20,14 +20,6 @@ define(function(require) {
          */
         initialize: function(options) {
             AtomicModelView.prototype.initialize.apply(this, arguments);
-
-            
-
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(Math.random() * 0xFFFFFF, 1);
-            graphics.drawCircle(500, 300, 20);
-            graphics.endFill();
-            this.displayObject.addChild(graphics);
         },
 
         /**
