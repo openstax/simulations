@@ -54,7 +54,7 @@ define(function(require) {
 
             this.$select = $(
                 '<select class="debroglie-view-mode">' + 
-                    '<option value="' + DeBroglieViewModes.RADIAL_DISTANCE + '" selected>Radial View</option>' +
+                    '<option value="' + DeBroglieViewModes.RADIAL_DISTANCE + '">Radial View</option>' +
                     '<option value="' + DeBroglieViewModes.HEIGHT_3D       + '">3D View</option>' +
                     '<option value="' + DeBroglieViewModes.BRIGHTNESS      + '">Brightness View</option>' +
                 '</select>'
@@ -77,6 +77,10 @@ define(function(require) {
         activate: function() {
             this.listenTo(this.getAtom(), 'change:viewMode', this.viewModeChanged);
             this.viewModeChanged(this.getAtom(), this.getAtom().get('viewMode'));
+
+            this.$select
+                .val(this.getAtom().get('viewMode'))
+                .selectpicker('refresh');
 
             AtomicModelView.prototype.activate.apply(this, arguments);
         },
