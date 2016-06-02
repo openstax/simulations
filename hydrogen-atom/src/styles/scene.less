@@ -12,4 +12,37 @@
             height: @short-scene-height;
         }
     }
+
+    .scene-view-ui {
+        .debroglie-view-mode-wrapper {
+            position: absolute;
+            left: 364px;
+            top: 25px;
+            width: 140px;
+
+            .bootstrap-select {
+                background-color: transparent;
+                border-color: transparent;
+                width: 100% !important;
+
+                > .btn {
+                    background: fadeout(#fff, 60%);
+                    border-color: rgba(0, 0, 0, 0.1);
+                    color: #fff;
+
+                    &:focus {
+                        outline: none !important;
+                    }
+
+                    &:active {
+                        .box-shadow(none);
+                    }
+                }
+
+                a:focus {
+                    outline: none;
+                }
+            }
+        }
+    }
 }

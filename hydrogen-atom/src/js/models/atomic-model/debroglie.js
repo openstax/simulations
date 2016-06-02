@@ -29,7 +29,7 @@ define(function (require) {
     var DeBroglieModel = BohrModel.extend({
 
         defaults: _.extend({}, BohrModel.prototype.defaults, {
-            viewMode: DeBroglieViewModes.BRIGHTNESS_MAGNITUDE
+            viewMode: DeBroglieViewModes.RADIAL_DISTANCE
         }),
 
         initialize: function(attributes, options) {

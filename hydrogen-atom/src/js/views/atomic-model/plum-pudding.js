@@ -55,7 +55,7 @@ define(function(require) {
             AtomicModelView.prototype.update.apply(this, arguments);
 
             if (this.electronSprite) {
-                var viewOffset = this.mvt.modelToView(this.atom.electronPosition);
+                var viewOffset = this.mvt.modelToView(this.getAtom().electronPosition);
                 this.electronSprite.x = viewOffset.x;
                 this.electronSprite.y = viewOffset.y;
             }
