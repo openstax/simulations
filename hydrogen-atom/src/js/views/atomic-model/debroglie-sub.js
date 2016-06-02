@@ -21,11 +21,23 @@ define(function(require) {
         initialize: function(options) {
             AtomicModelView.prototype.initialize.apply(this, arguments);
 
+            
+
             var graphics = new PIXI.Graphics();
             graphics.beginFill(Math.random() * 0xFFFFFF, 1);
             graphics.drawCircle(500, 300, 20);
             graphics.endFill();
             this.displayObject.addChild(graphics);
+        },
+
+        /**
+         * Initializes everything for rendering graphics
+         */
+        initGraphics: function() {
+            AtomicModelView.prototype.initGraphics.apply(this, arguments);
+
+            this.orbitalGraphics = new PIXI.Graphics();
+            this.displayObject.addChild(this.orbitalGraphics);
         },
 
         initProton: function() {

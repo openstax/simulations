@@ -369,12 +369,28 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    var DeBroglieBrightnessView = {};
+    var DeBroglieModelBrightnessSubView = {};
 
     // Radial width of the ring representation
-    DeBroglieBrightnessView.RING_WIDTH = 5;
+    DeBroglieModelBrightnessSubView.RING_WIDTH = 5;
 
-    Constants.DeBroglieBrightnessView = DeBroglieBrightnessView;
+    Constants.DeBroglieModelBrightnessSubView = DeBroglieModelBrightnessSubView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                   DeBROGLIE RADIAL DISTANCE VIEW                    **
+     **                                                                     **
+     *************************************************************************/
+
+    var DeBroglieModelRadialSubView = {};
+
+    // Multiply the ground state orbit radius by this number to determine max amplitude
+    DeBroglieModelRadialSubView.RADIAL_OFFSET_FACTOR = 0.45;
+    // Number of line segments used to approximate the ring
+    DeBroglieModelRadialSubView.NUMBER_OF_SEGMENTS = 200;
+
+    Constants.DeBroglieModelRadialSubView = DeBroglieModelRadialSubView;
 
 
 

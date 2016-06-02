@@ -25,13 +25,15 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             DeBroglieModelSubView.prototype.updateMVT.apply(this, arguments);
+
+            this.drawOrbitals(this.orbitalGraphics);
         },
 
         update: function(time, deltaTime, paused) {
             DeBroglieModelSubView.prototype.update.apply(this, arguments);
         }
 
-    });
+    }, Constants.DeBroglieModelBrightnessSubView);
 
 
     return DeBroglieModelBrightnessSubView;

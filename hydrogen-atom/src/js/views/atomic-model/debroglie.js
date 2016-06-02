@@ -72,6 +72,8 @@ define(function(require) {
 
         update: function(time, deltaTime, paused) {
             AtomicModelView.prototype.update.apply(this, arguments);
+
+            this.subViews[this.atom.get('viewMode')].update(time, deltaTime, paused);
         },
 
         activate: function() {

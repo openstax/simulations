@@ -48,12 +48,16 @@ define(function (require) {
         getAmplitude: function(angle, state) {
             if (state === undefined)
                 state = this.getElectronState();
-            if (!(state >= this.getGroundState() && state <= this.getGroundState() + this.getNumberOfStates() - 1))
+
+            if (!(state >= DeBroglieModel.getGroundState() && state <= DeBroglieModel.getGroundState() + DeBroglieModel.getNumberOfStates() - 1))
                 throw 'Bad state supplied to getAmplitude';
+
             var electronAngle = this.getElectronAngle();
             var amplitude = Math.sin(state * angle) * Math.sin(electronAngle);
+            
             if (!(amplitude >= -1 && amplitude <= 1))
                 throw 'Amplitude must be in the range of -1 to 1';
+
             return amplitude;
         },
 
@@ -89,7 +93,7 @@ define(function (require) {
             var distance = vec.distance(orbitX, orbitY);
             
             // How close the photon's center must be to a point on the electron's orbit
-            var closeness = DeBroglieModel.COLLISION_CLOSENESS + (Constants.DeBroglieBrightnessView.RING_WIDTH / 2);
+            var closeness = DeBroglieModel.COLLISION_CLOSENESS + (Constants.DeBroglieModelBrightnessSubView.RING_WIDTH / 2);
             
             var collides = (distance <= closeness);
             return collides;
@@ -112,7 +116,7 @@ define(function (require) {
             var orbitRadius = this.getElectronOrbitRadius();
             
             // How close the photon's center must be to a point on the electron's orbit
-            var closeness = DeBroglieModel.COLLISION_CLOSENESS + (Constants.DeBroglieBrightnessView.RING_WIDTH / 2);
+            var closeness = DeBroglieModel.COLLISION_CLOSENESS + (Constants.DeBroglieModelBrightnessSubView.RING_WIDTH / 2);
             
             var collides = (Math.abs(photonRadius - orbitRadius) <= closeness);
             return collides;
