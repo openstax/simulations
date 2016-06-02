@@ -219,8 +219,6 @@ define(function (require) {
             return BohrModel.getOrbitRadius(this.electronState);
         },
         
-        
-        
         /*
          * Determines if two wavelengths are "close enough" 
          *   for the purposes of absorption and emission.

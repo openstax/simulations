@@ -54,7 +54,7 @@ define(function (require) {
 
             var electronAngle = this.getElectronAngle();
             var amplitude = Math.sin(state * angle) * Math.sin(electronAngle);
-            
+
             if (!(amplitude >= -1 && amplitude <= 1))
                 throw 'Amplitude must be in the range of -1 to 1';
 

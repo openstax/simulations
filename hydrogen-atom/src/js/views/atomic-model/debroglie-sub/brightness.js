@@ -108,9 +108,9 @@ define(function(require) {
 
             var rgba;
             if (amplitude > 0)
-                rgba = Colors.interpolateRgba(zeroRgb, plusRgb, amplitude);
+                rgba = Colors.interpolateRgba(plusRgb, zeroRgb, amplitude);
             else
-                rgba = Colors.interpolateRgba(zeroRgb, minusRgb, -amplitude);
+                rgba = Colors.interpolateRgba(minusRgb, zeroRgb, -amplitude);
 
             return Colors.rgbToHexInteger(rgba);
         }
