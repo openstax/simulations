@@ -34,6 +34,11 @@ define(function(require) {
          */
         initGraphics: function() {},
 
+        initOrbitalGraphics: function() {
+            this.orbitalGraphics = new PIXI.Graphics();
+            this.displayObject.addChild(this.orbitalGraphics);
+        },
+
         /**
          * Draws the orbital paths to a given graphics object
          */
@@ -42,14 +47,11 @@ define(function(require) {
             graphics.lineStyle(1, 0xFFFFFF, 1);
 
             var dashStyle = [2, 2];
-            var viewPosition = this.getViewPosition();
-            var x = viewPosition.x;
-            var y = viewPosition.y;
             var groundState = BohrModel.getGroundState();
             var numberOfStates = BohrModel.getNumberOfStates();
             for (var state = groundState; state < (groundState + numberOfStates); state++) {
                 var radius = this.mvt.modelToViewDeltaX(BohrModel.getOrbitRadius(state));
-                graphics.dashCircle(x, y, radius, dashStyle);
+                graphics.dashCircle(0, 0, radius, dashStyle);
             }
         },
 

@@ -49,6 +49,8 @@ define(function(require) {
             var viewPosition = this.getViewPosition();
             this.ringGraphics.x = viewPosition.x;
             this.ringGraphics.y = viewPosition.y;
+            this.orbitalGraphics.x = viewPosition.x;
+            this.orbitalGraphics.y = viewPosition.y;
         },
 
         update: function(time, deltaTime, paused) {

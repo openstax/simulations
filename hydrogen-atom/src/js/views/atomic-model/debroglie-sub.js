@@ -28,8 +28,7 @@ define(function(require) {
         initGraphics: function() {
             AtomicModelView.prototype.initGraphics.apply(this, arguments);
 
-            this.orbitalGraphics = new PIXI.Graphics();
-            this.displayObject.addChild(this.orbitalGraphics);
+            this.initOrbitalGraphics();
         },
 
         initProton: function() {

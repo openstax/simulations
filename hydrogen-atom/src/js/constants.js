@@ -406,6 +406,39 @@ define(function (require) {
     Constants.DeBroglieModelRadialSubView = DeBroglieModelRadialSubView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                      DeBROGLIE HEIGHT 3D VIEW                       **
+     **                                                                     **
+     *************************************************************************/
+
+    var DeBroglieModel3DSubView = {};
+
+    // How much to scale the orbit in the y dimension, in order to 
+    //   create an ellipse that represents the projection of the 3D orbit into 3D.
+    //   See debugOrbitProjections method.
+    //   If you change this value, you must also change FINAL_VIEW_ANGLE !!
+    DeBroglieModel3DSubView.ORBIT_Y_SCALE = DeBroglieModel.ORBIT_Y_SCALE;
+    // Setting this to true cause the wireframe to rotate into place
+    DeBroglieModel3DSubView.ROTATE_INTO_PLACE = true;
+    DeBroglieModel3DSubView.MAX_HEIGHT = 15; // screen coordinates
+    // The final view angle, after the model has rotated into place.
+    // If you change this value, you must also change ORBIT_Y_SCALE !!
+    DeBroglieModel3DSubView.FINAL_VIEW_ANGLE = 70; // degrees, rotation about the x-axis
+    // change is angle during view animation
+    DeBroglieModel3DSubView.VIEW_ANGLE_DELTA = 5; // degrees
+    
+    DeBroglieModel3DSubView.ORBIT_VERTICIES = 200;
+    DeBroglieModel3DSubView.ORBIT_LINE_WIDTH = 1;
+    DeBroglieModel3DSubView.ORBIT_FRONT_COLOR = '#fff';
+    DeBroglieModel3DSubView.ORBIT_BACK_COLOR = '#eee';
+    
+    DeBroglieModel3DSubView.WAVE_VERTICIES = 200;
+    DeBroglieModel3DSubView.WAVE_LINE_WIDTH = 2;
+    DeBroglieModel3DSubView.WAVE_FRONT_COLOR = '#fff';
+    DeBroglieModel3DSubView.WAVE_BACK_COLOR = '#eee';
+
+    Constants.DeBroglieModel3DSubView = DeBroglieModel3DSubView;
 
 
     return Constants;

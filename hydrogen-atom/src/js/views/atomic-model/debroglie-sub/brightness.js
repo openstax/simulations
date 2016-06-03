@@ -14,7 +14,11 @@ define(function(require) {
     var zeroRgb  = Colors.hexToRgb(Constants.DeBroglieModelBrightnessSubView.ZERO_COLOR);
     
     /**
-     * Represents the scene for the DeBroglieModel
+     * DeBroglieBrightnessNode represents the deBroglie model
+     *   as a standing wave. The amplitude (-1...+1) of the standing
+     *   wave is represented by the brightness of color in a ring that 
+     *   is positioned at the electron's orbit. The ring is approximated
+     *   using a set of polygons.
      */
     var DeBroglieModelBrightnessSubView = DeBroglieModelSubView.extend({
 
@@ -46,6 +50,8 @@ define(function(require) {
             var viewPosition = this.getViewPosition();
             this.ringGraphics.x = viewPosition.x;
             this.ringGraphics.y = viewPosition.y;
+            this.orbitalGraphics.x = viewPosition.x;
+            this.orbitalGraphics.y = viewPosition.y;
         },
 
         update: function(time, deltaTime, paused) {

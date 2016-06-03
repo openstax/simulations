@@ -30,9 +30,7 @@ define(function(require) {
         initGraphics: function() {
             AtomicModelView.prototype.initGraphics.apply(this, arguments);
 
-            this.orbitalGraphics = new PIXI.Graphics();
-
-            this.displayObject.addChild(this.orbitalGraphics);
+            this.initOrbitalGraphics();
         },
 
         initSubatomicParticles: function() {
@@ -59,6 +57,10 @@ define(function(require) {
             AtomicModelView.prototype.updateMVT.apply(this, arguments);
 
             this.initSubatomicParticles();
+
+            var viewPosition = this.getViewPosition();
+            this.orbitalGraphics.x = viewPosition.x;
+            this.orbitalGraphics.y = viewPosition.y;
             this.drawOrbitals(this.orbitalGraphics);
         },
 
