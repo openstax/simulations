@@ -57,7 +57,7 @@ define(function (require) {
         RUTHERFORD_ACTUAL: 150,
         PUDDING_ACTUAL: 300,
 
-        PARTICLE_SCALE: 4,
+        PARTICLE_SCALE: 8,
 
         RayGunView: {
             WIDTH: 20,
@@ -325,9 +325,11 @@ define(function (require) {
     Gun.LIGHT_WHITE = 0;
     Gun.LIGHT_MONOCHROME = 1;
 
-    Gun.DEFAULT_WAVELENGTH = WavelengthColors.MIN_WAVELENGTH;
-    Gun.DEFAULT_LIGHT_INTENSITY = 0;
-    Gun.DEFAULT_ALPHA_PARTICLE_INTENSITY = 0;
+    Gun.DEFAULT_MODE = Gun.MODE_PHOTONS;
+    Gun.DEFAULT_LIGHT_TYPE = Gun.LIGHT_WHITE;
+    Gun.DEFAULT_WAVELENGTH = 94;
+    Gun.DEFAULT_LIGHT_INTENSITY = 1;
+    Gun.DEFAULT_ALPHA_PARTICLE_INTENSITY = 1;
     // probability that a "white light" photon's wavelength will one that causes a state transition
     Gun.TRANSITION_WAVELENGTHS_WEIGHT = 0.40; // 1.0 = 100%
     // probability that the gun will fire from it's center

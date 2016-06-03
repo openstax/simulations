@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var VanillaPositionableObject = require('common/models/positionable-object');
+    var VanillaPositionableObject = require('common/models/positionable-object-vanilla');
 
     /**
      * MovingObject is an object that has mutable position, orientation and speed.
@@ -20,6 +20,10 @@ define(function (require) {
 
         getOrientation: function() {
             return this.get('orientation');
+        },
+
+        getSpeed: function() {
+            return this.get('speed');
         }
 
     });

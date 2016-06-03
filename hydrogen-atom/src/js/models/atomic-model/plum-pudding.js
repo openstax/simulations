@@ -170,7 +170,7 @@ define(function (require) {
             var absorbed = false;
             if (this.canAbsorb(photon)) {
                 var photonPosition = photon.getPosition();
-                if (this.pointsCollide(this.electronPosition, photonPosition, AbstractAtomicModel.COLLISION_CLOSENESS)) {
+                if (PlumPuddingModel.pointsCollide(this.electronPosition, photonPosition, AbstractAtomicModel.COLLISION_CLOSENESS)) {
                     if (Math.random() < AbstractAtomicModel.PHOTON_ABSORPTION_PROBABILITY) {
                         this.numberOfPhotonsAbsorbed++;
                         if (this.numberOfPhotonsAbsorbed > AbstractAtomicModel.MAX_PHOTONS_ABSORBED)

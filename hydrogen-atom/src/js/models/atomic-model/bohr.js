@@ -173,7 +173,7 @@ define(function (require) {
          * This is essentially a conversion from Cartesian to Polar coordinates.
          */
         updateElectronOffset: function() {
-            var radius = this.getOrbitRadius(this.electronState);
+            var radius = BohrModel.getOrbitRadius(this.electronState);
             var xOffset = radius * Math.sin(this.electronAngle);
             var yOffset = radius * Math.cos(this.electronAngle);
             this.electronOffset.set(xOffset, yOffset);
@@ -215,7 +215,7 @@ define(function (require) {
          * the electron's offset in Polar coordinates.
          */
         getElectronOrbitRadius: function() {
-            return Bohr.getOrbitRadius(this.electronState);
+            return BohrModel.getOrbitRadius(this.electronState);
         },
         
         
@@ -234,7 +234,7 @@ define(function (require) {
          *   and see if the points are close enough to cause a collision.
          */
         collides: function(photon) {
-            return this.pointsCollide(this.electronPosition, photon.getPosition(), BohrModel.COLLISION_CLOSENESS);
+            return BohrModel.pointsCollide(this.electronPosition, photon.getPosition(), BohrModel.COLLISION_CLOSENESS);
         },
         
         /**

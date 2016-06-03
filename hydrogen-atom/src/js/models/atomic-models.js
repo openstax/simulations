@@ -20,7 +20,7 @@ define(function (require) {
         PLUM_PUDDING: {
             label: 'Plum Pudding',
             icon: Assets.Images.ICON_PLUM_PUDDING,
-            constructor: BohrModel
+            constructor: PlumPuddingModel
         }, 
         SOLAR_SYSTEM: {
             label: 'Classical Solar System',
@@ -30,7 +30,7 @@ define(function (require) {
         BOHR: {
             label: 'Bohr',
             icon: Assets.Images.ICON_BOHR,
-            constructor: PlumPuddingModel
+            constructor: BohrModel
         }, 
         DEBROGLIE: {
             label: 'deBroglie',

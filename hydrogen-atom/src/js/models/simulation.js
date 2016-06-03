@@ -32,13 +32,14 @@ define(function (require, exports, module) {
         
         initialize: function(attributes, options) {
             options = _.extend({
-                framesPerSecond: Constants.DELTA_TIMES_PER_FRAME,
+                framesPerSecond: Constants.FRAME_RATE,
                 deltaTimePerFrame: Constants.DEFAULT_DELTA_TIME_PER_FRAME
             }, options);
             
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.on('change:atomicModel', this.atomicModelChanged);
+            this.on('change:atomicModel',        this.atomicModelChanged);
+            this.on('change:experimentSelected', this.experimentSelectedChanged);
         },
 
         /**
@@ -75,6 +76,7 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
+            this.gun.update(time, deltaTime);
             this.atom.update(time, deltaTime);
             this.updateParticles(time, deltaTime);
         },
@@ -135,6 +137,8 @@ define(function (require, exports, module) {
 
             this.listenTo(this.atom, 'photon-absorbed', this.photonAbsorbed);
             this.listenTo(this.atom, 'photon-emitted',  this.photonEmitted);
+
+            this.trigger('atom-added', this.atom);
         },
 
         atomicModelChanged: function(simulation, atomicModel) {
