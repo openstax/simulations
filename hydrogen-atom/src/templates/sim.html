@@ -30,8 +30,8 @@
             </ul>
 
             <div class="prediction-models">
-            <% _.each(models, function(model, key) { %>
-                <div class="prediction-model-wrapper" data-model-key="<%= key %>">
+            <% _.each(atomicModels, function(model, key) { %>
+                <div class="prediction-model-wrapper <% if (model === selectedAtomicModel) { %>active<% } %>" data-model-key="<%= key %>">
                     <%= Assets.createIcon(model.icon, 42) %>
                     <label><%= model.label %></label>
                 </div>
