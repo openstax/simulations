@@ -428,15 +428,14 @@ define(function (require) {
     // change is angle during view animation
     DeBroglieModel3DSubView.VIEW_ANGLE_DELTA = 5; // degrees
     
-    DeBroglieModel3DSubView.ORBIT_VERTICIES = 200;
-    DeBroglieModel3DSubView.ORBIT_LINE_WIDTH = 1;
-    DeBroglieModel3DSubView.ORBIT_FRONT_COLOR = '#fff';
-    DeBroglieModel3DSubView.ORBIT_BACK_COLOR = '#eee';
+    // DeBroglieModel3DSubView.ORBIT_VERTICIES = 200;
+    // DeBroglieModel3DSubView.ORBIT_LINE_WIDTH = 1;
+    // DeBroglieModel3DSubView.ORBIT_FRONT_COLOR = '#fff';
+    // DeBroglieModel3DSubView.ORBIT_BACK_COLOR = '#eee';
     
     DeBroglieModel3DSubView.WAVE_VERTICIES = 200;
     DeBroglieModel3DSubView.WAVE_LINE_WIDTH = 2;
-    DeBroglieModel3DSubView.WAVE_FRONT_COLOR = '#fff';
-    DeBroglieModel3DSubView.WAVE_BACK_COLOR = '#eee';
+    DeBroglieModel3DSubView.WAVE_COLOR = Constants.ELECTRON_COLOR;
 
     Constants.DeBroglieModel3DSubView = DeBroglieModel3DSubView;
 
