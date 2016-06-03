@@ -11,13 +11,32 @@ define(function (require) {
     var SphereBoxCollisionExpert = {
 
         detectAndDoCollision: function(bodyA, bodyB) {
-            if (bodyA instanceof SphericalBody && 
-                bodyB instanceof SphericalBody && 
-                this.spheresTouch(bodyA, bodyB) && 
-                this.tweakCheck(bodyA, bodyB)
+            if (this.applies(bodyA, bodyB) && 
+                this.inContact(bodyA, bodyB)
             ) {
+                var box;
+                var sphere;
+
+                // Check that the arguments are valid and assign the box and sphere
+                if (bodyA instanceof BoxlikeBody) {
+                    box = bodyA;
+                    if (bodyB instanceof SphericalBody)
+                        sphere = bodyB;
+                    else
+                        throw 'Bad arguments given in SphereBoxCollisionExpert';
+                }
+                else if (bodyB instanceof BoxlikeBody) {
+                    box = bodyB;
+                    if (bodyA instanceof SphericalBody)
+                        sphere = bodyA;
+                    else
+                        throw 'Bad arguments given in SphereBoxCollisionExpert';
+                }
+                else
+                    throw 'Bad arguments given in SphereBoxCollisionExpert';
+
                 // Do the collision
-                this.collide(bodyA, bodyB);
+                this.collide(sphere, box);
                 
                 return true;
             }
@@ -79,6 +98,57 @@ define(function (require) {
                 result = true;
             
             return result;
+        },
+
+        collide: function(sphere, box) {
+            var wx;
+            var wy;
+            var dx;
+            var dy;
+            var sx = sphere.getX();
+            var sy = sphere.getY();
+            var r = sphere.get('radius');
+
+            // Collision with left wall?
+            if ((sx - r) <= box.getMinX()) {
+                sphere.setVelocity(-sphere.getVelocity().x, sphere.getVelocity().y);
+                var wx = box.getMinX();
+                var dx = wx - (sx - r);
+                var newX = sx + (dx + 2);
+                sphere.setPosition(newX, sphere.getY());
+
+                // Handle giving particle kinetic energy if the wall is moving
+                var vx0 = sphere.getVelocity().x;
+                var vx1 = vx0 + box.getLeftWallVx();
+                sphere.setVelocity(vx1, sphere.getVelocity().y);
+            }
+
+            // Collision with right wall?
+            if ((sx + r) >= box.getMaxX()) {
+                sphere.setVelocity(-sphere.getVelocity().x, sphere.getVelocity().y);
+                var wx = box.getMaxX();
+                var dx = (sx + r) - wx;
+                var newX = sx - (dx * 2);
+                sphere.setPosition(newX, sphere.getY());
+            }
+
+            // Collision with top wall?
+            if ((sy - r) <= box.getMinY()) {
+                sphere.setVelocity(sphere.getVelocity().x, -sphere.getVelocity().y);
+                var wy = box.getMinY();
+                var dy = wy - (sy - r);
+                var newY = sy + (dy * 2);
+                sphere.setPosition(sphere.getX(), newY);
+            }
+
+            // Collision with bottom wall?
+            if ((sy + r) >= box.getMaxY()) {
+                sphere.setVelocity(sphere.getVelocity().x, -sphere.getVelocity().y);
+                var wy = box.getMaxY();
+                var dy = (sy + r) - wy;
+                var newY = sy - (dy - 2);
+                sphere.setPosition(sphere.getX(), newY);
+            }
         }
 
     };

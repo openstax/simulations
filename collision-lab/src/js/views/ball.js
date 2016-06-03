@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView  = require('common/pixi/view');
-    var ArrowView = require('common/pixi/view/arrow');
+    var PixiView  = require('common/v3/pixi/view');
+    var ArrowView = require('common/v3/pixi/view/arrow');
     var Colors    = require('common/colors/colors');
     var Vector2  = require('common/math/vector2');
 
@@ -111,7 +111,7 @@ define(function(require) {
         },
 
         initVelocityMarker: function() {
-            this.velocityMarker = new PIXI.DisplayObjectContainer();
+            this.velocityMarker = new PIXI.Container();
             this.velocityMarker.hitArea = new PIXI.Circle(0, 0, BallView.VELOCITY_MARKER_RADIUS);
             this.velocityMarker.buttonMode = true;
 
@@ -126,7 +126,8 @@ define(function(require) {
                 fill: BallView.VELOCITY_MARKER_COLOR
             });
             label.anchor.x = 0.5
-            label.anchor.y = 0.4;
+            label.anchor.y = 0.45;
+            label.resolution = this.getResolution();
             label.alpha = BallView.VELOCITY_MARKER_ALPHA;
 
             this.velocityMarker.addChild(circle);
@@ -138,8 +139,9 @@ define(function(require) {
                 font: BallView.NUMBER_FONT,
                 fill: BallView.NUMBER_COLOR
             });
+            this.number.resolution = this.getResolution();
             this.number.anchor.x = 0.5;
-            this.number.anchor.y = 0.45;
+            this.number.anchor.y = 0.5;
         },
 
         initMomentumArrow: function() {
@@ -156,8 +158,8 @@ define(function(require) {
         },
 
         initLabels: function() {
-            this.velocityLabel = new PIXI.DisplayObjectContainer();
-            this.momentumLabel = new PIXI.DisplayObjectContainer();
+            this.velocityLabel = new PIXI.Container();
+            this.momentumLabel = new PIXI.Container();
 
             var offset = 8 + this.mvt.modelToViewDeltaX(this.model.get('radius'));
             var height = 44;
@@ -220,18 +222,18 @@ define(function(require) {
             this.ball.endFill();
         },
 
-        dragStart: function(data) {
+        dragStart: function(event) {
             if (!this.interactionEnabled)
                 return;
 
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
             this.moveToTop();
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
+                var local = event.data.getLocalPosition(this.displayObject.parent, this._dragLocation);
                 this._viewPosition.x = local.x - this.dragOffset.x;
                 this._viewPosition.y = local.y - this.dragOffset.y;
                 
@@ -260,23 +262,23 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
             this.simulation.separateAllBalls();
         },
 
-        dragVelocityStart: function(data) {
+        dragVelocityStart: function(event) {
             if (!this.interactionEnabled)
                 return;
 
-            this.dragOffset = data.getLocalPosition(this.velocityMarker, this._dragOffset);
+            this.dragOffset = event.data.getLocalPosition(this.velocityMarker, this._dragOffset);
             this.draggingVelocity = true;
             this.moveToTop();
         },
 
-        dragVelocity: function(data) {
+        dragVelocity: function(event) {
             if (this.draggingVelocity) {
-                var local = data.getLocalPosition(this.displayObject, this._dragLocation);
+                var local = event.data.getLocalPosition(this.displayObject, this._dragLocation);
                 var x = local.x - this.dragOffset.x;
                 var y = local.y - this.dragOffset.y;
 
@@ -291,7 +293,7 @@ define(function(require) {
             }
         },
 
-        dragVelocityEnd: function(data) {
+        dragVelocityEnd: function(event) {
             this.draggingVelocity = false;
         },
 
@@ -311,7 +313,7 @@ define(function(require) {
                 this.velocityArrowViewModel.set('targetX', viewVelocity.x);
                 this.velocityArrowViewModel.set('targetY', viewVelocity.y);
 
-                this.velocityValueText.setText('| v | = ' + velocity.length().toFixed(2));
+                this.velocityValueText.text = '| v | = ' + velocity.length().toFixed(2);
             });
         },
 
@@ -356,7 +358,7 @@ define(function(require) {
                     this.model.get('momentumY')
                 )
                 .length();
-            this.momentumValueText.setText('| p | = ' + momentum.toFixed(2));
+            this.momentumValueText.text = '| p | = ' + momentum.toFixed(2);
         },
 
         updateMVT: function(mvt) {

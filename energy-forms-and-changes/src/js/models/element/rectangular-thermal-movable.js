@@ -10,6 +10,7 @@ define(function (require) {
     var PiecewiseCurve         = require('common/math/piecewise-curve');
     var MovableElement         = require('models/element/movable');
     var EnergyChunk            = require('models/energy-chunk');
+    var EnergyChunkCollection  = require('models/energy-chunk-collection');
     var EnergyChunkDistributor = require('models/energy-chunk-distributor');
     var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');
     var EnergyChunkContainerSlice = require('models/energy-chunk-container-slice');
@@ -56,7 +57,7 @@ define(function (require) {
             this.nextSliceIndex = this.slices.length / 2;
 
             // Energy chunks that are approaching this model element
-            this.approachingEnergyChunks = new Backbone.Collection([], { model: EnergyChunk });
+            this.approachingEnergyChunks = new EnergyChunkCollection();
             this.energyChunkWanderControllers = [];
 
             // Add the initial energy chunks
@@ -345,7 +346,7 @@ define(function (require) {
             var numChunks = this.getNumEnergyChunks();
             while (numChunks < targetNumChunks) {
                 // Add a chunk at a random location in the block.
-                this.addEnergyChunk(new EnergyChunk({
+                this.addEnergyChunk(EnergyChunk.create({
                     energyType: EnergyChunk.THERMAL, 
                     position:   new Vector2(EnergyChunkDistributor.generateRandomLocation(energyChunkBounds))
                 }));

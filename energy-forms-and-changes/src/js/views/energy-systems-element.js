@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var PositionableView = require('views/positionable');
-    var EnergyChunkView  = require('views/energy-chunk');
+    var PositionableView          = require('views/positionable');
+    var EnergyChunkCollectionView = require('views/energy-chunk-collection');
 
     var Assets = require('assets');
 
@@ -20,7 +20,7 @@ define(function(require) {
          *
          */
         initialize: function(options) {
-            this.energyChunkLayers = [];
+            this.energyChunkCollectionViews = [];
 
             PositionableView.prototype.initialize.apply(this, [options]);
 
@@ -32,50 +32,20 @@ define(function(require) {
             this.energyChunkLayer = new PIXI.DisplayObjectContainer();
             this.energyChunkLayer.visible = false;
 
-            this.createEnergyChunkLayer('energyChunkLayer', this.model.energyChunks);
+            this.createEnergyChunkCollectionView('energyChunkCollectionLayer', this.model.energyChunks);
+            this.energyChunkLayer.addChild(this.energyChunkCollectionLayer);
         },
 
-        createEnergyChunkLayer: function(layerName, energyChunkCollection) {
-            var energyChunkLayer = new PIXI.DisplayObjectContainer();
-            energyChunkLayer.visible = false;
-            energyChunkLayer.energyChunkViews = [];
+        createEnergyChunkCollectionView: function(layerName, energyChunkCollection) {
+            var energyChunkCollectionView = new EnergyChunkCollectionView({
+                collection: energyChunkCollection,
+                mvt: this.mvt
+            });
 
-            var energyChunkViews = energyChunkLayer.energyChunkViews;
+            energyChunkCollectionView.hide();
 
-            var mvt = this.mvt;
-            var energyChunkAdded = function(chunk) {
-                var chunkView = new EnergyChunkView({
-                    model: chunk,
-                    mvt: mvt
-                });
-                energyChunkViews.push(chunkView);
-                energyChunkLayer.addChild(chunkView.displayObject);
-                chunkView.updatePosition(chunk, chunk.get('position'));
-            };
-
-            var energyChunkRemoved = function(chunk) {
-                for (var i = energyChunkViews.length - 1; i >= 0; i--) {
-                    if (energyChunkViews[i].model === chunk) {
-                        energyChunkViews[i].removeFrom(energyChunkLayer);
-                        energyChunkViews.splice(i, 1);
-                        break;
-                    }
-                }
-            };
-
-            var energyChunksReset = function() {
-                for (var i = energyChunkViews.length - 1; i >= 0; i--) {
-                    energyChunkViews[i].removeFrom(energyChunkLayer);
-                    energyChunkViews.splice(i, 1);
-                }
-            };
-
-            this.listenTo(energyChunkCollection, 'add',    energyChunkAdded);
-            this.listenTo(energyChunkCollection, 'remove', energyChunkRemoved);
-            this.listenTo(energyChunkCollection, 'reset',  energyChunksReset);
-
-            this.energyChunkLayers.push(energyChunkLayer);
-            this[layerName] = energyChunkLayer;
+            this.energyChunkCollectionViews.push(energyChunkCollectionView);
+            this[layerName] = energyChunkCollectionView.displayObject;
         },
 
         createSpriteWithOffset: function(image, offset, anchorX, anchorY) {
@@ -108,20 +78,20 @@ define(function(require) {
         },
 
         showEnergyChunks: function() {
-            for (var i = 0; i < this.energyChunkLayers.length; i++)
-                this.energyChunkLayers[i].visible = true;
+            this.energyChunkLayer.visible = true;
+            for (var i = 0; i < this.energyChunkCollectionViews.length; i++)
+                this.energyChunkCollectionViews[i].show();
         },
 
         hideEnergyChunks: function() {
-            for (var i = 0; i < this.energyChunkLayers.length; i++)
-                this.energyChunkLayers[i].visible = false;
+            this.energyChunkLayer.visible = false;
+            for (var i = 0; i < this.energyChunkCollectionViews.length; i++)
+                this.energyChunkCollectionViews[i].hide();
         },
 
         update: function(time, deltaTime) {
-            for (var i = 0; i < this.energyChunkLayers.length; i++) {
-                for (var j = 0; j < this.energyChunkLayers[i].energyChunkViews.length; j++)
-                    this.energyChunkLayers[i].energyChunkViews[j].update(time, deltaTime);
-            }
+            for (var i = 0; i < this.energyChunkCollectionViews.length; i++)
+                this.energyChunkCollectionViews[i].update(time, deltaTime);
         },
 
         updateOpacity: function(model, opacity) {

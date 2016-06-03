@@ -2,15 +2,15 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('common/math/vector2');
-
-    var Positionable = require('models/positionable');
+    var Vector2            = require('common/math/vector2');
+    var PositionableObject = require('common/models/positionable-object');
+    
     var EnergyChunkCollection = require('models/energy-chunk-collection');
 
     /**
      * Basic building block model for all the elements in the intro tab scene
      */
-    var EnergySystemsElement = Positionable.extend({
+    var EnergySystemsElement = PositionableObject.extend({
 
         defaults: {
             active: false,
@@ -18,7 +18,7 @@ define(function (require) {
         },
         
         initialize: function(attributes, options) {
-            Positionable.prototype.initialize.apply(this, [attributes, options]);
+            PositionableObject.prototype.initialize.apply(this, [attributes, options]);
 
             this.energyChunks = new EnergyChunkCollection();
 
@@ -58,6 +58,7 @@ define(function (require) {
             for (var i = this.energyChunks.length - 1; i >= 0; i--) {
                 this.energyChunks.models[i].translate(translation);
             }
+            // console.log(this.cid + ': ' + position)
         }
 
     });

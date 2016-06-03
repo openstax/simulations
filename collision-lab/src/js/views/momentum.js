@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView           = require('common/pixi/view');
-    var DraggableArrowView = require('common/pixi/view/arrow-draggable');
+    var PixiView           = require('common/v3/pixi/view');
+    var DraggableArrowView = require('common/v3/pixi/view/arrow-draggable');
     var Colors             = require('common/colors/colors');
 
     var Constants = require('constants');

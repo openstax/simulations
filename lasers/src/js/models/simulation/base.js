@@ -37,20 +37,27 @@ define(function (require, exports, module) {
         defaultMiddleStateMeanLifetime: Constants.MAXIMUM_STATE_LIFETIME,
         defaultHighStateMeanLifetime: Constants.MAXIMUM_STATE_LIFETIME / 4,
 
-        defaults: _.extend(LasersSimulation.prototype.defaults, {
+        defaults: _.extend({}, LasersSimulation.prototype.defaults, {
             lasingPhotonViewMode:  Constants.PHOTON_DISCRETE,
             pumpingPhotonViewMode: Constants.PHOTON_CURTAIN,
             displayHighLevelEmissions: false,
-            mirrorsEnabled: false
+            mirrorsEnabled: false,
+            exploded: false
         }),
         
         initialize: function(attributes, options) {
+            options = _.extend({
+                silentReset: false
+            }, options);
+
             LasersSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:mirrorsEnabled', this.mirrorsEnabledChanged);
             this.on('change:elementProperties', this.elementPropertiesChanged);
             this.on('change:pumpingPhotonViewMode', this.pumpingPhotonViewModeChanged);
             this.on('change:lasingPhotonViewMode', this.lasingPhotonViewModeChanged);
+
+            this.listenTo(this.lasingPhotons, 'add remove', this.numLasingPhotonsChanged);
         },
 
         /**
@@ -59,7 +66,7 @@ define(function (require, exports, module) {
         initComponents: function() {
             LasersSimulation.prototype.initComponents.apply(this, arguments);
 
-            this.setBounds(new Rectangle(0, 0, 1000, 800));
+            this.setBounds(new Rectangle(-300, -100, 1300, 900));
 
             this.laserOrigin = new Vector2(this.origin.x + this.laserOffsetX, this.origin.y);
             this.seedBeamOrigin = new Vector2();
@@ -72,6 +79,17 @@ define(function (require, exports, module) {
             this.listenTo(this.atoms, 'photon-emitted', this.photonEmitted)
 
             this.elementPropertiesChanged(this, this.get('elementProperties'));
+        },
+
+        resetComponents: function() {
+            LasersSimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.seedBeam.set('wavelength', Photon.RED);
+            this.pumpingBeam.set('wavelength',Photon.BLUE);
+
+            this.rightMirror.setReflectivity(1);
+
+            this.setNumEnergyLevels(2);
         },
 
         initTube: function() {
@@ -164,17 +182,6 @@ define(function (require, exports, module) {
             return this.pumpingBeamOrigin.set(this.origin.x + this.laserOffsetX, this.origin.y - this.laserOffsetX);
         },
 
-        resetComponents: function() {
-            LasersSimulation.prototype.resetComponents.apply(this, arguments);
-
-        },
-
-        _update: function(time, deltaTime) {
-            LasersSimulation.prototype._update.apply(this, arguments);
-
-            
-        },
-
         setPhotonVisibility: function(visibility, wavelength) {
             for (var i = 0; i < this.photons.length; i++) {
                 if (this.photons.at(i).get('wavelength') === wavelength)
@@ -232,8 +239,10 @@ define(function (require, exports, module) {
         },
 
         elementPropertiesChanged: function(simulation, elementProperties) {
-            this.getMiddleEnergyState().set('meanLifetime', this.defaultMiddleStateMeanLifetime);
-            this.getHighEnergyState().set('meanLifetime', this.defaultHighStateMeanLifetime);
+            if (elementProperties) {
+                this.getMiddleEnergyState().set('meanLifetime', this.defaultMiddleStateMeanLifetime);
+                this.getHighEnergyState().set('meanLifetime', this.defaultHighStateMeanLifetime);    
+            }
         },
 
         pumpingPhotonViewModeChanged: function(simulation, pumpingPhotonViewMode) {
@@ -251,6 +260,13 @@ define(function (require, exports, module) {
                 this.setPhotonVisibility(true, wavelength);
             else if (lasingPhotonViewMode === Constants.PHOTON_WAVE)
                 this.setPhotonVisibility(false, wavelength);
+        },
+
+        numLasingPhotonsChanged: function() {
+            if (this.lasingPhotons.length > Constants.KABOOM_THRESHOLD) {
+                this.set('exploded', true);
+                this.pause();
+            }
         }
 
     }, Constants.BaseLasersSimulation);

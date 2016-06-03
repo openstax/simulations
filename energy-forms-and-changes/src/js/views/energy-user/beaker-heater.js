@@ -43,7 +43,7 @@ define(function(require) {
             this.initBeakerView();
             this.initThermometerView();
 
-            this.createEnergyChunkLayer('radiatedEnergyChunks', this.model.radiatedEnergyChunks);
+            this.createEnergyChunkCollectionView('radiatedEnergyChunks', this.model.radiatedEnergyChunks);
             this.energyChunkLayer.addChild(this.radiatedEnergyChunks);
         },
 
@@ -115,10 +115,6 @@ define(function(require) {
         hideEnergyChunks: function() {
             EnergyUserView.prototype.hideEnergyChunks.apply(this);
             this.beakerView.hideEnergyChunks();
-        },
-
-        forceBeakerEnergyChunkPositionsUpdate: function() {
-            this.beakerView.forceEnergyChunkPositionsUpdate();
         }
 
     });

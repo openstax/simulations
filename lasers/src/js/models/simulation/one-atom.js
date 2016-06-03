@@ -20,15 +20,10 @@ define(function (require, exports, module) {
      */
     var OneAtomLasersSimulation = BaseLasersSimulation.extend({
 
-        defaults: _.extend(BaseLasersSimulation.prototype.defaults, {
+        defaults: _.extend({}, BaseLasersSimulation.prototype.defaults, {
+            photonSpeedScale: Constants.ONE_ATOM_PHOTON_SPEED,
             pumpingPhotonViewMode: Constants.PHOTON_DISCRETE
         }),
-        
-        initialize: function(attributes, options) {
-            BaseLasersSimulation.prototype.initialize.apply(this, [attributes, options]);
-
-            
-        },
 
         /**
          * Initializes the models used in the simulation
@@ -37,6 +32,16 @@ define(function (require, exports, module) {
             BaseLasersSimulation.prototype.initComponents.apply(this, arguments);
 
             this.initAtom();
+        },
+
+        resetComponents: function() {
+            BaseLasersSimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.seedBeam.set('photonsPerSecond', 1);
+            this.pumpingBeam.set('photonsPerSecond', 1);
+
+            this.seedBeam.set('enabled', true);
+            this.pumpingBeam.set('enabled', false);
         },
 
         initAtom: function() {
@@ -83,20 +88,9 @@ define(function (require, exports, module) {
                 this.tube.getBounds().x + this.tube.getBounds().w / 2,
                 this.tube.getBounds().y - 100
             );
-        },
-
-        resetComponents: function() {
-            BaseLasersSimulation.prototype.resetComponents.apply(this, arguments);
-
-        },
-
-        _update: function(time, deltaTime) {
-            BaseLasersSimulation.prototype._update.apply(this, arguments);
-
-            
         }
 
-    }, Constants.OneAtomLasersSimulation);
+    });
 
     return OneAtomLasersSimulation;
 });

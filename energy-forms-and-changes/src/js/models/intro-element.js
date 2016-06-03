@@ -4,19 +4,19 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Positionable = require('models/positionable');
+    var PositionableObject = require('common/models/positionable-object');
 
     /**
      * Basic building block model for all the elements in the intro tab scene
      */
-    var IntroElement = Positionable.extend({
+    var IntroElement = PositionableObject.extend({
 
-        defaults: _.extend({}, Positionable.prototype.defaults, {
+        defaults: _.extend({}, PositionableObject.prototype.defaults, {
             supportingSurface: null
         }),
         
         initialize: function(attributes, options) {
-            Positionable.prototype.initialize.apply(this, [options]);
+            PositionableObject.prototype.initialize.apply(this, [options]);
         },
 
         update: function(time, delta) {},

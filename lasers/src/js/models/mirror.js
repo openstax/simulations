@@ -49,7 +49,7 @@ define(function (require) {
          */
         reflects: function(photon) {
             var result = true;
-            for (var i = 0; i < this.reflectionStrategies.length && result === true; i++)
+            for (var i = 0; i < this.reflectionStrategies.length && result; i++)
                 result &= this.reflectionStrategies[i].reflects(photon);
             return result;
         }

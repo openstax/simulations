@@ -73,9 +73,8 @@ define(function(require) {
         },
 
         update: function(time, deltaTime, paused) {
-            this.elapsedTime += deltaTime;
-            
             if (this.simulation.updated()) {
+                this.elapsedTime += Constants.DT;
                 this.clear();
                 if (this.amplitude !== 0)
                     this.draw();

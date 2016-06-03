@@ -75,7 +75,7 @@ define(function(require) {
             this.atomCounts = [0, 0, 0];
             this.numAtomsInLevel = [0, 0, 0];
             this.numUpdatesToAverage = 0;
-            this.lastAtomUpdateTime = 0;
+            this.timeSinceLastUpdate = 0;
 
             // Initialize the graphics
             this.initGraphics();
@@ -96,6 +96,7 @@ define(function(require) {
             this.initAtoms();
             this.initSquiggles();
             this.drawSquiggles();
+            this.initHelpLabels();
 
             this.energyLevelsLayer = new PIXI.Container();
             this.displayObject.addChild(this.energyLevelsLayer);
@@ -178,6 +179,31 @@ define(function(require) {
             this.pumpingBeamEnabledChanged(null, this.simulation.pumpingBeam.get('enabled'));
         },
 
+        initHelpLabels: function() {
+            var settings = {
+                font: 'bold 12px Helvetica Neue',
+                fill: '#000'
+            };
+
+            var text1 = new PIXI.Text('Energy level can be\nadjusted up and\ndown by dragging', settings);
+            text1.resolution = this.getResolution();
+            text1.x = this.axisOriginX + 10;
+            text1.y = this.padding + 20;
+
+            var text2 = new PIXI.Text('Slider adjusts\nlifetime of\nenergy state', settings);
+            text2.resolution = this.getResolution();
+            text2.x = this.axisOriginX + 180;
+            text2.y = this.padding + 100;
+
+            this.helpLayer = new PIXI.Container();
+            this.helpLayer.addChild(text1);
+            this.helpLayer.addChild(text2);
+
+            this.displayObject.addChild(this.helpLayer);
+
+            this.hideHelp();
+        },
+
         drawSquiggles: function() {
             this.drawSquiggle(this.seedSquiggle, this.simulation.seedBeam);
             this.drawSquiggle(this.pumpSquiggle, this.simulation.pumpingBeam);
@@ -234,27 +260,30 @@ define(function(require) {
         createEnergyLevels: function() {
             // Remove old ones
             for (var j = this.energyLevelViews.length - 1; j >= 0; j--) {
+                this.stopListening(this.energyLevelViews[j].model);
                 this.energyLevelViews[j].remove();
                 this.energyLevelViews.splice(j, 1);
             }
 
             var x = this.axisOriginX + 10;
             var width = this.width - x - this.padding;
-            var groundStateEnergy = this.simulation.getGroundState().getEnergyLevel();
 
             var states = this.simulation.getStates();
             for (var i = 0; i < states.length; i++) {
                 // Set the minimum lifetime to be two clock ticks, so we will always see an energy halo.
                 var minLifetime = Constants.DT * 2;
                 var maxLifetime = (i === 1) ? Constants.MAXIMUM_STATE_LIFETIME : Constants.MAXIMUM_STATE_LIFETIME / 4;
+                if (i > 0)
+                    states[i].set('meanLifetime', maxLifetime);
 
                 var energyLevelView = new EnergyLevelView({
                     simulation: this.simulation,
                     model: states[i],
+                    groundState: states[0],
+                    highestEnergyState: states[states.length - 1],
                     energyToY: this.energyToY,
                     minY: this.minY,
                     maxY: this.maxY,
-                    groundStateEnergy: groundStateEnergy,
                     width: width,
                     levelNumber: i + 1,
                     wavelengthChangeEnabled: (i > 0),
@@ -264,9 +293,14 @@ define(function(require) {
                 });
                 energyLevelView.displayObject.x = x;
 
+                this.listenTo(states[i], 'change:energyLevel', this.energyLevelChanged);
+
                 this.energyLevelViews.push(energyLevelView);
                 this.energyLevelsLayer.addChild(energyLevelView.displayObject);
             }
+
+            for (var k = 0; k < states.length; k++)
+                this.energyLevelChanged(states[k], states[k].get('energyLevel'));
         },
 
         update: function(time, deltaTime, paused) {
@@ -279,7 +313,8 @@ define(function(require) {
             this.atomCounts[2] += this.simulation.getNumHighStateAtoms();
 
             this.numUpdatesToAverage++;
-            if (time - this.lastAtomUpdateTime >= this.averagingPeriod) {
+            this.timeSinceLastUpdate += deltaTime;
+            if (this.timeSinceLastUpdate >= this.averagingPeriod) {
                 // Compute the average number of atoms in each state. Take care to round off rather than truncate.
                 this.numAtomsInLevel[0] = Math.floor(0.5 + this.atomCounts[0] / this.numUpdatesToAverage);
                 this.numAtomsInLevel[1] = Math.floor(0.5 + this.atomCounts[1] / this.numUpdatesToAverage);
@@ -288,7 +323,7 @@ define(function(require) {
                 this.atomCounts[1] = 0;
                 this.atomCounts[2] = 0;
                 this.numUpdatesToAverage = 0;
-                this.lastAtomUpdateTime = time;
+                this.timeSinceLastUpdate = 0;
                 
                 // Move atoms
                 var currentLevelCount;
@@ -313,6 +348,14 @@ define(function(require) {
             }
         },
 
+        showHelp: function() {
+            this.helpLayer.visible = true;
+        },
+
+        hideHelp: function() {
+            this.helpLayer.visible = false;
+        },
+
         energyLevelsChanged: function() {
             this.createEnergyLevels();
         },
@@ -330,6 +373,20 @@ define(function(require) {
 
         pumpingBeamEnabledChanged: function(model, enabled) {
             this.pumpSquiggle.visible = enabled;
+        },
+
+        energyLevelChanged: function(model, energyLevel) {
+            var margin = 20;
+            var energyLevelY = this.energyToY(energyLevel);
+
+            for (var i = 0; i < this.energyLevelViews.length; i++) {
+                if (this.energyLevelViews[i].model !== model) {
+                    if (this.energyLevelViews[i].displayObject.y > energyLevelY)
+                        this.energyLevelViews[i].setMinY(Math.max(this.minY, energyLevelY + margin));
+                    else
+                        this.energyLevelViews[i].setMaxY(Math.min(this.maxY, energyLevelY - margin));
+                }
+            }
         }
 
     }, Constants.EnergyLevelPanelView);
