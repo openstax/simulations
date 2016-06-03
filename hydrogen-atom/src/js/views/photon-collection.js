@@ -8,6 +8,7 @@ define(function(require) {
     var WavelengthColors     = require('common/colors/wavelength');
     var Colors               = require('common/colors/colors');
 
+    var Constants = require('constants');
     var Assets = require('assets');
 
     /**
@@ -49,7 +50,7 @@ define(function(require) {
          * Calculates current scale for sprites.  Override in child classes.
          */
         getSpriteScale: function() {
-            var targetWidth = this.mvt.modelToViewDeltaX(22);
+            var targetWidth = this.mvt.modelToViewDeltaX(Constants.PHOTON_DIAMETER);
             var scale = targetWidth / this.texture.width;
             return scale;
         },

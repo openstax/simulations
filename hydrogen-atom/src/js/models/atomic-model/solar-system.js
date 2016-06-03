@@ -44,9 +44,10 @@ define(function (require) {
             AbstractAtomicModel.prototype.initialize.apply(this, [attributes, options]);
 
             this.electronOffset = new Vector2();
-            this.electronDistance = AbstractAtomicModel.ELECTRON_DISTANCE;
+            this.electronPosition = new Vector2();
+            this.electronDistance = SolarSystemModel.ELECTRON_DISTANCE;
             this.electronAngle = RandomUtils.randomAngle();
-            this.electronAngleDelta = AbstractAtomicModel.ELECTRON_ANGLE_DELTA;
+            this.electronAngleDelta = SolarSystemModel.ELECTRON_ANGLE_DELTA;
             this.destroyed = false;
         },
 
@@ -103,6 +104,7 @@ define(function (require) {
             var x = electronDistance * Math.cos(electronAngle);
             var y = electronDistance * Math.sin(electronAngle);
             this.electronOffset.set(x, y);
+            this.electronPosition.set(this.get('position')).add(x, y);
         }
 
     }, Constants.SolarSystemModel);
