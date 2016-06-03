@@ -9,6 +9,7 @@ define(function (require) {
 
     var AbstractAtomicModel  = require('hydrogen-atom/models/atomic-model');
     var RutherfordScattering = require('hydrogen-atom/models/rutherford-scattering');
+    var Photon               = require('hydrogen-atom/models/photon');
     
     var Constants = require('constants');
 
@@ -142,7 +143,7 @@ define(function (require) {
          * @param state
          */
         setElectronState: function(state) {
-            if (!(state >= BohrModel.GROUND_STATE && state <= BohrModel.GROUND_STATE + this.getNumberOfStates() - 1))
+            if (!(state >= BohrModel.GROUND_STATE && state <= BohrModel.GROUND_STATE + BohrModel.getNumberOfStates() - 1))
                 throw 'Bad state';
 
             if (state != this.electronState) {
@@ -255,10 +256,10 @@ define(function (require) {
                     // Is the photon absorbable, does it have a transition wavelength?
                     var canAbsorb = false;
                     var newState = 0;
-                    var maxState = BohrModel.GROUND_STATE + getNumberOfStates() - 1;
+                    var maxState = BohrModel.GROUND_STATE + BohrModel.getNumberOfStates() - 1;
                     var photonWavelength = photon.get('wavelength');
                     for (var n = this.electronState + 1; n <= maxState && !canAbsorb; n++ ) {
-                        var transitionWavelength = this.getWavelengthAbsorbed(this.electronState, n);
+                        var transitionWavelength = BohrModel.getWavelengthAbsorbed(this.electronState, n);
                         if (this.closeEnough(photonWavelength, transitionWavelength)) {
                             canAbsorb = true;
                             newState = n;
@@ -334,7 +335,7 @@ define(function (require) {
                     var photonWavelength = photon.getWavelength();
                     var newState = 0;
                     for (var state = BohrModel.GROUND_STATE; state < this.electronState && !canStimulateEmission; state++) {
-                        var transitionWavelength = this.getWavelengthAbsorbed(state, this.electronState);
+                        var transitionWavelength = BohrModel.getWavelengthAbsorbed(state, this.electronState);
                         if (this.closeEnough(photonWavelength, transitionWavelength)) {
                             canStimulateEmission = true;
                             newState = state;
@@ -421,10 +422,10 @@ define(function (require) {
                     }
                     
                     // New photon's properties
-                    var position = this.getSpontaneousEmissionPositionRef();
+                    var position = this.getSpontaneousEmissionPosition();
                     var orientation = RandomUtils.randomAngle();
                     var speed = Constants.PHOTON_INITIAL_SPEED;
-                    var wavelength = this.getWavelengthEmitted(this.electronState, newState);
+                    var wavelength = BohrModel.getWavelengthEmitted(this.electronState, newState);
                     
                     // Create and emit a photon
                     success = true;
@@ -451,7 +452,7 @@ define(function (require) {
          * Probabilistically determines whether not the atom will spontaneously emit a photon.
          */
         spontaneousEmissionIsCertain: function() {
-            return this.randomSpontaneousEmission.nextDouble() < BohrModel.PHOTON_SPONTANEOUS_EMISSION_PROBABILITY;
+            return Math.random() < BohrModel.PHOTON_SPONTANEOUS_EMISSION_PROBABILITY;
         },
         
         /*
