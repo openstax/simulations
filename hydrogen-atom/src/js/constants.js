@@ -58,7 +58,7 @@ define(function (require) {
         RUTHERFORD_ACTUAL: 150,
         PUDDING_ACTUAL: 300,
 
-        PARTICLE_SCALE: 8,
+        PARTICLE_SCALE: 9,
 
         RayGunView: {
             WIDTH: 20,
@@ -136,6 +136,7 @@ define(function (require) {
     
     Constants.PHOTON_INITIAL_SPEED = 5; // distance moved per dt
     Constants.ALPHA_PARTICLE_INITIAL_SPEED = 5; // distance moved per dt
+    Constants.NUCLEON_DIAMETER = 0.95;
     Constants.PHOTON_DIAMETER = 24;
     Constants.ELECTRON_HOLYWOOD_DIAMETER = 8;
     
@@ -463,7 +464,7 @@ define(function (require) {
     SchroedingerModelView.CELL_DEPTH  = (Constants.ANIMATION_BOX_SIZE.height / SchroedingerModelView.NUMBER_OF_DEPTH_CELLS) / 2;
     
     // colors used to represent probability density -- MUST BE OPAQUE!
-    SchroedingerModelView.MAX_RGBA = Colors.hexToRgb(Constants.ELECTRON_COLOR);
+    SchroedingerModelView.MAX_RGBA = Colors.hexToRgb('#00C9FF'/*Constants.ELECTRON_COLOR*/);
     SchroedingerModelView.MAX_RGBA.a = 255;
     SchroedingerModelView.MIN_RGBA = Colors.hexToRgb('#000');
     SchroedingerModelView.MIN_RGBA.a = 0;

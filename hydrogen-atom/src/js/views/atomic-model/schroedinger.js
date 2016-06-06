@@ -4,6 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
+    require('common/v3/pixi/draw-stick-arrow');
+
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
 
     var AtomicModelView    = require('hydrogen-atom/views/atomic-model');
@@ -46,6 +48,23 @@ define(function(require) {
             this.displayObject.addChild(this.brightnessGridView.displayObject);
 
             // Create little axis
+            var settings = {
+                font: '12px Helvetica Neue',
+                fill: '#fff'
+            };
+            this.axisGraphics = new PIXI.Graphics();
+            this.axisLabelX = new PIXI.Text('x', settings);
+            this.axisLabelZ = new PIXI.Text('z', settings);
+            this.axisLabelX.resolution = this.getResolution();
+            this.axisLabelZ.resolution = this.getResolution();
+            this.axisLabelX.anchor.x = -0.8;
+            this.axisLabelX.anchor.y = 0.56;
+            this.axisLabelZ.anchor.x = 0.44;
+            this.axisLabelZ.anchor.y = 1.2;
+
+            this.displayObject.addChild(this.axisGraphics);
+            this.displayObject.addChild(this.axisLabelX);
+            this.displayObject.addChild(this.axisLabelZ);
             
             // Create state label
             this.stateLabel = new PIXI.Text('(n,l,m) = (1,0,0)', {
@@ -88,6 +107,28 @@ define(function(require) {
             this.protonSprite.y = atomPosition.y;
             
             this.displayObject.addChild(this.protonSprite);
+
+            // Update axis labels
+            this.updateAxisLabel();
+        },
+
+        updateAxisLabel: function() {
+            var margin = 16;
+            var x = this.mvt.modelToViewX(this.simulation.spaceRect.x) + margin;
+            var y = this.mvt.modelToViewY(this.simulation.spaceRect.y + this.simulation.spaceRect.h) - margin;
+            var length = this.mvt.modelToViewDeltaX(this.simulation.spaceRect.w * 0.2);
+            var headWidth = 10;
+            var headLength = 10;
+            var graphics = this.axisGraphics;
+            graphics.clear();
+            graphics.lineStyle(1, 0xFFFFFF, 1);
+            graphics.drawStickArrow(x, y, x, y - length, headWidth, headLength);
+            graphics.drawStickArrow(x, y, x + length, y, headWidth, headLength);
+
+            this.axisLabelX.x = x + length;
+            this.axisLabelX.y = y;
+            this.axisLabelZ.x = x;
+            this.axisLabelZ.y = y - length;
         },
 
         update: function(time, deltaTime, paused) {
