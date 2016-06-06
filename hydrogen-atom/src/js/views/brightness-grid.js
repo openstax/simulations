@@ -9,7 +9,6 @@ define(function(require) {
 
     var Constants = require('constants');
 
-    var CELL_OVERLAP = 0; // 1.0 = 100%
     var MAX_RGBA = Constants.SchroedingerModelView.MAX_RGBA;
     var MIN_RGBA = Constants.SchroedingerModelView.MIN_RGBA;
 
@@ -47,19 +46,26 @@ define(function(require) {
             var alpha;
             var color;
             var x, z;
-            var w = this.cellWidth  + (CELL_OVERLAP * this.cellWidth);
-            var h = this.cellHeight + (CELL_OVERLAP * this.cellHeight);
+            var w = this.cellWidth;
+            var h = this.cellHeight;
+            var centerX = this.width / 2;
+            var centerZ = this.height / 2;
 
             for (var row = 0; row < brightness.length; row++) {
                 for (var col = 0; col < brightness[row].length; col++) {
                     rgba = Colors.interpolateRgba(MAX_RGBA, MIN_RGBA, brightness[row][col], rgba);
-                    alpha = rgba.a;
+                    alpha = rgba.a / 255;
                     color = Colors.rgbToHexInteger(rgba);
                     graphics.beginFill(color, alpha);
 
-                    x = (col * this.cellWidth);
-                    z = (row * this.cellHeight); 
-                    graphics.drawRect(x, z, w, h);
+                    x = col * w;
+                    z = row * h; 
+
+                    graphics.drawRect(centerX + x,     centerZ + z,     w, h);
+                    graphics.drawRect(centerX + x,     centerZ - z - h, w, h);
+                    graphics.drawRect(centerX - x - w, centerZ - z - h, w, h);
+                    graphics.drawRect(centerX - x - w, centerZ + z,     w, h);
+
                     graphics.endFill();
                 }
             }

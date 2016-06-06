@@ -74,8 +74,8 @@ define(function(require) {
             var upperLeftCornerY = this.mvt.modelToViewY(this.simulation.spaceRect.y);
             this.brightnessGridView.displayObject.x = upperLeftCornerX;
             this.brightnessGridView.displayObject.y = upperLeftCornerY;
-            this.brightnessGridView.setWidth(this.mvt.modelToViewDeltaX(bottomRightCornerX - upperLeftCornerX));
-            this.brightnessGridView.setHeight(this.mvt.modelToViewDeltaY(bottomRightCornerY - upperLeftCornerY));
+            this.brightnessGridView.setWidth(bottomRightCornerX - upperLeftCornerX);
+            this.brightnessGridView.setHeight(bottomRightCornerY - upperLeftCornerY);
 
             // Create proton
             if (this.protonSprite)

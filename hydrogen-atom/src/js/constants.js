@@ -464,9 +464,9 @@ define(function (require) {
     
     // colors used to represent probability density -- MUST BE OPAQUE!
     SchroedingerModelView.MAX_RGBA = Colors.hexToRgb(Constants.ELECTRON_COLOR);
-    SchroedingerModelView.MAX_RGBA.a = 1;
+    SchroedingerModelView.MAX_RGBA.a = 255;
     SchroedingerModelView.MIN_RGBA = Colors.hexToRgb('#000');
-    SchroedingerModelView.MIN_RGBA.a = 1;
+    SchroedingerModelView.MIN_RGBA.a = 0;
         
     // margin between axes and animation box
     SchroedingerModelView.AXES_MARGIN = 20;
