@@ -40,7 +40,7 @@ define(function (require) {
         },
 
         update: function(time, deltaTime) {
-            if (this.stuck && this.gun.isEnabled() && this.gun.isPhotonsMode() && this.gun.isWhiteLightType()) {
+            if (this.stuck && this.gun.get('on') && this.gun.isPhotonsMode() && this.gun.isWhiteLightType()) {
                 this.stuckTime += deltaTime;
                 if (this.stuckTime >= MetastableHandler.MAX_STUCK_TIME) {
                     console.log('atom has been stuck for ' + this.stuckTime + ' time units');

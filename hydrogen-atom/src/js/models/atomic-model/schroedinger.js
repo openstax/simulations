@@ -333,7 +333,7 @@ define(function (require) {
         },
 
         getStateAsString: function() {
-            return this.stateToString(this.getElectronState(), this.l, this.m);
+            return SchroedingerModel.stateToString(this.getElectronState(), this.l, this.m);
         },
 
         fireOneAbsorbablePhoton: function() {
