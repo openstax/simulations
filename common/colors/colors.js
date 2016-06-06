@@ -172,8 +172,9 @@ define(function (require) {
 			return this.darkenHex(colorString, -percent);
 		},
 
-		interpolateRgba: function(rgba1, rgba2, t) {
-			var rgba = {};
+		interpolateRgba: function(rgba1, rgba2, t, rgba) {
+			if (!rgba)
+				rgba = {};
 
 			rgba.r = Math.round((rgba1.r * t) + (rgba2.r * (1 - t)));
 			rgba.g = Math.round((rgba1.g * t) + (rgba2.g * (1 - t)));

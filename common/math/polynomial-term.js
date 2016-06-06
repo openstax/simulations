@@ -40,7 +40,7 @@ define(function (require) {
         if (this.power === 0)
             return PolynomialTerm.ZERO;
         else
-            return new PolynomialTerm(power - 1, coeff * power);
+            return new PolynomialTerm(this.power - 1, this.coeff * this.power);
     };
 
     PolynomialTerm.prototype.eval = function(x) {

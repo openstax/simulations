@@ -440,5 +440,51 @@ define(function (require) {
     Constants.DeBroglieModel3DSubView = DeBroglieModel3DSubView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                       SCHRÖDINGER MODEL VIEW                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var SchroedingerModelView = {};
+
+    // Animation box dimensions, for convenience
+    SchroedingerModelView.BOX_WIDTH = Constants.ANIMATION_BOX_SIZE.width;
+    SchroedingerModelView.BOX_HEIGHT = Constants.ANIMATION_BOX_SIZE.height;
+        
+    // Resolution of the grid, which covers 1/8 of the 3D space
+    SchroedingerModelView.NUMBER_OF_HORIZONTAL_CELLS = 40;
+    SchroedingerModelView.NUMBER_OF_VERTICAL_CELLS = SchroedingerModelView.NUMBER_OF_HORIZONTAL_CELLS;
+    SchroedingerModelView.NUMBER_OF_DEPTH_CELLS = SchroedingerModelView.NUMBER_OF_HORIZONTAL_CELLS;
+    
+    // 3D cell size
+    SchroedingerModelView.CELL_WIDTH  = (Constants.ANIMATION_BOX_SIZE.width  / SchroedingerModelView.NUMBER_OF_HORIZONTAL_CELLS) / 2;
+    SchroedingerModelView.CELL_HEIGHT = (Constants.ANIMATION_BOX_SIZE.height / SchroedingerModelView.NUMBER_OF_VERTICAL_CELLS) / 2;
+    SchroedingerModelView.CELL_DEPTH  = (Constants.ANIMATION_BOX_SIZE.height / SchroedingerModelView.NUMBER_OF_DEPTH_CELLS) / 2;
+    
+    // colors used to represent probability density -- MUST BE OPAQUE!
+    SchroedingerModelView.MAX_RGBA = Colors.hexToRgb(Constants.ELECTRON_COLOR);
+    SchroedingerModelView.MAX_RGBA.a = 1;
+    SchroedingerModelView.MIN_RGBA = Colors.hexToRgb('#000');
+    SchroedingerModelView.MIN_RGBA.a = 1;
+        
+    // margin between axes and animation box
+    SchroedingerModelView.AXES_MARGIN = 20;
+    SchroedingerModelView.HORIZONTAL_AXIS_LABEL = "x";
+    SchroedingerModelView.VERTICAL_AXIS_LABEL = "z";
+    
+    // margin between the state display and animation box
+    SchroedingerModelView.STATE_MARGIN = 15;
+    
+    // Cache of brightness values for all possible states
+    SchroedingerModelView.BRIGHTNESS_CACHE;
+    
+    // Should the brightness cache be fully populated the first time we visit Schrodinger?
+    // DANGER! Fully populating the cache can take ~15 seconds!
+    SchroedingerModelView.POPULATE_CACHE = false;
+
+    Constants.SchroedingerModelView = SchroedingerModelView;
+
+
     return Constants;
 });
