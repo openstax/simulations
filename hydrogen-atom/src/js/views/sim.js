@@ -9,10 +9,10 @@ define(function (require) {
     var WavelengthSliderView = require('common/controls/wavelength-slider');
 
     var HydrogenAtomSimulation = require('hydrogen-atom/models/simulation');
+    var AtomicModels           = require('hydrogen-atom/models/atomic-models');
     var HydrogenAtomSceneView  = require('hydrogen-atom/views/scene');
     var HydrogenAtomLegendView = require('hydrogen-atom/views/legend');
-    var AtomicModels           = require('hydrogen-atom/models/atomic-models');
-    
+    var SpectrometerView       = require('hydrogen-atom/views/spectrometer');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -84,6 +84,7 @@ define(function (require) {
 
             this.initSceneView();
             this.initLegend();
+            this.initSpectrometer();
 
             this.listenTo(this.simulation, 'change:atomicModel',        this.atomicModelChanged);
             this.listenTo(this.simulation, 'change:experimentSelected', this.atomicModelChanged);
@@ -113,6 +114,10 @@ define(function (require) {
             this.legendView = new HydrogenAtomLegendView();
         },
 
+        initSpectrometer: function() {
+            this.spectrometerView = new SpectrometerView();
+        },
+
         /**
          * Renders everything
          */
@@ -122,6 +127,7 @@ define(function (require) {
             this.renderScaffolding();
             this.renderSceneView();
             this.renderPlaybackControls();
+            this.renderSpectrometerView();
 
             return this;
         },
@@ -167,6 +173,11 @@ define(function (require) {
             this.$('.legend-panel').append(this.legendView.el);
         },
 
+        renderSpectrometerView: function() {
+            this.spectrometerView.render();
+            this.$('.spectrometer-panel').append(this.spectrometerView.el);
+        },
+
         /**
          * Renders playback controls
          */
@@ -191,6 +202,11 @@ define(function (require) {
             this.sceneView.postRender();
             this.wavelengthSliderView.postRender();
             this.renderLegend();
+
+            var $spectrometerPanel = this.$('.spectrometer-panel');
+            this.spectrometerView.setWidth($spectrometerPanel.width());
+            this.spectrometerView.setHeight(114);
+            this.spectrometerView.postRender();
 
             this.lightTypeChanged();
         },
