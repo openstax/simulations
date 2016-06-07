@@ -30,6 +30,10 @@
             </ul>
 
             <div class="prediction-models">
+                <div class="prediction-model-spectrum">
+                    <span class="prediction-model-spectrum-classical">Classical...</span>
+                    <span class="prediction-model-spectrum-quantum">...Quantum</span>
+                </div>
             <% _.each(atomicModels, function(model, key) { %>
                 <div class="prediction-model-wrapper <% if (model === selectedAtomicModel) { %>active<% } %>" data-model-key="<%= key %>">
                     <%= Assets.createIcon(model.icon, 42) %>

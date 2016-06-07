@@ -132,6 +132,7 @@
     }
 
     .prediction-models {
+        position: relative;
         margin-top: 12px;
         margin-bottom: -4px;
         margin-left: -15px;
@@ -173,6 +174,38 @@
                 margin-left: 6px;
                 margin-bottom: 0;
                 width: 100px;
+            }
+        }
+
+        .prediction-model-spectrum {
+            position: absolute;
+            top: 0;
+            right: 15px;
+            height: 100%;
+            width: 24px;
+            opacity: 0.8;
+            #gradient.vertical(#FF8D00; #00C9FF; 0%; 100%);
+
+            .prediction-model-spectrum-classical,
+            .prediction-model-spectrum-quantum {
+                display: block;
+                position: absolute;
+                left: -22px;
+                .transform(~'rotate(90deg)');
+            }
+
+            .prediction-model-spectrum-classical {
+                top: 34px;
+                color: #fff;
+            }
+
+            .prediction-model-spectrum-quantum {
+                top: 316px;
+                color: #fff;
+
+                @media screen and (max-height: @short-window) {
+                    top: 244px;
+                }
             }
         }
     }
