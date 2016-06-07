@@ -61,7 +61,7 @@ define(function (require) {
         PARTICLE_SCALE: 9,
 
         RayGunView: {
-            WIDTH: 20,
+            WIDTH: 19,
             BARREL_CENTER_X: 0.37,
             BARREL_CENTER_Y: 0.5,
             RAY_WIDTH: 0.4,

@@ -89,7 +89,8 @@ define(function(require) {
             this.rayGunView = new RayGunView({
                 mvt: this.rayGunMVT,
                 model: this.simulation.gun,
-                squareTarget: true
+                squareTarget: true,
+                targetColor: '#DA7900'
             });
 
             this.topLayer.addChild(this.rayGunView.displayObject);
