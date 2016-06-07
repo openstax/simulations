@@ -115,10 +115,6 @@
             list-style-image: none;
             margin-top: 4px;
 
-            @media screen and (max-height: @short-window) {
-                margin-top: 0;
-            }
-
             label {
                 font-weight: bold;
 
@@ -138,24 +134,15 @@
     .prediction-models {
         margin-top: 12px;
         margin-bottom: -4px;
+        margin-left: -15px;
+        margin-right: -15px;
         display: none;
 
         .prediction-model-wrapper {
-            display: inline-block;
-            width: 81px;
-            padding: 8px 4px 4px;
-            margin-bottom: 4px;
-            text-align: center;
+            padding: 10px 0 10px 15px;
             vertical-align: top;
             cursor: pointer;
-
-            &:nth-child(2n + 1) {
-                margin-right: 2px;
-            }
-
-            &:nth-child(2n) {
-                margin-left: 2px;
-            }
+            width: 100%;
 
             @media screen and (max-height: @short-window) {
                 padding-top: 4px;
@@ -171,13 +158,21 @@
             }
 
             > div {
-                margin: 0 auto;
+                display: inline-block;
+                vertical-align: middle;
+                
+                > div {
+                    border-radius: 8px;
+                }
             }
 
             > label {
-                width: 100%;
-                height: 24px;
+                display: inline-block;
+                vertical-align: middle;
                 font-size: 11px;
+                margin-left: 6px;
+                margin-bottom: 0;
+                width: 100px;
             }
         }
     }
