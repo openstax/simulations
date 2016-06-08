@@ -115,7 +115,9 @@ define(function (require) {
         },
 
         initSpectrometer: function() {
-            this.spectrometerView = new SpectrometerView();
+            this.spectrometerView = new SpectrometerView({
+                simulation: this.simulation
+            });
         },
 
         /**

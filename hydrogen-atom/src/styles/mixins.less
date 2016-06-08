@@ -25,22 +25,17 @@
     }
 }
 
-.btn-zoom-in,
-.btn-zoom-out,
-.btn.btn-zoom-in,
-.btn.btn-zoom-out {
-    .text-button(normal);
+.sim-controls-button() {
+    background: rgba(255, 255, 255, 0.27);
+    border-color: rgba(0, 0, 0, 0.27);
+    text-transform: capitalize;
 
-    > .fa {
-        position: relative;
-        font-size: 20px;
+    &:focus {
+        outline: none !important;
+    }
 
-        > .fa {
-            font-size: 10px;
-            position: absolute;
-            top: 5px;
-            left: 4px;
-        }
+    &:active {
+        .box-shadow(none);
     }
 }
 

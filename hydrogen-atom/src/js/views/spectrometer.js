@@ -22,7 +22,10 @@ define(function(require) {
         className: 'spectrometer-view',
 
         events: {
-            
+            'click .spectrometer-start-btn'    : 'start',
+            'click .spectrometer-stop-btn'     : 'stop',
+            'click .spectrometer-reset-btn'    : 'reset',
+            'click .spectrometer-snapshot-btn' : 'snapshot'
         },
 
         paddingLeft: 30,
@@ -40,7 +43,7 @@ define(function(require) {
                 paddingTop: 4,
                 paddingBottom: 24,
 
-                pointRadius: 4,
+                pointRadius: 2,
                 spectrumThickness: 4,
 
                 minWavelength: Constants.SPECTROMETER_MIN_WAVELENGTH,
@@ -52,7 +55,7 @@ define(function(require) {
                 labelColor: '#000',
                 tickLength: 4,
                 tickThickness: 1,
-                tickColor: '#fff',
+                tickColor: '#000',
 
                 classificationFontSize: 14,
                 wavelengthFontSize: 10
@@ -87,6 +90,12 @@ define(function(require) {
             
             this.classificationFont = options.classificationFontSize * resolution + 'px Helvetica Neue';
             this.wavelengthFont = options.wavelengthFontSize * resolution + 'px Helvetica Neue';
+
+            this._stopped = false;
+            this.wavelengthCounts = [];
+
+            this.listenTo(this.simulation, 'atom-added', this.atomAdded);
+            this.atomAdded();
         },
 
         setWidth: function(width) {
@@ -104,6 +113,13 @@ define(function(require) {
          */
         render: function() {
             this.$el.html(html);
+
+            this.$startButton = this.$('.spectrometer-start-btn');
+            this.$stopButton  = this.$('.spectrometer-stop-btn');
+            this.$resetButton = this.$('.spectrometer-reset-btn');
+
+            this.$startButton.hide();
+
             return this;
         },
 
@@ -133,6 +149,26 @@ define(function(require) {
          */
         update: function() {
             
+        },
+
+        start: function() {
+            this.$startButton.hide();
+            this.$stopButton.show();
+            this._stopped = false;
+        },
+
+        stop: function() {
+            this.$stopButton.hide();
+            this.$startButton.show();
+            this._stopped = true;
+        },
+
+        reset: function() {
+
+        },
+
+        snapshot: function() {
+
         },
 
         /**
@@ -230,82 +266,39 @@ define(function(require) {
 
             ctx.fillText(this.minWavelength, originX, textY);
             ctx.fillText(this.maxWavelength, originX + width, textY);
-
-            // // Draw numbers
-            // ctx.font = this.numberFont;
-            // ctx.fillStyle = this.axisColor;
-            
-            // if (this.x.showNumbers) {
-            //     ctx.textAlign = 'center';
-            //     ctx.textBaseline = 'top';
-            //     var startX = this.x.start;
-            //     var stepX = this.x.step;
-
-            //     for (c = 0; c <= cols; c++) {
-            //         n = startX + (c * stepX);
-            //         if (this.x.decimals !== undefined)
-            //             n = n.toFixed(this.x.decimals);
-            //         ctx.fillText(n, originX + gridCellWidth * c, originY + halfTick);
-            //     }
-            // }
-
-            // if (this.y.showNumbers) {
-            //     ctx.textAlign = 'right';
-            //     ctx.textBaseline = 'middle';
-            //     var stepY = this.y.step;
-            //     var yValue = this.y.start;
-
-            //     for (y = originY; y >= originY - height; y -= gridCellHeight) {
-            //         n = yValue;
-            //         if (this.y.decimals !== undefined)
-            //             n = n.toFixed(this.y.decimals);
-            //         ctx.fillText(n, originX - halfTick, y);
-            //         yValue += stepY;
-            //     }
-            // }
-
-            // // Draw axis labels
-            // ctx.font = this.axisLabelFont;
-            // ctx.textAlign = 'center';
-
-            // var xOffset = originX + width / 2;
-            // var yOffset;
-            // if (!this.x.showNumbers) {
-            //     yOffset = this.height - (this.paddingBottom / 2);
-            //     ctx.textBaseline = 'middle';
-            // }
-            // else {
-            //     yOffset = this.height - this.axisLabelMargin;
-            //     ctx.textBaseline = 'bottom';
-            // }
-            // ctx.fillText(this.x.label, xOffset, yOffset);
-
-            // yOffset = originY - height / 2;
-            // if (!this.y.showNumbers) {
-            //     xOffset = this.paddingLeft / 2;
-            //     ctx.textBaseline = 'middle';
-            // }
-            // else {
-            //     xOffset = this.axisLabelMargin;
-            //     ctx.textBaseline = 'top';
-            // }
-            // ctx.rotate(-Math.PI / 2);
-            // ctx.fillText(this.y.label, -yOffset, xOffset);
-            // ctx.rotate(Math.PI / 2);
-
-            // // Draw border
-            // ctx.beginPath();
-            // ctx.rect(this.paddingLeft, this.paddingTop, width, height);
-            // ctx.lineWidth = this.borderThickness;
-            // ctx.strokeStyle = this.borderColor;
-            // ctx.stroke();
         },
 
-        drawPoint: function(x, y, color) {
+        drawPoint: function(wavelength, count) {
+            var color = WavelengthColors.nmToHex(wavelength);
+            if (color === '#000000')
+                color = this.invisibleSpectrumColor;
+
+            var x = this.getWavelengthX(wavelength);
+            var y = this.paddingTop + this.getGraphHeight() - count * this.pointRadius * 2;
+            var ctx = this.ctx;
+
             ctx.fillStyle = color;
             ctx.beginPath();
             ctx.arc(x, y, this.pointRadius, 0, 2 * Math.PI);
             ctx.fill();
+        },
+
+        getWavelengthX: function(wavelength) {
+            if (wavelength < WavelengthColors.MIN_WAVELENGTH) {
+                // UV wavelength
+                var m = (wavelength - this.minWavelength) / (WavelengthColors.MIN_WAVELENGTH  - this.minWavelength);
+                return this.paddingLeft + (m * this.uvWidth);
+            }
+            else if (wavelength > WavelengthColors.MAX_WAVELENGTH) {
+                // IR wavelength
+                var m = (this.maxWavelength - wavelength) / (this.maxWavelength - WavelengthColors.MAX_WAVELENGTH);
+                return this.paddingLeft + this.getGraphWidth() - this.irWidth + (m * this.irWidth);
+            }
+            else {
+                // Visible wavelength
+                var m = (wavelength - WavelengthColors.MIN_WAVELENGTH) / (WavelengthColors.MAX_WAVELENGTH - WavelengthColors.MIN_WAVELENGTH);
+                return this.paddingLeft + this.uvWidth + m * (this.getGraphWidth() - this.irWidth - this.uvWidth);
+            }
         },
 
         getGraphWidth: function() {
@@ -318,6 +311,28 @@ define(function(require) {
 
         getResolution: function() {
             return window.devicePixelRatio ? window.devicePixelRatio : 1;
+        },
+
+        atomAdded: function() {
+            if (this.atom)
+                this.stopListening(this.atom);
+
+            this.atom = this.simulation.atom;
+
+            this.listenTo(this.atom, 'photon-emitted',  this.photonEmitted);
+        },
+
+        photonEmitted: function(photon) {
+            if (!this._stopped) {
+                var wavelength = Math.floor(photon.getWavelength());
+                
+                if (this.wavelengthCounts[wavelength] === undefined)
+                    this.wavelengthCounts[wavelength] = 1;
+                else
+                    this.wavelengthCounts[wavelength] = this.wavelengthCounts[wavelength] + 1;
+                
+                this.drawPoint(wavelength, this.wavelengthCounts[wavelength]);
+            }
         }
 
     });
