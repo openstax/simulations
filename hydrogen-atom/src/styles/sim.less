@@ -222,12 +222,12 @@
         }
 
         .wavelength-slider-container {
-            .transition(~"height 300ms, margin 300ms");
-            height: 0;
+            .transition(~"max-height 300ms, margin 300ms");
+            max-height: 0;
             overflow: hidden;
 
             &.open {
-                height: 74px;
+                max-height: 74px;
                 margin-top: 12px;
             }
 
