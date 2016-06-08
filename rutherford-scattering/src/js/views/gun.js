@@ -115,6 +115,7 @@ define(function(require) {
             this.rayWidth = RayGunView.RAY_WIDTH * this.rayGun.texture.width;
             this.rayHeight = RayGunView.RAY_HEIGHT * this.rayGun.texture.height;
 
+            this.ray.clear();
             this.ray.beginFill(this.color, this.alpha);
             this.ray.drawRect(-0.5 * this.rayWidth, -1 * this.rayHeight - 0.5 * this.rayGun.texture.height, this.rayWidth, this.rayHeight);
             this.ray.endFill();
