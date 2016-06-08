@@ -110,11 +110,21 @@
 
     .prediction-models {
         position: relative;
-        margin-top: 12px;
-        margin-bottom: -4px;
         margin-left: -15px;
         margin-right: -15px;
-        display: none;
+        height: 0;
+        .transition(~"height 300ms, margin 300ms");
+        overflow: hidden;
+
+        &.open {
+            height: 372px;
+            margin-top: 12px;
+            margin-bottom: -4px;
+
+            @media screen and (max-height: @short-window) {
+                height: 300px;
+            }
+        }
 
         .prediction-model-wrapper {
             padding: 10px 0 10px 15px;
@@ -203,30 +213,41 @@
         width: 320px;
 
         .light-mode-radios {
-            margin-bottom: 12px;
+            margin-bottom: 0;
 
             li {
                 display: inline;
-                margin-right: 18px;
+                margin-right: 24px;
             }
         }
 
-        .wavelength-slider-wrapper {
-            position: relative;
+        .wavelength-slider-container {
+            .transition(~"height 300ms, margin 300ms");
+            height: 0;
+            overflow: hidden;
 
-            .uv-label {
-                position: absolute;
-                top: -6px;
-                left: 19%;
-                .user-select(none);
-                pointer-events: none;
-                font-size: 10px;
-                color: #fff;
+            &.open {
+                height: 74px;
+                margin-top: 12px;
             }
-        }
 
-        .show-absorption-wavelengths-wrapper {
-            margin-top: 20px;
+            .wavelength-slider-wrapper {
+                position: relative;
+
+                .uv-label {
+                    position: absolute;
+                    top: -6px;
+                    left: 19%;
+                    .user-select(none);
+                    pointer-events: none;
+                    font-size: 10px;
+                    color: #fff;
+                }
+            }
+
+            .show-absorption-wavelengths-wrapper {
+                margin-top: 20px;
+            }
         }
     }
 
@@ -256,6 +277,7 @@
         top: 400px;
         left: 360px;
         width: @spectrometer-panel-width;
+        height: 204px;
 
         h2 {
             margin-bottom: -1px;

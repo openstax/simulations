@@ -255,9 +255,9 @@ define(function (require) {
 
         lightTypeChanged: function() {
             if (this.simulation.gun.get('lightType') === Constants.Gun.LIGHT_WHITE)
-                this.$('.wavelength-slider-container').hide();
+                this.$('.wavelength-slider-container').removeClass('open');
             else
-                this.$('.wavelength-slider-container').show();
+                this.$('.wavelength-slider-container').addClass('open');
         },
 
         changePlaybackSpeed: function(event) {
@@ -269,11 +269,11 @@ define(function (require) {
         changeModelMode: function(event) {
             var mode = $(event.target).val();
             if (mode === 'prediction') {
-                this.$('.prediction-models').show();
+                this.$('.prediction-models').addClass('open');
                 this.simulation.set('experimentSelected', false);
             }
             else {
-                this.$('.prediction-models').hide();
+                this.$('.prediction-models').removeClass('open');
                 this.simulation.set('experimentSelected', true);
             }
         },
