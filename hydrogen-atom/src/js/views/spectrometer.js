@@ -8,6 +8,8 @@ define(function(require) {
 
     var WavelengthColors = require('common/colors/wavelength');
 
+    var SnapshotView = require('hydrogen-atom/views/snapshot');
+
     var Constants = require('constants');
 
     var html = require('text!hydrogen-atom/templates/spectrometer.html');
@@ -93,6 +95,7 @@ define(function(require) {
 
             this._stopped = false;
             this.wavelengthCounts = [];
+            this.snapshotViews = [];
 
             this.listenTo(this.simulation, 'atom-added', this.atomAdded);
             this.atomAdded();
@@ -147,8 +150,9 @@ define(function(require) {
         /**
          * Updates the graph
          */
-        update: function() {
-            
+        update: function(time, deltaTime) {
+            for (var i = 0; i < this.snapshotViews.length; i++)
+                this.snapshotViews[i].update(time, deltaTime);
         },
 
         start: function() {
@@ -164,11 +168,23 @@ define(function(require) {
         },
 
         reset: function() {
-
+            this.draw();
         },
 
         snapshot: function() {
+            var modelName = this.simulation.get('experimentSelected') ?
+                'Experiment' :
+                this.simulation.get('atomicModel').label;
 
+            var snapshotView = new SnapshotView({
+                title: 'Snapshot ' + (this.snapshotViews.length + 1) + ': ' + modelName,
+                sourceCanvas: this.canvas,
+                dragFrame: $('body')[0],
+            });
+
+            $('.sim-view').first().append(snapshotView.el);
+
+            this.snapshotViews.push(snapshotView);
         },
 
         /**

@@ -39,14 +39,32 @@
     }
 }
 
-.white-panel(@shadow-alpha: 0.25, @background-fade-percent: 80%) {
-    background: fadeout(#fff, @background-fade-percent);
-    box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
-}
-
 .panel(@shadow-alpha: 0.15, @background-fade-percent: 30%) {
     background: fadeout(#fff, @background-fade-percent);
     box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
+
+    h2 {
+        font-size: 16px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
 }
 
 .collapsible-panel() {

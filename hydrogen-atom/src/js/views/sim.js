@@ -234,6 +234,8 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            // Update the spectrometer view
+            this.spectrometerView.update(timeSeconds, dtSeconds);
         },
 
         /**
