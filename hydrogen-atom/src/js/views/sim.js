@@ -210,6 +210,8 @@ define(function (require) {
             this.spectrometerView.setHeight(114);
             this.spectrometerView.postRender();
 
+            this.$('.spectrometer-panel').addClass('collapsed');
+
             this.lightTypeChanged();
         },
 
