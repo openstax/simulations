@@ -5,14 +5,14 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView              = require('common/v3/app/sim');
-    var WavelengthSliderView = require('common/controls/wavelength-slider');
-
-    var HydrogenAtomSimulation = require('hydrogen-atom/models/simulation');
-    var AtomicModels           = require('hydrogen-atom/models/atomic-models');
-    var HydrogenAtomSceneView  = require('hydrogen-atom/views/scene');
-    var HydrogenAtomLegendView = require('hydrogen-atom/views/legend');
-    var SpectrometerView       = require('hydrogen-atom/views/spectrometer');
+    var SimView = require('common/v3/app/sim');
+    
+    var HydrogenAtomSimulation           = require('hydrogen-atom/models/simulation');
+    var AtomicModels                     = require('hydrogen-atom/models/atomic-models');
+    var HydrogenAtomSceneView            = require('hydrogen-atom/views/scene');
+    var HydrogenAtomLegendView           = require('hydrogen-atom/views/legend');
+    var HydrogenAtomWavelengthSliderView = require('hydrogen-atom/views/wavelength-slider');
+    var SpectrometerView                 = require('hydrogen-atom/views/spectrometer');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -63,6 +63,7 @@ define(function (require) {
             'click .prediction-model-wrapper' : 'selectModel',
             'click input[name="light-mode"]'  : 'changeLightType',
             'slide .wavelength-slider'        : 'changeWavelength',
+            'change .show-absorption-wavelengths-check' : 'toggleAbsorptionWavelengths',
 
             'click .energy-level-diagram-panel > h2' : 'toggleEnergyLevelDiagramPanel',
             'click .spectrometer-panel         > h2' : 'toggleSpectrometerPanel'
@@ -85,7 +86,8 @@ define(function (require) {
             this.initSceneView();
             this.initLegend();
             this.initSpectrometer();
-
+            
+            this.listenTo(this.simulation, 'atom-added',                this.atomAdded);
             this.listenTo(this.simulation, 'change:atomicModel',        this.atomicModelChanged);
             this.listenTo(this.simulation, 'change:experimentSelected', this.atomicModelChanged);
             this.listenTo(this.simulation, 'change:paused',             this.pausedChanged);
@@ -148,7 +150,7 @@ define(function (require) {
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
 
-            this.wavelengthSliderView = new WavelengthSliderView({
+            this.wavelengthSliderView = new HydrogenAtomWavelengthSliderView({
                 defaultWavelength: Constants.MIN_WAVELENGTH,
                 minWavelength: Constants.MIN_WAVELENGTH,
                 maxWavelength: Constants.MAX_WAVELENGTH,
@@ -156,6 +158,7 @@ define(function (require) {
                 invisibleSpectrumColor: '#777'
             });
             this.wavelengthSliderView.render();
+            this.wavelengthSliderView.hideAbsorptionWavelengths();
             this.$('.wavelength-slider-wrapper').prepend(this.wavelengthSliderView.el);
 
             this.$wavelengthValue = this.$('.wavelength-value');
@@ -307,6 +310,13 @@ define(function (require) {
             this.$('.spectrometer-panel').toggleClass('collapsed');
         },
 
+        toggleAbsorptionWavelengths: function(event) {
+            if ($(event.target).is(':checked'))
+                this.wavelengthSliderView.showAbsorptionWavelengths();
+            else
+                this.wavelengthSliderView.hideAbsorptionWavelengths();
+        },
+
         atomicModelChanged: function(simulation, atomicModel) {
             var atomicModel = this.simulation.get('atomicModel');
 
@@ -320,6 +330,13 @@ define(function (require) {
             else {
                 this.$('.show-absorption-wavelengths-wrapper').hide();
             }
+        },
+
+        atomAdded: function(atom) {
+            var atomConstructor = this.simulation.get('atomicModel').constructor;
+            var groundState = atomConstructor.getGroundState();
+            var transitionWavelengths = atom.getTransitionWavelengths(groundState);
+            this.wavelengthSliderView.setTransitionWavelengths(transitionWavelengths);
         }
 
     });

@@ -61,6 +61,16 @@ define(function (require) {
 
         firePhotonEmitted: function(photon) {
             this.trigger('photon-emitted', photon);
+        },
+
+        /**
+         * Gets the transition wavelengths for a specified state.
+         * The default implementation returns null.
+         * The notion of "transition wavelength" does not apply to all
+         *   hydrogen atom models, but it is convenient to have it here.
+         */
+        getTransitionWavelengths: function(state) {
+            return null;
         }
 
     }, _.extend({}, Constants.AbstractAtomicModel, {
@@ -83,16 +93,6 @@ define(function (require) {
             return 0;
         },
         
-        /**
-         * Gets the transition wavelengths for a specified state.
-         * The default implementation returns null.
-         * The notion of "transition wavelength" does not apply to all
-         *   hydrogen atom models, but it is convenient to have it here.
-         */
-        getTransitionWavelengths: function(state) {
-            return null;
-        },
-
         /**
          * Determines if two points collide.
          * Any distance between the points that is <= threshold
