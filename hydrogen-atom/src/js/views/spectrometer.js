@@ -175,11 +175,30 @@ define(function(require) {
             var modelName = this.simulation.get('experimentSelected') ?
                 'Experiment' :
                 this.simulation.get('atomicModel').label;
+            var title = 'Snapshot ' + (this.snapshotViews.length + 1) + ': ' + modelName;
+
+            var x;
+            var y;
+
+            var lastView = this.getLatestVisibleSnapshot();
+            if (lastView) {
+                x = lastView.position.x - 20;
+                y = lastView.position.y - 16;
+            }
+            else {
+                var $spectrometerPanel = $('.spectrometer-panel');
+                x = $spectrometerPanel.position().left;
+                y = $spectrometerPanel.position().top - 176;    
+            }
 
             var snapshotView = new SnapshotView({
-                title: 'Snapshot ' + (this.snapshotViews.length + 1) + ': ' + modelName,
+                title: title,
                 sourceCanvas: this.canvas,
                 dragFrame: $('body')[0],
+                position: {
+                    x: x,
+                    y: y
+                }
             });
 
             $('.sim-view').first().append(snapshotView.el);
@@ -327,6 +346,13 @@ define(function(require) {
 
         getResolution: function() {
             return window.devicePixelRatio ? window.devicePixelRatio : 1;
+        },
+
+        getLatestVisibleSnapshot: function() {
+            for (var i = this.snapshotViews.length - 1; i >= 0; i--) {
+                if (!this.snapshotViews[i].closed)
+                    return this.snapshotViews[i];
+            }
         },
 
         atomAdded: function() {

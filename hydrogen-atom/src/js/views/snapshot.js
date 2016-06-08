@@ -45,7 +45,7 @@ define(function (require) {
 
             Draggable.prototype.initialize.apply(this, [options]);
 
-            this.render()
+            this.render();
         },
 
         render: function() {
@@ -54,6 +54,7 @@ define(function (require) {
             this.initCanvas();
             this.bindDragEvents();
             this.resize();
+            this.updateOnNextFrame = true;
             this.update(0, 0);
         },
 
@@ -136,6 +137,7 @@ define(function (require) {
 
         closeClicked: function() {
             this.$el.remove();
+            this.closed = true;
         }
 
     });
