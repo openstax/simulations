@@ -108,25 +108,20 @@ define(function (require) {
         /**
          * Gets the color of the gun's beam.
          * The alpha component of the Color returned corresponds to the intensity.
-         * If the gun is disabled, null is returned.
          * If the gun is shooting alpha particles, HAConstants.ALPHA_PARTICLES_COLOR is returned.
          * If the gun is shooting white light, Color.WHITE is returned.
          * If the gun is shooting monochromatic light, a Color corresponding to the wavelength is returned.
          */
         getBeamColor: function() {
-            if (this.get('on')) {
-                if (this.isPhotonsMode()) {
-                    if (this.isWhiteLightType())
-                        return '#fff';
-                    else
-                        return this.getWavelengthColor();
-                }
-                else {
-                    return Constants.ALPHA_PARTICLES_COLOR;
-                }
+            if (this.isPhotonsMode()) {
+                if (this.isWhiteLightType())
+                    return '#fff';
+                else
+                    return this.getWavelengthColor();
             }
-            
-            return null;
+            else {
+                return Constants.ALPHA_PARTICLES_COLOR;
+            }
         },
 
         getBeamAlpha: function() {
