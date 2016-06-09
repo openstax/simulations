@@ -22,6 +22,13 @@ define(function(require) {
          *   and generates and returns an image data URI.
          */
         displayObjectToDataURI: function(displayObject, padding) {
+            var canvas = this.displayObjectToCanvas(displayObject, padding);
+
+            // Return the image imprinted on the canvas
+            return canvas.toDataURL('image/png');
+        },
+
+        displayObjectToCanvas: function(displayObject, padding) {
             var wrapper = this._wrapDisplayObject(displayObject, padding);
             stage.addChild(wrapper);
 
@@ -32,8 +39,7 @@ define(function(require) {
             wrapper.removeChild(displayObject);
             stage.removeChild(wrapper);
 
-            // Return the image imprinted on the canvas
-            return canvas.toDataURL('image/png');
+            return canvas;
         },
 
         _wrapDisplayObject: function(displayObject, padding) {
