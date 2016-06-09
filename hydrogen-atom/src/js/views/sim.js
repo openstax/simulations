@@ -13,6 +13,7 @@ define(function (require) {
     var HydrogenAtomLegendView           = require('hydrogen-atom/views/legend');
     var HydrogenAtomWavelengthSliderView = require('hydrogen-atom/views/wavelength-slider');
     var SpectrometerView                 = require('hydrogen-atom/views/spectrometer');
+    var EnergyDiagramView                = require('hydrogen-atom/views/energy-diagram');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -86,6 +87,7 @@ define(function (require) {
             this.initSceneView();
             this.initLegend();
             this.initSpectrometer();
+            this.initEnergyDiagrams();
             
             this.listenTo(this.simulation, 'atom-added',                this.atomAdded);
             this.listenTo(this.simulation, 'change:atomicModel',        this.atomicModelChanged);
@@ -122,6 +124,12 @@ define(function (require) {
             });
         },
 
+        initEnergyDiagrams: function() {
+            this.energyDiagramView = new EnergyDiagramView({
+                simulation: this.simulation
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -132,6 +140,7 @@ define(function (require) {
             this.renderSceneView();
             this.renderPlaybackControls();
             this.renderSpectrometerView();
+            this.renderEnergyDiagrams();
 
             return this;
         },
@@ -183,6 +192,11 @@ define(function (require) {
             this.$('.spectrometer-panel').append(this.spectrometerView.el);
         },
 
+        renderEnergyDiagrams: function() {
+            this.energyDiagramView.render();
+            this.$('.energy-level-diagram-panel').append(this.energyDiagramView.el);
+        },
+
         /**
          * Renders playback controls
          */
@@ -215,6 +229,8 @@ define(function (require) {
 
             this.$('.spectrometer-panel').addClass('collapsed');
 
+            this.energyDiagramView.postRender();
+
             this.lightTypeChanged();
         },
 
@@ -239,8 +255,12 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+
             // Update the spectrometer view
             this.spectrometerView.update(timeSeconds, dtSeconds);
+
+            // Update the energy diagrams
+            this.energyDiagramView.update(timeSeconds, dtSeconds);
         },
 
         /**
