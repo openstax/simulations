@@ -62,15 +62,15 @@ define(function(require) {
             this.axisLineWidth = options.axisLineWidth * resolution;
 
             // Squiggle-drawing numbers
-            this.minSquiggleLength        = EnergyDiagramView.MIN_SQUIGGLE_LENGTH;
-            this.squiggleAmplitude        = EnergyDiagramView.SQUIGGLE_AMPLITUDE;
-            this.squiggleLineWidth        = EnergyDiagramView.SQUIGGLE_LINE_WIDTH;
-            this.squiggleArrowHeadWidth   = EnergyDiagramView.SQUIGGLE_ARROW_HEAD_WIDTH;
-            this.squiggleArrowHeadHeight  = EnergyDiagramView.SQUIGGLE_ARROW_HEAD_HEIGHT;
-            this.uvSquigglePeriod         = EnergyDiagramView.UV_SQUIGGLE_PERIOD;
-            this.minVisibleSquigglePeriod = EnergyDiagramView.MIN_VISIBLE_SQUIGGLE_PERIOD;
-            this.maxVisibleSquigglePeriod = EnergyDiagramView.MAX_VISIBLE_SQUIGGLE_PERIOD;
-            this.irSquigglePeriod         = EnergyDiagramView.IR_SQUIGGLE_PERIOD;
+            this.minSquiggleLength        = EnergyDiagramView.MIN_SQUIGGLE_LENGTH * resolution;
+            this.squiggleAmplitude        = EnergyDiagramView.SQUIGGLE_AMPLITUDE * resolution;
+            this.squiggleLineWidth        = EnergyDiagramView.SQUIGGLE_LINE_WIDTH * resolution;
+            this.squiggleArrowHeadWidth   = EnergyDiagramView.SQUIGGLE_ARROW_HEAD_WIDTH * resolution;
+            this.squiggleArrowHeadHeight  = EnergyDiagramView.SQUIGGLE_ARROW_HEAD_HEIGHT * resolution;
+            this.uvSquigglePeriod         = EnergyDiagramView.UV_SQUIGGLE_PERIOD * resolution;
+            this.minVisibleSquigglePeriod = EnergyDiagramView.MIN_VISIBLE_SQUIGGLE_PERIOD * resolution;
+            this.maxVisibleSquigglePeriod = EnergyDiagramView.MAX_VISIBLE_SQUIGGLE_PERIOD * resolution;
+            this.irSquigglePeriod         = EnergyDiagramView.IR_SQUIGGLE_PERIOD * resolution;
 
             // State-line drawing numbers
             this.stateLineLength = EnergyDiagramView.STATE_LINE_LENGTH * resolution;
@@ -169,13 +169,14 @@ define(function(require) {
             var originY = this.paddingTop + height;
             var resolution = this.getResolution();
 
-            // ctx.fillStyle = '#fff';
-            // ctx.fillRect(0, 0, this.width, this.height);
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, this.width, this.height);
 
             var headWidth  = 10 * resolution;
             var headLength = 12 * resolution;
 
             // Draw axis line
+            ctx.beginPath();
             ctx.moveTo(originX, originY);
             ctx.lineTo(originX, originY - height + headLength);
 
@@ -206,7 +207,7 @@ define(function(require) {
 
         drawSquiggle: function(ctx, x1, y1, x2, y2, wavelength) {
             // Distance between the 2 points
-            var distance = Math.sqrt(Math.pow(x2 - x1, 2), Math.pow(y2 - y1, 2));
+            var distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
             var phi = Math.atan2(y2 - y1, x2 - x1);
             var period = this.wavelengthToPeriod(wavelength);
             
@@ -226,16 +227,6 @@ define(function(require) {
                 color = Constants.IR_COLOR;
             else
                 color = WavelengthColors.nmToHex(wavelength);
-
-            // minSquiggleLength
-            // squiggleAmplitude
-            // squiggleLineWidth
-            // squiggleArrowHeadWidth
-            // squiggleArrowHeadHeight
-            // uvSquigglePeriod
-            // minVisibleSquigglePeriod
-            // maxVisibleSquigglePeriod
-            // irSquigglePeriod
 
             /*
              * The arrow head is drawn only if the distance between the points is 
@@ -275,7 +266,6 @@ define(function(require) {
                 ctx.moveTo(x1, y1);
                 ctx.lineTo(x2, y2);
             }
-            ctx.closePath();
 
             ctx.lineWidth = this.squiggleLineWidth;
             ctx.strokeStyle = color;

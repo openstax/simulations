@@ -82,11 +82,7 @@ define(function(require) {
         drawData: function() {
             var ctx = this.ctx;
 
-            // Place the electron
             var n = this.atom.getElectronState();
-            var x = this.getXOffset(n) + (this.stateLineLength / 2);
-            var y = this.getYOffset(n) - this.electronImage.height / 2;
-            this.drawElectron(ctx, x, y);
 
             // Create the new squiggle for photon absorption/emission
             if (n !== this._previousState) {
@@ -105,6 +101,11 @@ define(function(require) {
                 var y2 = this.getYOffset(n);
                 this.drawSquiggle(ctx, x1, y1, x2, y2, wavelength);    
             }
+
+            // Place the electron
+            var x = this.getXOffset(n) + (this.stateLineLength / 2);
+            var y = this.getYOffset(n) - this.electronImage.height / 2;
+            this.drawElectron(ctx, x, y);
         },
 
         /**
