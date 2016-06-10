@@ -185,6 +185,9 @@ module.exports = function(grunt) {
 				this.getAllSimDirNames() :
 				this.getUpdatedSimDirNames();
 
+			if (!grunt.file.exists('./dist'))
+				grunt.file.mkdir('./dist');
+
 			var dirsCleaned = 0;
 			for (var i = 0; i < simDirNames.length; i++) {
 				var directory = './dist/' + simDirNames[i];
@@ -208,6 +211,9 @@ module.exports = function(grunt) {
 			var simDirNames = (forceCopyAll) ?
 				this.getAllSimDirNames() :
 				this.getUpdatedSimDirNames();
+
+			if (!grunt.file.exists('./dist'))
+				grunt.file.mkdir('./dist');
 
 			// Copy each dist folder into the master dist folder
 			var dirsCopied = 0;
