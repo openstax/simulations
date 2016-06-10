@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "r.js -convert node_modules/solve-quadratic-equation node_modules/solve-quadratic-equation-shimmed; r.js -convert node_modules/line-intersect node_modules/line-intersect-shimmed; r.js -convert node_modules/rectangle-node node_modules/rectangle-node-shimmed; r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/object-pool node_modules/object-pool-shimmed; npm install ./v3"
+    "postinstall": "r.js -convert node_modules/solve-quadratic-equation node_modules/solve-quadratic-equation-shimmed; r.js -convert node_modules/line-intersect node_modules/line-intersect-shimmed; r.js -convert node_modules/rectangle-node node_modules/rectangle-node-shimmed; r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/object-pool node_modules/object-pool-shimmed"
   },
   "repository": {
     "type": "git",
