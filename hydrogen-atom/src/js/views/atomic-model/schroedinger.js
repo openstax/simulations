@@ -140,7 +140,7 @@ define(function(require) {
                 var m = Math.abs(this.getAtom().getTertiaryElectronState());
 
                 // Update the state label
-                this.stateLabel.text = '(n,l,m) = (' + n + ',' + l + ',' + m + ')';
+                this.stateLabel.text = '(n,\u2113,m) = (' + n + ',' + l + ',' + m + ')';
 
                 // Update the grid
                 var brightness = _brightnessCache.getBrightness(n, l, m);

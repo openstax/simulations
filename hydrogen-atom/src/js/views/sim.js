@@ -16,6 +16,8 @@ define(function (require) {
     var EnergyDiagramView                = require('hydrogen-atom/views/energy-diagram');
     var SolarSystemEnergyDiagramView     = require('hydrogen-atom/views/energy-diagram/solar-system');
     var BohrEnergyDiagramView            = require('hydrogen-atom/views/energy-diagram/bohr');
+    var DeBroglieEnergyDiagramView       = require('hydrogen-atom/views/energy-diagram/debroglie');
+    var SchroedingerEnergyDiagramView    = require('hydrogen-atom/views/energy-diagram/schroedinger');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -134,10 +136,10 @@ define(function (require) {
                 BOHR: new BohrEnergyDiagramView({
                     simulation: this.simulation
                 }),
-                DEBROGLIE: new EnergyDiagramView({
+                DEBROGLIE: new DeBroglieEnergyDiagramView({
                     simulation: this.simulation
                 }),
-                SCHROEDINGER: new EnergyDiagramView({
+                SCHROEDINGER: new SchroedingerEnergyDiagramView({
                     simulation: this.simulation
                 })
             };

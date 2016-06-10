@@ -24,12 +24,12 @@ define(function(require) {
         initialize: function(options) {
             // Default values
             options = _.extend({
-                width: 150,
+                width: 170,
                 height: 290,
-                paddingLeft:   26,
+                paddingLeft:   22,
                 paddingRight:  10,
                 paddingTop:    10,
-                paddingBottom: 10,
+                paddingBottom: 2,
 
                 numberOfStates: 0,
 
@@ -169,8 +169,8 @@ define(function(require) {
             var originY = this.paddingTop + height;
             var resolution = this.getResolution();
 
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(0, 0, this.width, this.height);
+            // ctx.fillStyle = '#fff';
+            // ctx.fillRect(0, 0, this.width, this.height);
 
             var headWidth  = 10 * resolution;
             var headLength = 12 * resolution;
