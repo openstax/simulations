@@ -14,7 +14,7 @@
 
             'vector2-node':          '../../../faraday/node_modules/vector2-node-shimmed/index',
             'object-pool':           '../../../faraday/node_modules/object-pool-shimmed/index',
-            'circular-list':         '../../../faraday/node_modules/object-pool-shimmed/node_modules/circular-list/index',
+            'circular-list':         '../../../faraday/node_modules/circular-list-shimmed/index',
             'bootstrap-select':      '../../../faraday/node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../../faraday/node_modules/bootstrap-select/less/bootstrap-select',
 

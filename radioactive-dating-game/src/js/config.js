@@ -14,7 +14,7 @@
 
             'vector2-node':          '../../../nuclear-physics/node_modules/vector2-node-shimmed/index',
             'object-pool':           '../../../nuclear-physics/node_modules/object-pool-shimmed/index',
-            'circular-list':         '../../../nuclear-physics/node_modules/object-pool-shimmed/node_modules/circular-list/index',
+            'circular-list':         '../../../nuclear-physics/node_modules/circular-list-shimmed/index',
             'bootstrap-select':      '../../../nuclear-physics/node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../../nuclear-physics/node_modules/bootstrap-select/less/bootstrap-select',
 
