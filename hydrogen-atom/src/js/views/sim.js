@@ -15,6 +15,7 @@ define(function (require) {
     var SpectrometerView                 = require('hydrogen-atom/views/spectrometer');
     var EnergyDiagramView                = require('hydrogen-atom/views/energy-diagram');
     var SolarSystemEnergyDiagramView     = require('hydrogen-atom/views/energy-diagram/solar-system');
+    var BohrEnergyDiagramView            = require('hydrogen-atom/views/energy-diagram/bohr');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -130,7 +131,7 @@ define(function (require) {
                 SOLAR_SYSTEM: new SolarSystemEnergyDiagramView({
                     simulation: this.simulation
                 }),
-                BOHR: new EnergyDiagramView({
+                BOHR: new BohrEnergyDiagramView({
                     simulation: this.simulation
                 }),
                 DEBROGLIE: new EnergyDiagramView({

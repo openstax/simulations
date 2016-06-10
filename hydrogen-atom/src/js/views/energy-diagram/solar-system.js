@@ -59,9 +59,6 @@ define(function(require) {
         },
 
         drawData: function() {
-            if (!this.atom || this._hidden)
-                return;
-
             var ctx = this.ctx;
             var width = this.getGraphWidth();
             var height = this.getGraphHeight();

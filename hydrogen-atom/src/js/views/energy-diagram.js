@@ -66,11 +66,16 @@ define(function(require) {
             this.squiggleAmplitude        = EnergyDiagramView.SQUIGGLE_AMPLITUDE;
             this.squiggleLineWidth        = EnergyDiagramView.SQUIGGLE_LINE_WIDTH;
             this.squiggleArrowHeadWidth   = EnergyDiagramView.SQUIGGLE_ARROW_HEAD_WIDTH;
-            this.squiggleArrowheadHeight  = EnergyDiagramView.SQUIGGLE_ARROW_HEAD_HEIGHT;
+            this.squiggleArrowHeadHeight  = EnergyDiagramView.SQUIGGLE_ARROW_HEAD_HEIGHT;
             this.uvSquigglePeriod         = EnergyDiagramView.UV_SQUIGGLE_PERIOD;
             this.minVisibleSquigglePeriod = EnergyDiagramView.MIN_VISIBLE_SQUIGGLE_PERIOD;
             this.maxVisibleSquigglePeriod = EnergyDiagramView.MAX_VISIBLE_SQUIGGLE_PERIOD;
             this.irSquigglePeriod         = EnergyDiagramView.IR_SQUIGGLE_PERIOD;
+
+            // State-line drawing numbers
+            this.stateLineLength = EnergyDiagramView.STATE_LINE_LENGTH * resolution;
+            this.stateLineWidth = EnergyDiagramView.STATE_LINE_WIDTH * resolution;
+            this.stateLabelFont = 'bold ' + EnergyDiagramView.STATE_LABEL_FONT_SIZE * resolution + suffix;
 
             // Calculate energies
             this._energies = this.calculateEnergies(options.numberOfStates);
@@ -97,6 +102,8 @@ define(function(require) {
             this.clearAtom();
 
             this.atom = atom;
+
+            this.draw();
         },
 
         clearAtom: function() {
@@ -149,7 +156,9 @@ define(function(require) {
             this.ctx.clearRect(0, 0, this.width, this.height);
 
             this.drawEmptyGraph();
-            this.drawData();
+
+            if (this.atom)
+                this.drawData();
         },
 
         drawEmptyGraph: function() {
@@ -160,8 +169,8 @@ define(function(require) {
             var originY = this.paddingTop + height;
             var resolution = this.getResolution();
 
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(0, 0, this.width, this.height);
+            // ctx.fillStyle = '#fff';
+            // ctx.fillRect(0, 0, this.width, this.height);
 
             var headWidth  = 10 * resolution;
             var headLength = 12 * resolution;
@@ -196,11 +205,107 @@ define(function(require) {
         drawData: function() {},
 
         drawSquiggle: function(ctx, x1, y1, x2, y2, wavelength) {
+            // Distance between the 2 points
+            var distance = Math.sqrt(Math.pow(x2 - x1, 2), Math.pow(y2 - y1, 2));
+            var phi = Math.atan2(y2 - y1, x2 - x1);
+            var period = this.wavelengthToPeriod(wavelength);
+            
+            
+            // Save the context's state before transforming
+            ctx.save();
+            // And transform so we can paint as though the squiggle is starting
+            //   on the origin and going to the right.
+            ctx.translate(x1, y1);
+            ctx.rotate(phi);
 
+            // Color that corresponds to the wavelength
+            var color;
+            if (wavelength < WavelengthColors.MIN_WAVELENGTH)
+                color = Constants.UV_COLOR;
+            else if (wavelength > WavelengthColors.MAX_WAVELENGTH)
+                color = Constants.IR_COLOR;
+            else
+                color = WavelengthColors.nmToHex(wavelength);
+
+            // minSquiggleLength
+            // squiggleAmplitude
+            // squiggleLineWidth
+            // squiggleArrowHeadWidth
+            // squiggleArrowHeadHeight
+            // uvSquigglePeriod
+            // minVisibleSquigglePeriod
+            // maxVisibleSquigglePeriod
+            // irSquigglePeriod
+
+            /*
+             * The arrow head is drawn only if the distance between the points is 
+             * large enough to fit both the arrow head and a minimum amount of squiggle.
+             * If the distance isn't sufficient, then our squiggle will have no arrow head.
+             */
+            var hasArrow = (distance > this.squiggleArrowHeadHeight + this.minSquiggleLength);
+            if (hasArrow) {
+                ctx.beginPath();
+                ctx.moveTo(distance, 0);
+                ctx.lineTo(distance - this.squiggleArrowHeadHeight,  this.squiggleArrowHeadWidth / 2);
+                ctx.lineTo(distance - this.squiggleArrowHeadHeight, -this.squiggleArrowHeadWidth / 2);
+                ctx.closePath();
+
+                ctx.fillStyle = color;
+                ctx.fill();
+            }
+
+            /*
+             * The squiggle is a sinusoidal line, with period and amplitude.
+             * If the 2 points are too close together, the sinusoidal nature of 
+             * the line won't be intelligible, so we simply draw a straight line.
+             */
+            ctx.beginPath();
+            if (distance >= this.minSquiggleLength) {
+                ctx.moveTo(0, 0);
+
+                var maxX = (hasArrow) ? (distance - this.squiggleArrowHeadHeight) : distance;
+                for (var x = 0; x < maxX; x++) {
+                    var angle = (x % period) * (2 * Math.PI / period);
+                    var y = this.squiggleAmplitude * Math.sin(angle);
+                    ctx.lineTo(x, y);
+                }
+            }
+            else {
+                // Use a straight line if the points are too close together
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+            }
+            ctx.closePath();
+
+            ctx.lineWidth = this.squiggleLineWidth;
+            ctx.strokeStyle = color;
+            ctx.stroke();
+
+            // Reset the context's transform
+            ctx.restore();
         },
 
         drawElectron: function(ctx, x, y) {
             ctx.drawImage(this.electronImage, x - this.electronImage.width / 2, y - this.electronImage.height / 2);
+        },
+
+        drawStateLine: function(ctx, x, y) {
+            ctx.beginPath();
+            ctx.moveTo(x, y)
+            ctx.lineTo(x + this.stateLineLength, y);
+            ctx.closePath();
+
+            ctx.lineWidth = this.stateLineWidth;
+            ctx.strokeStyle = EnergyDiagramView.STATE_LINE_COLOR;
+            ctx.stroke();
+        },
+
+        drawStateLabel: function(ctx, x, y, state) {
+            ctx.fillStyle = EnergyDiagramView.STATE_LINE_COLOR;
+            ctx.font = this.stateLabelFont;
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('n=' + state, x, y);
         },
 
         show: function() {
@@ -244,7 +349,7 @@ define(function(require) {
             var E = [];
             for (i = 0; i < numberOfStates; i++) {
                 var n = i + 1;
-                E[i] = E1 / (n * n);
+                E[i] = EnergyDiagramView.E1 / (n * n);
             }
 
             // Apply distortion
@@ -255,6 +360,27 @@ define(function(require) {
             }
 
             return E;
+        },
+
+        /*
+         * Convert wavelength to squiggle period.
+         * All UV has the same period.
+         * All IR has the same period.
+         * Visible wavelengths have a calculated period.
+         */
+        wavelengthToPeriod: function(wavelength) {
+            if (wavelength < WavelengthColors.MIN_WAVELENGTH) {
+                return this.uvSquigglePeriod;
+            }
+            else if (wavelength > WavelengthColors.MAX_WAVELENGTH) {
+                return this.irSquigglePeriod;
+            }
+            else {
+                var wavelengthRange = WavelengthColors.MAX_WAVELENGTH - WavelengthColors.MIN_WAVELENGTH;
+                var periodRange = this.maxVisibleSquigglePeriod - this.minVisibleSquigglePeriod;
+                var factor = (wavelength - WavelengthColors.MIN_WAVELENGTH) / wavelengthRange;
+                return this.minVisibleSquigglePeriod + (factor * periodRange);
+            }
         }
 
     }, Constants.EnergyDiagramView);

@@ -511,6 +511,11 @@ define(function (require) {
     EnergyDiagramView.MAX_VISIBLE_SQUIGGLE_PERIOD = 20; // pixels
     EnergyDiagramView.IR_SQUIGGLE_PERIOD = 22; // pixels
 
+    EnergyDiagramView.STATE_LINE_LENGTH = 10;
+    EnergyDiagramView.STATE_LINE_WIDTH = 2;
+    EnergyDiagramView.STATE_LINE_COLOR = '#000';
+    EnergyDiagramView.STATE_LABEL_FONT_SIZE = 10;
+
     Constants.EnergyDiagramView = EnergyDiagramView;
 
 
