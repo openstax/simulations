@@ -1,0 +1,37 @@
+<div class="transitions-btn-wrapper">
+    <button class="transitions-btn" title="Additional Options" data-toggle="modal" data-target="#transitions-dialog"><span class="fa fa-info"></span></button>
+</div>
+
+<div class="modal" id="transitions-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Transitions</h4>
+            </div>
+            <div class="modal-body">
+                
+                <table class="table">
+                    <thead>
+                        <th class="transition">n transition</th>
+                        <th class="wavelength">wavelength (nm)</th>
+                    </thead>
+                    <tbody>
+                    <% for (var m = groundState; m < maxState; m++) { %>
+                        <% for (var n = m + 1; n <= maxState; n++) { %>
+                        <tr>
+                            <td class="transition"><%= m %> &lt;-&gt; <%= n %></td>
+                            <td class="wavelength"><%= BohrModel.getWavelengthAbsorbed(m, n).toFixed(0) %></td>
+                        </tr>
+                        <% } %>
+                    <% } %>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
