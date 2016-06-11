@@ -98,7 +98,21 @@ define(function(require) {
                 this.rayGunView.setColor(gun.getBeamColor());
             });
 
+            var boxPosition = this.rayGunMVT.modelToView(this.simulation.gun.get('position'));
+            var boxLabel = new PIXI.Text('Box of\nHydrogen', {
+                font: '14px Helvetica Neue',
+                fill: '#fff',
+                align: 'center'
+            });
+            boxLabel.anchor.x = 0.5;
+            boxLabel.anchor.y = 1;
+            boxLabel.resolution = this.rayGunView.getResolution();
+            boxLabel.x = boxPosition.x;
+            boxLabel.y = boxPosition.y - this.rayGunView.displayObject.height * 0.8;
+            boxLabel.alpha = 0.6;
+
             this.topLayer.addChild(this.rayGunView.displayObject);
+            this.topLayer.addChild(boxLabel);
         },
 
         initSpaceBoxView: function() {
