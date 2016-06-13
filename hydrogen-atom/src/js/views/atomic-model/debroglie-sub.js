@@ -4,8 +4,6 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    require('common/v3/pixi/dash-circle');
-
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
 
     var AtomicModelView = require('hydrogen-atom/views/atomic-model');
@@ -13,12 +11,12 @@ define(function(require) {
     var Constants = require('constants');
     
     /**
-     * Represents the scene for the BohrModel
+     * Represents the scene for the DeBroglieModel
      */
-    var BohrModelView = AtomicModelView.extend({
+    var DeBroglieModelSubView = AtomicModelView.extend({
 
         /**
-         * Initializes the new BohrModelView.
+         * Initializes the new DeBroglieModelSubView.
          */
         initialize: function(options) {
             AtomicModelView.prototype.initialize.apply(this, arguments);
@@ -33,20 +31,16 @@ define(function(require) {
             this.initOrbitalGraphics();
         },
 
-        initSubatomicParticles: function() {
-            if (this.electronSprite) {
-                this.displayObject.removeChild(this.electronSprite);
+        initProton: function() {
+            if (this.protonSprite)
                 this.displayObject.removeChild(this.protonSprite);
-            }
 
-            this.electronSprite = ParticleGraphicsGenerator.generateElectron(this.particleMVT);
             this.protonSprite = ParticleGraphicsGenerator.generateProton(this.particleMVT);
 
             var atomPosition = this.getViewPosition();
             this.protonSprite.x = atomPosition.x;
             this.protonSprite.y = atomPosition.y;
-            
-            this.displayObject.addChild(this.electronSprite);
+
             this.displayObject.addChild(this.protonSprite);
         },
 
@@ -56,26 +50,15 @@ define(function(require) {
         updateMVT: function(mvt) {
             AtomicModelView.prototype.updateMVT.apply(this, arguments);
 
-            this.initSubatomicParticles();
-
-            var viewPosition = this.getViewPosition();
-            this.orbitalGraphics.x = viewPosition.x;
-            this.orbitalGraphics.y = viewPosition.y;
-            this.drawOrbitals(this.orbitalGraphics);
+            this.initProton();
         },
 
         update: function(time, deltaTime, paused) {
             AtomicModelView.prototype.update.apply(this, arguments);
-
-            if (this.electronSprite) {
-                var viewOffset = this.mvt.modelToView(this.getAtom().electronPosition);
-                this.electronSprite.x = viewOffset.x;
-                this.electronSprite.y = viewOffset.y;
-            }
         }
 
     });
 
 
-    return BohrModelView;
+    return DeBroglieModelSubView;
 });

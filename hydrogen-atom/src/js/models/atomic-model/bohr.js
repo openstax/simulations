@@ -219,8 +219,6 @@ define(function (require) {
             return BohrModel.getOrbitRadius(this.electronState);
         },
         
-        
-        
         /*
          * Determines if two wavelengths are "close enough" 
          *   for the purposes of absorption and emission.
@@ -386,7 +384,7 @@ define(function (require) {
          * Probabilistically determines whether the atom will emit a photon via stimulated emission.
          */
         stimulatedEmissionIsCertain: function() {
-            return _randomStimulatedEmission.nextDouble() < BohrModel.PHOTON_STIMULATED_EMISSION_PROBABILITY;
+            return Math.random() < BohrModel.PHOTON_STIMULATED_EMISSION_PROBABILITY;
         },
         
         /**

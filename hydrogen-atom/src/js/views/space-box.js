@@ -5,8 +5,8 @@ define(function(require) {
     var PIXI = require('pixi');
     var _    = require('underscore');
 
-    var PixiView = require('common/v3/pixi/view');
-    var Colors   = require('common/colors/colors');
+    var HybridView = require('common/v3/pixi/view/hybrid');
+    var Colors     = require('common/colors/colors');
 
     var AtomicModels = require('hydrogen-atom/models/atomic-models');
     
@@ -26,7 +26,7 @@ define(function(require) {
     /**
      * Represents the zoomed in view of the scene and what's happening at the atomic level
      */
-    var SpaceBoxView = PixiView.extend({
+    var SpaceBoxView = HybridView.extend({
 
         /**
          * Initializes the new SpaceBoxView.
@@ -113,6 +113,13 @@ define(function(require) {
             this.bottomLayer.addChild(this.atomicModelViews['BOHR'].displayObject);
             this.bottomLayer.addChild(this.atomicModelViews['DEBROGLIE'].displayObject);
             this.bottomLayer.addChild(this.atomicModelViews['SCHROEDINGER'].displayObject);
+
+            this.$el.append(this.atomicModelViews['BILLIARD_BALL'].el);
+            this.$el.append(this.atomicModelViews['PLUM_PUDDING'].el);
+            this.$el.append(this.atomicModelViews['SOLAR_SYSTEM'].el);
+            this.$el.append(this.atomicModelViews['BOHR'].el);
+            this.$el.append(this.atomicModelViews['DEBROGLIE'].el);
+            this.$el.append(this.atomicModelViews['SCHROEDINGER'].el);
 
             this.currentAtomicModelViewIndex = 0;
             this.atomicModelChanged();

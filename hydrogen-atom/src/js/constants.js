@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var WavelengthColors = require('common/colors/wavelength');
+    var Colors           = require('common/colors/colors');
     var range            = require('common/math/range');
 
     var Constants = require('nuclear-physics/constants'); 
@@ -369,14 +370,74 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    var DeBroglieBrightnessView = {};
+    var DeBroglieModelBrightnessSubView = {};
 
     // Radial width of the ring representation
-    DeBroglieBrightnessView.RING_WIDTH = 5;
+    DeBroglieModelBrightnessSubView.RING_WIDTH = 5;
+    DeBroglieModelBrightnessSubView.SEGMENT_LENGTH = 2;
 
-    Constants.DeBroglieBrightnessView = DeBroglieBrightnessView;
+    // color used when amplitude = +1
+    DeBroglieModelBrightnessSubView.PLUS_COLOR = Constants.ELECTRON_COLOR;
+    // color used when amplitude = -1
+    DeBroglieModelBrightnessSubView.MINUS_COLOR = '#000';
+    // color used when amplitude = 0
+    DeBroglieModelBrightnessSubView.ZERO_COLOR = Colors.interpolateHex(
+        DeBroglieModelBrightnessSubView.MINUS_COLOR, 
+        DeBroglieModelBrightnessSubView.PLUS_COLOR, 
+        0.5
+    );
+
+    Constants.DeBroglieModelBrightnessSubView = DeBroglieModelBrightnessSubView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                   DeBROGLIE RADIAL DISTANCE VIEW                    **
+     **                                                                     **
+     *************************************************************************/
+
+    var DeBroglieModelRadialSubView = {};
+
+    // Multiply the ground state orbit radius by this number to determine max amplitude
+    DeBroglieModelRadialSubView.RADIAL_OFFSET_FACTOR = 0.45;
+    // Number of line segments used to approximate the ring
+    DeBroglieModelRadialSubView.NUMBER_OF_SEGMENTS = 128;
+
+    Constants.DeBroglieModelRadialSubView = DeBroglieModelRadialSubView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                      DeBROGLIE HEIGHT 3D VIEW                       **
+     **                                                                     **
+     *************************************************************************/
+
+    var DeBroglieModel3DSubView = {};
+
+    // How much to scale the orbit in the y dimension, in order to 
+    //   create an ellipse that represents the projection of the 3D orbit into 3D.
+    //   See debugOrbitProjections method.
+    //   If you change this value, you must also change FINAL_VIEW_ANGLE !!
+    DeBroglieModel3DSubView.ORBIT_Y_SCALE = DeBroglieModel.ORBIT_Y_SCALE;
+    // Setting this to true cause the wireframe to rotate into place
+    DeBroglieModel3DSubView.ROTATE_INTO_PLACE = true;
+    DeBroglieModel3DSubView.MAX_HEIGHT = 15; // screen coordinates
+    // The final view angle, after the model has rotated into place.
+    // If you change this value, you must also change ORBIT_Y_SCALE !!
+    DeBroglieModel3DSubView.FINAL_VIEW_ANGLE = 70; // degrees, rotation about the x-axis
+    // change is angle during view animation
+    DeBroglieModel3DSubView.VIEW_ANGLE_DELTA = 5; // degrees
+    
+    // DeBroglieModel3DSubView.ORBIT_VERTICIES = 200;
+    // DeBroglieModel3DSubView.ORBIT_LINE_WIDTH = 1;
+    // DeBroglieModel3DSubView.ORBIT_FRONT_COLOR = '#fff';
+    // DeBroglieModel3DSubView.ORBIT_BACK_COLOR = '#eee';
+    
+    DeBroglieModel3DSubView.WAVE_VERTICIES = 200;
+    DeBroglieModel3DSubView.WAVE_LINE_WIDTH = 2;
+    DeBroglieModel3DSubView.WAVE_COLOR = Constants.ELECTRON_COLOR;
+
+    Constants.DeBroglieModel3DSubView = DeBroglieModel3DSubView;
 
 
     return Constants;

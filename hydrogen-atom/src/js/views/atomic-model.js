@@ -5,14 +5,16 @@ define(function(require) {
     var PIXI = require('pixi');
     var _    = require('underscore');
 
-    var PixiView = require('common/v3/pixi/view');
+    var HybridView = require('common/v3/pixi/view/hybrid');
+
+    var BohrModel = require('hydrogen-atom/models/atomic-model/bohr');
 
     var Constants = require('constants');
     
     /**
      * Represents the zoomed in view of the scene and what's happening at the atomic level
      */
-    var AtomicModelView = PixiView.extend({
+    var AtomicModelView = HybridView.extend({
 
         /**
          * Initializes the new AtomicModelView.
@@ -23,19 +25,34 @@ define(function(require) {
             this.simulation = options.simulation;
 
             this.initGraphics();
-            // this.updateMVT(this.mvt);
+
             this.hide();
         },
 
         /**
          * Initializes everything for rendering graphics
          */
-        initGraphics: function() {
-            // var graphics = new PIXI.Graphics();
-            // graphics.beginFill(Math.random() * 0xFFFFFF, 1);
-            // graphics.drawCircle(500, 300, 20);
-            // graphics.endFill();
-            // this.displayObject.addChild(graphics);
+        initGraphics: function() {},
+
+        initOrbitalGraphics: function() {
+            this.orbitalGraphics = new PIXI.Graphics();
+            this.displayObject.addChild(this.orbitalGraphics);
+        },
+
+        /**
+         * Draws the orbital paths to a given graphics object
+         */
+        drawOrbitals: function(graphics) {
+            graphics.clear();
+            graphics.lineStyle(1, 0xFFFFFF, 1);
+
+            var dashStyle = [2, 2];
+            var groundState = BohrModel.getGroundState();
+            var numberOfStates = BohrModel.getNumberOfStates();
+            for (var state = groundState; state < (groundState + numberOfStates); state++) {
+                var radius = this.mvt.modelToViewDeltaX(BohrModel.getOrbitRadius(state));
+                graphics.dashCircle(0, 0, radius, dashStyle);
+            }
         },
 
         /**
@@ -46,16 +63,14 @@ define(function(require) {
         },
 
         getViewPosition: function() {
-            return this.mvt.modelToView(this.simulation.atom.get('position'));
+            return this.mvt.modelToView(this.getAtom().get('position'));
         },
 
         getViewDiameter: function() {
-            return this.mvt.modelToViewDeltaX(this.simulation.atom.get('radius') * 2);
+            return this.mvt.modelToViewDeltaX(this.getAtom().get('radius') * 2);
         },
 
-        update: function(time, deltaTime, paused) {
-            
-        },
+        update: function(time, deltaTime, paused) {},
 
         activate: function() {
             this.atom = this.simulation.atom;
@@ -65,6 +80,22 @@ define(function(require) {
 
         deactivate: function() {
             this.hide();
+        },
+
+        show: function() {
+            HybridView.prototype.show.apply(this, arguments);
+
+            this.$el.show();
+        },
+
+        hide: function() {
+            HybridView.prototype.hide.apply(this, arguments);
+
+            this.$el.hide();
+        },
+
+        getAtom: function() {
+            return this.simulation.atom;
         }
 
     });

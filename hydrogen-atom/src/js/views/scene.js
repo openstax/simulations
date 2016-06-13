@@ -38,21 +38,7 @@ define(function(require) {
 
             this.initRayGunView();
             this.initSpaceBoxView();
-            // this.initAtomView();
             this.drawProjectionLines();
-        },
-
-        initAtomView: function() {
-            // this.atomNodeView = new AtomView({
-            //     mvt: this.mvt,
-            //     particleMVT: this.particleMVT,
-            //     model: this.simulation.atomNode,
-            //     simulation: this.simulation,
-            //     scale: this.scale,
-            //     maskBox: this.spaceBoxView.maskBox
-            // });
-
-            // this.bottomLayer.addChild(this.atomNodeView.displayObject);
         },
 
         initBoxMVT: function(){
@@ -117,6 +103,13 @@ define(function(require) {
             });
 
             this.topLayer.addChild(this.spaceBoxView.displayObject);
+            this.$ui.append(this.spaceBoxView.el);
+        },
+
+        postRender: function() {
+            RutherfordScatteringSceneView.prototype.postRender.apply(this, arguments);
+
+            this.$ui.find('select').selectpicker();
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
