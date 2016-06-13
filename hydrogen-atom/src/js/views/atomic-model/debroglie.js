@@ -92,8 +92,8 @@ define(function(require) {
         },
 
         viewModeChanged: function(atom, viewMode) {
-            if (this.subViews[atom.previous('viewMode')])
-                this.subViews[atom.previous('viewMode')].deactivate();
+            for (var key in this.subViews)
+                this.subViews[key].deactivate();
 
             this.subViews[viewMode].activate();
         }
