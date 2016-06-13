@@ -2,11 +2,11 @@ define(function(require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var SchrodingerModel = require('hydrogen-atom/models/atomic-model/schroedinger');
 
     var EnergyDiagramView = require('hydrogen-atom/views/energy-diagram');
-
-    var Constants = require('constants');
 
     // Margins inside the drawing area
     var X_MARGIN = 10;

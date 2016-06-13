@@ -178,7 +178,7 @@ define(function (require) {
             if (valid) {
                 this.l = lNew;
                 this.m = mNew;
-                DeBroglieModel.prototype.setElectronState.apply(this, [nNew])
+                DeBroglieModel.prototype.setElectronState.apply(this, [nNew]);
             }
             else {
                 // There's a bug in the implementation of the transition rules.
@@ -186,7 +186,7 @@ define(function (require) {
                 SchroedingerModel.warnBadTransition(this.getElectronState(), this.l, this.m, nNew, lNew, mNew);
                 this.l = 0;
                 this.m = 0;
-                DeBroglieModel.prototype.setElectronState.apply(this, [1])
+                DeBroglieModel.prototype.setElectronState.apply(this, [1]);
             }
         },
         
@@ -295,6 +295,7 @@ define(function (require) {
          */
         getNewTertiaryState: function(lNew, mOld) {
             var mNew = 0;
+            var a;
             
             if (lNew === 0) {
                 mNew = 0;
@@ -306,21 +307,21 @@ define(function (require) {
                 mNew = -lNew;
             }
             else if (mOld === lNew) {
-                var a = RandomUtils.randomInteger(2);
+                a = RandomUtils.randomInteger(2);
                 if (a === 0)
                     mNew = mOld;
                 else
                     mNew = mOld - 1;
             }
             else if (mOld === -lNew) {
-                var a = RandomUtils.randomInteger(2);
+                a = RandomUtils.randomInteger(2);
                 if (a === 0)
                     mNew = mOld;
                 else
                     mNew = mOld + 1;
             }
             else {
-                var a = RandomUtils.randomInteger(3);
+                a = RandomUtils.randomInteger(3);
                 if (a === 0)
                     mNew = mOld + 1;
                 else if (a === 1)

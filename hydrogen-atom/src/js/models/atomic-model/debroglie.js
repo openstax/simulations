@@ -4,8 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2     = require('common/math/vector2');
-    var RandomUtils = require('common/math/random-utils');
+    var Vector2 = require('common/math/vector2');
 
     var BohrModel          = require('hydrogen-atom/models/atomic-model/bohr');
     var DeBroglieViewModes = require('hydrogen-atom/models/debroglie-view-modes');

@@ -2,13 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var Vector2 = require('common/math/vector2');
 
     var MovingObject = require('hydrogen-atom/models/moving-object');
-    
-    var Constants = require('constants');
 
     /**
      * AlphaParticle is the model of an alpha particle.

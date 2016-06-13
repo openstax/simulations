@@ -51,7 +51,7 @@ define(function (require) {
             
             // Alpha particle's initial position, relative to the atom's center.
             var x0 = this.getX0(atom, alphaParticle, plumPudding);
-            if (!(x0 > 0));
+            if (!(x0 > 0))
                 throw 'x0 must be greater than 0';
 
             var y0 = alphaParticle.getInitialPosition().getY() - atom.getY();
@@ -60,7 +60,7 @@ define(function (require) {
             // b, horizontal distance to atom's center at y == negative infinity
             var b1 = Math.sqrt((x0 * x0) + (y0 * y0));
             var b = 0.5 * (x0 + Math.sqrt((-2 * D * b1) - (2 * D * y0) + (x0 * x0)));
-            if (!(b > 0));
+            if (!(b > 0))
                 throw 'b must be greater than 0';
 
             // particle's current position and speed
@@ -105,7 +105,7 @@ define(function (require) {
                 console.log('  particle id=' + alphaParticle.getId() );
                 console.log('  atom type=' + atom.getClass().getName() );
                 console.log('  constants:' );
-                console.log('    L=' + (HAConstants.ANIMATION_BOX_SIZE.height).toFixed(2));
+                console.log('    L=' + (Constants.ANIMATION_BOX_SIZE.height).toFixed(2));
                 console.log('    D=' + (D).toFixed(2));
                 console.log('    deltaTime=' + ( deltaTime ).toFixed(2) );
                 console.log('    (x0,y0)=(' + ( x0 ).toFixed(2) + ',' + ( y0 ).toFixed(2) + ')' );

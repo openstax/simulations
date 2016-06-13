@@ -5,8 +5,6 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var AtomicModelView = require('hydrogen-atom/views/atomic-model');
-
-    var Constants = require('constants');
     
     /**
      * Represents the scene for the ExperimentModel

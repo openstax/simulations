@@ -43,7 +43,7 @@ define(function (require) {
 
             if (wavelength === Constants.WHITE_WAVELENGTH) {
                 // Special case: white light.
-                color = Color.WHITE;
+                color = '#fff';
             }
             else if (wavelength < WavelengthColors.MIN_WAVELENGTH) {
                 color = Constants.UV_COLOR;

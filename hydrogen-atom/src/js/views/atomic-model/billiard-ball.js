@@ -2,11 +2,8 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-
     var AtomicModelView = require('hydrogen-atom/views/atomic-model');
 
-    var Constants = require('constants');
     var Assets = require('assets');
     
     /**

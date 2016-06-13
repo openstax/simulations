@@ -9,8 +9,9 @@ define(function (require) {
     var range              = require('common/math/range');
     var Vector2            = require('common/math/vector2');
 
-    var BohrModel = require('hydrogen-atom/models/atomic-model/bohr');
-    var Photon    = require('hydrogen-atom/models/photon');
+    var BohrModel     = require('hydrogen-atom/models/atomic-model/bohr');
+    var Photon        = require('hydrogen-atom/models/photon');
+    var AlphaParticle = require('hydrogen-atom/models/alpha-particle');
     
     var Constants = require('constants');
 
@@ -92,7 +93,7 @@ define(function (require) {
 
             if (wavelength === Constants.WHITE_WAVELENGTH) {
                 // Special case: white light.
-                return Color.WHITE;
+                return '#fff';
             }
             else if (wavelength < WavelengthColors.MIN_WAVELENGTH) {
                 return Constants.UV_COLOR;
@@ -108,8 +109,8 @@ define(function (require) {
         /**
          * Gets the color of the gun's beam.
          * The alpha component of the Color returned corresponds to the intensity.
-         * If the gun is shooting alpha particles, HAConstants.ALPHA_PARTICLES_COLOR is returned.
-         * If the gun is shooting white light, Color.WHITE is returned.
+         * If the gun is shooting alpha particles, Constants.ALPHA_PARTICLES_COLOR is returned.
+         * If the gun is shooting white light, white is returned.
          * If the gun is shooting monochromatic light, a Color corresponding to the wavelength is returned.
          */
         getBeamColor: function() {
