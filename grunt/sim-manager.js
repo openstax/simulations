@@ -291,6 +291,32 @@ module.exports = function(grunt) {
 			}
 		},
 
+		cleanNpm: function() {
+			grunt.log.writeln('Cleaning npm dependencies for each project...');
+
+			// Get a list of all the package files from each directory
+			var packageFiles = grunt.file.expand(packageFilePatterns);
+			// Get a list of their containing directories
+			var dirs = _.map(packageFiles, function(packageFile) {
+				// Gets the path leading up to package.json
+				return packageFile.substring(0, packageFile.indexOf('package.json'));
+			});
+
+			var dirsCleaned = 0;
+			for (var i = 0; i < dirs.length; i++) {
+				var directory = dirs[i] + 'node_modules';
+				if (grunt.file.exists(directory)) {
+					wrench.rmdirSyncRecursive(directory);
+					dirsCleaned++;
+				}
+			}
+
+			if (dirsCleaned === 1)
+				grunt.log.writeln('>> 1 node_modules directory cleaned');
+			else
+				grunt.log.writeln('>> ' + dirsCleaned + ' node_modules directories cleaned');
+		},
+
 		/**
 		 * Creates a new sim folder and renames all the references inside.
 		 */
@@ -358,6 +384,10 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('npm-install', function() {
 		SimManager.npmInstall(grunt.option('all'));
+	});
+
+	grunt.registerTask('npm-clean', function() {
+		SimManager.cleanNpm();
 	});
 
 	/**
