@@ -276,6 +276,13 @@
         width: @spectrometer-panel-width;
         height: 204px;
 
+        @media screen and (max-height: @short-window) {
+            top: inherit;
+            bottom: (@short-screen-playback-controls-bar-height + @short-screen-panel-margin - 1px);
+            left: (360px + @short-screen-panel-margin);
+            background-color: #b9bcc3;
+        }
+
         h2 {
             margin-bottom: -1px;
         }

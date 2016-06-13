@@ -43,8 +43,8 @@ define(function(require) {
 
         initBoxMVT: function(){
             if (AppView.windowIsShort()) {
-                this.viewOriginX = Math.round((this.width - 220) / 2);
-                this.viewOriginY = Math.round((this.height - 50)/ 2);
+                this.viewOriginX = 540 + 12;
+                this.viewOriginY = 12 + Constants.BOX_SIZE + 0.5;
                 this.spaceBoxSize = Constants.BOX_SIZE_SMALL;
             }
             else {
