@@ -53,7 +53,7 @@ define(function (require) {
 
         // Animation space size, must be square!
         BOX_SIZE: 360,
-        BOX_SIZE_SMALL: 360,
+        BOX_SIZE_SMALL: 320,
 
         RUTHERFORD_ACTUAL: 150,
         PUDDING_ACTUAL: 300,

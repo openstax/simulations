@@ -170,7 +170,8 @@ define(function (require) {
                 Assets: Assets,
                 simulation: this.simulation,
                 atomicModels: AtomicModels,
-                selectedAtomicModel: AtomicModels.BILLIARD_BALL
+                selectedAtomicModel: AtomicModels.BILLIARD_BALL,
+                iconSize: AppView.windowIsShort() ? 34 : 42
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();

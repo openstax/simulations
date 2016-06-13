@@ -122,8 +122,8 @@
             margin-bottom: -4px;
 
             @media screen and (max-height: @short-window) {
-                height: 300px;
-                margin-top: 13px;
+                height: 252px;
+                margin-top: 11px;
             }
         }
 
@@ -192,7 +192,7 @@
                 color: #fff;
 
                 @media screen and (max-height: @short-window) {
-                    top: 244px;
+                    top: 196px;
                 }
             }
         }
@@ -221,10 +221,11 @@
             margin-bottom: 0;
             max-height: 204px;
             overflow: hidden;
-            .transition(~"max-height 300ms, margin 300ms");
+            .transition(~"max-height 300ms, margin 300ms, padding 300ms");
 
             &.closed {
-                max-height: 46px;
+                max-height: 27px;
+                padding-top: 5px;
 
                 h2 {
                     border: none;
@@ -312,8 +313,9 @@
         @media screen and (max-height: @short-window) {
             top: inherit;
             bottom: (@short-screen-playback-controls-bar-height + @short-screen-panel-margin + 5px);
-            left: (360px + @short-screen-panel-margin);
+            left: (400px + @short-screen-panel-margin);
             margin-bottom: 0;
+            width: @short-screen-spectrometer-panel-width;
             background-color: #b9bcc3;
         }
 
