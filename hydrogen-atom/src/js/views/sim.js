@@ -5,6 +5,7 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
+    var AppView = require('common/v3/app/app');
     var SimView = require('common/v3/app/sim');
     
     var HydrogenAtomSimulation           = require('hydrogen-atom/models/simulation');
@@ -346,6 +347,13 @@ define(function (require) {
 
         toggleEnergyLevelDiagramPanel: function(event) {
             this.$('.energy-level-diagram-panel').toggleClass('collapsed');
+
+            if (AppView.windowIsShort()) {
+                if (this.$('.energy-level-diagram-panel').hasClass('collapsed'))
+                    this.$('.light-controls').removeClass('closed');
+                else
+                    this.$('.light-controls').addClass('closed');
+            }
         },
 
         toggleSpectrometerPanel: function(event) {

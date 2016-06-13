@@ -20,6 +20,11 @@
             top: 25px;
             width: 140px;
 
+            @media screen and (max-height: @short-window) {
+                top: (25px - (@panel-margin - @short-screen-panel-margin));
+                left: (364px + 13px);
+            }
+
             .bootstrap-select {
                 background-color: transparent;
                 border-color: transparent;
