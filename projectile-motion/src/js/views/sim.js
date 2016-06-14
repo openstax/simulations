@@ -5,8 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var MeasuringTapeView = require('common/tools/measuring-tape');
-    var SimView           = require('common/app/sim');
+    var MeasuringTapeView = require('common/v3/tools/measuring-tape');
+    var SimView           = require('common/v3/app/sim');
     var Vector2           = require('common/math/vector2');
 
     var ProjectileMotionSimulation = require('models/simulation');

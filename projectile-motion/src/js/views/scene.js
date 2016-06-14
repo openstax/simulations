@@ -10,8 +10,8 @@ define(function(require) {
     var Colors    = require('common/colors/colors');
 
     var ModelViewTransform = require('common/math/model-view-transform');
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var AppView            = require('common/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
 
     var CannonView      = require('views/cannon');
     var TargetView      = require('views/target');
