@@ -194,7 +194,9 @@ define(function (require, exports, module) {
          *      supporting surface."
          */
         _findSupportingSurfaces: function(time, deltaTime) {
-            _.each(this.movableElements, function(element) {
+            for (var i = 0; i < this.movableElements.length; i++) {
+                var element = this.movableElements[i];
+
                 // If the user is moving it, do nothing; if it's already at rest, do nothing.
                 if (!element.get('userControlled') && !element.getSupportingSurface() && element.get('position').y !== 0) {
                     var minYPos = 0;
@@ -228,11 +230,9 @@ define(function (require, exports, module) {
                     else {
                         element.set('verticalVelocity', velocity);
                     }
-                    //console.log(element.cid + ': ' + element.get('position').x + ', ' + proposedYPos);
                     element.setY(proposedYPos);
-                    //console.log('setting from simulation');
                 }
-            }, this);
+            }
         },
 
         /**
@@ -471,9 +471,11 @@ define(function (require, exports, module) {
             }
 
             // Now check the model element's motion against each of the blocks.
-            _.each(this.blocks, function(block) {
+            for (var i = 0; i < this.blocks.length; i++) {
+                var block = this.blocks[i];
+
                 if (element === block)
-                    return;
+                    continue;
 
                 // Do not restrict the model element's motion in positive Y
                 //   direction if the tested block is sitting on top of the model
@@ -498,7 +500,7 @@ define(function (require, exports, module) {
                 if (element !== this.beaker || !this.beaker.getRect().contains(block.getRect())) {
                     translation = this.determineAllowedTranslation(testRect, block.getRect(), translation, restrictPositiveY);
                 }
-            }, this);
+            }
 
             // Determine the new position based on the resultant translation and return it.
             return translation.add(element.get('position'));
@@ -642,13 +644,15 @@ define(function (require, exports, module) {
 
             // Check each of the possible supporting elements in the model to see
             //   if this element can go on top of it.
-            _.each(this.supportingSurfaces, function(potentialSupportingElement) {
+            for (var i = 0; i < this.supportingSurfaces.length; i++) {
+                var potentialSupportingElement = this.supportingSurfaces[i];
+
                 if (potentialSupportingElement === element || potentialSupportingElement.isStackedUpon(element)) {
                     // The potential supporting element is either the same as the
                     //   test element or is sitting on top of the test element.  In
                     //   either case, it can't be used to support the test element,
                     //   so skip it.
-                    return;
+                    continue;
                 }
 
                 if (element.getBottomSurface().overlapsWith( potentialSupportingElement.getTopSurface())) {
@@ -670,7 +674,7 @@ define(function (require, exports, module) {
                         bestOverlappingSurface = potentialSupportingElement.getTopSurface();
                     }
                 }
-            }, this);
+            }
 
             // Make sure that the best supporting surface isn't at the bottom of
             //   a stack, which can happen in cases where the model element being

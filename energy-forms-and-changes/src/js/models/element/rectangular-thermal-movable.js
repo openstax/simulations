@@ -232,8 +232,11 @@ define(function (require) {
             var compensatedDistance;
 
             // Indentify the closest energy chunk.
-            _.each(this.slices, function(slice) {
-                _.each(slice.energyChunkList.models, function(chunk) {
+            for (var i = 0; i < this.slices.length; i++) {
+                var slice = this.slices[i];
+                for (var j = 0; j < slice.energyChunkList.models.length; j++) {
+                    var chunk = slice.energyChunkList.models[j];
+
                     // Compensate for the Z offset.  Otherwise front chunk will
                     //   almost always be chosen.
                     compensatedChunkPosition
@@ -248,8 +251,8 @@ define(function (require) {
                         closestCompensatedDistance = compensatedDistance;
                         closestEnergyChunk = chunk;
                     }
-                });
-            });
+                }
+            }
 
             this.removeEnergyChunk(closestEnergyChunk);
             return closestEnergyChunk;
@@ -268,35 +271,45 @@ define(function (require) {
         extractClosestEnergyChunkToRectangle: function(rect) {
             var chunkToExtract = null;
             var myBounds = this.getSliceBounds();
+            var i;
+            var j;
 
             if (rect.contains(this.getThermalContactArea().getBounds())) {
                 // Our shape is contained by the destination.  Pick a chunk near
                 //   our right or left edge.
                 var closestDistanceToVerticalEdge = Number.POSITIVE_INFINITY;
-                _.each(this.slices, function(slice) {
-                    _.each(slice.energyChunkList.models, function(chunk) {
+
+                for (i = 0; i < this.slices.length; i++) {
+                    var slice = this.slices[i];
+                    for (j = 0; j < slice.energyChunkList.models.length; j++) {
+                        var chunk = slice.energyChunkList.models[j];
+                
                         var distanceToVerticalEdge = Math.min(Math.abs(myBounds.left() - chunk.get('position').x), Math.abs(myBounds.right() - chunk.get('position').x));
                         if (distanceToVerticalEdge < closestDistanceToVerticalEdge) {
                             chunkToExtract = chunk;
                             closestDistanceToVerticalEdge = distanceToVerticalEdge;
                         }
-                    }, this);
-                }, this);
+                    }
+                }
             }
             else if (this.getThermalContactArea().getBounds().contains(rect)) {
                 // Our shape encloses the destination shape.  Choose a chunk that
                 //   is close but doesn't overlap with the destination shape.
                 var closestDistanceToDestinationEdge = Number.POSITIVE_INFINITY;
                 var destinationBounds = rect.getBounds();
-                _.each(this.slices, function(slice) {
-                    _.each(slice.energyChunkList.models, function(chunk) {
+
+                for (i = 0; i < this.slices.length; i++) {
+                    var slice = this.slices[i];
+                    for (j = 0; j < slice.energyChunkList.models.length; j++) {
+                        var chunk = slice.energyChunkList.models[j];
+
                         var distanceToDestinationEdge = Math.min(Math.abs(destinationBounds.left() - chunk.get('position').x), Math.abs(destinationBounds.right() - chunk.get('position').x));
                         if (!rect.contains(chunk.get('position')) && distanceToDestinationEdge < closestDistanceToDestinationEdge) {
                             chunkToExtract = chunk;
                             closestDistanceToDestinationEdge = distanceToDestinationEdge;
                         }
-                    }, this);
-                }, this);
+                    }
+                }
             }
             else {
                 // There is no or limited overlap, so use center points.
@@ -309,7 +322,7 @@ define(function (require) {
             // Fail safe - If nothing found, get the first chunk.
             if (!chunkToExtract) {
                 console.error(Object.prototype.toString.call(this) + ' - Warning: No energy chunk found by extraction algorithm, trying first available.');
-                for (var i = 0; i < this.slices.length; i++) {
+                for (i = 0; i < this.slices.length; i++) {
                     if (this.slices[i].energyChunkList.length) {
                         chunkToExtract = this.slices[i].energyChunkList.at(0);
                         break;

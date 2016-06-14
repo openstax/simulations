@@ -76,9 +76,11 @@ define(function(require) {
         },
 
         update: function() {
-            _.each(this.lightRayViews, function(lightRayView) {
+            for (var i = 0; i < this.lightRayViews.length; i++) {
+                var lightRayView = this.lightRayViews[i];
+
                 lightRayView.updateLineSegments();
-            });
+            }
         }
 
     });
