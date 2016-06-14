@@ -13,6 +13,7 @@ define(function(require) {
     require('less!./tabs');
 
     var AppView = Backbone.View.extend({
+
         template: _.template(template),
         tagName: 'div',
         className: 'app-view',
@@ -21,6 +22,7 @@ define(function(require) {
          * List of constructors to call to create each sim view (tab)
          */
         simViewConstructors: [],
+        defaultSimViewIndex: 0,
 
         events: {
             'click .sim-tab' : 'tabClicked'
@@ -56,7 +58,17 @@ define(function(require) {
         postLoad: function() {
             this.render();
             this.postRender();
+            this.selectDefaultTab();
             this.hideLoading();
+        },
+
+        selectDefaultTab: function() {
+            if (AppView.getUrlParameter('defaultTabIndex'))
+                this.defaultSimViewIndex = parseInt(AppView.getUrlParameter('defaultTabIndex'));
+
+            var $tabs = this.$('.sim-tab');
+            if (this.defaultSimViewIndex < $tabs.length)
+                $tabs.eq(this.defaultSimViewIndex).click();
         },
 
         /**
@@ -214,6 +226,24 @@ define(function(require) {
          */
         windowIsShort: function() {
             return $(window).height() <= AppView.shortWindowHeight;
+        },
+
+        /**
+         * Gets a parameter from the URL's query string.
+         * Source from http://stackoverflow.com/a/21903119
+         */
+        getUrlParameter: function(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1));
+            var sURLVariables = sPageURL.split('&');
+            var sParameterName;
+            var i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam)
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
         }
 
     });
