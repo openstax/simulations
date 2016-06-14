@@ -100,7 +100,7 @@ define(function(require) {
         },
 
         initSteam: function() {
-            this.steamLayer = new PIXI.ParticleContainer();
+            this.steamLayer = new PIXI.Container();
             this.displayObject.addChildAt(this.steamLayer, 0);
 
             this.activeSteamParticles = [];

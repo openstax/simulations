@@ -263,7 +263,7 @@ define(function(require) {
         },
 
         initSteam: function() {
-            this.steamLayer = new PIXI.ParticleContainer();
+            this.steamLayer = new PIXI.Container();
             this.fluidLayer.addChild(this.steamLayer);
 
             this.activeSteamParticles = [];
