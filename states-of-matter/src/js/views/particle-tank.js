@@ -4,10 +4,10 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
     
-    var PixiView           = require('common/pixi/view');
-    var ThermometerView    = require('common/pixi/view/thermometer');
+    var PixiView           = require('common/v3/pixi/view');
+    var ThermometerView    = require('common/v3/pixi/view/thermometer');
     var Vector2            = require('common/math/vector2');
     var range              = require('common/math/range');
     var ModelViewTransform = require('common/math/model-view-transform');
@@ -90,7 +90,7 @@ define(function(require) {
             lidSprite.anchor.x = 0.5;
             lidSprite.anchor.y = 1;
 
-            this.lid = new PIXI.DisplayObjectContainer();
+            this.lid = new PIXI.Container();
             this.lid.y = this.lidYRange.min;
             this.lid.addChild(lidSprite);
 
@@ -115,6 +115,7 @@ define(function(require) {
                 font: 'bold 12px Arial',
                 fill: '#000'
             });
+            thermometerLabel.resolution = this.getResolution();
             thermometerLabel.anchor.x = 0.5;
             thermometerLabel.x = thermometerView.displayObject.x;
             thermometerLabel.y = thermometerView.displayObject.y - thermometerView.displayObject.height - 4;
@@ -160,15 +161,15 @@ define(function(require) {
             xOffsetFromEdge += particleSizeOffset;
 
             // Create, position, and add container
-            this.particleContainer = new PIXI.DisplayObjectContainer();
+            this.particleContainer = new PIXI.Container();
             this.particleContainer.x = -this.tank.width / 2 + xOffsetFromEdge;
             this.particleContainer.y = -19 - particleSizeOffset;
 
             this.displayObject.addChild(this.particleContainer);
 
             // Create particle layers for different atoms in a molecule
-            this.lowerParticleLayer = new PIXI.SpriteBatch();
-            this.upperParticleLayer = new PIXI.SpriteBatch();
+            this.lowerParticleLayer = new PIXI.Container();
+            this.upperParticleLayer = new PIXI.Container();
 
             this.particleContainer.addChild(this.lowerParticleLayer);
             this.particleContainer.addChild(this.upperParticleLayer);
@@ -298,11 +299,11 @@ define(function(require) {
             var temp = simulation.convertInternalTemperatureToKelvin();
             this.thermometerView.val(temp / Constants.MAX_DISPLAYED_TEMPERATURE);
             if (this.usingKelvin) {
-                this.thermometerLabel.setText(Math.round(temp) + ' K');
+                this.thermometerLabel.text = Math.round(temp) + ' K';
             }
             else {
                 temp -= 273.15;
-                this.thermometerLabel.setText(Math.round(temp) + ' C');
+                this.thermometerLabel.text = Math.round(temp) + ' C';
             }
         },
 
@@ -318,17 +319,17 @@ define(function(require) {
                 .add(this.displayObject.width / 2, -37);
         },
 
-        dragStart: function(data) {
+        dragStart: function(event) {
             if (!this.lidDraggable)
                 return;
 
-            this.dragOffset = data.getLocalPosition(this.lid, this._dragOffset);
+            this.dragOffset = event.data.getLocalPosition(this.lid, this._dragOffset);
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var local = data.getLocalPosition(this.displayObject, this._dragLocation);
+                var local = event.data.getLocalPosition(this.displayObject, this._dragLocation);
                 var y = local.y - this.dragOffset.y;
                 
                 if (y > this.lidYRange.max)
@@ -343,7 +344,7 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
             this.simulation.set('targetContainerHeight', this.simulation.get('particleContainerHeight'));
         },

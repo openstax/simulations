@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var AppView = require('common/app/app');
+    var AppView = require('common/v3/app/app');
 
     var SOMSceneView      = require('views/scene');
     var PressureGaugeView = require('views/pressure-gauge');

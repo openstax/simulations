@@ -4,7 +4,7 @@ define(function(require) {
 
     var _ = require('underscore');
 
-    var PixiAppView = require('common/pixi/view/app');
+    var PixiAppView = require('common/v3/pixi/view/app');
 
     var SolidLiquidGasSimView = require('views/sim/solid-liquid-gas');
     var PhaseChangesSimView   = require('views/sim/phase-changes');

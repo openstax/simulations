@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var Vector2  = require('common/math/vector2');
     var range    = require('common/math/range');
 
@@ -64,14 +64,14 @@ define(function(require) {
             this.pumpingRequiredToInject = this.handle.height * PumpView.PUMPING_PROPORTION_REQUIRE_TO_INJECT;
         },
 
-        dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.handle, this._dragOffset);
+        dragStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.handle, this._dragOffset);
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var local = data.getLocalPosition(this.displayObject, this._dragLocation);
+                var local = event.data.getLocalPosition(this.displayObject, this._dragLocation);
                 var y = local.y - this.dragOffset.y;
                 
                 if (y > this.handleYRange.max)
@@ -92,7 +92,7 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 
