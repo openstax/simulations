@@ -5,9 +5,9 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var AppView            = require('common/app/app');
-    var GridView           = require('common/pixi/view/grid');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
+    var GridView           = require('common/v3/pixi/view/grid');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
@@ -97,11 +97,11 @@ define(function(require) {
             this.bodyViews = [];
             this.bodyTraceViews = [];
 
-            this.bodyTraceLayer = new PIXI.DisplayObjectContainer();
+            this.bodyTraceLayer = new PIXI.Container();
             this.bodyTraceLayer.visible = false;
             this.stage.addChild(this.bodyTraceLayer);
 
-            this.bodies = new PIXI.DisplayObjectContainer();
+            this.bodies = new PIXI.Container();
             this.stage.addChild(this.bodies);
 
             this.bodiesReset(this.simulation.bodies);
@@ -121,7 +121,7 @@ define(function(require) {
 
         initCollisions: function() {
             this.collisionViews = [];
-            this.collisionLayer = new PIXI.DisplayObjectContainer();
+            this.collisionLayer = new PIXI.Container();
             this.stage.addChild(this.collisionLayer);
         },
 

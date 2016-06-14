@@ -5,9 +5,9 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
     var Colors    = require('common/colors/colors');
-    var ArrowView = require('common/pixi/view/arrow');
+    var ArrowView = require('common/v3/pixi/view/arrow');
 
     var defineInputUpdateLocks = require('common/locks/define-locks');
 
@@ -89,7 +89,7 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.bodyContainer = new PIXI.DisplayObjectContainer();
+            this.bodyContainer = new PIXI.Container();
 
             this.initBody();
             this.initLabels();
@@ -147,7 +147,7 @@ define(function(require) {
             bodyLabelLine.x = this.bodyLabelOffsetX * linePercentPadding;
             bodyLabelLine.y = this.bodyLabelOffsetY * linePercentPadding;
 
-            this.bodyLabel = new PIXI.DisplayObjectContainer();
+            this.bodyLabel = new PIXI.Container();
             this.bodyLabel.addChild(bodyLabelText);
             this.bodyLabel.addChild(bodyLabelLine);
 
@@ -184,7 +184,7 @@ define(function(require) {
         },
 
         initVelocityMarker: function() {
-            this.velocityMarker = new PIXI.DisplayObjectContainer();
+            this.velocityMarker = new PIXI.Container();
             this.velocityMarker.hitArea = new PIXI.Circle(0, 0, BodyView.VELOCITY_MARKER_RADIUS);
             this.velocityMarker.buttonMode = true;
 
@@ -213,7 +213,7 @@ define(function(require) {
         },
 
         updateMass: function(body, mass) {
-            this.massLabel.setText(this.simulation.get('scenario').viewSettings.massReadoutFunction(mass));
+            this.massLabel.text = this.simulation.get('scenario').viewSettings.massReadoutFunction(mass);
         },
 
         updateRadius: function(body, radius) {
@@ -260,15 +260,15 @@ define(function(require) {
                 return (targetSpriteWidth / this.body.width) / this.textureBodyWidthRatio;
         },
 
-        dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+        dragStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var dx = event.data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.displayObject.y - this.dragOffset.y;
                 
                 this.displayObject.x += dx;
                 this.displayObject.y += dy;
@@ -284,18 +284,18 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 
-        dragVelocityStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.velocityMarker, this._dragOffset);
+        dragVelocityStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.velocityMarker, this._dragOffset);
             this.draggingVelocity = true;
         },
 
-        dragVelocity: function(data) {
+        dragVelocity: function(event) {
             if (this.draggingVelocity) {
-                var local = data.getLocalPosition(this.displayObject, this._dragLocation);
+                var local = event.data.getLocalPosition(this.displayObject, this._dragLocation);
                 var x = local.x - this.dragOffset.x;
                 var y = local.y - this.dragOffset.y;
                 
@@ -307,7 +307,7 @@ define(function(require) {
             }
         },
 
-        dragVelocityEnd: function(data) {
+        dragVelocityEnd: function(event) {
             this.draggingVelocity = false;
         },
 
