@@ -7,7 +7,7 @@ define(function (require) {
 
     var IntroSimulation = require('models/simulation/intro');
 
-    var SimView        = require('common/app/sim');
+    var SimView        = require('common/v3/app/sim');
     var IntroSceneView = require('views/scene/intro');
     var Assets         = require('assets'); window.Assets = Assets;
 

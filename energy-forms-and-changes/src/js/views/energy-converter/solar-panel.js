@@ -23,8 +23,8 @@ define(function(require) {
         initGraphics: function() {
             EnergyConverterView.prototype.initGraphics.apply(this);
 
-            this.backLayer = new PIXI.DisplayObjectContainer();
-            this.frontLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer = new PIXI.Container();
+            this.frontLayer = new PIXI.Container();
 
             var solarPanel = this.createSpriteWithOffset(Assets.Images.SOLAR_PANEL,        SolarPanel.SOLAR_PANEL_OFFSET, 0.5); // need to offset with an anchor in the middle because the width is going to change
             var post       = this.createSpriteWithOffset(Assets.Images.SOLAR_PANEL_POST_2, SolarPanel.POST_OFFSET);

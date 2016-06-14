@@ -31,8 +31,8 @@ define(function(require) {
         initGraphics: function() {
             EnergyUserView.prototype.initGraphics.apply(this);
 
-            this.backLayer = new PIXI.DisplayObjectContainer();
-            this.frontLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer = new PIXI.Container();
+            this.frontLayer = new PIXI.Container();
 
             this.initImages();
             this.initLightRays();

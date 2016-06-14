@@ -7,7 +7,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var Colors     = require('common/colors/colors');
-    var SliderView = require('common/pixi/view/slider');
+    var SliderView = require('common/v3/pixi/view/slider');
     var Rectangle  = require('common/math/rectangle');
 
     var EnergySourceView   = require('views/energy-source');
@@ -57,7 +57,7 @@ define(function(require) {
             blueSky.y = sunCenter.y;
 
             // Put it in a separate layer to go behind everything
-            this.skyLayer = new PIXI.DisplayObjectContainer();
+            this.skyLayer = new PIXI.Container();
             this.skyLayer.addChild(blueSky);
         },
 
@@ -104,7 +104,7 @@ define(function(require) {
         },
 
         initClouds: function() {
-            this.cloudLayer = new PIXI.DisplayObjectContainer();
+            this.cloudLayer = new PIXI.Container();
             this.model.clouds.each(function(cloud) {
                 var cloudView = new CloudView({
                     model: cloud,
@@ -126,7 +126,7 @@ define(function(require) {
 
         initControls: function() {
             // Create a panel
-            var panel = new PIXI.DisplayObjectContainer();
+            var panel = new PIXI.Container();
             var panelOffset = this.mvt.modelToViewDelta(Constants.SunView.PANEL_OFFSET).clone();
             var panelWidth  = this.mvt.modelToViewDeltaX(Constants.SunView.PANEL_WIDTH);
             var panelHeight = -this.mvt.modelToViewDeltaY(Constants.SunView.PANEL_HEIGHT);

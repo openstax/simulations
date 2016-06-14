@@ -5,8 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/app/sim');
-    var AppView = require('common/app/app');
+    var SimView = require('common/v3/app/sim');
+    var AppView = require('common/v3/app/app');
 
     var EnergySystemsSimulation = require('models/simulation/energy-systems');
 

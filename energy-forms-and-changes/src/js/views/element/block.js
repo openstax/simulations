@@ -30,10 +30,10 @@ define(function(require) {
 
         initGraphics: function() {
 
-            this.energyChunkLayer = new PIXI.DisplayObjectContainer();
-            this.outlineBack  = new PIXI.DisplayObjectContainer();
-            this.faces        = new PIXI.DisplayObjectContainer();
-            this.outlineFront = new PIXI.DisplayObjectContainer();
+            this.energyChunkLayer = new PIXI.Container();
+            this.outlineBack  = new PIXI.Container();
+            this.faces        = new PIXI.Container();
+            this.outlineFront = new PIXI.Container();
 
             this.displayObject.addChild(this.outlineBack);
             this.displayObject.addChild(this.faces);
@@ -56,7 +56,7 @@ define(function(require) {
         },
 
         initDebugSlices: function() {
-            this.debugLayer = new PIXI.DisplayObjectContainer();
+            this.debugLayer = new PIXI.Container();
 
             this.debugSlicesGraphics = new PIXI.Graphics();
             this.debugLayer.addChild(this.debugSlicesGraphics);

@@ -9,8 +9,8 @@ define(function(require) {
     var Rectangle = require('common/math/rectangle');
 
     var ModelViewTransform = require('common/math/model-view-transform');
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var AppView            = require('common/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
 
     var AirView              = require('views/air');
     var ThermometerView      = require('views/element/thermometer');
@@ -74,13 +74,13 @@ define(function(require) {
 
         initLayers: function() {
             // Create layers
-            this.backLayer        = new PIXI.DisplayObjectContainer();
-            this.beakerBackLayer  = new PIXI.DisplayObjectContainer();
-            this.blockLayer       = new PIXI.DisplayObjectContainer();
-            this.airLayer         = new PIXI.DisplayObjectContainer();
-            this.burnerFrontLayer = new PIXI.DisplayObjectContainer();
-            this.thermometerLayer = new PIXI.DisplayObjectContainer();
-            this.beakerFrontLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer        = new PIXI.Container();
+            this.beakerBackLayer  = new PIXI.Container();
+            this.blockLayer       = new PIXI.Container();
+            this.airLayer         = new PIXI.Container();
+            this.burnerFrontLayer = new PIXI.Container();
+            this.thermometerLayer = new PIXI.Container();
+            this.beakerFrontLayer = new PIXI.Container();
 
             this.stage.addChild(this.backLayer);
             this.stage.addChild(this.beakerBackLayer);
@@ -167,7 +167,7 @@ define(function(require) {
                 textFont: font,
                 labelText: 'Brick'
             });
-            this.brickLayer = new PIXI.DisplayObjectContainer();
+            this.brickLayer = new PIXI.Container();
             this.brickLayer.addChild(this.brickView.debugLayer);
             this.brickLayer.addChild(this.brickView.energyChunkLayer);
             this.brickLayer.addChild(this.brickView.displayObject);
@@ -185,7 +185,7 @@ define(function(require) {
                 textFont: font,
                 labelText: 'Iron'
             });
-            this.ironBlockLayer = new PIXI.DisplayObjectContainer();
+            this.ironBlockLayer = new PIXI.Container();
             this.ironBlockLayer.addChild(this.ironBlockView.debugLayer);
             this.ironBlockLayer.addChild(this.ironBlockView.energyChunkLayer);
             this.ironBlockLayer.addChild(this.ironBlockView.displayObject);

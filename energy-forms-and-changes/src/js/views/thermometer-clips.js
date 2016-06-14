@@ -7,7 +7,7 @@ define(function(require) {
 
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
 
     var Assets = require('assets');
 
@@ -50,9 +50,9 @@ define(function(require) {
             base.anchor.x = woodXOffsetPercent;
             base.anchor.y = woodYOffsetPercent;
 
-            this.backLayer        = new PIXI.DisplayObjectContainer();
-            this.thermometerLayer = new PIXI.DisplayObjectContainer();
-            this.frontLayer       = new PIXI.DisplayObjectContainer();
+            this.backLayer        = new PIXI.Container();
+            this.thermometerLayer = new PIXI.Container();
+            this.frontLayer       = new PIXI.Container();
             
             this.displayObject.addChild(base);
             this.displayObject.addChild(this.backLayer);

@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var SpriteCollectionView = require('common/pixi/view/sprite-collection');
+    var SpriteCollectionView = require('common/v3/pixi/view/sprite-collection');
 
     var EnergyChunk = require('models/energy-chunk');
     
@@ -60,7 +60,7 @@ define(function(require) {
             sprite.alpha = (model.get('zPosition') < 0) ?
                 Math.max((Z_DISTANCE_WHERE_FULLY_FADED + model.get('zPosition')) / Z_DISTANCE_WHERE_FULLY_FADED, 0) :
                 1;
-            sprite.setTexture(Textures[model.get('energyType')]);
+            sprite.texture = Textures[model.get('energyType')];
         }
 
     }, Constants.EnergyChunkCollectionView);
