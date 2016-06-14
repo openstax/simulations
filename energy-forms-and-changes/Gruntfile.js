@@ -76,7 +76,7 @@ module.exports = function(grunt){
                         nouislider:       '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
                         'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
                         'object-pool':    '../../node_modules/object-pool-shimmed/index',
-                        'circular-list':  '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
+                        'circular-list':  '../../node_modules/circular-list-shimmed/index',
 
                         views:      '../js/views',
                         graphics:   '../js/graphics',

@@ -4,7 +4,7 @@
   "description": "A simulation to show how molecules interact at different velocities and how temperature of a system relates to those interactions and causes groups of molecules to take different shapes.",
   "main": "main.js",
   "scripts": {
-    "postinstall": "r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/object-pool node_modules/object-pool-shimmed; r.js -convert node_modules/gauss-random node_modules/gauss-random-shimmed",
+    "postinstall": "r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/object-pool node_modules/object-pool-shimmed; r.js -convert node_modules/circular-list node_modules/circular-list-shimmed; r.js -convert node_modules/gauss-random node_modules/gauss-random-shimmed",
     "prepublish": "bower install",
     "test": "grunt test"
   },
