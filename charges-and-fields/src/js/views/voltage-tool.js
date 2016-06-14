@@ -4,9 +4,9 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
     
-    var PixiView       = require('common/pixi/view');
+    var PixiView       = require('common/v3/pixi/view');
     var Colors         = require('common/colors/colors');
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
@@ -202,12 +202,13 @@ define(function(require) {
             plotBtnBg.endFill();
 
             var plotBtnText = new PIXI.Text('Plot', textSettings);
+            plotBtnText.resolution = this.getResolution();
             plotBtnText.anchor.x = 0.49;
-            plotBtnText.anchor.y = 0.391;
+            plotBtnText.anchor.y = 0.42;
             plotBtnText.x = btnWidth / 2;
             plotBtnText.y = btnHeight / 2;
 
-            this.plotBtn = new PIXI.DisplayObjectContainer();
+            this.plotBtn = new PIXI.Container();
             this.plotBtn.x = -w / 2 + m;
             this.plotBtn.y = h - btnHeight;
             this.plotBtn.addChild(plotBtnBg);
@@ -220,12 +221,13 @@ define(function(require) {
             clearBtnBg.endFill();
 
             var clearBtnText = new PIXI.Text('Clear', textSettings);
+            clearBtnText.resolution = this.getResolution();
             clearBtnText.anchor.x = 0.492;
             clearBtnText.anchor.y = 0.391;
             clearBtnText.x = btnWidth / 2;
             clearBtnText.y = btnHeight / 2;
 
-            this.clearBtn = new PIXI.DisplayObjectContainer();
+            this.clearBtn = new PIXI.Container();
             this.clearBtn.x = 2;
             this.clearBtn.y = h - btnHeight;
             this.clearBtn.addChild(clearBtnBg);
@@ -246,10 +248,12 @@ define(function(require) {
             };
 
             var voltage = new PIXI.Text('Voltage:', readoutTextSettings);
+            voltage.resolution = this.getResolution();
             voltage.x = -w / 2 + m;
             voltage.y = m;
 
             var readout = new PIXI.Text('40.9 V', readoutTextSettings);
+            readout.resolution = this.getResolution();
             readout.x = w / 2 - m;
             readout.y = m;
             readout.anchor.x = 1;
@@ -270,6 +274,7 @@ define(function(require) {
             };
 
             var label = new PIXI.Text('EQUIPOTENTIAL', settings);
+            label.resolution = this.getResolution();
             label.anchor.x = 0.5;
             label.x = 0;
             label.y = h - this.btnHeight - 24;
@@ -292,7 +297,7 @@ define(function(require) {
         },
 
         updateReadout: function(voltage) {
-            this.readout.setText((voltage * Constants.VFAC).toFixed(1) + ' V');
+            this.readout.text = (voltage * Constants.VFAC).toFixed(1) + ' V';
         },
 
         /**
@@ -305,15 +310,15 @@ define(function(require) {
             this.detectVoltage();
         },
 
-        dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+        dragStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var dx = event.data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.displayObject.y - this.dragOffset.y;
                 
                 this.displayObject.x += dx;
                 this.displayObject.y += dy;
@@ -322,7 +327,7 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 

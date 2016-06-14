@@ -5,9 +5,9 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var GridView           = require('common/pixi/view/grid');
-    var AppView            = require('common/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var GridView           = require('common/v3/pixi/view/grid');
+    var AppView            = require('common/v3/app/app');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
@@ -130,7 +130,7 @@ define(function(require) {
                 smallLineAlpha: 0.15
             });
 
-            this.gridLayer = new PIXI.DisplayObjectContainer();
+            this.gridLayer = new PIXI.Container();
             this.gridLayer.addChild(this.gridView.displayObject);
             this.gridLayer.visible = false;
             this.stage.addChild(this.gridLayer);
@@ -157,8 +157,8 @@ define(function(require) {
         },
 
         initEquipotentialPlots: function() {
-            this.equipotentialPlots = new PIXI.DisplayObjectContainer();
-            this.equipotentialLabels = new PIXI.DisplayObjectContainer();
+            this.equipotentialPlots = new PIXI.Container();
+            this.equipotentialLabels = new PIXI.Container();
             this.stage.addChild(this.equipotentialPlots);
             this.stage.addChild(this.equipotentialLabels);
 
@@ -168,14 +168,14 @@ define(function(require) {
         initCharges: function() {
             this.chargeViews = [];
 
-            this.charges = new PIXI.DisplayObjectContainer();
+            this.charges = new PIXI.Container();
             this.stage.addChild(this.charges);
         },
 
         initSensors: function() {
             this.sensorViews = [];
 
-            this.sensors = new PIXI.DisplayObjectContainer();
+            this.sensors = new PIXI.Container();
             this.stage.addChild(this.sensors);
         },
 

@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var ArrowView = require('common/pixi/view/arrow');
+    var ArrowView = require('common/v3/pixi/view/arrow');
 
     var ReservoirObjectView = require('views/reservoir-object');
 
@@ -52,6 +52,7 @@ define(function(require) {
                     align: 'center'
                 };
                 this.text = new PIXI.Text('', textSettings);
+                this.text.resolution = this.getResolution();
                 this.text.anchor.x = 0.5;
                 this.text.anchor.y = -0.4;
                 this.text.visible = false;
@@ -74,10 +75,7 @@ define(function(require) {
             // Update text
             var magnitude = efield.length() * Constants.EFAC * 0.01;
             var angle = (Math.atan2(-efield.y, efield.x) * RAD_TO_DEG);
-            this.text.setText(
-                magnitude.toFixed(1) + ' V/m' + '\n' + 
-                angle.toFixed(1) + ' deg'
-            );
+            this.text.text = magnitude.toFixed(1) + ' V/m' + '\n' + angle.toFixed(1) + ' deg';
         },
 
         chargesChanged: function() {

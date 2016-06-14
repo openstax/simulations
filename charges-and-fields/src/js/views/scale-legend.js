@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView  = require('common/pixi/view');
-    var ArrowView = require('common/pixi/view/arrow');
+    var PixiView  = require('common/v3/pixi/view');
+    var ArrowView = require('common/v3/pixi/view/arrow');
 
     var Constants = require('constants');
 
@@ -66,6 +66,7 @@ define(function(require) {
                 stroke: '#fff',
                 strokeThickness: 2
             });
+            text.resolution = this.getResolution();
             text.anchor.x = 0.5;
             text.anchor.y = -0.2;
             this.displayObject.addChild(text);

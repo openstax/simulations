@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
     var Colors    = require('common/colors/colors');
     var Vector2  = require('common/math/vector2');
 
@@ -29,11 +29,6 @@ define(function(require) {
                 outlineWidth: 2,
                 outlineAlpha: 1,
 
-                labelText: '',
-                labelFont: 'bold 21px Helvetica Neue',
-                labelColor: '#fff',
-                labelAlpha: 1,
-
                 interactive: true
             }, options);
 
@@ -48,11 +43,6 @@ define(function(require) {
             this.outlineColor = Colors.parseHex(options.outlineColor);
             this.outlineWidth = options.outlineWidth;
             this.outlineAlpha = options.outlineAlpha;
-
-            this.labelText = options.labelText;
-            this.labelFont = options.labelFont;
-            this.labelColor = options.labelColor;
-            this.labelAlpha = options.labelAlpha;
 
             // Cached objects
             this._dragOffset   = new PIXI.Point();
@@ -87,25 +77,21 @@ define(function(require) {
             this.background = new PIXI.Graphics();
             this.displayObject.addChild(this.background);
 
-            this.initLabel();
+            this.initIcon();
             
             this.updateMVT(this.mvt);
         },
 
-        initLabel: function() {
-            var textSettings = {
-                font: this.labelFont,
-                fill: this.labelColor
-            };
+        initIcon: function() {
+            this.icon = new PIXI.Graphics();
+            this.icon.lineStyle(3, 0xFFFFFF, 1);
 
-            var label = new PIXI.Text(this.labelText, textSettings);
-            label.anchor.x = 0.5;
-            label.anchor.y = 0.47;
-            label.x = 0;
-            label.y = 0;
+            this.drawIcon(this.icon, this.radius);
 
-            this.displayObject.addChild(label);
+            this.displayObject.addChild(this.icon);
         },
+
+        drawIcon: function(graphics, iconWidth) {},
 
         drawBackground: function() {
             this.background.clear();
@@ -115,15 +101,15 @@ define(function(require) {
             this.background.endFill();
         },
 
-        dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+        dragStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
             this.moveToTop();
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
+                var local = event.data.getLocalPosition(this.displayObject.parent, this._dragLocation);
                 
                 this.setPosition(
                     local.x - this.dragOffset.x, 
@@ -147,7 +133,7 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
 
             if (this.reservoir) {

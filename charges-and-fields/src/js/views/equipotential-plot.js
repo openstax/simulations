@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
     var Colors    = require('common/colors/colors');
     var Vector2  = require('common/math/vector2');
 
@@ -126,6 +126,7 @@ define(function(require) {
                 font: '14px Helvetica Neue',
                 fill: '#000'
             });
+            labelText.resolution = this.getResolution();
             labelText.anchor.x = 0.5;
             labelText.anchor.y = 0.551;
 
@@ -140,7 +141,7 @@ define(function(require) {
             labelBackground.endFill();
             console.log(labelText.height)
 
-            var label = new PIXI.DisplayObjectContainer();
+            var label = new PIXI.Container();
             label.addChild(labelBackground);
             label.addChild(labelText);
             label.x = this.x;
