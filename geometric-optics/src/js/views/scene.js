@@ -12,7 +12,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
     var ModelViewTransform = require('common/math/model-view-transform');
-    var HelpLabelView      = require('common/help-label/index');
+    var HelpLabelView      = require('common/v3/help-label/index');
 
     var SourceObjectView = require('views/source-object');
     var TargetImageView  = require('views/target-image');
@@ -51,11 +51,11 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.backLayer   = new PIXI.DisplayObjectContainer();
-            this.objectsLayer = new PIXI.DisplayObjectContainer();
-            this.raysLayer   = new PIXI.DisplayObjectContainer();
-            this.axisLayer   = new PIXI.DisplayObjectContainer();
-            this.frontLayer  = new PIXI.DisplayObjectContainer();
+            this.backLayer   = new PIXI.Container();
+            this.objectsLayer = new PIXI.Container();
+            this.raysLayer   = new PIXI.Container();
+            this.axisLayer   = new PIXI.Container();
+            this.frontLayer  = new PIXI.Container();
 
             this.stage.addChild(this.backLayer);
             this.stage.addChild(this.objectsLayer);

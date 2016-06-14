@@ -61,7 +61,7 @@ define(function(require) {
         },
 
         initLens: function() {
-            this.lens = new PIXI.DisplayObjectContainer();
+            this.lens = new PIXI.Container();
             this.displayObject.addChild(this.lens);
 
             this.lensFill = Assets.createSprite(Assets.Images.LENS_FILL);
@@ -88,7 +88,7 @@ define(function(require) {
         },
 
         createFocusPoint: function() {
-            var focusPoint = new PIXI.DisplayObjectContainer();
+            var focusPoint = new PIXI.Container();
 
             var marker = new PIXI.Graphics();
             marker.lineStyle(LensView.FOCUS_POINT_LINE_WIDTH, FOCUS_POINT_COLOR, LensView.FOCUS_POINT_ALPHA);

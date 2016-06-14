@@ -37,10 +37,10 @@ define(function(require) {
          * Initializes all the graphics
          */
         initGraphics: function() {
-            this.objectContainer = new PIXI.DisplayObjectContainer();
+            this.objectContainer = new PIXI.Container();
             this.displayObject.addChild(this.objectContainer);
 
-            this.pictureContainer = new PIXI.DisplayObjectContainer();
+            this.pictureContainer = new PIXI.Container();
             this.objectContainer.addChild(this.pictureContainer);
 
             this.pictureSprites = [];

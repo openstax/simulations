@@ -94,8 +94,8 @@ define(function(require) {
             // Pointer cursor
             screenBack.buttonMode = true;
 
-            this.backLayer  = new PIXI.DisplayObjectContainer();
-            this.frontLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer  = new PIXI.Container();
+            this.frontLayer = new PIXI.Container();
 
             this.backLayer.addChild(screenBack);
             this.frontLayer.addChild(screenFront);

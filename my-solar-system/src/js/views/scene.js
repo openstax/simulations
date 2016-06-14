@@ -86,12 +86,12 @@ define(function(require) {
         },
 
         initBodyLayer: function() {
-            this.bodyLayer = new PIXI.DisplayObjectContainer();
+            this.bodyLayer = new PIXI.Container();
             this.stage.addChild(this.bodyLayer);
         },
 
         initBodyTraceLayer: function() {
-            this.bodyTraceLayer = new PIXI.DisplayObjectContainer();
+            this.bodyTraceLayer = new PIXI.Container();
             this.stage.addChild(this.bodyTraceLayer);
         },
 
@@ -122,7 +122,7 @@ define(function(require) {
 
         initCollisions: function() {
             this.collisionViews = [];
-            this.collisionLayer = new PIXI.DisplayObjectContainer();
+            this.collisionLayer = new PIXI.Container();
             this.stage.addChild(this.collisionLayer);
         },
 

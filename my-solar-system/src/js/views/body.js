@@ -94,7 +94,7 @@ define(function(require) {
         },
 
         initVelocityMarker: function() {
-            this.velocityMarker = new PIXI.DisplayObjectContainer();
+            this.velocityMarker = new PIXI.Container();
             this.velocityMarker.hitArea = new PIXI.Circle(0, 0, BodyView.VELOCITY_MARKER_RADIUS);
             this.velocityMarker.buttonMode = true;
 

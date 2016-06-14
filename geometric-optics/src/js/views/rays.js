@@ -59,8 +59,8 @@ define(function(require) {
         initGraphics: function() {
             this.sourcePointRays = new PIXI.Graphics();
             this.targetPointRays = new PIXI.Graphics();
-            this.topGuide        = new PIXI.DisplayObjectContainer();
-            this.bottomGuide     = new PIXI.DisplayObjectContainer();
+            this.topGuide        = new PIXI.Container();
+            this.bottomGuide     = new PIXI.Container();
 
             this.displayObject.addChild(this.sourcePointRays);
             this.displayObject.addChild(this.targetPointRays);

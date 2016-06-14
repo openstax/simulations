@@ -69,7 +69,7 @@ define(function(require) {
             secondPointMarker.drawCircle(0, 0, SourceObjectView.SECOND_POINT_SIZE  / 2);
             secondPointMarker.endFill();
 
-            this.secondPoint = new PIXI.DisplayObjectContainer();
+            this.secondPoint = new PIXI.Container();
             this.secondPoint.addChild(secondPointMarker);
             this.secondPoint.visible = false;
             this.displayObject.addChild(this.secondPoint);
