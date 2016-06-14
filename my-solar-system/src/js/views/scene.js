@@ -5,10 +5,10 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var AppView            = require('common/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
     var ModelViewTransform = require('common/math/model-view-transform');
-    var GridView           = require('common/pixi/view/grid');
+    var GridView           = require('common/v3/pixi/view/grid');
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
 

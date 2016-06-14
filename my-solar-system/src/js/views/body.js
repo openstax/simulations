@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView  = require('common/pixi/view');
-    var ArrowView = require('common/pixi/view/arrow');
+    var PixiView  = require('common/v3/pixi/view');
+    var ArrowView = require('common/v3/pixi/view/arrow');
     var Colors    = require('common/colors/colors');
     //var Vector2  = require('common/math/vector2');
 
@@ -126,18 +126,18 @@ define(function(require) {
             this.body.endFill();
         },
 
-        dragStart: function(data) {
+        dragStart: function(event) {
             if (!this.interactionEnabled)
                 return;
 
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var dx = event.data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.displayObject.y - this.dragOffset.y;
                 
                 this.displayObject.x += dx;
                 this.displayObject.y += dy;
@@ -152,21 +152,21 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 
-        dragVelocityStart: function(data) {
+        dragVelocityStart: function(event) {
             if (!this.interactionEnabled)
                 return;
 
-            this.dragOffset = data.getLocalPosition(this.velocityMarker, this._dragOffset);
+            this.dragOffset = event.data.getLocalPosition(this.velocityMarker, this._dragOffset);
             this.draggingVelocity = true;
         },
 
-        dragVelocity: function(data) {
+        dragVelocity: function(event) {
             if (this.draggingVelocity) {
-                var local = data.getLocalPosition(this.displayObject, this._dragLocation);
+                var local = event.data.getLocalPosition(this.displayObject, this._dragLocation);
                 var x = local.x - this.dragOffset.x;
                 var y = local.y - this.dragOffset.y;
                 
@@ -178,7 +178,7 @@ define(function(require) {
             }
         },
 
-        dragVelocityEnd: function(data) {
+        dragVelocityEnd: function(event) {
             this.draggingVelocity = false;
         },
 
