@@ -74,6 +74,9 @@ define(function(require) {
 
             this.leftTexture  = new PIXI.Texture(baseTexture, new PIXI.Rectangle(0,         0,         dividingX, height));
             this.rightTexture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(dividingX, 0, width - dividingX, height));
+
+            this.leftTexture.resolution = this.getResolution();
+            this.rightTexture.resolution = this.getResolution();
         },
 
         initLayers: function() {

@@ -108,6 +108,7 @@ define(function(require) {
                 font: BodyView.VELOCITY_MARKER_FONT,
                 fill: BodyView.VELOCITY_MARKER_COLOR
             });
+            label.resolution = this.getResolution();
             label.anchor.x = 0.5
             label.anchor.y = 0.4;
             label.alpha = BodyView.VELOCITY_MARKER_ALPHA;

@@ -134,6 +134,7 @@ define(function(require) {
             };
 
             var bodyLabelText = new PIXI.Text(name, textSettings);
+            bodyLabelText.resolution = this.getResolution();
             bodyLabelText.anchor.x = 0.5;
             bodyLabelText.anchor.y = 0.6;
             bodyLabelText.x = this.bodyLabelOffsetX;
@@ -152,6 +153,7 @@ define(function(require) {
             this.bodyLabel.addChild(bodyLabelLine);
 
             this.massLabel = new PIXI.Text('', textSettings);
+            this.massLabel.resolution = this.getResolution();
             this.massLabel.anchor.x = 0.5;
             this.massLabel.anchor.y = 0.4;
             this.massLabel.visible = false;
@@ -198,6 +200,7 @@ define(function(require) {
                 font: BodyView.VELOCITY_MARKER_FONT,
                 fill: BodyView.VELOCITY_MARKER_COLOR
             });
+            label.resolution = this.getResolution();
             label.anchor.x = 0.5
             label.anchor.y = 0.4;
             label.alpha = BodyView.VELOCITY_MARKER_ALPHA;
