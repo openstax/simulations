@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var SliderView = require('common/pixi/view/slider');
-    var AppView    = require('common/app/app');
+    var SliderView = require('common/v3/pixi/view/slider');
+    var AppView    = require('common/v3/app/app');
 
     var CircuitView             = require('views/circuit');
     var DielectricCapacitorView = require('views/capacitor/dielectric');
@@ -90,6 +90,11 @@ define(function(require) {
             var none  = new PIXI.Text('None',     markerStyle);
             var minus = new PIXI.Text('Lots (-)', markerStyle);
 
+            var resolution = this.getResolution();
+            plus.resolution = resolution;
+            none.resolution = resolution;
+            minus.resolution = resolution;
+
             var markerX = Math.round(width * 0.36);
             var plusY  = Math.round(sliderView.displayObject.y);
             var noneY  = Math.round(sliderView.displayObject.y + sliderView.displayObject.height / 2) - 1;
@@ -118,6 +123,7 @@ define(function(require) {
                 font: 'bold 14px Helvetica Neue',
                 fill: '#000'
             });
+            caption.resolution = resolution;
             caption.x = Math.round(width / 2 - caption.width / 2);
             caption.y = Math.round(height + 4);
 

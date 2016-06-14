@@ -4,10 +4,10 @@ define(function(require) {
 
     var SAT      = require('sat');
     var PIXI     = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
 
-    var AppView  = require('common/app/app');
-    var PixiView = require('common/pixi/view');
+    var AppView  = require('common/v3/app/app');
+    var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
 
     var CapacitorView = require('views/capacitor');
@@ -74,7 +74,7 @@ define(function(require) {
         initVoltmeterBrick: function() {
             this.voltmeterSprite = Assets.createSprite(Assets.Images.VOLTMETER);
 
-            this.voltmeterContainer = new PIXI.DisplayObjectContainer();
+            this.voltmeterContainer = new PIXI.Container();
             this.voltmeterContainer.buttonMode = true;
             this.voltmeterContainer.defaultCursor = 'move';
             this.voltmeterContainer.addChild(this.voltmeterSprite);
@@ -98,6 +98,7 @@ define(function(require) {
             };
 
             var voltage = new PIXI.Text('-- V', textStyle);
+            voltage.resolution = this.getResolution();
             voltage.anchor.x = 1;
             voltage.anchor.y = 0.37;
             voltage.x = this.voltmeterSprite.width - (0.18 * this.voltmeterSprite.width);
@@ -189,10 +190,10 @@ define(function(require) {
 
                 var voltage = redVoltage - blackVoltage;
 
-                this.voltageLabel.setText(voltage.toFixed(3) + ' V');
+                this.voltageLabel.text = voltage.toFixed(3) + ' V';
             }
             else {
-                this.voltageLabel.setText('-- V');
+                this.voltageLabel.text = '-- V';
             }
         },
 
@@ -234,43 +235,43 @@ define(function(require) {
                 this.updateVoltage();
         },
 
-        dragStart: function(data) {
-            this.lastPosition.x = data.global.x;
-            this.lastPosition.y = data.global.y;
+        dragStart: function(event) {
+            this.lastPosition.x = event.data.global.x;
+            this.lastPosition.y = event.data.global.y;
 
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.lastPosition.x;
-                var dy = data.global.y - this.lastPosition.y;
+                var dx = event.data.global.x - this.lastPosition.x;
+                var dy = event.data.global.y - this.lastPosition.y;
 
                 this.voltmeterContainer.x += dx;
                 this.voltmeterContainer.y += dy;
 
                 this.drawWires();
 
-                this.lastPosition.x = data.global.x;
-                this.lastPosition.y = data.global.y;
+                this.lastPosition.x = event.data.global.x;
+                this.lastPosition.y = event.data.global.y;
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 
-        dragRedProbeStart: function(data) {
-            this.lastPosition.x = data.global.x;
-            this.lastPosition.y = data.global.y;
+        dragRedProbeStart: function(event) {
+            this.lastPosition.x = event.data.global.x;
+            this.lastPosition.y = event.data.global.y;
 
             this.draggingRedProbe = true;
         },
 
-        dragRedProbe: function(data) {
+        dragRedProbe: function(event) {
             if (this.draggingRedProbe) {
-                var dx = data.global.x - this.lastPosition.x;
-                var dy = data.global.y - this.lastPosition.y;
+                var dx = event.data.global.x - this.lastPosition.x;
+                var dy = event.data.global.y - this.lastPosition.y;
 
                 this.redProbe.x += dx;
                 this.redProbe.y += dy;
@@ -278,26 +279,26 @@ define(function(require) {
                 this.drawWires();
                 this.updateProbePolygon(this.redProbe,   this.redProbePolygon);
 
-                this.lastPosition.x = data.global.x;
-                this.lastPosition.y = data.global.y;
+                this.lastPosition.x = event.data.global.x;
+                this.lastPosition.y = event.data.global.y;
             }
         },
 
-        dragRedProbeEnd: function(data) {
+        dragRedProbeEnd: function(event) {
             this.draggingRedProbe = false;
         },
 
-        dragBlackProbeStart: function(data) {
-            this.lastPosition.x = data.global.x;
-            this.lastPosition.y = data.global.y;
+        dragBlackProbeStart: function(event) {
+            this.lastPosition.x = event.data.global.x;
+            this.lastPosition.y = event.data.global.y;
 
             this.draggingBlackProbe = true;
         },
 
-        dragBlackProbe: function(data) {
+        dragBlackProbe: function(event) {
             if (this.draggingBlackProbe) {
-                var dx = data.global.x - this.lastPosition.x;
-                var dy = data.global.y - this.lastPosition.y;
+                var dx = event.data.global.x - this.lastPosition.x;
+                var dy = event.data.global.y - this.lastPosition.y;
 
                 this.blackProbe.x += dx;
                 this.blackProbe.y += dy;
@@ -305,12 +306,12 @@ define(function(require) {
                 this.drawWires();
                 this.updateProbePolygon(this.blackProbe, this.blackProbePolygon);
 
-                this.lastPosition.x = data.global.x;
-                this.lastPosition.y = data.global.y;
+                this.lastPosition.x = event.data.global.x;
+                this.lastPosition.y = event.data.global.y;
             }
         },
 
-        dragBlackProbeEnd: function(data) {
+        dragBlackProbeEnd: function(event) {
             this.draggingBlackProbe = false;
         },
 

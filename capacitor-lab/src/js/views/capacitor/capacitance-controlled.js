@@ -6,8 +6,8 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var Colors     = require('common/colors/colors');
-    var AppView    = require('common/app/app');
-    var SliderView = require('common/pixi/view/slider');
+    var AppView    = require('common/v3/app/app');
+    var SliderView = require('common/v3/pixi/view/slider');
 
     var CapacitorView = require('views/capacitor');
 
@@ -113,7 +113,7 @@ define(function(require) {
             this.listenTo(sliderView, 'slide', function(value, prev) {
                 this.model.setTotalCapacitance(value);
                 var displayCapacitance = value / (Math.pow(10, Constants.CAPACITANCE_CONTROL_EXPONENT));
-                this.capacitanceValue.setText(displayCapacitance.toFixed(2) + this.capacitanceSuffix);
+                this.capacitanceValue.text = displayCapacitance.toFixed(2) + this.capacitanceSuffix;
             });
 
             // Save a reference
@@ -121,15 +121,18 @@ define(function(require) {
 
             // Create labels
             this.capacitanceTitle = new PIXI.Text('Capacitance', this.labelTitleStyle);
+            this.capacitanceTitle.resolution = this.getResolution();
             this.capacitanceTitle.x = Math.round(width / 2 - this.capacitanceTitle.width / 2);
             this.capacitanceTitle.y = Math.round(height + 4);
 
             this.capacitanceSuffix = 'x10     F';
             this.capacitanceValue = new PIXI.Text('1.00' + this.capacitanceSuffix, this.labelValueStyle);
+            this.capacitanceValue.resolution = this.getResolution();
             this.capacitanceValue.x = Math.round(width / 2 - this.capacitanceValue.width / 2);
             this.capacitanceValue.y = Math.round(height + 24);
 
             this.capacitanceValuePower = new PIXI.Text(Constants.CAPACITANCE_CONTROL_EXPONENT, this.labelValuePowerStyle);
+            this.capacitanceValuePower.resolution = this.getResolution();
             this.capacitanceValuePower.x = Math.round(width / 2 + this.capacitanceValue.width * 0.15);
             this.capacitanceValuePower.y = Math.round(height + 20);
 

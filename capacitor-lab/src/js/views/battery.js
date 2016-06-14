@@ -8,9 +8,9 @@ define(function(require) {
 
     var defineInputUpdateLocks = require('common/locks/define-locks');
     
-    var AppView    = require('common/app/app');
-    var PixiView   = require('common/pixi/view');
-    var SliderView = require('common/pixi/view/slider');
+    var AppView    = require('common/v3/app/app');
+    var PixiView   = require('common/v3/pixi/view');
+    var SliderView = require('common/v3/pixi/view/slider');
     var Colors     = require('common/colors/colors');
 
     var BatteryShapeCreator = require('shape-creators/battery');
@@ -144,6 +144,14 @@ define(function(require) {
             var topUnit      = new PIXI.Text('V',    textStyle);
             var middleUnit   = new PIXI.Text('V',    textStyle);
             var bottomUnit   = new PIXI.Text('V',    textStyle);
+
+            var resolution = this.getResolution();
+            topNumber.resolution = resolution;
+            middleNumber.resolution = resolution;
+            bottomNumber.resolution = resolution;
+            topUnit.resolution = resolution;
+            middleUnit.resolution = resolution;
+            bottomUnit.resolution = resolution;
 
             topNumber.anchor.y = middleNumber.anchor.y = bottomNumber.anchor.y = 0.35;
             topUnit.anchor.y = middleUnit.anchor.y = bottomUnit.anchor.y = 0.35;

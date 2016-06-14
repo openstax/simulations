@@ -153,7 +153,7 @@ define(function(require) {
                 dots.drawCircle(x, 0, 1);
             dots.endFill();
 
-            var graphicsWrapper = new PIXI.DisplayObjectContainer();
+            var graphicsWrapper = new PIXI.Container();
             graphicsWrapper.rotation = rotation;
             graphicsWrapper.addChild(this.plateAreaHandleGraphic);
             graphicsWrapper.addChild(this.plateAreaHandleHoverGraphic);
@@ -162,13 +162,15 @@ define(function(require) {
             this.plateAreaLabelTitle = new PIXI.Text('Plate Area', this.labelTitleStyle);
             this.plateAreaLabelValue = new PIXI.Text('100.0 mm²', this.labelValueStyle);
             this.plateAreaLabelValue.y = 18;
-            var textWrapper = new PIXI.DisplayObjectContainer();
+            this.plateAreaLabelTitle.resolution = this.getResolution();
+            this.plateAreaLabelValue.resolution = this.getResolution();
+            var textWrapper = new PIXI.Container();
             textWrapper.addChild(this.plateAreaLabelTitle);
             textWrapper.addChild(this.plateAreaLabelValue);
             textWrapper.x = -76;
             textWrapper.y = -38;
 
-            var plateAreaHandle = new PIXI.DisplayObjectContainer();
+            var plateAreaHandle = new PIXI.Container();
             plateAreaHandle.buttonMode = true;
             plateAreaHandle.addChild(graphicsWrapper);
             plateAreaHandle.addChild(textWrapper);
@@ -195,7 +197,7 @@ define(function(require) {
                 dots.drawCircle(x, 0, 1);
             dots.endFill();
 
-            var graphicsWrapper = new PIXI.DisplayObjectContainer();
+            var graphicsWrapper = new PIXI.Container();
             graphicsWrapper.rotation = Math.PI / 2;
             graphicsWrapper.addChild(this.plateSeparationHandleGraphic);
             graphicsWrapper.addChild(this.plateSeparationHandleHoverGraphic);
@@ -203,8 +205,10 @@ define(function(require) {
             
             this.plateSeparationLabelTitle = new PIXI.Text('Separation', this.labelTitleStyle);
             this.plateSeparationLabelValue = new PIXI.Text('5.0 mm', this.labelValueStyle);
+            this.plateSeparationLabelTitle.resolution = this.getResolution();
+            this.plateSeparationLabelValue.resolution = this.getResolution();
             this.plateSeparationLabelValue.y = 18;
-            var textWrapper = new PIXI.DisplayObjectContainer();
+            var textWrapper = new PIXI.Container();
             textWrapper.addChild(this.plateSeparationLabelTitle);
             textWrapper.addChild(this.plateSeparationLabelValue);
             textWrapper.x = -66;
@@ -237,15 +241,17 @@ define(function(require) {
                 dots.drawCircle(x, 0, 1);
             dots.endFill();
 
-            var graphicsWrapper = new PIXI.DisplayObjectContainer();
+            var graphicsWrapper = new PIXI.Container();
             graphicsWrapper.addChild(this.dielectricHandleGraphic);
             graphicsWrapper.addChild(this.dielectricHandleHoverGraphic);
             graphicsWrapper.addChild(dots);
             
             this.dielectricLabelTitle = new PIXI.Text('Offset', this.labelTitleStyle);
             this.dielectricLabelValue = new PIXI.Text('5.0 mm', this.labelValueStyle);
+            this.dielectricLabelTitle.resolution = this.getResolution();
+            this.dielectricLabelValue.resolution = this.getResolution();
             this.dielectricLabelValue.y = 18;
-            var textWrapper = new PIXI.DisplayObjectContainer();
+            var textWrapper = new PIXI.Container();
             textWrapper.addChild(this.dielectricLabelTitle);
             textWrapper.addChild(this.dielectricLabelValue);
             textWrapper.x = 50;
@@ -286,9 +292,9 @@ define(function(require) {
             var areaInMM = this.model.getPlateArea() * (1000 * 1000); // It's a squared measurement.
             var offsetInMM = this.model.get('dielectricOffset') * 1000;
 
-            this.plateSeparationLabelValue.setText(separationInMM.toFixed(1) + ' mm');
-            this.plateAreaLabelValue.setText(areaInMM.toFixed(1) + ' mm²');
-            this.dielectricLabelValue.setText(offsetInMM.toFixed(1) + ' mm');
+            this.plateSeparationLabelValue.text = separationInMM.toFixed(1) + ' mm';
+            this.plateAreaLabelValue.text = areaInMM.toFixed(1) + ' mm²';
+            this.dielectricLabelValue.text = offsetInMM.toFixed(1) + ' mm';
         },
 
         drawDragHandle: function(graphics, color) {
@@ -379,14 +385,14 @@ define(function(require) {
             this.middleLayer.addChildAt(this.dielectricExcessChargeView.displayObject, 0);
         },
 
-        dragPlateAreaStart: function(data) {
-            this.lastDragX = data.global.x;
+        dragPlateAreaStart: function(event) {
+            this.lastDragX = event.data.global.x;
             this.draggingPlateArea = true;
         },
 
-        dragPlateArea: function(data) {
+        dragPlateArea: function(event) {
             if (this.draggingPlateArea) {
-                var dx = data.global.x - this.lastDragX;
+                var dx = event.data.global.x - this.lastDragX;
 
                 var mdx = this.mvt.viewToModelDeltaX(dx);
 
@@ -399,24 +405,24 @@ define(function(require) {
                 
                 this.model.set('plateWidth', newWidth);
 
-                this.lastDragX = data.global.x;
+                this.lastDragX = event.data.global.x;
             }
         },
 
-        dragPlateAreaEnd: function(data) {
+        dragPlateAreaEnd: function(event) {
             this.draggingPlateArea = false;
             if (!this.plateAreaHandleHovering)
                 this.plateAreaUnhover();
         },
 
-        dragPlateSeparationStart: function(data) {
-            this.lastDragY = data.global.y;
+        dragPlateSeparationStart: function(event) {
+            this.lastDragY = event.data.global.y;
             this.draggingPlateSeparation = true;
         },
 
-        dragPlateSeparation: function(data) {
+        dragPlateSeparation: function(event) {
             if (this.draggingPlateSeparation) {
-                var dy = data.global.y - this.lastDragY;
+                var dy = event.data.global.y - this.lastDragY;
 
                 var mdy = this.mvt.viewToModelDeltaY(dy);
 
@@ -429,24 +435,24 @@ define(function(require) {
                 
                 this.model.set('plateSeparation', newSeparation);
 
-                this.lastDragY = data.global.y;
+                this.lastDragY = event.data.global.y;
             }
         },
 
-        dragPlateSeparationEnd: function(data) {
+        dragPlateSeparationEnd: function(event) {
             this.draggingPlateSeparation = false;
             if (!this.plateSeparationHandleHovering)
                 this.plateSeparationUnhover();
         },
 
-        dragDielectricStart: function(data) {
-            this.lastDragX = data.global.x;
+        dragDielectricStart: function(event) {
+            this.lastDragX = event.data.global.x;
             this.draggingDielectric = true;
         },
 
-        dragDielectric: function(data) {
+        dragDielectric: function(event) {
             if (this.draggingDielectric) {
-                var dx = data.global.x - this.lastDragX;
+                var dx = event.data.global.x - this.lastDragX;
 
                 var mdx = this.mvt.viewToModelDeltaX(dx);
 
@@ -459,11 +465,11 @@ define(function(require) {
                 
                 this.model.set('dielectricOffset', newOffset);
 
-                this.lastDragX = data.global.x;
+                this.lastDragX = event.data.global.x;
             }
         },
 
-        dragDielectricEnd: function(data) {
+        dragDielectricEnd: function(event) {
             this.draggingDielectric = false;
             if (!this.dielectricHandleHovering)
                 this.dielectricUnhover();
@@ -475,8 +481,8 @@ define(function(require) {
             this.plateAreaHandleGraphic.alpha = 0;
             this.plateAreaHandleHoverGraphic.alpha = 1;
 
-            this.plateAreaLabelTitle.setStyle(this.labelTitleHoverStyle);
-            this.plateAreaLabelValue.setStyle(this.labelValueHoverStyle);
+            this.plateAreaLabelTitle.style = this.labelTitleHoverStyle;
+            this.plateAreaLabelValue.style = this.labelValueHoverStyle;
         },
 
         plateAreaUnhover: function() {
@@ -486,8 +492,8 @@ define(function(require) {
                 this.plateAreaHandleGraphic.alpha = 1;
                 this.plateAreaHandleHoverGraphic.alpha = 0;
 
-                this.plateAreaLabelTitle.setStyle(this.labelTitleStyle);
-                this.plateAreaLabelValue.setStyle(this.labelValueStyle);
+                this.plateAreaLabelTitle.style = this.labelTitleStyle;
+                this.plateAreaLabelValue.style = this.labelValueStyle;
             }
         },
 
@@ -497,8 +503,8 @@ define(function(require) {
             this.plateSeparationHandleGraphic.alpha = 0;
             this.plateSeparationHandleHoverGraphic.alpha = 1;
 
-            this.plateSeparationLabelTitle.setStyle(this.labelTitleHoverStyle);
-            this.plateSeparationLabelValue.setStyle(this.labelValueHoverStyle);
+            this.plateSeparationLabelTitle.style = this.labelTitleHoverStyle;
+            this.plateSeparationLabelValue.style = this.labelValueHoverStyle;
         },
 
         plateSeparationUnhover: function() {
@@ -508,8 +514,8 @@ define(function(require) {
                 this.plateSeparationHandleGraphic.alpha = 1;
                 this.plateSeparationHandleHoverGraphic.alpha = 0;
 
-                this.plateSeparationLabelTitle.setStyle(this.labelTitleStyle);
-                this.plateSeparationLabelValue.setStyle(this.labelValueStyle);
+                this.plateSeparationLabelTitle.style = this.labelTitleStyle;
+                this.plateSeparationLabelValue.style = this.labelValueStyle;
             }
         },
 
@@ -519,8 +525,8 @@ define(function(require) {
             this.dielectricHandleGraphic.alpha = 0;
             this.dielectricHandleHoverGraphic.alpha = 1;
 
-            this.dielectricLabelTitle.setStyle(this.labelTitleHoverStyle);
-            this.dielectricLabelValue.setStyle(this.labelValueHoverStyle);
+            this.dielectricLabelTitle.style = this.labelTitleHoverStyle;
+            this.dielectricLabelValue.style = this.labelValueHoverStyle;
         },
 
         dielectricUnhover: function() {
@@ -530,8 +536,8 @@ define(function(require) {
                 this.dielectricHandleGraphic.alpha = 1;
                 this.dielectricHandleHoverGraphic.alpha = 0;
 
-                this.dielectricLabelTitle.setStyle(this.labelTitleStyle);
-                this.dielectricLabelValue.setStyle(this.labelValueStyle);
+                this.dielectricLabelTitle.style = this.labelTitleStyle;
+                this.dielectricLabelValue.style = this.labelValueStyle;
             }
         },
 

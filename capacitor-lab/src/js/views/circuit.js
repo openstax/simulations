@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
     
-    var PixiView   = require('common/pixi/view');
+    var PixiView   = require('common/v3/pixi/view');
 
     var CapacitanceControlledCapacitorView = require('views/capacitor/capacitance-controlled');
     var CapacitorView                      = require('views/capacitor');
@@ -41,7 +41,7 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.components = new PIXI.DisplayObjectContainer();
+            this.components = new PIXI.Container();
             this.displayObject.addChild(this.components);
 
             this.addBattery();

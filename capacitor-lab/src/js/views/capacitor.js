@@ -6,7 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
     var SAT  = require('sat');
     
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
 
     var CapacitorShapeCreator = require('shape-creators/capacitor');
 
@@ -47,9 +47,9 @@ define(function(require) {
         initGraphics: function() {
             this.shapeCreator = new CapacitorShapeCreator(this.model, this.mvt);
 
-            this.bottomLayer = new PIXI.DisplayObjectContainer();
-            this.middleLayer = new PIXI.DisplayObjectContainer();
-            this.topLayer    = new PIXI.DisplayObjectContainer();
+            this.bottomLayer = new PIXI.Container();
+            this.middleLayer = new PIXI.Container();
+            this.topLayer    = new PIXI.Container();
 
             this.displayObject.addChild(this.bottomLayer);
             this.displayObject.addChild(this.middleLayer);
@@ -96,7 +96,7 @@ define(function(require) {
             var topAirCharges = new AirPlateChargeView(topChargesOptions);
             var topDielectricCharges = new DielectricPlateChargeView(topChargesOptions);
 
-            this.topPlateCharges = new PIXI.DisplayObjectContainer();
+            this.topPlateCharges = new PIXI.Container();
             this.topPlateCharges.addChild(topAirCharges.displayObject);
             this.topPlateCharges.addChild(topDielectricCharges.displayObject);
             this.topLayer.addChild(this.topPlateCharges);
@@ -114,7 +114,7 @@ define(function(require) {
                 _.extend({}, bottomChargesOptions, { transparency: 0.25 })
             );
 
-            this.bottomPlateCharges = new PIXI.DisplayObjectContainer();
+            this.bottomPlateCharges = new PIXI.Container();
             this.bottomPlateCharges.addChild(bottomAirCharges.displayObject);
             this.bottomPlateCharges.addChild(bottomDielectricCharges.displayObject);
             this.bottomLayer.addChild(this.bottomPlateCharges);
