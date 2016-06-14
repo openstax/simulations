@@ -6,7 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var defineInputUpdateLocks = require('common/locks/define-locks');
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
 
     var Constants = require('constants');
@@ -144,15 +144,15 @@ define(function(require) {
             this.focusPoint2.x =  this.mvt.modelToViewDeltaX(focalLength);
         },
 
-        dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+        dragStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var dx = event.data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.displayObject.y - this.dragOffset.y;
                 
                 this.displayObject.x += dx;
                 this.displayObject.y += dy;
@@ -166,7 +166,7 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 

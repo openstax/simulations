@@ -10,7 +10,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
 
     var Constants = require('constants');
     var Types = Constants.SourceObject.Types;
@@ -192,26 +192,26 @@ define(function(require) {
             frontGraphics.endFill();
         },
 
-        dragStart: function(data) {
-            this.lastPosition.x = data.global.x;
-            this.lastPosition.y = data.global.y;
+        dragStart: function(event) {
+            this.lastPosition.x = event.data.global.x;
+            this.lastPosition.y = event.data.global.y;
 
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.lastPosition.x;
-                var dy = data.global.y - this.lastPosition.y;
+                var dx = event.data.global.x - this.lastPosition.x;
+                var dy = event.data.global.y - this.lastPosition.y;
 
                 this.translate(dx, dy);
 
-                this.lastPosition.x = data.global.x;
-                this.lastPosition.y = data.global.y;
+                this.lastPosition.x = event.data.global.x;
+                this.lastPosition.y = event.data.global.y;
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 

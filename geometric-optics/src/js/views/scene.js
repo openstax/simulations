@@ -5,9 +5,9 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var RulerView          = require('common/pixi/view/ruler');
-    var AppView            = require('common/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var RulerView          = require('common/v3/pixi/view/ruler');
+    var AppView            = require('common/v3/app/app');
     var Colors             = require('common/colors/colors');
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
