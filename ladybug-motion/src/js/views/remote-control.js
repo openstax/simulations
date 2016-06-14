@@ -6,9 +6,9 @@ define(function(require) {
 
     var defineInputUpdateLocks = require('common/locks/define-locks');
 
-    var HybridView         = require('common/pixi/view/hybrid');
+    var HybridView         = require('common/v3/pixi/view/hybrid');
     var Colors             = require('common/colors/colors');
-    var DraggableArrowView = require('common/pixi/view/arrow-draggable');
+    var DraggableArrowView = require('common/v3/pixi/view/arrow-draggable');
 
     var Constants = require('constants');
     var UpdateMode = Constants.UpdateMode;
@@ -56,14 +56,14 @@ define(function(require) {
         },
 
         initTabbedPanels: function() {
-            this.tabs = new PIXI.DisplayObjectContainer();
-            this.panels = new PIXI.DisplayObjectContainer();
+            this.tabs = new PIXI.Container();
+            this.panels = new PIXI.Container();
             this.areaMask = new PIXI.Graphics();
 
             // Create the objects necessary for each tabbed panel
             for (var i = 0; i < RemoteControlView.TABS.length; i++) {
                 // Create the tab container
-                var tab = new PIXI.DisplayObjectContainer();
+                var tab = new PIXI.Container();
 
                 // Create the background Graphics object
                 tab.background = new PIXI.Graphics();
@@ -76,13 +76,14 @@ define(function(require) {
                     font: RemoteControlView.TAB_FONT,
                     fill: RemoteControlView.TABS[i].color
                 });
+                tab.label.resolution = this.getResolution();
                 tab.addChild(tab.label);
 
                 // Add the tab
                 this.tabs.addChild(tab);
 
                 // Create and panel
-                var panel = new PIXI.DisplayObjectContainer();
+                var panel = new PIXI.Container();
 
                 // Create panel background
                 panel.background = new PIXI.Graphics();
