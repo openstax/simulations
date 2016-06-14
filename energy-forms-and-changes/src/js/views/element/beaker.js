@@ -154,6 +154,23 @@ define(function(require) {
             this.frontLayer.addChild(PIXI.Sprite.fromPiecewiseCurve(frontFill, fillStyle));
             this.backLayer.addChild(PIXI.Sprite.fromPiecewiseCurve(backFill, fillStyle));
 
+            var hitGraphics = new PIXI.Graphics();
+            hitGraphics.beginFill(0x000000, 0.001);
+            hitGraphics.moveTo(left, bottom)
+            hitGraphics.bezierCurveTo(
+                left,  bottom - ellipseHeight / 2,
+                right, bottom - ellipseHeight / 2,
+                right, bottom
+            );
+            hitGraphics.bezierCurveTo(
+                right, bottom + ellipseHeight / 2,
+                left,  bottom + ellipseHeight / 2,
+                left, bottom
+            );
+            hitGraphics.endFill();
+
+            this.backLayer.addChild(hitGraphics);
+
             // Top back curve
             backCurves
                 .moveTo(left, top)

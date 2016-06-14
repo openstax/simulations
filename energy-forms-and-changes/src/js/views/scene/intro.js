@@ -12,6 +12,8 @@ define(function(require) {
     var PixiSceneView      = require('common/v3/pixi/view/scene');
     var AppView            = require('common/v3/app/app');
 
+    var Beaker = require('models/element/beaker');
+
     var AirView              = require('views/air');
     var ThermometerView      = require('views/element/thermometer');
     var ThermometerClipsView = require('views/thermometer-clips');
@@ -245,6 +247,8 @@ define(function(require) {
 
             this.beakerView.listenTo(this, 'show-energy-chunks', this.beakerView.showEnergyChunks);
             this.beakerView.listenTo(this, 'hide-energy-chunks', this.beakerView.hideEnergyChunks);
+
+            this.listenTo(this.simulation.beaker, 'change:fluidLevel', this.fluidLevelChanged);
         },
 
         initThermometers: function() {
@@ -414,6 +418,19 @@ define(function(require) {
                 )
             ) {
                 this.blockLayer.swapChildren(this.brickLayer, this.ironBlockLayer);
+            }
+        },
+
+        fluidLevelChanged: function(beaker, fluidLevel) {
+            if (fluidLevel !== Beaker.INITIAL_FLUID_LEVEL) {
+                // Move the beaker grabbing layer behind the block layer
+                if (this.stage.getChildIndex(this.blockLayer) < this.stage.getChildIndex(this.beakerBackLayer))
+                    this.stage.swapChildren(this.blockLayer, this.beakerBackLayer);
+            }
+            else {
+                // Move the beaker grabbing layer in front of the block layer
+                if (this.stage.getChildIndex(this.blockLayer) > this.stage.getChildIndex(this.beakerBackLayer))
+                    this.stage.swapChildren(this.blockLayer, this.beakerBackLayer);
             }
         },
 
