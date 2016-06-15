@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var WavelengthColors = require('common/colors/wavelength');
     var Colors           = require('common/colors/colors');
     var range            = require('common/math/range');
@@ -471,14 +473,11 @@ define(function (require) {
         
     // margin between axes and animation box
     SchroedingerModelView.AXES_MARGIN = 20;
-    SchroedingerModelView.HORIZONTAL_AXIS_LABEL = "x";
-    SchroedingerModelView.VERTICAL_AXIS_LABEL = "z";
+    SchroedingerModelView.HORIZONTAL_AXIS_LABEL = 'x';
+    SchroedingerModelView.VERTICAL_AXIS_LABEL = 'z';
     
     // margin between the state display and animation box
     SchroedingerModelView.STATE_MARGIN = 15;
-    
-    // Cache of brightness values for all possible states
-    SchroedingerModelView.BRIGHTNESS_CACHE;
     
     // Should the brightness cache be fully populated the first time we visit Schrodinger?
     // DANGER! Fully populating the cache can take ~15 seconds!

@@ -2,15 +2,11 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-
     require('common/v3/pixi/dash-circle');
 
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
 
     var AtomicModelView = require('hydrogen-atom/views/atomic-model');
-
-    var Constants = require('constants');
     
     /**
      * Represents the scene for the BohrModel

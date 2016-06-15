@@ -163,14 +163,10 @@ define(function(require) {
 
         drawEmptyGraph: function() {
             var ctx = this.ctx;
-            var width = this.getGraphWidth();
             var height = this.getGraphHeight();
             var originX = this.paddingLeft;
             var originY = this.paddingTop + height;
             var resolution = this.getResolution();
-
-            // ctx.fillStyle = '#fff';
-            // ctx.fillRect(0, 0, this.width, this.height);
 
             var headWidth  = 10 * resolution;
             var headLength = 12 * resolution;

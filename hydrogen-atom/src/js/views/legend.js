@@ -2,6 +2,8 @@ define(function(require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var LegendView = require('views/legend');
 
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');

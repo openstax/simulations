@@ -2,13 +2,9 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
 
     var AtomicModelView = require('hydrogen-atom/views/atomic-model');
-
-    var Constants = require('constants');
     
     /**
      * Represents the scene for the DeBroglieModel

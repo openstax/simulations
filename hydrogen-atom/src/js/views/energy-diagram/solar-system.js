@@ -2,17 +2,11 @@ define(function(require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var Vector2 = require('common/math/vector2');
 
     var EnergyDiagramView = require('hydrogen-atom/views/energy-diagram');
-
-    var Constants = require('constants');
-
-    // Distance between the electron and the vertical energy axis.
-    var X_MARGIN = 15;
-    
-    // Distance between the electron's initial position and top of the diagram.
-    var Y_MARGIN = 40;
     
     // Electron's distance from the atom's center when it drops off bottom of diagram.
     // If you want the last position of the electron to be close to the bottom of the chart:
@@ -60,10 +54,8 @@ define(function(require) {
 
         drawData: function() {
             var ctx = this.ctx;
-            var width = this.getGraphWidth();
             var height = this.getGraphHeight();
             var originX = this.paddingLeft;
-            var originY = this.paddingTop + height;
 
             var x = originX + this.electronXOffset;
             var y = Number.MAX_VALUE; // off the chart

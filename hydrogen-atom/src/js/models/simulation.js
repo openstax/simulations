@@ -75,6 +75,16 @@ define(function (require, exports, module) {
             this.updateAtomicModel();
         },
 
+        removeAllPhotons: function() {
+            for (var i = this.photons.length - 1; i >= 0; i--)
+                this.photons.at(i).destroy();
+        },
+
+        removeAllAlphaParticles: function() {
+            for (var i = this.alphaParticles.length - 1; i >= 0; i--)
+                this.alphaParticles.at(i).destroy();
+        },
+
         _update: function(time, deltaTime) {
             this.gun.update(time, deltaTime);
             this.atom.update(time, deltaTime);
@@ -103,18 +113,21 @@ define(function (require, exports, module) {
 
             for (i = this.photons.length - 1; i >= 0; i--) {
                 if (!this.spaceRect.contains(this.photons.at(i).getPosition()))
-                    this.photons.remove(this.photons.at(i));
+                    this.photons.at(i).destroy();
             }
 
             for (i = this.alphaParticles.length - 1; i >= 0; i--) {
                 if (!this.spaceRect.contains(this.alphaParticles.at(i).getPosition()))
-                    this.alphaParticles.remove(this.alphaParticles.at(i));
+                    this.alphaParticles.at(i).destroy();
             }
         },
 
         updateAtomicModel: function() {
             if (this.atom)
                 this.stopListening(this.atom);
+
+            this.removeAllPhotons();
+            this.removeAllAlphaParticles();
 
             var position = this.spaceRect.center();
 

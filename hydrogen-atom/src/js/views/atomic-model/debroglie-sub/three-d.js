@@ -2,8 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-
     var Matrix3D = require('common/math/matrix-3d');
 
     var DeBroglieModelSubView = require('hydrogen-atom/views/atomic-model/debroglie-sub');

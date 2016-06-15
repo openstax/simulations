@@ -2,7 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
+    var $ = require('jquery');
 
     var DeBroglieViewModes = require('hydrogen-atom/models/debroglie-view-modes');
 
@@ -10,8 +10,6 @@ define(function(require) {
     var DeBroglieModelRadialSubView     = require('hydrogen-atom/views/atomic-model/debroglie-sub/radial');
     var DeBroglieModel3DSubView         = require('hydrogen-atom/views/atomic-model/debroglie-sub/three-d');
     var DeBroglieModelBrightnessSubView = require('hydrogen-atom/views/atomic-model/debroglie-sub/brightness');
-
-    var Constants = require('constants');
     
     /**
      * Represents the scene for the DeBroglieModel
@@ -94,8 +92,8 @@ define(function(require) {
         },
 
         viewModeChanged: function(atom, viewMode) {
-            if (this.subViews[atom.previous('viewMode')])
-                this.subViews[atom.previous('viewMode')].deactivate();
+            for (var key in this.subViews)
+                this.subViews[key].deactivate();
 
             this.subViews[viewMode].activate();
         }

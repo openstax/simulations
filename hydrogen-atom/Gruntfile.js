@@ -128,7 +128,8 @@ module.exports = function(grunt) {
 			options: {		
 				globals: {
 					require: true,
-					define: true
+					define: true,
+					module: true
 				},
 
 				// Enforcing Options
@@ -177,7 +178,7 @@ module.exports = function(grunt) {
 				
 				// Environments
 				browser: true,
-				devel: false
+				devel: true
 			},
 			source: [
 				'src/**/*.js',

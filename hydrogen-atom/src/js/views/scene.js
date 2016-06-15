@@ -2,7 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var AppView            = require('common/v3/app/app');
@@ -10,7 +9,6 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var RutherfordScatteringSceneView = require('rutherford-scattering/views/scene');
-    var AtomView                      = require('rutherford-scattering/views/atom');
     var RayGunView                    = require('rutherford-scattering/views/gun');
 
     var SpaceBoxView = require('hydrogen-atom/views/space-box');

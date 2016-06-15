@@ -13,8 +13,6 @@ define(function (require) {
     
     var Constants = require('constants');
 
-    var DEG_TO_RAD = Math.PI / 180;
-
     /**
      * BohrModel is the Bohr model of the hydrogen atom.
      * 
@@ -90,21 +88,6 @@ define(function (require) {
          */
         moveAlphaParticle: function(alphaParticle, deltaTime) {
             RutherfordScattering.moveParticle(this, alphaParticle, deltaTime);
-        },
-        
-        /**
-         * Gets the transition wavelengths for a specified state.
-         */
-        getTransitionWavelengths: function(state) {
-            var transitionWavelengths = null;
-            var maxState = this.getGroundState() + BohrModel.getNumberOfStates() - 1;
-            var numWavelengths = maxState - state;
-            if (state < maxState) {
-                transitionWavelengths = [];
-                for (var i = 0; i < numWavelengths; i++)
-                    transitionWavelengths[i] = this.getWavelengthAbsorbed(state, state + i + 1);
-            }
-            return transitionWavelengths;
         },
         
         //----------------------------------------------------------------------------
@@ -346,9 +329,7 @@ define(function (require) {
                     
                     // Emit a photon with some probability...
                     if (canStimulateEmission && this.stimulatedEmissionIsCertain()) {
-                        
                         // This algorithm assumes that photons are moving vertically from bottom to top.
-                        if (!(photon.get('orientation') == -90 * DEG_TO_RAD));
                         
                         // New photon's properties
                         var wavelength = photon.getWavelength();

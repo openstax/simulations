@@ -408,8 +408,8 @@ define(function (require) {
             // Determine whether the energy diagram is visible and which one
             if (!this.simulation.get('experimentSelected')) {
                 var currentAtomicModel = this.simulation.get('atomicModel');
-                var key = _.findKey(AtomicModels, function(atomicModel) {
-                    return (atomicModel === currentAtomicModel);
+                var key = _.findKey(AtomicModels, function(model) {
+                    return (model === currentAtomicModel);
                 });
 
                 if (key !== undefined && this.energyDiagrams[key]) {

@@ -2,26 +2,14 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var PositionableObject = require('common/models/positionable-object');
-    
+
     var Constants = require('constants');
 
     /**
      * AbstractAtomicModel is the base class for all hydrogen atom models.
      */
     var AbstractAtomicModel = PositionableObject.extend({
-
-        defaults: _.extend({}, PositionableObject.prototype.defaults, {
-            
-        }),
-
-        initialize: function(attributes, options) {
-            PositionableObject.prototype.initialize.apply(this, [attributes, options]);
-
-            
-        },
 
         /**
          * Moves a photon.

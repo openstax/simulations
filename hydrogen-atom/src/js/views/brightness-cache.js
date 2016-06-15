@@ -37,8 +37,6 @@ define(function (require) {
             var n;
             var l;
             var m;
-            var z;
-            var x;
             var nSize = SchroedingerModel.getNumberOfStates();
             var lSize;
             var mSize;
