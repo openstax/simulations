@@ -25,10 +25,12 @@ define(function(require) {
         defaultSimViewIndex: 0,
 
         events: {
-            'click .sim-tab' : 'tabClicked'
+            
         },
 
-        initialize: function(options) {},
+        initialize: function(options) {
+            $(window).on('hashchange', _.bind(this.hashChanged, this));
+        },
 
         /**
          * This function should be called to start the app. Calling this
@@ -58,17 +60,7 @@ define(function(require) {
         postLoad: function() {
             this.render();
             this.postRender();
-            this.selectDefaultTab();
             this.hideLoading();
-        },
-
-        selectDefaultTab: function() {
-            if (AppView.getUrlParameter('defaultTabIndex'))
-                this.defaultSimViewIndex = parseInt(AppView.getUrlParameter('defaultTabIndex'));
-
-            var $tabs = this.$('.sim-tab');
-            if (this.defaultSimViewIndex < $tabs.length)
-                $tabs.eq(this.defaultSimViewIndex).click();
         },
 
         /**
@@ -166,8 +158,8 @@ define(function(require) {
             // Take all the sim content containers out of rendering mode
             this.$('.sim-content').removeClass('rendering');
 
-            // Only hide the other tabs after they've all been rendered visibly
-            this.$('.sim-tab').first().click();
+            // Select the default tab
+            $(window).trigger('hashchange');
         },
 
         /**
@@ -181,35 +173,42 @@ define(function(require) {
             });
         },
 
-        /**
-         * This is the event handler for when a tab is clicked. It visually
-         *   activates the desired tab and deactivates the others but leaves
-         *   the technical activation of the sim views to another handler by
-         *   triggering a 'tab-selected' jQuery event on the tab element.
-         */
-        tabClicked: function(event) {
-            var $tab = $(event.target).closest('.tab');
-            if (!$tab.hasClass('active')) {
-                // Activate the right tab, deactivating the others
-                var selector = $tab.data('content-selector');
-                $tab.add(this.$(selector))
-                    .addClass('active')
-                    .siblings()
-                    .removeClass('active');
-
-                this.simSelected($tab.data('cid'));
-            }
+        validTabSelected: function() {
+            return $(location.hash).is('.sim-content');
         },
 
-        /**
-         * Plays the right sim, pausing (halting) the others.
-         */
-        simSelected: function(cid) {
-            _.each(this.simViews, function(sim){
-                if (sim.cid == cid)
-                    sim.resume();
+        hashChanged: function() {
+            if (!this.validTabSelected()) {
+                if (this.defaultSimViewIndex >= this.simViews.length)
+                    throw 'defaultSimViewIndex is invalid';
+
+                location.hash = '#' + this.$('.sim-content').eq(this.defaultSimViewIndex).attr('id');
+                return;
+            }
+
+            window.scrollTo(0, 0);
+
+            var selector = location.hash;
+
+            // Select the right tab, deselecting the others
+            this.$('.sim-tab').each(function() {
+                if (this.getAttribute('href') == selector)
+                    $(this).addClass('active');
                 else
-                    sim.halt();
+                    $(this).removeClass('active');
+            });
+
+            // Show and activate the right sim view, hiding and halting the others
+            _.each(this.simViews, function(simView) {
+                var $parent = simView.$el.parent();
+                if ($parent.is(selector)) {
+                    $parent.addClass('active');
+                    simView.resume();
+                }
+                else {
+                    $parent.removeClass('active');
+                    simView.halt();
+                }
             }, this);
         }
 
@@ -226,24 +225,6 @@ define(function(require) {
          */
         windowIsShort: function() {
             return $(window).height() <= AppView.shortWindowHeight;
-        },
-
-        /**
-         * Gets a parameter from the URL's query string.
-         * Source from http://stackoverflow.com/a/21903119
-         */
-        getUrlParameter: function(sParam) {
-            var sPageURL = decodeURIComponent(window.location.search.substring(1));
-            var sURLVariables = sPageURL.split('&');
-            var sParameterName;
-            var i;
-
-            for (i = 0; i < sURLVariables.length; i++) {
-                sParameterName = sURLVariables[i].split('=');
-
-                if (sParameterName[0] === sParam)
-                    return sParameterName[1] === undefined ? true : sParameterName[1];
-            }
         }
 
     });

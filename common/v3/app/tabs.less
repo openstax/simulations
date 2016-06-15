@@ -13,48 +13,61 @@
 
         > li {
             display: inline-block;
-            padding: 7px 10px;
             margin-right: 3px;
-            font-size: 1.4rem;
-            background-color: @gray-lightest;
-            cursor: pointer;
-            .user-select(none);
 
-            &.singleton {
-                cursor: default;
-            }
+            > a {
+                display: block;
+                padding: 7px 10px;
+                font-size: 1.4rem;
+                background-color: @gray-lightest;
+                cursor: pointer;
+                .user-select(none);
 
-            > .tab-title {
-                margin-left: 2px;
-                vertical-align: middle;
+                &:hover,
+                &:visited,
+                &:active,
+                &:focus {
+                    text-decoration: none;
+                }
 
-                &::after {
-                    font-weight: bold;
-                    margin-left: 5px;
-                    vertical-align: top;
-                    content: "+";
+                &.singleton {
+                    cursor: default;
+                }
+
+                > .tab-title {
+                    margin-left: 2px;
+                    vertical-align: middle;
+
+                    &::after {
+                        font-weight: bold;
+                        margin-left: 5px;
+                        vertical-align: top;
+                        content: "+";
+                    }
+                }
+
+                &.active {
+                    color: @gray-lightest;
+                    background-color: @link-color;
+
+                    > .tab-title::after {
+                        content: "\2212"; // &minus; (−)
+                    }
+                }
+
+                &.disabled {
+                    cursor: not-allowed;
+                    pointer-events: none;
+                    opacity: 0.65;
+                }
+
+                &.singleton > .tab-title::after,
+                &.singleton.active > .tab-title::after {
+                    content: "";
                 }
             }
-
-            &.active {
-                color: @gray-lightest;
-                background-color: @link-color;
-
-                > .tab-title::after {
-                    content: "\2212"; // &minus; (−)
-                }
-            }
-
-            &.disabled {
-                cursor: not-allowed;
-                pointer-events: none;
-                opacity: 0.65;
-            }
-
-            &.singleton > .tab-title::after,
-            &.singleton.active > .tab-title::after {
-                content: "";
-            }
+            
+            
         }
     }
 }

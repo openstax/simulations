@@ -24,15 +24,7 @@ define(function(require) {
             GeneratorGeneratorSimView
         ],
 
-        /**
-         * Overrides the default postRender function so we select the "Generator"
-         *   tab to start instead of the first tab.
-         */
-        postRender: function() {
-            FaradayAppView.prototype.postRender.apply(this, arguments);
-
-            this.$('.sim-tab').last().click();
-        }
+        defaultSimViewIndex: 4
 
     });
 
