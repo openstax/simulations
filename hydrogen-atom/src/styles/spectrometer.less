@@ -1,0 +1,26 @@
+@import "mixins.less";
+@import "variables.less";
+
+.spectrometer-view {
+    .btn {
+        .sim-controls-button();
+
+        &:hover {
+            background: fadeout(#fff, 60%);
+            border-color: fadeout(#fff, 80%);
+        }
+
+        &:active {
+            background: fadeout(#fff, 30%);
+            border-color: #fff;
+        }
+
+        .fa {
+            margin-right: 3px;
+        }
+    }
+
+    .spectrometer-snapshot-btn {
+        float: right;
+    }
+}
