@@ -98,7 +98,6 @@ define(function(require) {
             this.snapshotViews = [];
 
             this.listenTo(this.simulation, 'atom-added', this.atomAdded);
-            this.atomAdded();
         },
 
         setWidth: function(width) {
@@ -142,7 +141,7 @@ define(function(require) {
             this.ctx = canvas.getContext('2d');
             this.canvas = canvas;
 
-            this.draw();
+            this.atomAdded();
 
             return this;
         },
@@ -169,6 +168,7 @@ define(function(require) {
 
         reset: function() {
             this.draw();
+            this.wavelengthCounts = [];
         },
 
         snapshot: function() {
@@ -360,6 +360,7 @@ define(function(require) {
                 this.stopListening(this.atom);
 
             this.atom = this.simulation.atom;
+            this.reset();
 
             this.listenTo(this.atom, 'photon-emitted',  this.photonEmitted);
         },
