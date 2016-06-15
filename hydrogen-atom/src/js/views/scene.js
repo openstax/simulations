@@ -41,7 +41,7 @@ define(function(require) {
 
         initBoxMVT: function(){
             if (AppView.windowIsShort()) {
-                this.viewOriginX = 572;
+                this.viewOriginX = 542;
                 this.viewOriginY = 12 + Constants.BOX_SIZE_SMALL + 0.5;
                 this.spaceBoxSize = Constants.BOX_SIZE_SMALL;
             }
@@ -65,7 +65,7 @@ define(function(require) {
 
         initRayGunMVT: function() {
             if (AppView.windowIsShort()) {
-                this.rayGunOriginX = this.viewOriginX - Constants.BOX_SIZE_SMALL / 2 - 100;
+                this.rayGunOriginX = this.viewOriginX - Constants.BOX_SIZE_SMALL / 2 - 90;
                 this.rayGunOriginY = Math.round(this.height / 2) + 130;
             }
             else {

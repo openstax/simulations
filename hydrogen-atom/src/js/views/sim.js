@@ -72,7 +72,8 @@ define(function (require) {
             'change .show-absorption-wavelengths-check' : 'toggleAbsorptionWavelengths',
 
             'click .energy-level-diagram-panel > h2' : 'toggleEnergyLevelDiagramPanel',
-            'click .spectrometer-panel         > h2' : 'toggleSpectrometerPanel'
+            'click .spectrometer-panel         > h2' : 'toggleSpectrometerPanel',
+            'click .light-controls             > h2' : 'openLightControls'
         },
 
         /**
@@ -368,12 +369,20 @@ define(function (require) {
                 this.wavelengthSliderView.hideAbsorptionWavelengths();
         },
 
+        openLightControls: function(event) {
+            this.$('.light-controls').removeClass('closed');
+            this.$('.energy-level-diagram-panel').addClass('collapsed');
+        },
+
         showEnergyDiagramPanel: function() {
             this.$('.energy-level-diagram-panel').show();
+            if (!this.$('.energy-level-diagram-panel').hasClass('collapsed'))
+                this.$('.light-controls').addClass('closed');
         },
 
         hideEnergyDiagramPanel: function() {
             this.$('.energy-level-diagram-panel').hide();
+            this.$('.light-controls').removeClass('closed');
         },
 
         atomicModelChanged: function(simulation, atomicModel) {
