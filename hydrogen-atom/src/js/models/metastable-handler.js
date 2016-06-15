@@ -8,6 +8,18 @@ define(function (require) {
 
     var Constants = require('constants');
 
+    /**
+     * MetastableHandler handles a case where the Schrodinger model
+     * can get stuck in state (n,l,m) = (2,0,0). This state is known as a 
+     * metastable state. The only way to get out of this state is to absorb
+     * a photon that takes the atom to a higher state.
+     * 
+     * While the gun is shooting white light and the atom is in state (2,0,0),
+     * we fire an absorbable photon at the atom's center every MAX_STUCK_TIME milliseconds.
+     * 
+     * This solution assumes that the centers of the gun and atom are vertically aligned.
+     * If that is not the case, a warning is printed to System.err.
+     */
     var MetastableHandler = Backbone.Model.extend({
 
         defaults: {
@@ -28,7 +40,7 @@ define(function (require) {
         },
 
         update: function(time, deltaTime) {
-            if (this.stuck && this.gun.isEnabled() && this.gun.isPhotonsMode() && this.gun.isWhiteLightType()) {
+            if (this.stuck && this.gun.get('on') && this.gun.isPhotonsMode() && this.gun.isWhiteLightType()) {
                 this.stuckTime += deltaTime;
                 if (this.stuckTime >= MetastableHandler.MAX_STUCK_TIME) {
                     console.log('atom has been stuck for ' + this.stuckTime + ' time units');

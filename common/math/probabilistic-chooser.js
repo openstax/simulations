@@ -54,7 +54,7 @@ define(function (require) {
         var result = null;
         for (var i = 0; i < this.items.length && result == null; i++) {
             if (p <= this._normalizedWeights[i])
-                result = this.items.getObject();
+                result = this.items[i];
         }
         return result;
     };

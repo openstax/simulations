@@ -17,7 +17,7 @@ define(function(require) {
     var BohrModelView         = require('hydrogen-atom/views/atomic-model/bohr');
     var DeBroglieModelView    = require('hydrogen-atom/views/atomic-model/debroglie');
     var PlumPuddingModelView  = require('hydrogen-atom/views/atomic-model/plum-pudding');
-    var SchrodingerModelView  = require('hydrogen-atom/views/atomic-model/schroedinger');
+    var SchroedingerModelView = require('hydrogen-atom/views/atomic-model/schroedinger');
     var SolarSystemModelView  = require('hydrogen-atom/views/atomic-model/solar-system');
 
     var Assets = require('assets');
@@ -101,7 +101,7 @@ define(function(require) {
             this.atomicModelViews['SOLAR_SYSTEM']  = new SolarSystemModelView(options);
             this.atomicModelViews['BOHR']          = new BohrModelView(options);
             this.atomicModelViews['DEBROGLIE']     = new DeBroglieModelView(options);
-            this.atomicModelViews['SCHROEDINGER']  = new SchrodingerModelView(options);
+            this.atomicModelViews['SCHROEDINGER']  = new SchroedingerModelView(options);
 
             // "Experiment" atom is in front of particles
             this.topLayer.addChild(this.atomicModelViews[0].displayObject);

@@ -45,14 +45,13 @@ define(function (require) {
     var BohrModel = AbstractAtomicModel.extend({
 
         defaults: _.extend({}, AbstractAtomicModel.prototype.defaults, {
-            orientation: 0
+            orientation: 0,
+            electronState: AbstractAtomicModel.GROUND_STATE
         }),
 
         initialize: function(attributes, options) {
             AbstractAtomicModel.prototype.initialize.apply(this, [attributes, options]);
 
-            // electron state
-            this.electronState = BohrModel.GROUND_STATE;
             // time that the electron has been in its current state
             this.timeInState = 0;
             // current angle of electron
@@ -64,6 +63,8 @@ define(function (require) {
 
             // Cached objects
             this._position = new Vector2();
+
+            this.on('change:electronState', this.electronStateChanged);
         },
 
         /**
@@ -132,24 +133,23 @@ define(function (require) {
         
         /**
          * Gets the electron's state.
-         * @return int
          */
         getElectronState: function() {
-            return this.electronState;
+            return this.get('electronState');
         },
         
         /*
          * Sets the electron's state.
-         * @param state
          */
         setElectronState: function(state) {
+            this.set('electronState', state);
+        },
+
+        electronStateChanged: function(simulation, state) {
             if (!(state >= BohrModel.GROUND_STATE && state <= BohrModel.GROUND_STATE + BohrModel.getNumberOfStates() - 1))
                 throw 'Bad state';
 
-            if (state != this.electronState) {
-                this.electronState = state;
-                this.timeInState = 0;
-            }
+            this.timeInState = 0;
         },
         
         /**
@@ -174,7 +174,7 @@ define(function (require) {
          * This is essentially a conversion from Cartesian to Polar coordinates.
          */
         updateElectronOffset: function() {
-            var radius = BohrModel.getOrbitRadius(this.electronState);
+            var radius = BohrModel.getOrbitRadius(this.get('electronState'));
             var xOffset = radius * Math.sin(this.electronAngle);
             var yOffset = radius * Math.cos(this.electronAngle);
             this.electronOffset.set(xOffset, yOffset);
@@ -202,7 +202,7 @@ define(function (require) {
          * Subclasses may override this to produce different oscillation behavior.
          */
         calculateNewElectronAngle: function(deltaTime) {
-            var deltaAngle = deltaTime * (BohrModel.ELECTRON_ANGLE_DELTA / (this.electronState * this.electronState));
+            var deltaAngle = deltaTime * (BohrModel.ELECTRON_ANGLE_DELTA / (this.get('electronState') * this.get('electronState')));
             return this.electronAngle - deltaAngle; // clockwise
         },
         
@@ -216,7 +216,7 @@ define(function (require) {
          * the electron's offset in Polar coordinates.
          */
         getElectronOrbitRadius: function() {
-            return BohrModel.getOrbitRadius(this.electronState);
+            return BohrModel.getOrbitRadius(this.get('electronState'));
         },
         
         /*
@@ -256,8 +256,8 @@ define(function (require) {
                     var newState = 0;
                     var maxState = BohrModel.GROUND_STATE + BohrModel.getNumberOfStates() - 1;
                     var photonWavelength = photon.get('wavelength');
-                    for (var n = this.electronState + 1; n <= maxState && !canAbsorb; n++ ) {
-                        var transitionWavelength = BohrModel.getWavelengthAbsorbed(this.electronState, n);
+                    for (var n = this.get('electronState') + 1; n <= maxState && !canAbsorb; n++ ) {
+                        var transitionWavelength = BohrModel.getWavelengthAbsorbed(this.get('electronState'), n);
                         if (this.closeEnough(photonWavelength, transitionWavelength)) {
                             canAbsorb = true;
                             newState = n;
@@ -265,7 +265,7 @@ define(function (require) {
                     }
 
                     // Is the transition that would occur allowed?
-                    if (!this.absorptionIsAllowed(this.electronState, newState))
+                    if (!this.absorptionIsAllowed(this.get('electronState'), newState))
                         return false;
                     
                     // Absorb the photon with some probability...
@@ -320,7 +320,7 @@ define(function (require) {
             // Are we in some state other than the ground state?
             // Has the electron been in this state awhile?
             // Was this photon fired by the gun?
-            if (this.electronState > BohrModel.GROUND_STATE &&
+            if (this.get('electronState') > BohrModel.GROUND_STATE &&
                 this.timeInState >= BohrModel.MIN_TIME_IN_STATE && 
                 !photon.isEmitted()
             ) {
@@ -332,8 +332,8 @@ define(function (require) {
                     var canStimulateEmission = false;
                     var photonWavelength = photon.getWavelength();
                     var newState = 0;
-                    for (var state = BohrModel.GROUND_STATE; state < this.electronState && !canStimulateEmission; state++) {
-                        var transitionWavelength = BohrModel.getWavelengthAbsorbed(state, this.electronState);
+                    for (var state = BohrModel.GROUND_STATE; state < this.get('electronState') && !canStimulateEmission; state++) {
+                        var transitionWavelength = BohrModel.getWavelengthAbsorbed(state, this.get('electronState'));
                         if (this.closeEnough(photonWavelength, transitionWavelength)) {
                             canStimulateEmission = true;
                             newState = state;
@@ -341,7 +341,7 @@ define(function (require) {
                     }
                     
                     // Is the transition that would occur allowed?
-                    if (!this.stimulatedEmissionIsAllowed(this.electronState, newState))
+                    if (!this.stimulatedEmissionIsAllowed(this.get('electronState'), newState))
                         return false;
                     
                     // Emit a photon with some probability...
@@ -409,7 +409,7 @@ define(function (require) {
             
             // Are we in some state other than the ground state?
             // Has the electron been in this state awhile?
-            if (this.electronState > BohrModel.GROUND_STATE && this.timeInState >= BohrModel.MIN_TIME_IN_STATE) {
+            if (this.get('electronState') > BohrModel.GROUND_STATE && this.timeInState >= BohrModel.MIN_TIME_IN_STATE) {
                 //  Emit a photon with some probability...
                 if (this.spontaneousEmissionIsCertain()) {
                     
@@ -423,7 +423,7 @@ define(function (require) {
                     var position = this.getSpontaneousEmissionPosition();
                     var orientation = RandomUtils.randomAngle();
                     var speed = Constants.PHOTON_INITIAL_SPEED;
-                    var wavelength = BohrModel.getWavelengthEmitted(this.electronState, newState);
+                    var wavelength = BohrModel.getWavelengthEmitted(this.get('electronState'), newState);
                     
                     // Create and emit a photon
                     success = true;
@@ -461,8 +461,8 @@ define(function (require) {
          */
         chooseLowerElectronState: function() {
             var newState = BohrModel.GROUND_STATE;
-            if (this.electronState > BohrModel.GROUND_STATE + 1)
-                newState = BohrModel.GROUND_STATE + Math.floor(Math.random() * (this.electronState - BohrModel.GROUND_STATE));
+            if (this.get('electronState') > BohrModel.GROUND_STATE + 1)
+                newState = BohrModel.GROUND_STATE + Math.floor(Math.random() * (this.get('electronState') - BohrModel.GROUND_STATE));
             return newState;
         },
         

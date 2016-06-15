@@ -50,7 +50,7 @@ define(function (require) {
             for (var i = 0; i < l; i++) {
                 //x^2-1 times each term on left side
                 var terms = [];
-                for (var k = 0; k < productTerms.size(); k++ ) {
+                for (var k = 0; k < productTerms.length; k++ ) {
                     var term = productTerms[k];
                     terms.push(new PolynomialTerm(term.getPower() + 2, term.getCoeff()));
                     terms.push(new PolynomialTerm(term.getPower(),     term.getCoeff() * -1));
@@ -58,7 +58,7 @@ define(function (require) {
                 productTerms = terms;
             }
 
-            for (var k = 0; k < productTerms.size(); k++)
+            for (var k = 0; k < productTerms.length; k++)
                 productTerms[k] = productTerms[k].derive(l + m);
 
             // Wolfram says there is a sign convention difference here

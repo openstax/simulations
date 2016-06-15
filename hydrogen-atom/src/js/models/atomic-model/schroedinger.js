@@ -174,7 +174,7 @@ define(function (require) {
             }
             
             // Verify that no transition rules have been broken.
-            var valid = isaValidTransition(this.getElectronState(), this.l, this.m, nNew, lNew, mNew);
+            var valid = SchroedingerModel.isAValidTransition(this.getElectronState(), this.l, this.m, nNew, lNew, mNew);
             if (valid) {
                 this.l = lNew;
                 this.m = mNew;
@@ -196,7 +196,7 @@ define(function (require) {
          */
         getSpontaneousEmissionPosition: function() {
             // random point on the orbit
-            var radius = BohrModel.getOrbitRadius(SchroedingerModel.GROUND_STATE);
+            var radius = DeBroglieModel.getOrbitRadius(SchroedingerModel.GROUND_STATE);
             var angle = RandomUtils.randomAngle();
             // convert to Cartesian coordinates, adjust for atom's position
             var x = (radius * Math.cos(angle)) + this.getX();
@@ -244,7 +244,7 @@ define(function (require) {
                 for (var i = 0; i < numEntries; i++) {
                     var state = nMin + i;
                     var transitionStrength = SchroedingerModel.TRANSITION_STRENGTH[nOld-1][state-1];
-                    this.probabilisticChooser.add(weight, state);
+                    this.probabilisticChooser.add(transitionStrength, state);
                     strengthSum += transitionStrength;
                 }
                 if (strengthSum === 0) {
@@ -333,7 +333,7 @@ define(function (require) {
         },
 
         getStateAsString: function() {
-            return this.stateToString(this.getElectronState(), this.l, this.m);
+            return SchroedingerModel.stateToString(this.getElectronState(), this.l, this.m);
         },
 
         fireOneAbsorbablePhoton: function() {
@@ -349,12 +349,12 @@ define(function (require) {
         /**
          * Checks state transition rules to see if a proposed transition is valid. 
          */
-        isaValidTransition: function(nOld, lOld, mOld, nNew, lNew, mNew) {
+        isAValidTransition: function(nOld, lOld, mOld, nNew, lNew, mNew) {
             var valid = true;
 
             if (nOld === nNew)
                 valid = false;
-            else if (!(nNew >= 1 && nNew <= getNumberOfStates()))
+            else if (!(nNew >= 1 && nNew <= SchroedingerModel.getNumberOfStates()))
                 valid = false;
             else if (!(lNew >= 0 && lNew <= nNew - 1))
                 valid = false;
@@ -405,7 +405,7 @@ define(function (require) {
          * Codified from design document.
          */
         getGeneralizedLaguerrePolynomial: function(n, l, r) {
-            var a = BohrModel.getOrbitRadius(n) / (n * n);
+            var a = DeBroglieModel.getOrbitRadius(n) / (n * n);
             var multiplier = Math.pow(r, l) * Math.exp(-r / (n * a));
             var b0 = 2 * Math.pow((n * a), (-1.5)); // b0
             var limit = n - l - 1;
