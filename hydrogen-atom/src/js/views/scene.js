@@ -90,7 +90,12 @@ define(function(require) {
                 mvt: this.rayGunMVT,
                 model: this.simulation.gun,
                 squareTarget: true,
-                targetColor: '#DA7900'
+                targetColor: '#DA7900',
+                alpha: 0.8//this.simulation.gun.getBeamAlpha()
+            });
+
+            this.listenTo(this.simulation.gun, 'change:wavelength change:lightType', function(gun, wavelength) {
+                this.rayGunView.setColor(gun.getBeamColor());
             });
 
             this.topLayer.addChild(this.rayGunView.displayObject);

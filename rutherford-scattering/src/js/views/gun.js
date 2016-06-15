@@ -27,12 +27,14 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 color: '#fff',
+                alpha: 0.25,
                 targetColor: '#3e5fff',
                 squareTarget: false
             }, options);
 
             this.mvt = options.mvt;
             this.color = Colors.parseHex(options.color);
+            this.alpha = options.alpha;
             this.targetColor = Colors.parseHex(options.targetColor);
             this.squareTarget = options.squareTarget;
 
@@ -106,13 +108,15 @@ define(function(require) {
 
         setColor: function(hexString) {
             this.color = Colors.parseHex(hexString);
+            this.drawRay();
         },
 
         drawRay: function() {
             this.rayWidth = RayGunView.RAY_WIDTH * this.rayGun.texture.width;
             this.rayHeight = RayGunView.RAY_HEIGHT * this.rayGun.texture.height;
 
-            this.ray.beginFill(this.color, 0.25);
+            this.ray.clear();
+            this.ray.beginFill(this.color, this.alpha);
             this.ray.drawRect(-0.5 * this.rayWidth, -1 * this.rayHeight - 0.5 * this.rayGun.texture.height, this.rayWidth, this.rayHeight);
             this.ray.endFill();
         },

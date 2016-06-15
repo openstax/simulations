@@ -474,6 +474,20 @@ define(function (require) {
          */
         getSpontaneousEmissionPosition: function() {
             return this.electronPosition;
+        },
+
+        /**
+         * Gets the transition wavelengths for a specified state.
+         */
+        getTransitionWavelengths: function(state) {
+            var wavelengths = null;
+            var maxState = BohrModel.getGroundState() + BohrModel.getNumberOfStates() - 1;
+            if (state < maxState) {
+                wavelengths = [];
+                for (var i = 0; i < maxState - state; i++)
+                    wavelengths[i] = BohrModel.getWavelengthAbsorbed(state, state + i + 1);
+            }
+            return wavelengths;
         }
 
     }, _.extend({}, Constants.BohrModel, {
