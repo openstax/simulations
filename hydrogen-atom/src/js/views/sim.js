@@ -14,6 +14,10 @@ define(function (require) {
     var HydrogenAtomWavelengthSliderView = require('hydrogen-atom/views/wavelength-slider');
     var SpectrometerView                 = require('hydrogen-atom/views/spectrometer');
     var EnergyDiagramView                = require('hydrogen-atom/views/energy-diagram');
+    var SolarSystemEnergyDiagramView     = require('hydrogen-atom/views/energy-diagram/solar-system');
+    var BohrEnergyDiagramView            = require('hydrogen-atom/views/energy-diagram/bohr');
+    var DeBroglieEnergyDiagramView       = require('hydrogen-atom/views/energy-diagram/debroglie');
+    var SchroedingerEnergyDiagramView    = require('hydrogen-atom/views/energy-diagram/schroedinger');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -125,9 +129,20 @@ define(function (require) {
         },
 
         initEnergyDiagrams: function() {
-            this.energyDiagramView = new EnergyDiagramView({
-                simulation: this.simulation
-            });
+            this.energyDiagrams = {
+                SOLAR_SYSTEM: new SolarSystemEnergyDiagramView({
+                    simulation: this.simulation
+                }),
+                BOHR: new BohrEnergyDiagramView({
+                    simulation: this.simulation
+                }),
+                DEBROGLIE: new DeBroglieEnergyDiagramView({
+                    simulation: this.simulation
+                }),
+                SCHROEDINGER: new SchroedingerEnergyDiagramView({
+                    simulation: this.simulation
+                })
+            };
         },
 
         /**
@@ -193,8 +208,10 @@ define(function (require) {
         },
 
         renderEnergyDiagrams: function() {
-            this.energyDiagramView.render();
-            this.$('.energy-level-diagram-panel').append(this.energyDiagramView.el);
+            for (var key in this.energyDiagrams) {
+                this.energyDiagrams[key].render();
+                this.$('.energy-level-diagram-panel').append(this.energyDiagrams[key].el);
+            }
         },
 
         /**
@@ -229,7 +246,11 @@ define(function (require) {
 
             this.$('.spectrometer-panel').addClass('collapsed');
 
-            this.energyDiagramView.postRender();
+            for (var key in this.energyDiagrams)
+                this.energyDiagrams[key].postRender();
+
+            this.$('.energy-level-diagram-panel').addClass('collapsed');
+            this.hideEnergyDiagramPanel();
 
             this.lightTypeChanged();
         },
@@ -260,7 +281,8 @@ define(function (require) {
             this.spectrometerView.update(timeSeconds, dtSeconds);
 
             // Update the energy diagrams
-            this.energyDiagramView.update(timeSeconds, dtSeconds);
+            for (var key in this.energyDiagrams)
+                this.energyDiagrams[key].update(timeSeconds, dtSeconds);
         },
 
         /**
@@ -337,9 +359,18 @@ define(function (require) {
                 this.wavelengthSliderView.hideAbsorptionWavelengths();
         },
 
+        showEnergyDiagramPanel: function() {
+            this.$('.energy-level-diagram-panel').show();
+        },
+
+        hideEnergyDiagramPanel: function() {
+            this.$('.energy-level-diagram-panel').hide();
+        },
+
         atomicModelChanged: function(simulation, atomicModel) {
             var atomicModel = this.simulation.get('atomicModel');
 
+            // Determine whether we should show the energy absorption lines option
             if (atomicModel === AtomicModels.BOHR ||
                 atomicModel === AtomicModels.DEBROGLIE ||
                 atomicModel === AtomicModels.SCHROEDINGER ||
@@ -349,6 +380,32 @@ define(function (require) {
             }
             else {
                 this.$('.show-absorption-wavelengths-wrapper').hide();
+            }
+
+            for (var key in this.energyDiagrams) {
+                this.energyDiagrams[key].clearAtom();
+                this.energyDiagrams[key].hide();
+            }
+
+            // Determine whether the energy diagram is visible and which one
+            if (!this.simulation.get('experimentSelected')) {
+                var currentAtomicModel = this.simulation.get('atomicModel');
+                var key = _.findKey(AtomicModels, function(atomicModel) {
+                    return (atomicModel === currentAtomicModel);
+                });
+
+                if (key !== undefined && this.energyDiagrams[key]) {
+                    this.energyDiagrams[key].setAtom(this.simulation.atom);
+                    this.energyDiagrams[key].show();
+
+                    this.showEnergyDiagramPanel();
+                }
+                else {
+                    this.hideEnergyDiagramPanel();
+                }
+            }
+            else {
+                this.hideEnergyDiagramPanel();
             }
         },
 

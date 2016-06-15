@@ -487,5 +487,37 @@ define(function (require) {
     Constants.SchroedingerModelView = SchroedingerModelView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                         ENERGY DIAGRAM VIEW                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var EnergyDiagramView = {};
+
+    // Energy of the ground state
+    EnergyDiagramView.E1 = -13.6; // eV
+    // How much to distory the energy level values. For no distortion, set this to zero.
+    EnergyDiagramView.DISTORTION_FACTOR = 0.2; // 1.0 = 100% increase in spacing
+
+    EnergyDiagramView.MIN_SQUIGGLE_LENGTH = 5; // pixels
+    EnergyDiagramView.SQUIGGLE_AMPLITUDE = 6; // pixels
+    EnergyDiagramView.SQUIGGLE_LINE_WIDTH = 1;
+    EnergyDiagramView.SQUIGGLE_ARROW_HEAD_WIDTH = 20;
+    EnergyDiagramView.SQUIGGLE_ARROW_HEAD_HEIGHT = 10;
+    
+    EnergyDiagramView.UV_SQUIGGLE_PERIOD = 8; // pixels
+    EnergyDiagramView.MIN_VISIBLE_SQUIGGLE_PERIOD = 10; // pixels
+    EnergyDiagramView.MAX_VISIBLE_SQUIGGLE_PERIOD = 20; // pixels
+    EnergyDiagramView.IR_SQUIGGLE_PERIOD = 22; // pixels
+
+    EnergyDiagramView.STATE_LINE_LENGTH = 10;
+    EnergyDiagramView.STATE_LINE_WIDTH = 2;
+    EnergyDiagramView.STATE_LINE_COLOR = '#000';
+    EnergyDiagramView.STATE_LABEL_FONT_SIZE = 10;
+
+    Constants.EnergyDiagramView = EnergyDiagramView;
+
+
     return Constants;
 });

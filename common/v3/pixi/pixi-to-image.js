@@ -8,9 +8,9 @@ define(function(require) {
     /*
      * Canvas initialization
      */
-    var renderer = PIXI.autoDetectRenderer(200, 200, { transparent: true, antialias: true });
-    var canvas = renderer.view;
-    var stage = new PIXI.Container();
+    var _renderer = PIXI.autoDetectRenderer(200, 200, { transparent: true, antialias: true });
+    var _canvas = _renderer.view;
+    var _stage = new PIXI.Container();
 
     /**
      * Static functions
@@ -22,21 +22,33 @@ define(function(require) {
          *   and generates and returns an image data URI.
          */
         displayObjectToDataURI: function(displayObject, padding) {
-            var wrapper = this._wrapDisplayObject(displayObject, padding);
-            stage.addChild(wrapper);
-
-            // Render to the canvas
-            renderer.render(stage);
-
-            // Set the displayObject loose again
-            wrapper.removeChild(displayObject);
-            stage.removeChild(wrapper);
+            var canvas = this.displayObjectToCanvas(displayObject, padding, _renderer);
 
             // Return the image imprinted on the canvas
             return canvas.toDataURL('image/png');
         },
 
-        _wrapDisplayObject: function(displayObject, padding) {
+        displayObjectToCanvas: function(displayObject, padding, renderer) {
+            var canvas = _canvas;
+            if (renderer === undefined) {
+                renderer = PIXI.autoDetectRenderer(200, 200, { transparent: true, antialias: true });
+                canvas = renderer.view;
+            }
+
+            var wrapper = this._wrapDisplayObject(displayObject, padding, renderer);
+            _stage.addChild(wrapper);
+
+            // Render to the canvas
+            renderer.render(_stage);
+
+            // Set the displayObject loose again
+            wrapper.removeChild(displayObject);
+            _stage.removeChild(wrapper);
+
+            return canvas;
+        },
+
+        _wrapDisplayObject: function(displayObject, padding, renderer) {
             if (padding === undefined)
                 padding = 0;
             
