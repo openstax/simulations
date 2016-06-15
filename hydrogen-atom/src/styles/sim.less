@@ -115,10 +115,6 @@
             list-style-image: none;
             margin-top: 4px;
 
-            @media screen and (max-height: @short-window) {
-                margin-top: 0;
-            }
-
             label {
                 font-weight: bold;
 
@@ -136,26 +132,18 @@
     }
 
     .prediction-models {
+        position: relative;
         margin-top: 12px;
         margin-bottom: -4px;
+        margin-left: -15px;
+        margin-right: -15px;
         display: none;
 
         .prediction-model-wrapper {
-            display: inline-block;
-            width: 81px;
-            padding: 8px 4px 4px;
-            margin-bottom: 4px;
-            text-align: center;
+            padding: 10px 0 10px 15px;
             vertical-align: top;
             cursor: pointer;
-
-            &:nth-child(2n + 1) {
-                margin-right: 2px;
-            }
-
-            &:nth-child(2n) {
-                margin-left: 2px;
-            }
+            width: 100%;
 
             @media screen and (max-height: @short-window) {
                 padding-top: 4px;
@@ -171,13 +159,53 @@
             }
 
             > div {
-                margin: 0 auto;
+                display: inline-block;
+                vertical-align: middle;
+                
+                > div {
+                    border-radius: 8px;
+                }
             }
 
             > label {
-                width: 100%;
-                height: 24px;
+                display: inline-block;
+                vertical-align: middle;
                 font-size: 11px;
+                margin-left: 6px;
+                margin-bottom: 0;
+                width: 100px;
+            }
+        }
+
+        .prediction-model-spectrum {
+            position: absolute;
+            top: 0;
+            right: 15px;
+            height: 100%;
+            width: 24px;
+            opacity: 0.8;
+            #gradient.vertical(#FF8D00; #00C9FF; 0%; 100%);
+
+            .prediction-model-spectrum-classical,
+            .prediction-model-spectrum-quantum {
+                display: block;
+                position: absolute;
+                left: -22px;
+                .transform(~'rotate(90deg)');
+            }
+
+            .prediction-model-spectrum-classical {
+                top: 34px;
+                color: #fff;
+            }
+
+            .prediction-model-spectrum-quantum {
+                top: 316px;
+                color: #fff;
+
+                @media screen and (max-height: @short-window) {
+                    top: 244px;
+                }
             }
         }
     }
@@ -194,9 +222,8 @@
     &.light-controls {
         position: absolute;
         top: 398px;
-        // bottom: (@playback-controls-bar-height + @panel-margin - 5);
         left: @panel-margin;
-        width: 260px;
+        width: 320px;
 
         .light-mode-radios {
             margin-bottom: 12px;

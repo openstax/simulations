@@ -85,7 +85,9 @@ define(function (require) {
             this.initSceneView();
             this.initLegend();
 
-            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.listenTo(this.simulation, 'change:atomicModel',        this.atomicModelChanged);
+            this.listenTo(this.simulation, 'change:experimentSelected', this.atomicModelChanged);
+            this.listenTo(this.simulation, 'change:paused',             this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
 
             this.listenTo(this.simulation.gun, 'change:lightType', this.lightTypeChanged);
@@ -281,6 +283,21 @@ define(function (require) {
 
         toggleSpectrometerPanel: function(event) {
             this.$('.spectrometer-panel').toggleClass('collapsed');
+        },
+
+        atomicModelChanged: function(simulation, atomicModel) {
+            var atomicModel = this.simulation.get('atomicModel');
+
+            if (atomicModel === AtomicModels.BOHR ||
+                atomicModel === AtomicModels.DEBROGLIE ||
+                atomicModel === AtomicModels.SCHROEDINGER ||
+                this.simulation.get('experimentSelected')
+            ) {
+                this.$('.show-absorption-wavelengths-wrapper').show();
+            }
+            else {
+                this.$('.show-absorption-wavelengths-wrapper').hide();
+            }
         }
 
     });

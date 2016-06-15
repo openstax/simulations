@@ -30,6 +30,10 @@
             </ul>
 
             <div class="prediction-models">
+                <div class="prediction-model-spectrum">
+                    <span class="prediction-model-spectrum-classical">Classical...</span>
+                    <span class="prediction-model-spectrum-quantum">...Quantum</span>
+                </div>
             <% _.each(atomicModels, function(model, key) { %>
                 <div class="prediction-model-wrapper <% if (model === selectedAtomicModel) { %>active<% } %>" data-model-key="<%= key %>">
                     <%= Assets.createIcon(model.icon, 42) %>
@@ -60,11 +64,11 @@
         <div class="wavelength-slider-wrapper">
             <div class="uv-label">UV</div>
         </div>
-    </div>
 
-    <div class="show-absorption-wavelengths-wrapper">
-        <input type="checkbox" class="show-absorption-wavelengths-check" id="show-absorption-wavelengths-check">
-        <label for="show-absorption-wavelengths-check">Show absorption wavelengths</label>
+        <div class="show-absorption-wavelengths-wrapper">
+            <input type="checkbox" class="show-absorption-wavelengths-check" id="show-absorption-wavelengths-check">
+            <label for="show-absorption-wavelengths-check">Show absorption wavelengths</label>
+        </div>
     </div>
 </div>
 
