@@ -1,0 +1,66 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+.transitions-btn-wrapper {
+    position: absolute;
+    top: 0;
+    right: 30px;
+
+    > .transitions-btn {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:active, &:active:hover, &.active {
+            background: @link-color;
+            color: #fff;
+        }
+
+        &.active:hover{
+            background: fade(@link-color, 75%);
+        }
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+}
+
+#transitions-dialog {
+    .modal-header {
+        border-color: #dfdfdf;
+    }
+
+    .modal-body {
+        background: @gray-lightest;
+        padding: 40px 40px;
+
+        table {
+            max-width: 240px;
+            margin: 0 auto;
+
+            .wavelength {
+                text-align: right;
+            }
+
+            td {
+                padding: 2px 8px;
+            }
+        }
+    }
+
+    .modal-footer {
+        border-color: #dfdfdf;
+    }
+} 
+
+.modal {
+    background: fadeout(#000, 50%);
+}
