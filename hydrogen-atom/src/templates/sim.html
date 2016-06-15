@@ -31,7 +31,7 @@
                 </div>
             <% _.each(atomicModels, function(model, key) { %>
                 <div class="prediction-model-wrapper <% if (model === selectedAtomicModel) { %>active<% } %>" data-model-key="<%= key %>">
-                    <%= Assets.createIcon(model.icon, 42) %>
+                    <%= Assets.createIcon(model.icon, iconSize) %>
                     <label><%= model.label %></label>
                 </div>
             <% }); %>
