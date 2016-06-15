@@ -168,6 +168,7 @@ define(function(require) {
 
         reset: function() {
             this.draw();
+            this.wavelengthCounts = [];
         },
 
         snapshot: function() {
