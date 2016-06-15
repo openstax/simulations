@@ -12,6 +12,13 @@ define(function(require) {
     require('less!./app');
     require('less!./tabs');
 
+    // So we can apply the default hash
+    Backbone.history.start();
+
+    /**
+     * A view that manages the whole simulation application and the
+     *   individual simulation views.
+     */
     var AppView = Backbone.View.extend({
 
         template: _.template(template),
@@ -182,7 +189,8 @@ define(function(require) {
                 if (this.defaultSimViewIndex >= this.simViews.length)
                     throw 'defaultSimViewIndex is invalid';
 
-                location.hash = '#' + this.$('.sim-content').eq(this.defaultSimViewIndex).attr('id');
+                var defaultHash = '#' + this.$('.sim-content').eq(this.defaultSimViewIndex).attr('id');
+                (new Backbone.Router()).navigate(defaultHash, { replace: true })
                 return;
             }
 
