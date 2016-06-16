@@ -29,7 +29,7 @@
     "chai": "^1.10.0",
     "chai-stats": "^0.3.0",
     "font-awesome": "^4.2.0",
-    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-jshint": "^1.0.0",
     "grunt-mocha": "^0.4.11",
     "jquery": "^2.1.3",
     "line-intersect": "^1.0.0",
