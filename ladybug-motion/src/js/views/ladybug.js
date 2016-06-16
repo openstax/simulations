@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var HybridView = require('common/pixi/view/hybrid');
-    var ArrowView  = require('common/pixi/view/arrow');
+    var HybridView = require('common/v3/pixi/view/hybrid');
+    var ArrowView  = require('common/v3/pixi/view/arrow');
 
     var LadybugMover = require('models/ladybug-mover');
 
@@ -78,9 +78,9 @@ define(function(require) {
             ladybugOpenWings.anchor.x = 0.5;
             ladybugOpenWings.anchor.y = 0.5;
 
-            this.ladybug = new PIXI.DisplayObjectContainer();
-            this.idleWings = new PIXI.DisplayObjectContainer();
-            this.openWings = new PIXI.DisplayObjectContainer();
+            this.ladybug = new PIXI.Container();
+            this.idleWings = new PIXI.Container();
+            this.openWings = new PIXI.Container();
 
             this.idleWings.addChild(ladybug);
             this.openWings.addChild(ladybugOpenWings);
@@ -140,7 +140,7 @@ define(function(require) {
             return targetSpriteHeight / this.ladybugSprite.height;
         },
 
-        dragStart: function(data) {
+        dragStart: function(event) {
             this.simulation.startSampling();
 
             if (!this.simulation.get('recording'))
@@ -152,13 +152,13 @@ define(function(require) {
             this.simulation.set('motionType', 'Manual');
             this.simulation.set('updateMode', UpdateMode.POSITION);
 
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
+                var local = event.data.getLocalPosition(this.displayObject.parent, this._dragLocation);
                 
                 var x = this.mvt.viewToModelX(local.x);
                 var y = this.mvt.viewToModelY(local.y);
@@ -167,7 +167,7 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
 
             this.simulation.stopSampling();

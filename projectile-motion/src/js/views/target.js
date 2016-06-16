@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
     var Vector2  = require('common/math/vector2');
 
@@ -77,15 +77,15 @@ define(function(require) {
             }
         },
 
-        dragStart: function(data) {
-            this.previousX = data.global.x;
+        dragStart: function(event) {
+            this.previousX = event.data.global.x;
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.previousX;
-                this.previousX = data.global.x;
+                var dx = event.data.global.x - this.previousX;
+                this.previousX = event.data.global.x;
 
                 dx = this.mvt.viewToModelDeltaX(dx);
 
@@ -98,7 +98,7 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 

@@ -37,7 +37,7 @@ define(function(require) {
             ObjectView.prototype.initGraphics.apply(this, arguments);
 
             // Put an extra transform frame inside the picture container
-            this.pictureScaleFrame = new PIXI.DisplayObjectContainer();
+            this.pictureScaleFrame = new PIXI.Container();
 
             while (this.pictureContainer.children.length > 0) {
                 // Move the original contents of the picture container into
@@ -50,10 +50,10 @@ define(function(require) {
             this.pictureContainer.addChild(this.pictureScaleFrame);
 
             // Use reversed versions of the picture images
-            this.pictureSprites[Types.PICTURE_A].setTexture(Assets.Texture(Assets.Images.PICTURE_A_REVERSED));
-            this.pictureSprites[Types.PICTURE_B].setTexture(Assets.Texture(Assets.Images.PICTURE_B_REVERSED));
-            this.pictureSprites[Types.PICTURE_C].setTexture(Assets.Texture(Assets.Images.PICTURE_C_REVERSED));
-            this.pictureSprites[Types.PICTURE_D].setTexture(Assets.Texture(Assets.Images.PICTURE_D_REVERSED));
+            this.pictureSprites[Types.PICTURE_A].texture = Assets.Texture(Assets.Images.PICTURE_A_REVERSED);
+            this.pictureSprites[Types.PICTURE_B].texture = Assets.Texture(Assets.Images.PICTURE_B_REVERSED);
+            this.pictureSprites[Types.PICTURE_C].texture = Assets.Texture(Assets.Images.PICTURE_C_REVERSED);
+            this.pictureSprites[Types.PICTURE_D].texture = Assets.Texture(Assets.Images.PICTURE_D_REVERSED);
 
             // Change the anchors for the reversing effect
             for (var key in this.pictureSprites) {

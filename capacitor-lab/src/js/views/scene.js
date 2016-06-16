@@ -3,9 +3,9 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
 
-    var PixiSceneView        = require('common/pixi/view/scene');
+    var PixiSceneView        = require('common/v3/pixi/view/scene');
     var ModelViewTransform3D = require('common/math/model-view-transform-3d');
     var Vector2              = require('common/math/vector2');
     var Rectangle            = require('common/math/rectangle');
@@ -39,8 +39,8 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.circuitLayer = new PIXI.DisplayObjectContainer();
-            this.toolsLayer   = new PIXI.DisplayObjectContainer();
+            this.circuitLayer = new PIXI.Container();
+            this.toolsLayer   = new PIXI.Container();
 
             this.stage.addChild(this.circuitLayer);
             this.stage.addChild(this.toolsLayer);

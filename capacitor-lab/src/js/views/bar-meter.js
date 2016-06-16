@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Draggable = require('common/tools/draggable');
+    var Draggable = require('common/v3/tools/draggable');
     var Vector2   = require('common/math/vector2');
 
     var html  = require('text!templates/bar-meter.html');

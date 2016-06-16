@@ -7,7 +7,7 @@ define(function (require) {
     var Moon      = require('models/body/moon');
     var Satellite = require('models/body/satellite');
 
-    var Assets = require('common/pixi/assets');
+    var Assets = require('common/v3/pixi/assets');
 
     Assets.Path = 'img/';
 

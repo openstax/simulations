@@ -4,9 +4,9 @@ define(function(require) {
 
     var buzz = require('buzz');
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
     
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
     var range    = require('common/math/range');
     var Vector2  = require('common/math/vector2');
@@ -129,7 +129,7 @@ define(function(require) {
              *   reference the mvt object and do conversions when controlling
              *   the behavior of our particles or move their transform origin.
              */
-            var particleContainer = new PIXI.SpriteBatch();
+            var particleContainer = new PIXI.Container();
             this.spritesLayer.addChildAt(particleContainer, 0);
 
             var flameParticleTexture = Assets.Texture(Assets.Images.FLAME_PARTICLE);
@@ -233,14 +233,14 @@ define(function(require) {
             this.axes.lineTo(0, bottom);
         },
 
-        dragCannonStart: function(data) {
+        dragCannonStart: function(event) {
             this.draggingCannon = true;
         },
 
-        dragCannon: function(data) {
+        dragCannon: function(event) {
             if (this.draggingCannon) {
-                var x = data.global.x - this.displayObject.x;
-                var y = data.global.y - this.displayObject.y;
+                var x = event.data.global.x - this.displayObject.x;
+                var y = event.data.global.y - this.displayObject.y;
                 
                 var angle = Math.atan2(y, x);
                 var degrees = -angle * RADIANS_TO_DEGREES;
@@ -257,19 +257,19 @@ define(function(require) {
             }
         },
 
-        dragCannonEnd: function(data) {
+        dragCannonEnd: function(event) {
             this.draggingCannon = false;
         },
 
-        dragPedestalStart: function(data) {
-            this.previousPedestalY = data.global.y;
+        dragPedestalStart: function(event) {
+            this.previousPedestalY = event.data.global.y;
             this.draggingPedestal = true;
         },
 
-        dragPedestal: function(data) {
+        dragPedestal: function(event) {
             if (this.draggingPedestal) {
-                var dy = data.global.y - this.previousPedestalY;
-                this.previousPedestalY = data.global.y;
+                var dy = event.data.global.y - this.previousPedestalY;
+                this.previousPedestalY = event.data.global.y;
 
                 dy = this.mvt.viewToModelDeltaY(dy);
 
@@ -284,7 +284,7 @@ define(function(require) {
             }
         },
 
-        dragPedestalEnd: function(data) {
+        dragPedestalEnd: function(event) {
             this.draggingPedestal = false;
         },
 

@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var ArrowView = require('common/pixi/view/arrow');
+    var ArrowView = require('common/v3/pixi/view/arrow');
 
     var Constants = require('constants');
 
@@ -49,9 +49,11 @@ define(function(require) {
 
             var label = new PIXI.Text(this.label, textStyle);
             var value = new PIXI.Text('10 V/m', textStyle);
+            label.resolution = this.getResolution();
+            value.resolution = this.getResolution();
             value.y = 12;
 
-            this.text = new PIXI.DisplayObjectContainer();
+            this.text = new PIXI.Container();
             this.text.addChild(label);
             this.text.addChild(value);
             this.displayObject.addChild(this.text);
@@ -82,7 +84,7 @@ define(function(require) {
             this.labelText.x = Math.round(-this.labelText.width / 2);
             this.valueText.x = Math.round(-this.valueText.width / 2);
 
-            this.valueText.setText(Math.abs(Math.round(this.value)) + ' V/m');
+            this.valueText.text = Math.abs(Math.round(this.value)) + ' V/m';
         },
 
         setScale: function(scale) {

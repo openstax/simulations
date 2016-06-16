@@ -3,9 +3,9 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
 
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
 
     var Constants = require('constants');
@@ -39,7 +39,7 @@ define(function(require) {
             this.displayObject.addChild(this.lines);
 
             this.dotTexture = PIXI.Texture.generateCircleTexture(this.lineWidth, this.color);
-            this.dots = new PIXI.SpriteBatch();
+            this.dots = new PIXI.Container();
             this.dots.visible = false;
             this.displayObject.addChild(this.dots);
             this.lastDotTime = 0;

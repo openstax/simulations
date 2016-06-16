@@ -4,7 +4,7 @@ define(function(require) {
 
     var _ = require('underscore');
 
-    var AppView = require('common/app/app');
+    var AppView = require('common/v3/app/app');
 
     var DielectricSimulation = require('models/simulation/dielectric');
 

@@ -69,10 +69,13 @@ define(function(require) {
             secondPointMarker.drawCircle(0, 0, SourceObjectView.SECOND_POINT_SIZE  / 2);
             secondPointMarker.endFill();
 
-            this.secondPoint = new PIXI.DisplayObjectContainer();
+            this.secondPoint = new PIXI.Container();
             this.secondPoint.addChild(secondPointMarker);
             this.secondPoint.visible = false;
             this.displayObject.addChild(this.secondPoint);
+
+            this.objectContainer.buttonMode = true;
+            this.secondPoint.buttonMode = true;
 
             this.initLamps();
         },
@@ -88,15 +91,15 @@ define(function(require) {
             this.secondPoint.addChild(this.lamp2);
         },
 
-        dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.objectContainer, this._dragOffset);
+        dragStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.objectContainer, this._dragOffset);
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.objectContainer.x - this.dragOffset.x;
-                var dy = data.global.y - this.objectContainer.y - this.dragOffset.y;
+                var dx = event.data.global.x - this.objectContainer.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.objectContainer.y - this.dragOffset.y;
                 
                 this.objectContainer.x += dx;
                 this.objectContainer.y += dy;
@@ -114,19 +117,19 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 
-        dragSecondPointStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.secondPoint, this._dragOffset);
+        dragSecondPointStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.secondPoint, this._dragOffset);
             this.draggingSecondPoint = true;
         },
 
-        dragSecondPoint: function(data) {
+        dragSecondPoint: function(event) {
             if (this.draggingSecondPoint) {
-                var dx = data.global.x - this.secondPoint.x - this.dragOffset.x;
-                var dy = data.global.y - this.secondPoint.y - this.dragOffset.y;
+                var dx = event.data.global.x - this.secondPoint.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.secondPoint.y - this.dragOffset.y;
                 
                 if (this.model.get('type') !== Types.LIGHT) {
                     // If we're not in lamp mode, we need to constrain movement
@@ -153,7 +156,7 @@ define(function(require) {
             }
         },
 
-        dragSecondPointEnd: function(data) {
+        dragSecondPointEnd: function(event) {
             this.draggingSecondPoint = false;
         },
 

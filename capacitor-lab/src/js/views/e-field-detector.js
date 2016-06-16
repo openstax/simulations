@@ -4,10 +4,10 @@ define(function(require) {
 
     var SAT      = require('sat');
     var PIXI     = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
 
-    var AppView   = require('common/app/app');
-    var PixiView  = require('common/pixi/view');
+    var AppView   = require('common/v3/app/app');
+    var PixiView  = require('common/v3/pixi/view');
     var Colors    = require('common/colors/colors');
 
     var EFieldDetectorArrowView = require('views/e-field-detector-arrow');
@@ -85,7 +85,7 @@ define(function(require) {
             else
                 this.bodySprite = Assets.createSprite(Assets.Images.EFD_DEVICE_BODY_NARROW);
 
-            this.detectorContainer = new PIXI.DisplayObjectContainer();
+            this.detectorContainer = new PIXI.Container();
             this.detectorContainer.buttonMode = true;
             this.detectorContainer.defaultCursor = 'move';
             this.detectorContainer.addChild(this.bodySprite);
@@ -101,7 +101,7 @@ define(function(require) {
 
             this.displayObject.addChild(this.detectorContainer);
 
-            this.body = new PIXI.DisplayObjectContainer();
+            this.body = new PIXI.Container();
             this.body.x = 13;
             this.body.y = 13;
             this.bodyHeight = this.bodySprite.texture.height - 24;
@@ -171,7 +171,7 @@ define(function(require) {
                 dielectricMask.drawRect(displayX, displayY, this.displayWidth, this.displayHeight);
                 dielectricMask.endFill();
 
-                this.dielectricDisplay = new PIXI.DisplayObjectContainer();
+                this.dielectricDisplay = new PIXI.Container();
                 this.dielectricDisplay.x = displayX;
                 this.dielectricDisplay.y = displayY;
                 this.dielectricDisplay.mask = dielectricMask;
@@ -223,7 +223,7 @@ define(function(require) {
             plateMask.drawRect(displayX, displayY, this.displayWidth, this.displayHeight);
             plateMask.endFill();
 
-            this.plateDisplay = new PIXI.DisplayObjectContainer();
+            this.plateDisplay = new PIXI.Container();
             this.plateDisplay.x = displayX;
             this.plateDisplay.y = displayY;
             this.plateDisplay.mask = plateMask;
@@ -266,7 +266,7 @@ define(function(require) {
                 onCallback();
             };
 
-            var container = new PIXI.DisplayObjectContainer();
+            var container = new PIXI.Container();
             container.addChild(onBtn);
             container.addChild(offBtn);
 
@@ -293,7 +293,7 @@ define(function(require) {
             zoomInBtn.buttonMode = true;
             zoomOutBtn.buttonMode = true;
 
-            var wrapper = new PIXI.DisplayObjectContainer();
+            var wrapper = new PIXI.Container();
             wrapper.addChild(label);
             wrapper.addChild(zoomInBtn);
             wrapper.addChild(zoomInBtnDisabled);
@@ -591,55 +591,55 @@ define(function(require) {
             }
         },
 
-        dragStart: function(data) {
-            this.lastPosition.x = data.global.x;
-            this.lastPosition.y = data.global.y;
+        dragStart: function(event) {
+            this.lastPosition.x = event.data.global.x;
+            this.lastPosition.y = event.data.global.y;
 
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.lastPosition.x;
-                var dy = data.global.y - this.lastPosition.y;
+                var dx = event.data.global.x - this.lastPosition.x;
+                var dy = event.data.global.y - this.lastPosition.y;
 
                 this.detectorContainer.x += dx;
                 this.detectorContainer.y += dy;
 
                 this.drawWires();
 
-                this.lastPosition.x = data.global.x;
-                this.lastPosition.y = data.global.y;
+                this.lastPosition.x = event.data.global.x;
+                this.lastPosition.y = event.data.global.y;
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 
-        dragProbeStart: function(data) {
-            this.lastPosition.x = data.global.x;
-            this.lastPosition.y = data.global.y;
+        dragProbeStart: function(event) {
+            this.lastPosition.x = event.data.global.x;
+            this.lastPosition.y = event.data.global.y;
 
             this.draggingProbe = true;
         },
 
-        dragProbe: function(data) {
+        dragProbe: function(event) {
             if (this.draggingProbe) {
-                var dx = data.global.x - this.lastPosition.x;
-                var dy = data.global.y - this.lastPosition.y;
+                var dx = event.data.global.x - this.lastPosition.x;
+                var dy = event.data.global.y - this.lastPosition.y;
 
                 this.probe.x += dx;
                 this.probe.y += dy;
 
                 this.drawWires();
 
-                this.lastPosition.x = data.global.x;
-                this.lastPosition.y = data.global.y;
+                this.lastPosition.x = event.data.global.x;
+                this.lastPosition.y = event.data.global.y;
             }
         },
 
-        dragProbeEnd: function(data) {
+        dragProbeEnd: function(event) {
             this.draggingProbe = false;
         },
 

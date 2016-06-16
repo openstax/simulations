@@ -10,7 +10,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
 
     var Constants = require('constants');
     var Types = Constants.SourceObject.Types;
@@ -74,6 +74,9 @@ define(function(require) {
 
             this.leftTexture  = new PIXI.Texture(baseTexture, new PIXI.Rectangle(0,         0,         dividingX, height));
             this.rightTexture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(dividingX, 0, width - dividingX, height));
+
+            this.leftTexture.resolution = this.getResolution();
+            this.rightTexture.resolution = this.getResolution();
         },
 
         initLayers: function() {
@@ -94,8 +97,8 @@ define(function(require) {
             // Pointer cursor
             screenBack.buttonMode = true;
 
-            this.backLayer  = new PIXI.DisplayObjectContainer();
-            this.frontLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer  = new PIXI.Container();
+            this.frontLayer = new PIXI.Container();
 
             this.backLayer.addChild(screenBack);
             this.frontLayer.addChild(screenFront);
@@ -192,26 +195,26 @@ define(function(require) {
             frontGraphics.endFill();
         },
 
-        dragStart: function(data) {
-            this.lastPosition.x = data.global.x;
-            this.lastPosition.y = data.global.y;
+        dragStart: function(event) {
+            this.lastPosition.x = event.data.global.x;
+            this.lastPosition.y = event.data.global.y;
 
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.lastPosition.x;
-                var dy = data.global.y - this.lastPosition.y;
+                var dx = event.data.global.x - this.lastPosition.x;
+                var dy = event.data.global.y - this.lastPosition.y;
 
                 this.translate(dx, dy);
 
-                this.lastPosition.x = data.global.x;
-                this.lastPosition.y = data.global.y;
+                this.lastPosition.x = event.data.global.x;
+                this.lastPosition.y = event.data.global.y;
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 

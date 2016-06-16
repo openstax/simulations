@@ -2,10 +2,10 @@ define(function(require) {
 
     'use strict';
 
-    var AppView              = require('common/app/app');
-    var PixiSceneView        = require('common/pixi/view/scene');
-    var HeaterCoolerView     = require('common/pixi/view/heater-cooler');
-    var FlatHeaterCoolerView = require('common/pixi/view/flat-heater-cooler');
+    var AppView              = require('common/v3/app/app');
+    var PixiSceneView        = require('common/v3/pixi/view/scene');
+    var HeaterCoolerView     = require('common/v3/pixi/view/heater-cooler');
+    var FlatHeaterCoolerView = require('common/v3/pixi/view/flat-heater-cooler');
     var Vector2              = require('common/math/vector2');
 
     var ParticleTankView = require('views/particle-tank');

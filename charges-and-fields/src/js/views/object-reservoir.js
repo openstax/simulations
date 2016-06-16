@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
     var Colors    = require('common/colors/colors');
     var Rectangle = require('common/math/rectangle');
 
@@ -179,7 +179,7 @@ define(function(require) {
             this.decorativeDummyObjectsMask = new PIXI.Graphics();
             this.displayObject.addChild(this.decorativeDummyObjectsMask);
 
-            this.decorativeDummyObjects = new PIXI.DisplayObjectContainer();
+            this.decorativeDummyObjects = new PIXI.Container();
             this.decorativeDummyObjects.mask = this.decorativeDummyObjectsMask;
             this.displayObject.addChild(this.decorativeDummyObjects);
         },
@@ -191,6 +191,7 @@ define(function(require) {
             };
 
             var label = new PIXI.Text(this.labelText, textSettings);
+            label.resolution = this.getResolution();
             label.anchor.x = 0.5;
             label.anchor.y = -0.11;
             label.x = this.width / 2;
@@ -290,23 +291,23 @@ define(function(require) {
             this.drawDecorativeDummyObjects();
         },
 
-        dragStart: function(data) {
+        dragStart: function(event) {
             this.dragging = true;
 
             this.dummyObject = this.createDummyObject();
             this.dummyLayer.addChild(this.dummyObject.displayObject);
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
                 this.dummyObject.setPosition(
-                    data.global.x,
-                    data.global.y
+                    event.data.global.x,
+                    event.data.global.y
                 );
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
 
             if (this.dummyObject) {

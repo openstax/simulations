@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView  = require('common/pixi/view');
-    var ArrowView = require('common/pixi/view/arrow');
+    var PixiView  = require('common/v3/pixi/view');
+    var ArrowView = require('common/v3/pixi/view/arrow');
 
     var Constants = require('constants');
 
@@ -64,7 +64,7 @@ define(function(require) {
                     arrowView.displayObject.x = -halfLength;
 
                     // Put the arrow view in a container and then position the container
-                    var arrowContainer = new PIXI.DisplayObjectContainer();
+                    var arrowContainer = new PIXI.Container();
                     arrowContainer.addChild(arrowView.displayObject);
                     arrowContainer.x = xOffset + c * spacing;
                     arrowContainer.y = yOffset + r * spacing;

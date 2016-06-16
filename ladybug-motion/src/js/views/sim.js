@@ -5,7 +5,7 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/app/sim');
+    var SimView = require('common/v3/app/sim');
 
     var LadybugMotionSimulation = require('models/simulation');
     var LadybugMover            = require('models/ladybug-mover');

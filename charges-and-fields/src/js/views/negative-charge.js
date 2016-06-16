@@ -19,12 +19,15 @@ define(function(require) {
                 fillAlpha: 1,
                 outlineColor: '#004FD8',
                 outlineWidth: 2,
-                outlineAlpha: 1,
-
-                labelText: '-' // Note that this character is a dash, not a hyphen
+                outlineAlpha: 1
             }, options);
 
             ReservoirObjectView.prototype.initialize.apply(this, [options]);
+        },
+
+        drawIcon: function(graphics, iconWidth) {
+            graphics.moveTo(-iconWidth / 2, 0);
+            graphics.lineTo( iconWidth / 2, 0);
         }
 
     });

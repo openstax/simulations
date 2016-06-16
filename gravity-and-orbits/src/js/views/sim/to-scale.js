@@ -5,7 +5,7 @@ define(function(require) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var MeasuringTapeView = require('common/tools/measuring-tape');
+    var MeasuringTapeView = require('common/v3/tools/measuring-tape');
 
     var GOSimulation = require('models/simulation');
     var GOSimView    = require('views/sim');

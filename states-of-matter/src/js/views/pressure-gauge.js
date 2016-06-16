@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var Vector2  = require('common/math/vector2');
     var range    = require('common/math/range');
 
@@ -103,6 +103,7 @@ define(function(require) {
             this.readout = new PIXI.Text('100.0 ATM', {
                 font: PressureGaugeView.READOUT_FONT
             });
+            this.readout.resolution = this.getResolution();
             this.readout.x = this.gaugeCenter.x;
             this.readout.y = this.gaugeCenter.y + 8 + 2;
             this.readout.anchor.x = 0.5;
@@ -111,6 +112,7 @@ define(function(require) {
             this.units = new PIXI.Text('ATM', {
                 font: PressureGaugeView.UNITS_FONT
             });
+            this.units.resolution = this.getResolution();
             this.units.x = this.readout.x;
             this.units.y = this.readout.y + 12;
             this.units.anchor.x = 0.5;
@@ -120,6 +122,7 @@ define(function(require) {
                 font: PressureGaugeView.OVERLOAD_FONT,
                 fill: '#ff0000'
             });
+            this.overload.resolution = this.getResolution();
             this.overload.x = this.readout.x;
             this.overload.y = this.readout.y + 4;
             this.overload.anchor.x = 0.5;
@@ -136,7 +139,7 @@ define(function(require) {
             var pressurePercent = this.pressureRange.percent(pressure);
             var angle = this.angleRange.lerp(1 - pressurePercent);
             this.needle.rotation = -angle;
-            this.readout.setText(pressure.toFixed(2));
+            this.readout.text = pressure.toFixed(2);
 
             if (pressurePercent > 1) {
                 this.overload.visible = true;
