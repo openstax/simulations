@@ -12,7 +12,15 @@ define(function(require) {
     require('less!./app');
     require('less!./tabs');
 
+    // So we can apply the default hash
+    Backbone.history.start();
+
+    /**
+     * A view that manages the whole simulation application and the
+     *   individual simulation views.
+     */
     var AppView = Backbone.View.extend({
+
         template: _.template(template),
         tagName: 'div',
         className: 'app-view',
@@ -21,12 +29,15 @@ define(function(require) {
          * List of constructors to call to create each sim view (tab)
          */
         simViewConstructors: [],
+        defaultSimViewIndex: 0,
 
         events: {
-            'click .sim-tab' : 'tabClicked'
+            
         },
 
-        initialize: function(options) {},
+        initialize: function(options) {
+            $(window).on('hashchange', _.bind(this.hashChanged, this));
+        },
 
         /**
          * This function should be called to start the app. Calling this
@@ -154,8 +165,8 @@ define(function(require) {
             // Take all the sim content containers out of rendering mode
             this.$('.sim-content').removeClass('rendering');
 
-            // Only hide the other tabs after they've all been rendered visibly
-            this.$('.sim-tab').first().click();
+            // Select the default tab
+            $(window).trigger('hashchange');
         },
 
         /**
@@ -169,35 +180,43 @@ define(function(require) {
             });
         },
 
-        /**
-         * This is the event handler for when a tab is clicked. It visually
-         *   activates the desired tab and deactivates the others but leaves
-         *   the technical activation of the sim views to another handler by
-         *   triggering a 'tab-selected' jQuery event on the tab element.
-         */
-        tabClicked: function(event) {
-            var $tab = $(event.target).closest('.tab');
-            if (!$tab.hasClass('active')) {
-                // Activate the right tab, deactivating the others
-                var selector = $tab.data('content-selector');
-                $tab.add(this.$(selector))
-                    .addClass('active')
-                    .siblings()
-                    .removeClass('active');
-
-                this.simSelected($tab.data('cid'));
-            }
+        validTabSelected: function() {
+            return $(location.hash).is('.sim-content');
         },
 
-        /**
-         * Plays the right sim, pausing (halting) the others.
-         */
-        simSelected: function(cid) {
-            _.each(this.simViews, function(sim){
-                if (sim.cid == cid)
-                    sim.resume();
+        hashChanged: function() {
+            if (!this.validTabSelected()) {
+                if (this.defaultSimViewIndex >= this.simViews.length)
+                    throw 'defaultSimViewIndex is invalid';
+
+                var defaultHash = '#' + this.$('.sim-content').eq(this.defaultSimViewIndex).attr('id');
+                (new Backbone.Router()).navigate(defaultHash, { replace: true })
+                return;
+            }
+
+            window.scrollTo(0, 0);
+
+            var selector = location.hash;
+
+            // Select the right tab, deselecting the others
+            this.$('.sim-tab').each(function() {
+                if (this.getAttribute('href') == selector)
+                    $(this).addClass('active');
                 else
-                    sim.halt();
+                    $(this).removeClass('active');
+            });
+
+            // Show and activate the right sim view, hiding and halting the others
+            _.each(this.simViews, function(simView) {
+                var $parent = simView.$el.parent();
+                if ($parent.is(selector)) {
+                    $parent.addClass('active');
+                    simView.resume();
+                }
+                else {
+                    $parent.removeClass('active');
+                    simView.halt();
+                }
             }, this);
         }
 
