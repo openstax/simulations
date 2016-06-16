@@ -142,7 +142,7 @@ define(function(require) {
 
             // Place the electron
             var x = this.getXOffset(l) + (this.stateLineLength / 2);
-            var y = this.getYOffset(n) - this.electronImageBitmap.height / 2;
+            var y = this.getYOffset(n) - this.electronImage.height / 2;
             this.drawElectron(ctx, x, y);
         },
 
