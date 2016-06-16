@@ -85,7 +85,10 @@ define(function(require) {
             var mvt = ModelViewTransform.createScaleMapping(22);
             var electronDisplayObject = ParticleGraphicsGenerator.generateElectron(mvt);
             var canvas = PixiToImage.displayObjectToCanvas(electronDisplayObject, 1);
-            this.electronImage = canvas;
+            var self = this;
+            createImageBitmap(canvas).then(function(imageBitmap) {
+                self.electronImageBitmap = imageBitmap;
+            });
         },
 
         setWidth: function(width) {
@@ -272,7 +275,8 @@ define(function(require) {
         },
 
         drawElectron: function(ctx, x, y) {
-            ctx.drawImage(this.electronImage, x - this.electronImage.width / 2, y - this.electronImage.height / 2);
+            if (this.electronImageBitmap)
+                ctx.drawImage(this.electronImageBitmap, x - this.electronImageBitmap.width / 2, y - this.electronImageBitmap.height / 2);
         },
 
         drawStateLine: function(ctx, x, y) {
