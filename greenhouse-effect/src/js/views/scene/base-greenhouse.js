@@ -5,8 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var AppView            = require('common/app/app');
-    var PixiSceneView      = require('common/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
@@ -45,8 +45,8 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.backgroundLayer = new PIXI.DisplayObjectContainer();
-            this.foregroundLayer = new PIXI.DisplayObjectContainer();
+            this.backgroundLayer = new PIXI.Container();
+            this.foregroundLayer = new PIXI.Container();
 
             this.stage.addChild(this.backgroundLayer);
             this.stage.addChild(this.foregroundLayer);
@@ -109,8 +109,8 @@ define(function(require) {
         initPhotons: function() {
             this.photonViews = [];
 
-            this.sunlightPhotons = new PIXI.SpriteBatch();
-            this.infraredPhotons = new PIXI.SpriteBatch();
+            this.sunlightPhotons = new PIXI.Container();
+            this.infraredPhotons = new PIXI.Container();
 
             // Sunlight goes on top because it goes over the glass
             this.backgroundLayer.addChild(this.infraredPhotons);

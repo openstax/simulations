@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView      = require('common/pixi/view/scene');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
@@ -103,7 +103,7 @@ define(function(require) {
         initMolecules: function() {
             this.moleculeViews = [];
 
-            this.molecules = new PIXI.DisplayObjectContainer();
+            this.molecules = new PIXI.Container();
             this.stage.addChild(this.molecules);
 
             this.moleculesReset(this.simulation.molecules);
@@ -112,7 +112,7 @@ define(function(require) {
         initPhotons: function() {
             this.photonViews = [];
 
-            this.photons = new PIXI.SpriteBatch();
+            this.photons = new PIXI.Container();
             this.stage.addChild(this.photons);
 
             this.photonsReset(this.simulation.photons);
