@@ -39,12 +39,14 @@ define(function (require) {
             );
             var intersection;
             var overlappingArea = 0;
-            _.each(potentiallyDisplacingRectangles, function(rectangle) {
+            for (var i = 0; i < potentiallyDisplacingRectangles.length; i++) {
+                var rectangle = potentiallyDisplacingRectangles[i];
+
                 if (rectangle.overlaps(fluidRectangle)) {
                     intersection = rectangle.intersection(fluidRectangle);
                     overlappingArea += intersection.w * intersection.h;
                 }
-            });
+            }
 
             // Map the overlap to a new fluid height.  The scaling factor was
             //   empirically determined to look good.
@@ -55,14 +57,16 @@ define(function (require) {
                 this.set('fluidLevel', newFluidLevel);
 
                 // Update the shapes of the energy chunk slices.
-                _.each(this.slices, function(slice) {
+                for (var i = 0; i < this.slices.length; i++) {
+                    var slice = this.slices[i];
+
                     var originalBounds = slice.getShape().getBounds().clone();
                     slice.getShape().scale(1, proportionateIncrease);
                     slice.getShape().translate(
                         originalBounds.x - slice.getShape().getBounds().x,
                         originalBounds.y - slice.getShape().getBounds().y
                     );
-                });
+                }
             }
             
         },

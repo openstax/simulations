@@ -3,8 +3,9 @@ define(function(require) {
     'use strict';
 
     var _    = require('underscore');
-    var PIXI = require('pixi'); require('common/pixi/extensions');
-    
+    var PIXI = require('pixi');
+
+                    require('../extensions');
     var PixiView  = require('../view');
     var Colors    = require('common/colors/colors');
     var Rectangle = require('common/math/rectangle');

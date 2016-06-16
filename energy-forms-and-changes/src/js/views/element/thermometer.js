@@ -51,8 +51,8 @@ define(function(require) {
             back.scale.x = back.scale.y = scale;
             front.scale.x = front.scale.y = scale;
 
-            this.backLayer  = new PIXI.DisplayObjectContainer;
-            this.frontLayer = new PIXI.DisplayObjectContainer;
+            this.backLayer  = new PIXI.Container;
+            this.frontLayer = new PIXI.Container;
 
             this.backLayer.addChild(back);
             this.frontLayer.addChild(front);

@@ -32,12 +32,17 @@ define(function (require) {
                 else {
                     // The user has dropped this thermometer.  See if it was
                     //   dropped over something that it should follow.
-                    _.each(this.simulation.getBlockList(), function(block) {
+                    var blockList = this.simulation.getBlockList();
+
+                    for (var i = 0; i < blockList.length; i++) {
+                        var block = blockList[i];
+
                         if (block.getProjectedShape().contains(this.get('position'))) {
                             // Stick to this block.
                             this.follow(block);
                         }
-                    }, this);
+                    }
+                    
                     if (!this.followedElement && this.simulation.getBeaker().getThermalContactArea().getBounds().contains(this.get('position'))) {
                         // Stick to the beaker.
                         this.follow(this.simulation.getBeaker());

@@ -6,7 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PiecewiseCurve = require('common/math/piecewise-curve');
-    var SliderView     = require('common/pixi/view/slider');
+    var SliderView     = require('common/v3/pixi/view/slider');
 
     var IntroElementView          = require('views/intro-element');
     var EnergyChunkCollectionView = require('views/energy-chunk-collection');
@@ -57,9 +57,9 @@ define(function(require) {
 
         initGraphics: function() {
             // Layers
-            this.backLayer        = new PIXI.DisplayObjectContainer();
-            this.frontLayer       = new PIXI.DisplayObjectContainer();
-            this.energyChunkLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer        = new PIXI.Container();
+            this.frontLayer       = new PIXI.Container();
+            this.energyChunkLayer = new PIXI.Container();
 
             // Graphical components
             this.initBucket();

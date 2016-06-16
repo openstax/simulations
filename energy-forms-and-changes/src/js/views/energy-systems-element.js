@@ -29,7 +29,7 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.energyChunkLayer = new PIXI.DisplayObjectContainer();
+            this.energyChunkLayer = new PIXI.Container();
             this.energyChunkLayer.visible = false;
 
             this.createEnergyChunkCollectionView('energyChunkCollectionLayer', this.model.energyChunks);

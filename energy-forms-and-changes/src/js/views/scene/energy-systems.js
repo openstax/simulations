@@ -7,8 +7,8 @@ define(function(require) {
     var Vector2 = require('common/math/vector2');
 
     var ModelViewTransform = require('common/math/model-view-transform');
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var AppView            = require('common/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
 
     var AirView    = require('views/air');
     var FaucetView = require('views/energy-source/faucet');
@@ -80,10 +80,10 @@ define(function(require) {
 
         initLayers: function() {
             // Create layers
-            this.backLayer  = new PIXI.DisplayObjectContainer();
-            this.airLayer   = new PIXI.DisplayObjectContainer();
-            this.midLayer   = new PIXI.DisplayObjectContainer();
-            this.frontLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer  = new PIXI.Container();
+            this.airLayer   = new PIXI.Container();
+            this.midLayer   = new PIXI.Container();
+            this.frontLayer = new PIXI.Container();
 
             this.stage.addChild(this.backLayer);
             this.stage.addChild(this.airLayer);

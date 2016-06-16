@@ -26,8 +26,8 @@ define(function(require) {
         initGraphics: function() {
             EnergyConverterView.prototype.initGraphics.apply(this);
 
-            this.backLayer = new PIXI.DisplayObjectContainer();
-            this.frontLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer = new PIXI.Container();
+            this.frontLayer = new PIXI.Container();
 
             this.createEnergyChunkCollectionView('electricalEnergyChunkLayer', this.model.electricalEnergyChunks);
             this.createEnergyChunkCollectionView('hiddenEnergyChunkLayer',     this.model.hiddenEnergyChunks);

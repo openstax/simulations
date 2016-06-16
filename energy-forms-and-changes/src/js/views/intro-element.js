@@ -4,7 +4,7 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
     
 
     var Rectangle = require('common/math/rectangle');
@@ -90,20 +90,20 @@ define(function(require) {
             );
         },
 
-        dragStart: function(data) {
+        dragStart: function(event) {
             if (this.movable && !this.simulation.get('paused')) {
-                this.dragOffset = data.getLocalPosition(this[this.dragLayer], this._dragOffset);
+                this.dragOffset = event.data.getLocalPosition(this[this.dragLayer], this._dragOffset);
                 this.dragging = true;
                 this.model.set('userControlled', true);
                 this.trigger('drag-start');  
             }
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
                 var global = this[this.dragLayer].getGlobalPosition();
-                var dx = data.global.x - global.x - this.dragOffset.x;
-                var dy = data.global.y - global.y - this.dragOffset.y;
+                var dx = event.data.global.x - global.x - this.dragOffset.x;
+                var dy = event.data.global.y - global.y - this.dragOffset.y;
                 
                 var newBounds = this.calculateDragBounds(dx, dy);
                 var constraintBounds = this.movementConstraintBounds;
@@ -139,7 +139,7 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
             this.dragData = null;
             this.model.set('userControlled', false);

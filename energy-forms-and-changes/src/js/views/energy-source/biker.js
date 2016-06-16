@@ -6,7 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var Colors     = require('common/colors/colors');
-    var SliderView = require('common/pixi/view/slider');
+    var SliderView = require('common/v3/pixi/view/slider');
     var Vector2    = require('common/math/vector2');
 
     var EnergySourceView = require('views/energy-source');
@@ -110,8 +110,8 @@ define(function(require) {
 
             var legImageOffset = this.mvt.modelToViewDelta(new Vector2(0.009, 0.002).add(Biker.FRAME_CENTER_OFFSET));
 
-            var backLeg  = new PIXI.MovieClip(backLegTextures);
-            var frontLeg = new PIXI.MovieClip(frontLegTextures);
+            var backLeg  = new PIXI.extras.MovieClip(backLegTextures);
+            var frontLeg = new PIXI.extras.MovieClip(frontLegTextures);
 
             backLeg.x = frontLeg.x = legImageOffset.x;
             backLeg.y = frontLeg.y = legImageOffset.y;
@@ -143,7 +143,7 @@ define(function(require) {
 
         initControls: function() {
             // Create a panel
-            var panel = new PIXI.DisplayObjectContainer();
+            var panel = new PIXI.Container();
             var panelOffset =  this.mvt.modelToViewDelta(BikerView.PANEL_OFFSET).clone();
             var panelWidth  =  this.mvt.modelToViewDeltaX(BikerView.PANEL_WIDTH);
             var panelHeight = -this.mvt.modelToViewDeltaY(BikerView.PANEL_HEIGHT);

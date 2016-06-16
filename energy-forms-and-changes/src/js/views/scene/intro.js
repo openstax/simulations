@@ -9,8 +9,10 @@ define(function(require) {
     var Rectangle = require('common/math/rectangle');
 
     var ModelViewTransform = require('common/math/model-view-transform');
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var AppView            = require('common/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
+
+    var Beaker = require('models/element/beaker');
 
     var AirView              = require('views/air');
     var ThermometerView      = require('views/element/thermometer');
@@ -74,13 +76,13 @@ define(function(require) {
 
         initLayers: function() {
             // Create layers
-            this.backLayer        = new PIXI.DisplayObjectContainer();
-            this.beakerBackLayer  = new PIXI.DisplayObjectContainer();
-            this.blockLayer       = new PIXI.DisplayObjectContainer();
-            this.airLayer         = new PIXI.DisplayObjectContainer();
-            this.burnerFrontLayer = new PIXI.DisplayObjectContainer();
-            this.thermometerLayer = new PIXI.DisplayObjectContainer();
-            this.beakerFrontLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer        = new PIXI.Container();
+            this.beakerBackLayer  = new PIXI.Container();
+            this.blockLayer       = new PIXI.Container();
+            this.airLayer         = new PIXI.Container();
+            this.burnerFrontLayer = new PIXI.Container();
+            this.thermometerLayer = new PIXI.Container();
+            this.beakerFrontLayer = new PIXI.Container();
 
             this.stage.addChild(this.backLayer);
             this.stage.addChild(this.beakerBackLayer);
@@ -167,7 +169,7 @@ define(function(require) {
                 textFont: font,
                 labelText: 'Brick'
             });
-            this.brickLayer = new PIXI.DisplayObjectContainer();
+            this.brickLayer = new PIXI.Container();
             this.brickLayer.addChild(this.brickView.debugLayer);
             this.brickLayer.addChild(this.brickView.energyChunkLayer);
             this.brickLayer.addChild(this.brickView.displayObject);
@@ -185,7 +187,7 @@ define(function(require) {
                 textFont: font,
                 labelText: 'Iron'
             });
-            this.ironBlockLayer = new PIXI.DisplayObjectContainer();
+            this.ironBlockLayer = new PIXI.Container();
             this.ironBlockLayer.addChild(this.ironBlockView.debugLayer);
             this.ironBlockLayer.addChild(this.ironBlockView.energyChunkLayer);
             this.ironBlockLayer.addChild(this.ironBlockView.displayObject);
@@ -245,6 +247,8 @@ define(function(require) {
 
             this.beakerView.listenTo(this, 'show-energy-chunks', this.beakerView.showEnergyChunks);
             this.beakerView.listenTo(this, 'hide-energy-chunks', this.beakerView.hideEnergyChunks);
+
+            this.listenTo(this.simulation.beaker, 'change:fluidLevel', this.fluidLevelChanged);
         },
 
         initThermometers: function() {
@@ -414,6 +418,19 @@ define(function(require) {
                 )
             ) {
                 this.blockLayer.swapChildren(this.brickLayer, this.ironBlockLayer);
+            }
+        },
+
+        fluidLevelChanged: function(beaker, fluidLevel) {
+            if (fluidLevel !== Beaker.INITIAL_FLUID_LEVEL) {
+                // Move the beaker grabbing layer behind the block layer
+                if (this.stage.getChildIndex(this.blockLayer) < this.stage.getChildIndex(this.beakerBackLayer))
+                    this.stage.swapChildren(this.blockLayer, this.beakerBackLayer);
+            }
+            else {
+                // Move the beaker grabbing layer in front of the block layer
+                if (this.stage.getChildIndex(this.blockLayer) > this.stage.getChildIndex(this.beakerBackLayer))
+                    this.stage.swapChildren(this.blockLayer, this.beakerBackLayer);
             }
         },
 

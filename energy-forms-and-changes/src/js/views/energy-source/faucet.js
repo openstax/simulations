@@ -5,7 +5,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var Colors                  = require('common/colors/colors');
-    var SliderView              = require('common/pixi/view/slider');
+    var SliderView              = require('common/v3/pixi/view/slider');
     var EnergySourceView        = require('views/energy-source');
     var WaterDropCollectionView = require('views/water-drop-collection');
 
@@ -37,7 +37,7 @@ define(function(require) {
             faucetPipe.scale.x = 200; // Make it go off the screen and disappear
             faucetPipe.y = 32; // Line it up with the faucet front graphic
 
-            var faucet = new PIXI.DisplayObjectContainer();
+            var faucet = new PIXI.Container();
             faucet.addChild(faucetFront);
             faucet.addChild(faucetPipe);
             this.displayObject.addChild(faucet);
@@ -106,7 +106,7 @@ define(function(require) {
         },
 
         initWater: function() {
-            this.waterLayer = new PIXI.DisplayObjectContainer();
+            this.waterLayer = new PIXI.Container();
             this.displayObject.addChild(this.waterLayer);
 
             this.waterDropCollectionView = new WaterDropCollectionView({

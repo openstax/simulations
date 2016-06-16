@@ -4,7 +4,7 @@ define(function(require) {
 
     var _ = require('underscore');
     
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var Vector2  = require('common/math/vector2');
 
     var LightRayView = require('views/light-ray');
@@ -76,9 +76,11 @@ define(function(require) {
         },
 
         update: function() {
-            _.each(this.lightRayViews, function(lightRayView) {
+            for (var i = 0; i < this.lightRayViews.length; i++) {
+                var lightRayView = this.lightRayViews[i];
+
                 lightRayView.updateLineSegments();
-            });
+            }
         }
 
     });

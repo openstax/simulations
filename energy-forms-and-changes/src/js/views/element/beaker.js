@@ -67,9 +67,9 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.backLayer        = new PIXI.DisplayObjectContainer();
-            this.energyChunkLayer = new PIXI.DisplayObjectContainer();
-            this.frontLayer       = new PIXI.DisplayObjectContainer();
+            this.backLayer        = new PIXI.Container();
+            this.energyChunkLayer = new PIXI.Container();
+            this.frontLayer       = new PIXI.Container();
             
             // Get a version of the rectangle that defines the beaker size and
             //   location in the view.
@@ -89,7 +89,7 @@ define(function(require) {
         },
 
         initDebugSlices: function() {
-            this.debugLayer = new PIXI.DisplayObjectContainer();
+            this.debugLayer = new PIXI.Container();
 
             this.debugSlicesGraphics = new PIXI.Graphics();
             this.debugLayer.addChild(this.debugSlicesGraphics);
@@ -153,6 +153,23 @@ define(function(require) {
 
             this.frontLayer.addChild(PIXI.Sprite.fromPiecewiseCurve(frontFill, fillStyle));
             this.backLayer.addChild(PIXI.Sprite.fromPiecewiseCurve(backFill, fillStyle));
+
+            var hitGraphics = new PIXI.Graphics();
+            hitGraphics.beginFill(0x000000, 0.001);
+            hitGraphics.moveTo(left, bottom)
+            hitGraphics.bezierCurveTo(
+                left,  bottom - ellipseHeight / 2,
+                right, bottom - ellipseHeight / 2,
+                right, bottom
+            );
+            hitGraphics.bezierCurveTo(
+                right, bottom + ellipseHeight / 2,
+                left,  bottom + ellipseHeight / 2,
+                left, bottom
+            );
+            hitGraphics.endFill();
+
+            this.backLayer.addChild(hitGraphics);
 
             // Top back curve
             backCurves
@@ -234,7 +251,7 @@ define(function(require) {
             this.fluidTop = PIXI.Sprite.fromPiecewiseCurve(fluidTopCurve, fluidStyle);
             this.fluidFront = new PIXI.Graphics();
 
-            this.fluidLayer = new PIXI.DisplayObjectContainer();
+            this.fluidLayer = new PIXI.Container();
             this.fluidLayer.addChild(this.fluidFront);
             this.fluidLayer.addChild(this.fluidTop);
 
@@ -263,7 +280,7 @@ define(function(require) {
         },
 
         initSteam: function() {
-            this.steamLayer = new PIXI.SpriteBatch();
+            this.steamLayer = new PIXI.Container();
             this.fluidLayer.addChild(this.steamLayer);
 
             this.activeSteamParticles = [];

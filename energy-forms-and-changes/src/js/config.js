@@ -8,7 +8,7 @@
             backbone:         '../../bower_components/backbone/backbone',
             bootstrap:        '../../bower_components/bootstrap/dist/js/bootstrap.min',
             text:             '../../bower_components/requirejs-text/text',
-            pixi:             '../../bower_components/pixi/bin/pixi.dev',
+            pixi:             '../../bower_components/pixi/bin/pixi',
             nouislider:       '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
             'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
             'object-pool':    '../../node_modules/object-pool-shimmed/index',
