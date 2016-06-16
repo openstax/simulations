@@ -9,7 +9,6 @@ define(function (require, exports, module) {
     var QuantumConfig     = require('common/quantum/config');
     var QuantumSimulation = require('common/quantum/models/simulation');
     var Photon            = require('common/quantum/models/photon-vanilla');
-    var Atom              = require('common/quantum/models/atom');
     var Tube              = require('common/quantum/models/tube');
     var PhysicsUtil       = require('common/quantum/models/physics-util');
     var Rectangle         = require('common/math/rectangle');
@@ -274,9 +273,9 @@ define(function (require, exports, module) {
         },
 
         getNumAtomsWithState: function(state) {
-            var count = 0
+            var count = 0;
             
-            for (i = 0; i < this.atoms.length; i++) {
+            for (var i = 0; i < this.atoms.length; i++) {
                 if (this.atoms.at(i).getCurrentState().equals(state))
                     count++;
             }

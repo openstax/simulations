@@ -6,7 +6,6 @@ define(function(require) {
     var PIXI = require('pixi');
 
                            require('common/v3/pixi/draw-arrow');
-    var AppView          = require('common/v3/app/app');
     var PixiView         = require('common/v3/pixi/view');
     var SliderView       = require('common/v3/pixi/view/slider');
     var Colors           = require('common/colors/colors');
@@ -16,7 +15,6 @@ define(function(require) {
     var AtomView = require('views/atom');
 
     var Constants = require('constants');
-    var Assets    = require('assets');
 
     /**
      * 

@@ -5,23 +5,20 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-                             require('common/v3/pixi/create-drop-shadow');
-                             require('common/v3/pixi/draw-stick-arrow');
-                             require('common/v3/pixi/draw-arrow');
-    var AppView            = require('common/v3/app/app');
-    var PixiView           = require('common/v3/pixi/view');
-    var Colors             = require('common/colors/colors');
-    var WavelengthColors   = require('common/colors/wavelength');
-    var Rectangle          = require('common/math/rectangle');
-    var Functions          = require('common/math/functions');
-    var ModelViewTransform = require('common/math/model-view-transform');
-    var PhysicsUtil        = require('common/quantum/models/physics-util');
+                           require('common/v3/pixi/create-drop-shadow');
+                           require('common/v3/pixi/draw-stick-arrow');
+                           require('common/v3/pixi/draw-arrow');
+    var PixiView         = require('common/v3/pixi/view');
+    var Colors           = require('common/colors/colors');
+    var WavelengthColors = require('common/colors/wavelength');
+    var Rectangle        = require('common/math/rectangle');
+    var Functions        = require('common/math/functions');
+    var PhysicsUtil      = require('common/quantum/models/physics-util');
 
     var EnergyLevelView = require('views/energy-level');
     var AtomView        = require('views/atom');
 
     var Constants = require('constants');
-    var Assets    = require('assets');
 
     /**
      * 

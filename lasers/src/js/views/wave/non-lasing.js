@@ -2,15 +2,9 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-
-                   require('common/v3/pixi/extensions');
-    var Colors   = require('common/colors/colors');
-    var Vector2  = require('common/math/vector2');
+    var Vector2 = require('common/math/vector2');
 
     var WaveView = require('views/wave');
-
-    var Constants = require('constants');
 
     /**
      * A sine wave with randomized phase.

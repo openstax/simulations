@@ -10,9 +10,6 @@ define(function(require) {
     var WavelengthColors = require('common/colors/wavelength');
     var Rectangle        = require('common/math/rectangle');
     var PiecewiseCurve   = require('common/math/piecewise-curve');
-    var PhysicsUtil      = require('common/quantum/models/physics-util');
-
-    var Constants = require('constants');
 
     /**
      * Represents a semi-transparent beam of light coming out of a lamp

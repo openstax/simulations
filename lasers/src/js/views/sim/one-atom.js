@@ -4,16 +4,12 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var WavelengthSliderView = require('common/controls/wavelength-slider');
-
     var OneAtomLaserSimulation = require('models/simulation/one-atom');
 
     var LasersSimView     = require('views/sim');
     var OneAtomSceneView  = require('views/scene/one-atom');
     var LaserControlsView = require('views/laser-controls');
     var LegendView        = require('views/legend');
-
-    var Constants = require('constants');
 
     // HTML
     var simHtml = require('text!templates/one-atom-sim.html');

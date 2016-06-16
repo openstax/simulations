@@ -2,15 +2,10 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-
-    var PixiView         = require('common/v3/pixi/view');
-    var WavelengthColors = require('common/colors/wavelength');
-    var Colors           = require('common/colors/colors');
+    var PixiView = require('common/v3/pixi/view');
 
     var LampView = require('views/lamp');
 
-    var Assets = require('assets');
 
     /**
      * Create a different version of the LampView that doesn't control its own position

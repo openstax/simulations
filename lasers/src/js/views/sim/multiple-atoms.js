@@ -10,8 +10,6 @@ define(function (require) {
     var MultipleAtomsSceneView = require('views/scene/multiple-atoms');
     var LaserControlsView      = require('views/laser-controls');
 
-    var Constants = require('constants');
-
     // HTML
     var simHtml = require('text!templates/multiple-atoms-sim.html');
 

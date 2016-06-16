@@ -2,14 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-
-                   require('common/v3/pixi/extensions');
-    var Colors   = require('common/colors/colors');
-
     var WaveView = require('views/wave');
-
-    var Constants = require('constants');
 
     /**
      * A traveling sinusoidal wave

@@ -6,9 +6,7 @@ define(function(require) {
 
                            require('common/v3/pixi/extensions');
     var PixiView         = require('common/v3/pixi/view');
-    var Colors           = require('common/colors/colors');
     var WavelengthColors = require('common/colors/wavelength');
-    var Rectangle        = require('common/math/rectangle');
     var Vector2          = require('common/math/vector2');
     var PhysicsUtil      = require('common/quantum/models/physics-util');
 
@@ -49,7 +47,7 @@ define(function(require) {
 
             var tube = this.simulation.tube;
             var internalWaveOrigin = new Vector2(tube.getMinX(), tube.getMinY() + tube.getHeight() / 2);
-            var externalWaveOrigin = new Vector2(tube.getMinX() + tube.getWidth(), tube.getMinY() + tube.getHeight() / 2)
+            var externalWaveOrigin = new Vector2(tube.getMinX() + tube.getWidth(), tube.getMinY() + tube.getHeight() / 2);
 
             this.internalStandingWaveView = new StandingWaveView({
                 mvt: this.mvt,

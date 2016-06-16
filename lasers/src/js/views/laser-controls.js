@@ -6,8 +6,6 @@ define(function(require) {
     var _        = require('underscore');
     var Backbone = require('backbone'); Backbone.$ = $;
 
-    var Constants = require('constants');
-
     var WavelengthSliderView   = require('common/controls/wavelength-slider');
     var QuantumConfig          = require('common/quantum/config');
     var defineInputUpdateLocks = require('common/locks/define-locks');

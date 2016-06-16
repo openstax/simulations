@@ -13,7 +13,6 @@ define(function(require) {
     var Rectangle        = require('common/math/rectangle');
     var PhysicsUtil      = require('common/quantum/models/physics-util');
 
-    var Constants = require('constants');
     var Assets = require('assets');
 
     var NUM_PARTICLES = 600;
@@ -177,7 +176,7 @@ define(function(require) {
 
                 // Fade particles out when they reach the end of their lives
                 if (percentLifeLeft < (1 - PARTICLE_FADE_POINT)) {
-                    var t = (percentLifeLeft / (1 - PARTICLE_FADE_POINT))
+                    var t = (percentLifeLeft / (1 - PARTICLE_FADE_POINT));
                     particle.alpha = t * PARTICLE_ALPHA;
                 }
             }

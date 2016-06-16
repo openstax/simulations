@@ -2,20 +2,13 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var PIXI = require('pixi');
-
     var AppView            = require('common/v3/app/app');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var LasersSceneView      = require('views/scene');
-    var PhotonCollectionView = require('views/photon-collection');
-    var TubeView             = require('views/tube');
-    var LampArrayView        = require('views/lamp-array');
-    var AtomView             = require('views/atom');
-    var EnergyLevelPanelView = require('views/energy-level-panel');
-    var BeamCurtainView      = require('views/beam-curtain');
+    var LasersSceneView = require('views/scene');
+    var LampArrayView   = require('views/lamp-array');
+    var AtomView        = require('views/atom');
 
     // Constants
     var Constants = require('constants');

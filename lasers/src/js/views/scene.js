@@ -2,7 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var AppView            = require('common/v3/app/app');
@@ -19,8 +18,6 @@ define(function(require) {
     var LaserWaveView        = require('views/laser-wave');
     var EnergyLevelPanelView = require('views/energy-level-panel');
     var LaserExplosionView   = require('views/laser-explosion');
-
-    var Assets = require('assets');
 
     // Constants
     var Constants = require('constants');

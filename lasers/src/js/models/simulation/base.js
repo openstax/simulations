@@ -4,15 +4,14 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var VanillaCollection = require('common/collections/vanilla');
-    var Tube              = require('common/quantum/models/tube');
-    var Photon            = require('common/quantum/models/photon');
-    var Atom              = require('common/quantum/models/atom');
-    var Beam              = require('common/quantum/models/beam');
-    var PhysicsUtil       = require('common/quantum/models/physics-util');
-    var QuantumConfig     = require('common/quantum/config');
-    var Vector2           = require('common/math/vector2');
-    var Rectangle         = require('common/math/rectangle');
+    var Tube          = require('common/quantum/models/tube');
+    var Photon        = require('common/quantum/models/photon');
+    var Atom          = require('common/quantum/models/atom');
+    var Beam          = require('common/quantum/models/beam');
+    var PhysicsUtil   = require('common/quantum/models/physics-util');
+    var QuantumConfig = require('common/quantum/config');
+    var Vector2       = require('common/math/vector2');
+    var Rectangle     = require('common/math/rectangle');
 
     var LasersSimulation           = require('models/simulation');
     var BandPassReflectionStrategy = require('models/reflection-strategy/band-pass');
@@ -76,7 +75,7 @@ define(function (require, exports, module) {
             this.initBeams();
             this.initMirrors();
 
-            this.listenTo(this.atoms, 'photon-emitted', this.photonEmitted)
+            this.listenTo(this.atoms, 'photon-emitted', this.photonEmitted);
 
             this.elementPropertiesChanged(this, this.get('elementProperties'));
         },

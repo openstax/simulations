@@ -8,7 +8,6 @@ define(function(require) {
     var Colors   = require('common/colors/colors');
     var Vector2  = require('common/math/vector2');
 
-    var Assets = require('assets');
     var Constants = require('constants');
 
     var MirrorView = PixiView.extend({

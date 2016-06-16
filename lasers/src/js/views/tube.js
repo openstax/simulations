@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var PixiView = require('common/v3/pixi/view');
@@ -44,20 +45,12 @@ define(function(require) {
             this.mvt = mvt;
 
             this.draw();
-            this.updatePosition(this.model, this.model.get('position'));
-        },
-
-        updatePosition: function(tube, position) {
-            var viewPosition = this.mvt.modelToView(position);
-            // this.displayObject.x = viewPosition.x;
-            // this.displayObject.y = viewPosition.y;
         },
 
         draw: function() {
             var mirrorPerspecitveWidth = this.mvt.modelToViewDeltaX(Constants.MIRROR_THICKNESS);
             var minX   = this.mvt.modelToViewX(this.model.getMinX());
             var minY   = this.mvt.modelToViewY(this.model.getMinY());
-            var maxX   = this.mvt.modelToViewX(this.model.getMaxX());
             var maxY   = this.mvt.modelToViewY(this.model.getMaxY());
             var width  = this.mvt.modelToViewDeltaX(this.model.getWidth());
             var height = this.mvt.modelToViewDeltaY(this.model.getHeight());

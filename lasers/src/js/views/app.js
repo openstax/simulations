@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var _ = require('underscore');
+    var $ = require('jquery');
 
     var PixiAppView      = require('common/v3/pixi/view/app');
     var QuantumConfig    = require('common/quantum/config');

@@ -4,12 +4,10 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var VanillaCollection = require('common/collections/vanilla');
-    var Vector2           = require('common/math/vector2');
+    var Vector2 = require('common/math/vector2');
 
-    var BaseLasersSimulation      = require('models/simulation/base');
-    var TwoLevelElementProperties = require('models/element-properties/two-level');
-    var LaserAtom                 = require('models/atom');
+    var BaseLasersSimulation = require('models/simulation/base');
+    var LaserAtom            = require('models/atom');
 
     /**
      * Constants
@@ -58,7 +56,6 @@ define(function (require, exports, module) {
         initAtoms: function() {
             var numAtoms = 30;
             var maxSpeed = 0.1;
-            var position = new Vector2();
             var tubeBounds = this.tube.getBounds();
 
             for (var i = 0; i < numAtoms; i++) {

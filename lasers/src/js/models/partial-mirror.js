@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var Rectangle = require('common/math/rectangle');
-
     var PartialReflectionStrategy = require('models/reflection-strategy/partial');
     var Mirror                    = require('models/mirror');
 
