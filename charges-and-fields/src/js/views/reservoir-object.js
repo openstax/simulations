@@ -123,11 +123,11 @@ define(function(require) {
                     // If it's over its home reservoir, highlight the reservoir
                     if (this.reservoir.contains(x, y)) {
                         this.reservoir.showDestroyHighlight();
-                        this.displayObject.visible = false;
+                        this.displayObject.alpha = 0.01;
                     }
                     else {
                         this.reservoir.hideDestroyHighlight();
-                        this.displayObject.visible = true;
+                        this.displayObject.alpha = 1;
                     }
                 }
             }
