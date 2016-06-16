@@ -29,7 +29,7 @@ define(function(require) {
         events: {
             'click .positionTab'     : 'positionSelected',
             'click .velocityTab'     : 'velocitySelected',
-            'click .accelerationTab' : 'accelerationSelected',
+            'click .accelerationTab' : 'accelerationSelected'
         },
 
         initialize: function(options) {
@@ -85,6 +85,14 @@ define(function(require) {
                 panel.addChild(panel.background);
 
                 panel.controlArea = new PIXI.Graphics();
+                panel.controlArea.touchstart      = _.bind(this.dragStart, this);
+                panel.controlArea.mousedown       = _.bind(this.dragStart, this);
+                panel.controlArea.touchend        = _.bind(this.dragEnd, this);
+                panel.controlArea.mouseup         = _.bind(this.dragEnd, this);
+                panel.controlArea.touchendoutside = _.bind(this.dragEnd, this);
+                panel.controlArea.mouseupoutside  = _.bind(this.dragEnd, this);
+                panel.controlArea.interactive = true;  
+
                 panel.addChild(panel.controlArea);
 
                 this.panels.addChild(panel);
@@ -281,6 +289,30 @@ define(function(require) {
             this.tabs.getChildAt(index).background.visible = false;
             this.tabs.getChildAt(index).activeBackground.visible = true;
             this.panels.getChildAt(index).visible = true;
+        },
+
+        dragStart: function(event) {
+            var index = this.getControlAreaTabIndex(event.target);
+            if (!this.arrowViews[index].draggingHead) {
+                var localPoint = event.data.getLocalPosition(event.target.parent, this._dragOffset);
+
+                this.arrowModels[index].set('targetX', localPoint.x);
+                this.arrowModels[index].set('targetY', localPoint.y);
+
+                this.arrowViews[index].dragHeadStart(event);
+            }
+        },
+
+        dragEnd: function(event) {
+            var index = this.getControlAreaTabIndex(event.target);
+            this.arrowViews[index].dragHeadEnd(event);
+        },
+
+        getControlAreaTabIndex: function(controlArea) {
+            for (var i = 0; i < this.panels.children.length; i++) {
+                if (this.panels.children[i].controlArea === controlArea)
+                    return i;
+            }
         },
 
         positionChanged: function(arrowModel) {
