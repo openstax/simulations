@@ -3,12 +3,12 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
 
-    var PixiView           = require('common/pixi/view');
+    var PixiView           = require('common/v3/pixi/view');
     var PiecewiseCurve     = require('common/math/piecewise-curve');
     var Colors             = require('common/colors/colors');
-    var DraggableArrowView = require('common/pixi/view/arrow-draggable');
+    var DraggableArrowView = require('common/v3/pixi/view/arrow-draggable');
 
     var Level = require('models/level');
 
@@ -49,8 +49,8 @@ define(function(require) {
         },
 
         initTabbedPanels: function() {
-            this.tabs = new PIXI.DisplayObjectContainer();
-            this.panels = new PIXI.DisplayObjectContainer();
+            this.tabs = new PIXI.Container();
+            this.panels = new PIXI.Container();
 
             this.shadow = new PIXI.Graphics();
             this.displayObject.addChild(this.shadow);
@@ -58,7 +58,7 @@ define(function(require) {
             // Create the objects necessary for each tabbed panel
             for (var i = 0; i < Constants.TABS.length; i++) {
                 // Create the tab container
-                var tab = new PIXI.DisplayObjectContainer();
+                var tab = new PIXI.Container();
 
                 // Create the background Graphics object
                 tab.background = new PIXI.Graphics();
@@ -71,13 +71,14 @@ define(function(require) {
                     font: Constants.TAB_FONT,
                     fill: Constants.TABS[i].color
                 });
+                tab.label.resolution = this.getResolution();
                 tab.addChild(tab.label);
 
                 // Add the tab
                 this.tabs.addChild(tab);
 
                 // Create and panel
-                var panel = new PIXI.DisplayObjectContainer();
+                var panel = new PIXI.Container();
 
                 // Create panel background
                 panel.background = new PIXI.Graphics();

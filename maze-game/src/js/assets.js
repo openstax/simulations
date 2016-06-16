@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Assets = require('common/pixi/assets');
+    var Assets = require('common/v3/pixi/assets');
 
     Assets.Path = 'img/';
 

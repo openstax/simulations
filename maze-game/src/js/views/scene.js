@@ -5,8 +5,8 @@ define(function(require) {
     // Third-party dependencies
 
     // Common dependencies
-    var AppView            = require('common/app/app');
-    var PixiSceneView      = require('common/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 

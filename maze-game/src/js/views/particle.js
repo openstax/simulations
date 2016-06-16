@@ -2,7 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
 
     var Assets = require('assets');
 
