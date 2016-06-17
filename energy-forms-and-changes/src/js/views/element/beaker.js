@@ -156,7 +156,7 @@ define(function(require) {
 
             var hitGraphics = new PIXI.Graphics();
             hitGraphics.beginFill(0x000000, 0.001);
-            hitGraphics.moveTo(left, bottom)
+            hitGraphics.moveTo(left, bottom);
             hitGraphics.bezierCurveTo(
                 left,  bottom - ellipseHeight / 2,
                 right, bottom - ellipseHeight / 2,

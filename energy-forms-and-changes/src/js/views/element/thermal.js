@@ -2,8 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var _       = require('underscore');
-    var PIXI    = require('pixi');
+    var _ = require('underscore');
 
     var IntroElementView              = require('views/intro-element');
     var EnergyChunkCollectionView     = require('views/energy-chunk-collection');

@@ -2,7 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _       = require('underscore');
     var Vector2 = require('common/math/vector2');
 
     var Beaker                      = require('models/element/beaker');
@@ -39,7 +38,8 @@ define(function (require) {
             );
             var intersection;
             var overlappingArea = 0;
-            for (var i = 0; i < potentiallyDisplacingRectangles.length; i++) {
+            var i;
+            for (i = 0; i < potentiallyDisplacingRectangles.length; i++) {
                 var rectangle = potentiallyDisplacingRectangles[i];
 
                 if (rectangle.overlaps(fluidRectangle)) {
@@ -57,7 +57,7 @@ define(function (require) {
                 this.set('fluidLevel', newFluidLevel);
 
                 // Update the shapes of the energy chunk slices.
-                for (var i = 0; i < this.slices.length; i++) {
+                for (i = 0; i < this.slices.length; i++) {
                     var slice = this.slices[i];
 
                     var originalBounds = slice.getShape().getBounds().clone();

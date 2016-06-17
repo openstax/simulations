@@ -4,7 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
     
-    var Vector2             = require('common/math/vector2');
     var VanillaMotionObject = require('common/models/motion-object-vanilla');
     
     var EnergyTypes = require('constants').EnergyTypes;

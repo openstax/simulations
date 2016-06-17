@@ -6,7 +6,6 @@ define(function (require) {
     var Backbone  = require('backbone');
     var Rectangle = require('common/math/rectangle');
 
-    var EnergyChunk           = require('models/energy-chunk');
     var EnergyChunkCollection = require('models/energy-chunk-collection');
 
     /**

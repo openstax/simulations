@@ -2,8 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var _         = require('underscore');
-    var Backbone  = require('backbone');
+    var _ = require('underscore');
+
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
 
@@ -273,6 +273,8 @@ define(function (require) {
             var myBounds = this.getSliceBounds();
             var i;
             var j;
+            var slice;
+            var chunk;
 
             if (rect.contains(this.getThermalContactArea().getBounds())) {
                 // Our shape is contained by the destination.  Pick a chunk near
@@ -280,9 +282,9 @@ define(function (require) {
                 var closestDistanceToVerticalEdge = Number.POSITIVE_INFINITY;
 
                 for (i = 0; i < this.slices.length; i++) {
-                    var slice = this.slices[i];
+                    slice = this.slices[i];
                     for (j = 0; j < slice.energyChunkList.models.length; j++) {
-                        var chunk = slice.energyChunkList.models[j];
+                        chunk = slice.energyChunkList.models[j];
                 
                         var distanceToVerticalEdge = Math.min(Math.abs(myBounds.left() - chunk.get('position').x), Math.abs(myBounds.right() - chunk.get('position').x));
                         if (distanceToVerticalEdge < closestDistanceToVerticalEdge) {
@@ -299,9 +301,9 @@ define(function (require) {
                 var destinationBounds = rect.getBounds();
 
                 for (i = 0; i < this.slices.length; i++) {
-                    var slice = this.slices[i];
+                    slice = this.slices[i];
                     for (j = 0; j < slice.energyChunkList.models.length; j++) {
-                        var chunk = slice.energyChunkList.models[j];
+                        chunk = slice.energyChunkList.models[j];
 
                         var distanceToDestinationEdge = Math.min(Math.abs(destinationBounds.left() - chunk.get('position').x), Math.abs(destinationBounds.right() - chunk.get('position').x));
                         if (!rect.contains(chunk.get('position')) && distanceToDestinationEdge < closestDistanceToDestinationEdge) {

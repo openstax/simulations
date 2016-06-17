@@ -151,7 +151,7 @@ define(function(require) {
             var font;
             if (this.mvt.getXScale() > 1600) {
                 lineWidth = Constants.BlockView.LINE_WIDTH;
-                font = Constants.IntroElementView.TEXT_FONT
+                font = Constants.IntroElementView.TEXT_FONT;
             }
             else {
                 lineWidth = Math.round(Constants.BlockView.LINE_WIDTH * (this.mvt.getXScale() / 2000));
