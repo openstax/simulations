@@ -29,7 +29,7 @@ define(function (require) {
             EnergySource.prototype.initialize.apply(this, [attributes, options]);
 
             this.exemptFromTransferEnergyChunks = new EnergyChunkCollection();
-            this.waterDrops = new VanillaCollection;
+            this.waterDrops = new VanillaCollection();
 
             this.transferNextAvailableChunk = true;
             this.energySinceLastChunk = 0;

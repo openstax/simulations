@@ -25,7 +25,7 @@ define(function (require) {
     var Static = {};
 
     Static.calculateWaterMass = function(width, height) {
-        return Math.PI * Math.pow(width / 2, 2) * height * Beaker.WATER_DENSITY;
+        return Math.PI * Math.pow(width / 2, 2) * height * Constants.Beaker.WATER_DENSITY;
     };
 
     /**

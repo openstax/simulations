@@ -69,7 +69,6 @@ define(function(require) {
             var clipXAnchor = 0.40;
             var clipYAnchor = 0.56;
             var clipScale;
-            console.log(spacing)
 
             for (var i = 0; i < this.numThermometerSpots; i++) {
                 backClip  = Assets.createSprite(Assets.Images.THERMOMETER_CLIP_BACK);

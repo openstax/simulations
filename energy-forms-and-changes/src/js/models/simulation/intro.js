@@ -244,6 +244,7 @@ define(function (require, exports, module) {
             var burner;
             var element;
             var otherElement;
+            var chunk;
 
             /**
              *  Note: The original intent was to design all the energy containers
@@ -264,7 +265,6 @@ define(function (require, exports, module) {
 
             // Exchange thermal energy between the burners and the other thermal
             //   model elements, including air.
-            var burner;
             for (i = 0; i < this.burners.length; i++) {
                 burner = this.burners[i];
                 if (burner.areAnyOnTop(this.movableElements)) {
@@ -289,7 +289,7 @@ define(function (require, exports, module) {
                         }
                         else if (burner.canAcceptEnergyChunk() && (burner.getEnergyChunkBalanceWithObjects() < 0 || element.getEnergyChunkBalance() > 0)) {
                             // Extract an energy chunk from the model element.
-                            var chunk = element.extractClosestEnergyChunk(burner.getFlameIceRect());
+                            chunk = element.extractClosestEnergyChunk(burner.getFlameIceRect());
                             if (chunk)
                                 burner.addEnergyChunk(chunk);
                         }
@@ -360,7 +360,7 @@ define(function (require, exports, module) {
                             Math.random() * element.getRect().w + element.getRect().left(),
                             element.getRect().top()
                         );
-                        var chunk = element.extractClosestEnergyChunk(pointAbove);
+                        chunk = element.extractClosestEnergyChunk(pointAbove);
                         if (chunk) {
                             //console.log('(' + element.cid + ') giving chunk to air');
                             var initialMotionConstraints = null;

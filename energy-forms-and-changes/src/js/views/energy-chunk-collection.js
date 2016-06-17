@@ -2,8 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-
     var SpriteCollectionView = require('common/v3/pixi/view/sprite-collection');
 
     var EnergyChunk = require('models/energy-chunk');
