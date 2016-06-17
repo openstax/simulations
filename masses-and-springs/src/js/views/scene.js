@@ -7,8 +7,8 @@ define(function(require) {
 
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var AppView            = require('common/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
 
     var SpringView = require('views/spring');
     var BodyView   = require('views/body');
@@ -69,9 +69,9 @@ define(function(require) {
 
         initLayers: function() {
 
-            this.toolsLayer  = new PIXI.DisplayObjectContainer();
-            this.bodyLayer   = new PIXI.DisplayObjectContainer();
-            this.springLayer = new PIXI.DisplayObjectContainer();
+            this.toolsLayer  = new PIXI.Container();
+            this.bodyLayer   = new PIXI.Container();
+            this.springLayer = new PIXI.Container();
 
             this.stage.addChild(this.toolsLayer);
             this.stage.addChild(this.bodyLayer);

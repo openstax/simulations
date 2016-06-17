@@ -122,6 +122,12 @@ define(function(require) {
             }
         },
 
+        setPosition: function(x, y) {
+            this.position.x = x;
+            this.position.y = y;
+            this.updatePosition();
+        },
+
         updatePosition: function(){
             this.displayObject.x = this.position.x;
             this.displayObject.y = this.position.y;

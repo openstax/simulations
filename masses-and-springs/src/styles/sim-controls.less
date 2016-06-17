@@ -135,35 +135,66 @@
     width: @control-panel-expanded-width;
     margin-left: 8px;
 
-    .sim-tabs{
+    .panel-tabs{
         position: absolute;
         bottom: -35px;
         margin: 0 -15px;
 
-        > ul{
+        > ul {
+            margin: 0;
+            padding: 0 0 0 30px;
+            font-size: 0;
+            list-style-type: none;
+            color: @link-color;
             border-bottom: none;
             overflow: hidden;
             height: 36px;
-            padding: 0 0 0 30px;
 
-            > li{
-                padding: 7px 8px;
+            > li {
+                display: inline-block;
+                margin-right: 3px;
                 margin-top: -5px;
+                padding: 7px 8px;
+                font-size: 1.4rem;
                 background: transparent;
+                cursor: pointer;
+                .user-select(none);
+
+                &:hover,
+                &:visited,
+                &:active,
+                &:focus {
+                    text-decoration: none;
+                }
 
                 &:hover{
                     background: fade(@sim-controls-graph-background, 95%);
                 }
 
-                &.active{
+                &.active {
                     .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 0%);
                     background: #FCFCFC;
                     color: @link-color;
                     font-weight: bold;
+
+                    > .tab-title::after {
+                        content: "\2212"; // &minus; (−)
+                    }
+                }
+
+                > .tab-title {
+                    margin-left: 2px;
+                    vertical-align: middle;
+
+                    &::after {
+                        font-weight: bold;
+                        margin-left: 5px;
+                        vertical-align: top;
+                        content: "+";
+                    }
                 }
             }
         }
-
     }
 }
 

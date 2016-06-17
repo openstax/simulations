@@ -3,9 +3,9 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('common/pixi/extensions');
+    var PIXI = require('common/v3/pixi/extensions');
 
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
     // var Vector2  = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
@@ -130,6 +130,9 @@ define(function(require) {
                 labelText = new PIXI.Text(this._makeLabelText(), labelSettings);
                 unitsLabel = new PIXI.Text(this.model.units, unitSettings);
 
+                labelText.resolution = this.getResolution();
+                unitsLabel.resolution = this.getResolution();
+
                 this._positionLabel(labelText, unitsLabel);
 
                 labelText.blendMode = PIXI.blendModes.MULTIPLY;
@@ -209,26 +212,26 @@ define(function(require) {
             this.body.endFill();
         },
 
-        dragStart: function(data){
+        dragStart: function(event){
             this.bringToFront();
-            this.dragOffset = data.getLocalPosition(this.displayObject);
+            this.dragOffset = event.data.getLocalPosition(this.displayObject);
             this.model.grabbed = true;
             this.model.set('resting', true);
         },
 
-        dragEnd: function(data){
+        dragEnd: function(event){
             this.dropBody();
         },
 
-        drag: function(data){
+        drag: function(event){
 
             var newBodyLeft;
             var newBodyBottom;
 
             if(this.model.grabbed){
 
-                newBodyLeft = data.global.x - this.dragOffset.x;
-                newBodyBottom = data.global.y - this.dragOffset.y;
+                newBodyLeft = event.data.global.x - this.dragOffset.x;
+                newBodyBottom = event.data.global.y - this.dragOffset.y;
 
                 if(this.model.isHung() && this.isSidewaysDrag(newBodyLeft)){
                     this.model.unhang();

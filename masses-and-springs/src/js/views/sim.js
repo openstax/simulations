@@ -7,12 +7,12 @@ define(function (require) {
     var underscoreDeepExtend = require('underscoreDeepExtend');
     _.mixin({deepExtend: underscoreDeepExtend(_)});
 
-    var AppView           = require('common/app/app');
-    var SimView           = require('common/app/sim');
-    var StopwatchView     = require('common/tools/stopwatch');
-    var RulerView         = require('common/tools/ruler');
-    var ReferenceLineView = require('common/tools/reference-line');
-    var HelpLabelView     = require('common/help-label/index');
+    var AppView           = require('common/v3/app/app');
+    var SimView           = require('common/v3/app/sim');
+    var StopwatchView     = require('common/v3/tools/stopwatch');
+    var RulerView         = require('common/v3/tools/ruler');
+    var ReferenceLineView = require('common/v3/tools/reference-line');
+    var HelpLabelView     = require('common/v3/help-label/index');
     var BarGraphView      = require('common/bar-graph/bar-graph');
 
     var MassesAndSpringsSimulation = require('models/simulation');
@@ -153,7 +153,7 @@ define(function (require) {
 
             // Reset graph
             this.$('.energy-graph-placeholder').empty();
-            this.$('.energy-graphs .sim-tabs').replaceWith('<div class="energy-graph-tabs"></div>');
+            this.$('.energy-graphs .panel-tabs').replaceWith('<div class="energy-graph-tabs"></div>');
             this.renderEnergyGraphs();
             this.showEnergyGraph(this.simulation.systems.first());
         },
