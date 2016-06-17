@@ -7,7 +7,7 @@ define(function(require) {
     require('common/v3/pixi/extensions');
     require('common/v3/pixi/dash-to');
 
-    var AppView   = require('common/app/app');
+    var AppView   = require('common/v3/app/app');
     var PixiSceneView = require('common/v3/pixi/view/scene');
     var RayGunView = require('rutherford-scattering/views/gun');
     var SpaceBoxView = require('rutherford-scattering/views/space-box');
