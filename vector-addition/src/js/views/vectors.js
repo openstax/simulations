@@ -37,6 +37,7 @@ define(function(require) {
       this.listenTo(this.model, 'change:emptyStage', this.clearStage);
       this.listenTo(this.vectorViewModel, 'change:targetX change:targetY', this.updateReadouts);
       this.listenTo(this.vectorViewModel, 'change:targetX change:targetY', this.dragArrow);
+      this.listenTo(this.model.vectorCollection, 'remove', this.vectorRemoved);
     },
 
     initGraphics: function() {
@@ -188,6 +189,11 @@ define(function(require) {
 
         this.model.set('deleteVector', false);
       }
+    },
+
+    vectorRemoved: function(vector, collection) {
+      if (vector == this.vectorViewModel)
+        this.remove();
     }
 
   });

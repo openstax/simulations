@@ -138,7 +138,7 @@ define(function(require) {
     },
 
     getResolution: function() {
-        return window.devicePixelRatio ? window.devicePixelRatio : 1;
+      return window.devicePixelRatio ? window.devicePixelRatio : 1;
     }
 
   });

@@ -30,8 +30,14 @@ define(function(require) {
       this.sumVectorYModel = options.sumVectorYViewModel;
 
       this.listenTo(this.model, 'change:componentStyles', this.showComponentStyles);
-      this.listenTo(this.model.vectorCollection, 'add remove', this.showComponentStyles);
+      this.listenTo(this.model.vectorCollection, 'add', this.showComponentStyles);
       this.listenTo(this.vectorViewModel, 'change:targetY change:targetX', this.showComponentStyles);
+    },
+
+    clear: function() {
+      this.model.resetOrigins(this.vectorXViewModel);
+      this.model.resetOrigins(this.vectorYViewModel);
+      this.model.clearComponentLines(this.lines);
     },
 
     showComponentStyles: function() {
@@ -39,9 +45,7 @@ define(function(require) {
       var xOffset = canvas.height() - Constants.X_OFFSET;
       var yOffset = canvas.width() - Constants.Y_OFFSET;
 
-      this.model.resetOrigins(this.vectorXViewModel);
-      this.model.resetOrigins(this.vectorYViewModel);
-      this.model.clearComponentLines(this.lines);
+      this.clear();
 
       if (this.model.get('componentStyles') == 0) {
         this.vectorXContainer.visible = false;
@@ -110,7 +114,8 @@ define(function(require) {
 
       this.linesContainer.addChild(this.lines);
       this.displayObject.addChild(this.linesContainer);
-    }
+    },
+
   });
 
   return ComponentsView;
