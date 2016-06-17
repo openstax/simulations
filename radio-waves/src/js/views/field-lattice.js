@@ -5,9 +5,9 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiView         = require('common/pixi/view');
-    var ArrowOutlineView = require('common/pixi/view/arrow-outline');
-                           require('common/pixi/draw-arrow');
+    var PixiView         = require('common/v3/pixi/view');
+    var ArrowOutlineView = require('common/v3/pixi/view/arrow-outline');
+                           require('common/v3/pixi/draw-arrow');
     var Colors           = require('common/colors/colors');
     var Vector2          = require('common/math/vector2');
                            require('common/math/polyfills');
@@ -64,7 +64,7 @@ define(function(require) {
          */
         initGraphics: function() {
             this.curveGraphics = new PIXI.Graphics();
-            this.singleLineArrows = new PIXI.DisplayObjectContainer();
+            this.singleLineArrows = new PIXI.Container();
             this.fullFieldGraphics = new PIXI.Graphics();
 
             this.displayObject.addChild(this.curveGraphics);

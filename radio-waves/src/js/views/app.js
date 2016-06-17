@@ -2,7 +2,7 @@ define(function(require) {
     
     'use strict';
 
-    var PixiAppView = require('common/pixi/view/app');
+    var PixiAppView = require('common/v3/pixi/view/app');
 
     var RadioWavesSimView = require('views/sim');
 

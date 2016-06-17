@@ -4,9 +4,9 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
     
-    var PixiView       = require('common/pixi/view');
+    var PixiView       = require('common/v3/pixi/view');
     var Colors         = require('common/colors/colors');
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
@@ -114,6 +114,7 @@ define(function(require) {
             };
 
             var title = new PIXI.Text(this.titleText, settings);
+            title.resolution = this.getResolution();
             title.x = Math.round((this.width - title.width) / 2);
             title.y = 8;
 
@@ -152,6 +153,7 @@ define(function(require) {
             };
 
             var label = new PIXI.Text('Time', settings);
+            label.resolution = this.getResolution();
             label.x = Math.round((this.width - label.width) / 2);
             label.y = this.height - 20;
 
