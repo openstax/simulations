@@ -3,7 +3,7 @@ define(function(require) {
   'use strict';
 
   var PIXI = require('pixi');
-  var PixiView = require('common/pixi/view');
+  var PixiView = require('common/v3/pixi/view');
   var Colors   = require('common/colors/colors');
   var Constants = require('constants');
 
@@ -19,7 +19,7 @@ define(function(require) {
     },
 
     drawGrid: function() {
-      this.gridContainer = new PIXI.DisplayObjectContainer();
+      this.gridContainer = new PIXI.Container();
       var canvas = $('.scene-view');
       var startX = 0;
       var startY = 0;

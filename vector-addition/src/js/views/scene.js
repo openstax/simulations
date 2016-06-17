@@ -4,9 +4,9 @@ define(function(require) {
 
   var PIXI = require('pixi');
 
-  var PixiSceneView = require('common/pixi/view/scene');
-  var GridView      = require('common/pixi/view/grid');
-  var AppView       = require('common/app/app');
+  var PixiSceneView = require('common/v3/pixi/view/scene');
+  var GridView      = require('common/v3/pixi/view/grid');
+  var AppView       = require('common/v3/app/app');
   var Vector2       = require('common/math/vector2');
   var Rectangle     = require('common/math/rectangle');
   
@@ -65,6 +65,9 @@ define(function(require) {
       var textStyles = { font: '25px arial', color: 'black' };
       var textX = new PIXI.Text('x', textStyles);
       var textY = new PIXI.Text('y', textStyles);
+
+      textX.resolution = this.getResolution();
+      textY.resolution = this.getResolution();
 
       textX.anchor.x = 1;
       textX.x = 10 * 5 * Constants.GRID_SIZE - 8;
@@ -132,6 +135,10 @@ define(function(require) {
         this.gridView.show();
       else
         this.gridView.hide();
+    },
+
+    getResolution: function() {
+      return window.devicePixelRatio ? window.devicePixelRatio : 1;
     }
 
   });

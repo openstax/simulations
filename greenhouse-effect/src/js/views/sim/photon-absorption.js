@@ -5,10 +5,10 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView            = require('common/app/sim');
+    var SimView            = require('common/v3/app/sim');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
-    var PixiToImage        = require('common/pixi/pixi-to-image');
+    var PixiToImage        = require('common/v3/pixi/pixi-to-image');
 
     var PhotonAbsorptionSimulation = require('models/simulation/photon-absorption');
     var PhotonAbsorptionSceneView  = require('views/scene/photon-absorption');

@@ -3,7 +3,7 @@ define(function(require) {
   'use strict';
 
   var PIXI = require('pixi');
-  var PixiView = require('common/pixi/view');
+  var PixiView = require('common/v3/pixi/view');
   var Simulation = require('models/simulation');
   var Constants = require('constants');
 
@@ -30,8 +30,14 @@ define(function(require) {
       this.sumVectorYModel = options.sumVectorYViewModel;
 
       this.listenTo(this.model, 'change:componentStyles', this.showComponentStyles);
-      this.listenTo(this.model.vectorCollection, 'add remove', this.showComponentStyles);
+      this.listenTo(this.model.vectorCollection, 'add', this.showComponentStyles);
       this.listenTo(this.vectorViewModel, 'change:targetY change:targetX', this.showComponentStyles);
+    },
+
+    clear: function() {
+      this.model.resetOrigins(this.vectorXViewModel);
+      this.model.resetOrigins(this.vectorYViewModel);
+      this.model.clearComponentLines(this.lines);
     },
 
     showComponentStyles: function() {
@@ -39,9 +45,7 @@ define(function(require) {
       var xOffset = canvas.height() - Constants.X_OFFSET;
       var yOffset = canvas.width() - Constants.Y_OFFSET;
 
-      this.model.resetOrigins(this.vectorXViewModel);
-      this.model.resetOrigins(this.vectorYViewModel);
-      this.model.clearComponentLines(this.lines);
+      this.clear();
 
       if (this.model.get('componentStyles') == 0) {
         this.vectorXContainer.visible = false;
@@ -96,7 +100,7 @@ define(function(require) {
     },
 
     drawComponentLines: function(vectorYModel, vectorModel, vectorXModel) {
-      this.linesContainer = new PIXI.DisplayObjectContainer();
+      this.linesContainer = new PIXI.Container();
 
       var lines = new PIXI.Graphics();
       lines.lineStyle(1, this.model.get('darkOrange'), 1);
@@ -110,7 +114,8 @@ define(function(require) {
 
       this.linesContainer.addChild(this.lines);
       this.displayObject.addChild(this.linesContainer);
-    }
+    },
+
   });
 
   return ComponentsView;

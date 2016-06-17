@@ -4,8 +4,8 @@ define(function(require) {
 
   var PIXI = require('pixi');
 
-  var PixiView = require('common/pixi/view');
-  var AppView  = require('common/app/app');
+  var PixiView = require('common/v3/pixi/view');
+  var AppView  = require('common/v3/app/app');
 
   var Assets = require('assets');
   var Constants = require('constants');
@@ -27,7 +27,7 @@ define(function(require) {
     },
 
     trashCan: function() {
-      this.canContainer = new PIXI.DisplayObjectContainer();
+      this.canContainer = new PIXI.Container();
       var can      = Assets.createSprite(Assets.Images.TRASH_CAN);
       var can_open = Assets.createSprite(Assets.Images.TRASH_CAN_OPEN);
       var canvas = $('.scene-view');

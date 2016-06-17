@@ -64,7 +64,7 @@ define(function(require) {
         initClouds: function() {
             this.cloudViews = [];
 
-            this.clouds = new PIXI.DisplayObjectContainer();
+            this.clouds = new PIXI.Container();
             this.backgroundLayer.addChild(this.clouds);
 
             this.cloudsReset(this.simulation.clouds);

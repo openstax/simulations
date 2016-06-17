@@ -427,7 +427,7 @@ define(function(require) {
      *   width and height, filled with a horizontal gradient.
      *   The offsets are optional.
      */
-    PIXI.Texture.generateHoriztonalGradientTexture = function(width, height, leftColor, leftColorOffset, rightColor, rightColorOffset) {
+    PIXI.Texture.generateHorizontalGradientTexture = function(width, height, leftColor, leftColorOffset, rightColor, rightColorOffset) {
         if (rightColor === undefined) {
             // We allow only the colors to be specified instead of the offsets,
             //   so remap everything in this case.

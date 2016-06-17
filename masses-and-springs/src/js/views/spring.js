@@ -3,9 +3,9 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('common/pixi/extensions');
+    var PIXI = require('common/v3/pixi/extensions');
 
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
     // var Vector2  = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
@@ -252,12 +252,12 @@ define(function(require) {
         },
 
         labelSpring: function(){
-
             var labelText = new PIXI.Text(this._makeLabelText(), {
                 font : this.labelOptions.font,
                 align : this.labelOptions.align,
                 fill : Colors.darkenHex(Spring.PEG_COLOR, .2)
             });
+            labelText.resolution = this.getResolution();
 
             this.peg.addChild(labelText);
             this._positionLabelText(labelText);

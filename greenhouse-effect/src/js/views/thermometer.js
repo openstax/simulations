@@ -4,9 +4,9 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
     
-    var ThermometerView = require('common/pixi/view/thermometer');
+    var ThermometerView = require('common/v3/pixi/view/thermometer');
     var range           = require('common/math/range');
 
     var Constants = require('constants');
@@ -63,12 +63,14 @@ define(function(require) {
             };
 
             var kelvinLabel = new PIXI.Text('295K', options);
+            kelvinLabel.resolution = this.getResolution();
             kelvinLabel.anchor.x = 0.5;
             kelvinLabel.y = -16;
             this.kelvinLabel = kelvinLabel;
             this.displayObject.addChild(kelvinLabel);
 
             var degreesLabel = new PIXI.Text('69℉', options);
+            degreesLabel.resolution = this.getResolution();
             degreesLabel.anchor.x = 0.5;
             degreesLabel.y = 2;
             this.degreesLabel = degreesLabel;
@@ -82,12 +84,12 @@ define(function(require) {
         },
 
         updateTemperature: function(thermometer, temperature) {
-            this.kelvinLabel.setText(Math.round(temperature) + 'K');
+            this.kelvinLabel.text = Math.round(temperature) + 'K';
 
             if (this.celsiusMode)
-                this.degreesLabel.setText(Math.round(this.kelvinToCelsius(temperature)) + '℃');
+                this.degreesLabel.text = Math.round(this.kelvinToCelsius(temperature)) + '℃';
             else
-                this.degreesLabel.setText(Math.round(this.kelvinToFahrenheight(temperature)) + '℉');
+                this.degreesLabel.text = Math.round(this.kelvinToFahrenheight(temperature)) + '℉';
 
             this.val(this.temperatureRange.constrainedPercent(temperature));
         },

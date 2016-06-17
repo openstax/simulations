@@ -4,9 +4,9 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
     
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
 
     var AtomView       = require('views/atom');
     var AtomicBondView = require('views/atomic-bond');
@@ -34,7 +34,7 @@ define(function(require) {
         },
 
         initBonds: function() {
-            this.bondLayer = new PIXI.DisplayObjectContainer();
+            this.bondLayer = new PIXI.Container();
             this.atomicBondViews = [];
 
             var atomicBonds = this.model.getAtomicBonds();
@@ -51,7 +51,7 @@ define(function(require) {
         },
 
         initAtoms: function() {
-            this.atomLayer = new PIXI.DisplayObjectContainer();
+            this.atomLayer = new PIXI.Container();
             this.atomViews = [];
 
             var atoms = this.model.getAtoms();

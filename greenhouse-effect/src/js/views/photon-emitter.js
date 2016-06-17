@@ -4,10 +4,10 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    require('common/v3/pixi/extensions');
     
-    var PixiView   = require('common/pixi/view');
-    var SliderView = require('common/pixi/view/slider');
+    var PixiView   = require('common/v3/pixi/view');
+    var SliderView = require('common/v3/pixi/view/slider');
     var Colors     = require('common/colors/colors');
 
     var PhotonAbsorptionSimulation = require('models/simulation/photon-absorption');
@@ -137,7 +137,7 @@ define(function(require) {
             var width  = 135;
             var height =  90;
 
-            var panel = new PIXI.DisplayObjectContainer();
+            var panel = new PIXI.Container();
             panel.x = -206;
             panel.y = 80;
             this.displayObject.addChild(panel);
@@ -166,6 +166,9 @@ define(function(require) {
 
             var infraredLabel = new PIXI.Text('Infrared', options);
             var sunlightLabel = new PIXI.Text('Sunlight', options);
+
+            infraredLabel.resolution = this.getResolution();
+            sunlightLabel.resolution = this.getResolution();
 
             infraredLabel.anchor.x = 1;
             sunlightLabel.anchor.x = 1;

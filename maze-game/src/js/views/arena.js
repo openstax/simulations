@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
     var range     = require('common/math/range');
 
     var Level = require('models/level');
@@ -33,11 +33,11 @@ define(function(require) {
 
         initGraphics: function() {
             // Create layers
-            this.floor   = new PIXI.DisplayObjectContainer();
-            this.shadows = new PIXI.DisplayObjectContainer();
-            this.walls   = new PIXI.DisplayObjectContainer();
-            this.lowerEffects = new PIXI.DisplayObjectContainer();
-            this.upperEffects = new PIXI.DisplayObjectContainer();
+            this.floor   = new PIXI.Container();
+            this.shadows = new PIXI.Container();
+            this.walls   = new PIXI.Container();
+            this.lowerEffects = new PIXI.Container();
+            this.upperEffects = new PIXI.Container();
 
             // Add layers
             this.displayObject.addChild(this.floor);

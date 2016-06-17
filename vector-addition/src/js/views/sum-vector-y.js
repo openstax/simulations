@@ -3,8 +3,8 @@ define(function(require) {
   'use strict';
 
   var PIXI = require('pixi');
-  var PixiView = require('common/pixi/view');
-  var CommonArrowView = require('common/pixi/view/arrow');
+  var PixiView = require('common/v3/pixi/view');
+  var CommonArrowView = require('common/v3/pixi/view/arrow');
   var SumVectorYViewModel = require('models/sum-vector-y');
   var Constants = require('constants');
 
@@ -26,7 +26,7 @@ define(function(require) {
           fillColor: this.model.get('lightGreen')
       });
 
-      this.sumVectorYContainer = new PIXI.DisplayObjectContainer();
+      this.sumVectorYContainer = new PIXI.Container();
       this.sumVectorYContainer.addChild(this.sumVectorYView.displayObject);
       this.displayObject.addChild(this.sumVectorYContainer);
       this.sumVectorYContainer.visible = false;
