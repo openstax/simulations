@@ -5,8 +5,8 @@ define(function(require) {
   var PIXI = require('pixi');
 
   var Rectangle = require('common/math/rectangle');
-  var PixiView = require('common/pixi/view');
-  var DraggableArrowView = require('common/pixi/view/arrow-draggable');
+  var PixiView = require('common/v3/pixi/view');
+  var DraggableArrowView = require('common/v3/pixi/view/arrow-draggable');
   var ComponentsView = require('views/components');
   var VectorXView = require('views/vector-x');
   var VectorYView = require('views/vector-y');
@@ -72,7 +72,7 @@ define(function(require) {
 
       this.arrowDisplayObject = this.arrowView.displayObject;
 
-      this.container = new PIXI.DisplayObjectContainer();
+      this.container = new PIXI.Container();
       this.container.addChild(this.arrowView.displayObject);
       this.displayObject.addChild(this.container);
 

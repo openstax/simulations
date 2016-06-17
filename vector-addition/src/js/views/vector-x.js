@@ -3,8 +3,8 @@ define(function(require) {
   'use strict';
 
   var PIXI = require('pixi');
-  var PixiView = require('common/pixi/view');
-  var CommonArrowView = require('common/pixi/view/arrow');
+  var PixiView = require('common/v3/pixi/view');
+  var CommonArrowView = require('common/v3/pixi/view/arrow');
   var VectorXViewModel = require('models/vector-x');
   var Constants = require('constants');
 
@@ -24,7 +24,7 @@ define(function(require) {
           fillColor: this.model.get('pink')
       });
 
-      this.vectorXContainer = new PIXI.DisplayObjectContainer();
+      this.vectorXContainer = new PIXI.Container();
       this.vectorXContainer.addChild(this.vectorXView.displayObject);
       this.displayObject.addChild(this.vectorXContainer);
       this.vectorXContainer.visible = false;

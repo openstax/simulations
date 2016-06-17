@@ -4,8 +4,8 @@ define(function(require) {
 
   var PIXI = require('pixi');
 
-  var PixiView = require('common/pixi/view');
-  var AppView  = require('common/app/app');
+  var PixiView = require('common/v3/pixi/view');
+  var AppView  = require('common/v3/app/app');
 
   var VectorView = require('views/vectors');
 
@@ -36,7 +36,7 @@ define(function(require) {
     },
 
     bin: function() {
-      this.binContainer = new PIXI.DisplayObjectContainer();
+      this.binContainer = new PIXI.Container();
       var bin = Assets.createSprite(Assets.Images.VECTOR_BOX);
 
       var targetSpriteWidth = 140; // in pixels
@@ -65,21 +65,21 @@ define(function(require) {
       this.displayObject.parent.addChild(vectorView.displayObject);
     },
 
-    dragStart: function(data) {
+    dragStart: function(event) {
       this.dragging = true;
       this.addVector();
-      this.vectorView.centerAt(data.global.x, data.global.y);
+      this.vectorView.centerAt(event.data.global.x, event.data.global.y);
       this.didDrag = false;
     },
 
-    drag: function(data) {
+    drag: function(event) {
       if (this.dragging) {
-        this.vectorView.centerAt(data.global.x, data.global.y);
+        this.vectorView.centerAt(event.data.global.x, event.data.global.y);
         this.didDrag = true;
       }
     },
 
-    dragEnd: function(data) {
+    dragEnd: function(event) {
       this.dragging = false;
 
       // It was just a click

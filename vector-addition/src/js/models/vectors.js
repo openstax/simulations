@@ -2,8 +2,8 @@ define(function(require) {
 
   'use strict'
 
-  var AppView = require('common/app/app');
-  var DraggableArrowView = require('common/pixi/view/arrow-draggable');
+  var AppView = require('common/v3/app/app');
+  var DraggableArrowView = require('common/v3/pixi/view/arrow-draggable');
   var Constants = require('constants');
 
 

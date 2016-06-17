@@ -3,7 +3,7 @@ define(function(require) {
   'use strict';
 
   var PIXI = require('pixi');
-  var PixiView = require('common/pixi/view');
+  var PixiView = require('common/v3/pixi/view');
   var Simulation = require('models/simulation');
   var Constants = require('constants');
 
@@ -96,7 +96,7 @@ define(function(require) {
     },
 
     drawComponentLines: function(vectorYModel, vectorModel, vectorXModel) {
-      this.linesContainer = new PIXI.DisplayObjectContainer();
+      this.linesContainer = new PIXI.Container();
 
       var lines = new PIXI.Graphics();
       lines.lineStyle(1, this.model.get('darkOrange'), 1);
