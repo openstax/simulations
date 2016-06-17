@@ -5,12 +5,12 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/v3/app/sim');
+    var SimView       = require('common/v3/app/sim');
+    var HelpLabelView = require('common/v3/help-label/index');
 
     var RutherfordScatteringSimulation = require('rutherford-scattering/models/simulation');
     var RutherfordScatteringSceneView  = require('rutherford-scattering/views/scene');
     var RutherfordScatteringLegendView = require('rutherford-scattering/views/legend');
-    var HelpLabelView     = require('common/help-label/index');
 
     var Constants = require('constants');
 
