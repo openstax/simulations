@@ -2,7 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var PixiView  = require('common/v3/pixi/view');
@@ -201,7 +200,7 @@ define(function(require) {
                 fill: BodyView.VELOCITY_MARKER_COLOR
             });
             label.resolution = this.getResolution();
-            label.anchor.x = 0.5
+            label.anchor.x = 0.5;
             label.anchor.y = 0.4;
             label.alpha = BodyView.VELOCITY_MARKER_ALPHA;
 

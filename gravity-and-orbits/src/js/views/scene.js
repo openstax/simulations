@@ -2,7 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var PixiSceneView      = require('common/v3/pixi/view/scene');
@@ -183,17 +182,19 @@ define(function(require) {
         },
 
         bodiesReset: function(bodies) {
+            var i;
+
             // Remove old collision views
             this.clearCollisionViews();
 
             // Remove old body trace views
-            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--) {
+            for (i = this.bodyTraceViews.length - 1; i >= 0; i--) {
                 this.bodyTraceViews[i].removeFrom(this.bodyTraceLayer);
                 this.bodyTraceViews.splice(i, 1);
             }
 
             // Remove old body views
-            for (var i = this.bodyViews.length - 1; i >= 0; i--) {
+            for (i = this.bodyViews.length - 1; i >= 0; i--) {
                 this.bodyViews[i].removeFrom(this.bodies);
                 this.bodyViews.splice(i, 1);
             }
@@ -287,13 +288,15 @@ define(function(require) {
 
             this.gridView.setGridSize(this.mvt.modelToViewDeltaX(this.getViewSettings().gridSpacing));
 
-            for (var i = 0; i < this.bodyViews.length; i++)
+            var i;
+            
+            for (i = 0; i < this.bodyViews.length; i++)
                 this.bodyViews[i].updateMVT(this.mvt);
 
-            for (var j = this.bodyTraceViews.length - 1; j >= 0; j--)
-                this.bodyTraceViews[j].updateMVT(this.mvt);
+            for (i = this.bodyTraceViews.length - 1; i >= 0; i--)
+                this.bodyTraceViews[i].updateMVT(this.mvt);
 
-            for (var i = this.collisionViews.length - 1; i >= 0; i--) 
+            for (i = this.collisionViews.length - 1; i >= 0; i--) 
                 this.collisionViews[i].updateMVT(this.mvt);
 
             this.trigger('change:mvt', this, this.mvt);

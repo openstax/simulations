@@ -2,8 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
 
     var GOSimulation = require('models/simulation');
     var GOSimView    = require('views/sim');

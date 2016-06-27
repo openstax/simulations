@@ -2,11 +2,12 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var Vector2 = require('common/math/vector2');
 
     var Constants = require('constants');
 
-    var Body      = require('models/body');
     var Sun       = require('models/body/sun');
     var Planet    = require('models/body/planet');
     var Moon      = require('models/body/moon');

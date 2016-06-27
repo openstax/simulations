@@ -10,8 +10,6 @@ define(function (require, exports, module) {
     var Rectangle  = require('common/math/rectangle');
 
     var Body            = require('models/body');
-    var Moon            = require('models/body/moon');
-    var Planet          = require('models/body/planet');
     var BodyStateRecord = require('models/body-state-record');
 
     var Constants = require('constants');
@@ -151,7 +149,7 @@ define(function (require, exports, module) {
          */
         play: function() {
             // Save the current state to apply later with the rewind button
-            for (i = 0; i < this.savedState.length; i++)
+            for (var i = 0; i < this.savedState.length; i++)
                 this.savedState[i].saveState(this.bodies.at(i));
 
             FixedIntervalSimulation.prototype.play.apply(this);
@@ -162,7 +160,7 @@ define(function (require, exports, module) {
          */
         rewind: function() {
             // Apply the saved state
-            for (i = 0; i < this.savedState.length; i++)
+            for (var i = 0; i < this.savedState.length; i++)
                 this.savedState[i].applyState(this.bodies.at(i));
         },
 
@@ -226,8 +224,8 @@ define(function (require, exports, module) {
                 state[i].applyState(this.bodies.at(i));
             
             // Check for collisions between bodies
-            for (var i = 0; i < this.bodies.length; i++) {
-                for (var j = i + 1; j < this.bodies.length; j++) {
+            for (i = 0; i < this.bodies.length; i++) {
+                for (j = i + 1; j < this.bodies.length; j++) {
                     if (this.bodies.at(i).collidesWith(this.bodies.at(j))) {
                         var smaller = this.smallerBody(this.bodies.at(i), this.bodies.at(j));
                         if (!smaller.get('exploded')) {

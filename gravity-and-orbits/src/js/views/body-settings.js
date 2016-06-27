@@ -3,14 +3,14 @@ define(function(require) {
     'use strict';
 
     var _        = require('underscore');
+    var $        = require('jquery');
     var Backbone = require('backbone');
 
     var defineInputUpdateLocks = require('common/locks/define-locks');
     var Vector2                = require('common/math/vector2');
     var range                  = require('common/math/range');
 
-    var Constants = require('constants');
-    var Assets    = require('assets');
+    var Assets = require('assets');
 
     require('nouislider');
 
