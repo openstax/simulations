@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Draggable = require('common/tools/draggable');
+    var Draggable = require('common/v3/tools/draggable');
 
     var html  = require('text!hydrogen-atom/templates/snapshot.html');
 
