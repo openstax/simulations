@@ -11,7 +11,7 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "~2.1.1",
+    "jquery": "~3.3.1",
     "lodash": "~2.4.1",
     "backbone": "~1.1.2",
     "font-awesome": "~4.2.0",
@@ -19,7 +19,7 @@
     "requirejs-text": "~2.0.12",
     "require-css": "~0.1.5",
     "require-less": "~0.1.2",
-    "bootstrap": "~3.2.0",
+    "bootstrap": "~3.3.7",
     "sinonjs": "~1.10.2",
     "mocha": "~1.21.4",
     "chai": "~1.9.1",
