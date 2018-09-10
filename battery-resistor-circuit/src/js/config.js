@@ -48,16 +48,22 @@
 
         shim: {
             'bootstrap-select': {
+                deps: ['bootstrap']
+            },
+            'bootstrap': {
+                deps: ['jquery']
+            },
+            'nouislider': {
                 deps: ['jquery']
             }
         },
     };
 
-    // Expose to the rest of the world 
-    if (typeof module !== 'undefined') { 
-        module.exports = config; // For nodejs 
-    } 
-    else if (typeof require.config !== 'undefined') { 
-        require.config(config); // For requirejs 
+    // Expose to the rest of the world
+    if (typeof module !== 'undefined') {
+        module.exports = config; // For nodejs
+    }
+    else if (typeof require.config !== 'undefined') {
+        require.config(config); // For requirejs
     }
 })();
